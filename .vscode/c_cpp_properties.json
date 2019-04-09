@@ -1,0 +1,58 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "D:/0软件/mingw/mingw64/x86_64-w64-mingw32/include",
+                "${workspaceFolder}/src/cryptoauthlib",
+                "${workspaceFolder}/src/cryptoauthlib/lib",
+                "${workspaceFolder}/src/cryptoauthlib/lib/atcacert/",
+                "${workspaceFolder}/src/",
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/main/include/",
+                "${workspaceFolder}/components/nyt-proto-c/include/",
+                "${workspaceFolder}/components/protobuf-c/include/",
+                "${workspaceFolder}/components/nyt-protobuf-c/include/",
+                "${workspaceFolder}/components/esp-modbus/include/",
+                "${workspaceFolder}/components/esp-modbus/port/",
+                "${workspaceFolder}/components/esp_cron/include/",
+                "${workspaceFolder}/components/esp_cron/library/ccronexpr",
+                "${workspaceFolder}/build/include/",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/newlib/platform_include/",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/newlib/include/",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/nvs_flash/include/",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/nvs_flash/test_nvs_host/",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/log/include/",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/heap/include/",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/lwip/lwip/src/include/",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/tcpip_adapter/include/",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/freertos/include/",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/mqtt/esp-mqtt/include/",
+                "D:/7esp32/msys32/opt/xtensa-esp32-elf/lib/gcc/xtensa-esp32-elf/5.2.0/include/",
+                "D:/7esp32/msys32/opt/xtensa-esp32-elf/xtensa-esp32-elf/include/",
+                "D:/7esp32/msys32/opt/xtensa-esp32-elf/xtensa-esp32-elf/include/include/",
+                "D:/7esp32/msys32/opt/xtensa-esp32-elf/xtensa-esp32-elf/sysroot/usr/include/",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/esp32/include/",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/soc/esp32/include/",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/soc/include/",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/driver/include/",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/lwip/port/esp32/include/",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/lwip/include/apps",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/vfs/include/",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/spi_flash/include/",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/esp_event/include/",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/esp_ringbuf/include/",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/driver/include/"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "intelliSenseMode": "msvc-x64",
+            "compilerPath": "D:\\0软件\\LLVM\\bin\\clang.exe",
+            "cStandard": "c11"
+        }
+    ],
+    "version": 4
+}
