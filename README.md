@@ -1,2 +1,2 @@
-# metathings-driver-ds3231
-hardware time module ds3231
+# metathings-esp32-lib
+lib for esp32
