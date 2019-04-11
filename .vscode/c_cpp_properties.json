@@ -42,7 +42,9 @@
                 "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/spi_flash/include/",
                 "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/esp_event/include/",
                 "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/esp_ringbuf/include/",
-                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/driver/include/"
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/driver/include/",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/wpa_supplicant/include/",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/wpa_supplicant/port/include/"
             ],
             "defines": [
                 "_DEBUG",
