@@ -1,1 +1,0 @@
-void nyt_hmac();
