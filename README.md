@@ -18,5 +18,5 @@ esp32官方 [ESP-IDF framework](https://github.com/espressif/esp-idf)
 | **cryptolibhal**  | cryptoauthlib hal 对接esp32                                             | GNU   | -      |
 | **i2c_ds1307**    | 硬件I2C时钟模块                                                          | MIT  | 是     |
 | **i2c_ds3231**    | 硬件I2C时钟模块附带温度测量                                               | MIT  | 是     |
-| **i2c_atecc608a** | 加密芯片,安全密钥存储器                                                   | MIT  | -      |
+| **i2c_atecc608a** | 硬件I2C加密芯片,安全密钥存储器                                            | MIT  | -      |
 | **i2cdev**        | ESP32 i2c driver                                                        | GNU  | -      |
