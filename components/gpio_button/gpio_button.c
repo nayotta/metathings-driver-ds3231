@@ -71,12 +71,12 @@ static bool mt_btn_init(mt_gpio_btn_t *btn_handle) {
              btn_handle->pin);
     return false;
   }
-  if (btn_handle->mt_gpio_btn_double_press_callback == NULL) {
-    ESP_LOGE(TAG,
-             "button %d callback mt_gpio_btn_double_press_callback not set",
-             btn_handle->pin);
-    return false;
-  }
+  // if (btn_handle->mt_gpio_btn_double_press_callback == NULL) {
+  // ESP_LOGE(TAG,
+  //          "button %d callback mt_gpio_btn_double_press_callback not set",
+  //         btn_handle->pin);
+  //  return false;
+  //}
 
   // gpio init
   gpio_config_t conf;
@@ -106,7 +106,7 @@ static void mt_btn_task_loop(mt_gpio_btn_t *btn_handle) {
   int level = 0;
   uint32_t sum = 0;             // press count
   uint32_t none_press_sum = 0;  // none press count for double press
-  int interval = 10;            // task interval
+  int interval = 10;             // task interval do not less than 10
   int short_press_count =
       (int)(btn_handle->short_press_interval / interval);  // short press count
   int long_press_count =
@@ -132,8 +132,12 @@ static void mt_btn_task_loop(mt_gpio_btn_t *btn_handle) {
         none_press_sum = 0;
       } else if (sum >= short_press_count) {
         if (none_press_sum < double_press_count) {
-          ESP_LOGI(TAG, "button %d double press", btn_handle->pin);
-          btn_handle->mt_gpio_btn_double_press_callback();
+          if (none_press_sum > short_press_count / 2) {
+            ESP_LOGI(TAG, "button %d double press", btn_handle->pin);
+            // btn_handle->mt_gpio_btn_double_press_callback();
+          } else {
+            ESP_LOGE(TAG, "button %d ignore double press", btn_handle->pin);
+          }
         } else {
           ESP_LOGI(TAG, "button %d short press", btn_handle->pin);
           btn_handle->mt_gpio_btn_short_press_callback();

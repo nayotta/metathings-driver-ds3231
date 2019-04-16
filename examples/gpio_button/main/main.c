@@ -20,11 +20,6 @@ void example_long_press_callback()
   printf("example_long_press\n");
 }
 
-void example_double_press_callback()
-{
-  printf("example_double_press\n");
-}
-
 void app_main()
 {
   bool ret = false;
@@ -39,7 +34,6 @@ void app_main()
   gpio_btn_handle->double_press_interval = DOUBLE_PRESS_INTERVAL_DEFAULT;
   gpio_btn_handle->mt_gpio_btn_short_press_callback = example_short_press_callback;
   gpio_btn_handle->mt_gpio_btn_long_press_callback = example_long_press_callback;
-  gpio_btn_handle->mt_gpio_btn_double_press_callback = example_double_press_callback;
 
   ret = mt_btn_task(gpio_btn_handle);
   if (ret == false)
