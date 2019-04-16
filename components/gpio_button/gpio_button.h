@@ -8,9 +8,11 @@
 #define CONFIG_FREERTOS_HZ 100
 #endif
 
-#define SHORT_PRESS_INTERVAL_DEFAULT 50
-#define LONG_PRESS_INTERVAL_DEFAULT 5000
-#define DOUBLE_PRESS_INTERVAL_DEFAULT 500
+#define DEFAULT_GPIO_BTN_PIN 14
+#define DEFAULT_GPIO_BTN_PIN_ON_LEVEL 1
+#define DEFAULT_SHORT_PRESS_INTERVAL 50
+#define DEFAULT_LONG_PRESS_INTERVAL 5000
+#define DEFAULT_DOUBLE_PRESS_INTERVAL 500
 
 typedef struct
 {
@@ -24,4 +26,6 @@ typedef struct
     //void (*mt_gpio_btn_double_press_callback)();
 } mt_gpio_btn_t;
 
-bool mt_btn_task(mt_gpio_btn_t *btn_handle);
+mt_gpio_btn_t *mt_gpio_btn_default();
+
+bool mt_gpio_btn_task(mt_gpio_btn_t *btn_handle);

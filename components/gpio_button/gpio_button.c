@@ -11,9 +11,10 @@
 static const char *TAG = "MT_GPIO_BTN";
 
 #define GPIO_MAX 40
-bool REG_GPIO_BTN[GPIO_MAX] = {false};
+static bool REG_GPIO_BTN[GPIO_MAX] = {false};
 
-static bool mt_btn_init(mt_gpio_btn_t *btn_handle) {
+// static func ================================================================
+static bool mt_gpio_btn_init(mt_gpio_btn_t *btn_handle) {
   int ret = 0;
 
   // check pin value
@@ -37,13 +38,13 @@ static bool mt_btn_init(mt_gpio_btn_t *btn_handle) {
 
   // set press interval default
   if (btn_handle->short_press_interval == 0) {
-    btn_handle->short_press_interval = SHORT_PRESS_INTERVAL_DEFAULT;
+    btn_handle->short_press_interval = DEFAULT_SHORT_PRESS_INTERVAL;
   }
   if (btn_handle->long_press_interval == 0) {
-    btn_handle->long_press_interval = LONG_PRESS_INTERVAL_DEFAULT;
+    btn_handle->long_press_interval = DEFAULT_LONG_PRESS_INTERVAL;
   }
   if (btn_handle->double_press_interval == 0) {
-    btn_handle->double_press_interval = DOUBLE_PRESS_INTERVAL_DEFAULT;
+    btn_handle->double_press_interval = DEFAULT_DOUBLE_PRESS_INTERVAL;
   }
 
   // check press interval value
@@ -102,11 +103,11 @@ static bool mt_btn_init(mt_gpio_btn_t *btn_handle) {
   return true;
 }
 
-static void mt_btn_task_loop(mt_gpio_btn_t *btn_handle) {
+static void mt_gpio_btn_task_loop(mt_gpio_btn_t *btn_handle) {
   int level = 0;
   uint32_t sum = 0;             // press count
   uint32_t none_press_sum = 0;  // none press count for double press
-  int interval = 10;             // task interval do not less than 10
+  int interval = 10;            // task interval do not less than 10
   int short_press_count =
       (int)(btn_handle->short_press_interval / interval);  // short press count
   int long_press_count =
@@ -138,11 +139,12 @@ static void mt_btn_task_loop(mt_gpio_btn_t *btn_handle) {
           } else {
             ESP_LOGE(TAG, "button %d ignore double press", btn_handle->pin);
           }
+          none_press_sum = double_press_count;
         } else {
           ESP_LOGI(TAG, "button %d short press", btn_handle->pin);
           btn_handle->mt_gpio_btn_short_press_callback();
+          none_press_sum = 0;
         }
-        none_press_sum = 0;
       } else if (sum > 0) {
         ESP_LOGI(TAG, "button %d error press", btn_handle->pin);
       }
@@ -153,16 +155,28 @@ static void mt_btn_task_loop(mt_gpio_btn_t *btn_handle) {
   }
 }
 
-bool mt_btn_task(mt_gpio_btn_t *btn_handle) {
+// public func ================================================================
+mt_gpio_btn_t *mt_gpio_btn_default() {
+  mt_gpio_btn_t *gpio_btn_handle = malloc(sizeof(mt_gpio_btn_t));
+
+  gpio_btn_handle->pin = DEFAULT_GPIO_BTN_PIN;
+  gpio_btn_handle->pin_on_level = DEFAULT_GPIO_BTN_PIN_ON_LEVEL;
+  gpio_btn_handle->short_press_interval = DEFAULT_SHORT_PRESS_INTERVAL;
+  gpio_btn_handle->long_press_interval = DEFAULT_LONG_PRESS_INTERVAL;
+  gpio_btn_handle->double_press_interval = DEFAULT_DOUBLE_PRESS_INTERVAL;
+
+  return gpio_btn_handle;
+}
+
+bool mt_gpio_btn_task(mt_gpio_btn_t *btn_handle) {
   bool ret = false;
 
-  ret = mt_btn_init(btn_handle);
+  ret = mt_gpio_btn_init(btn_handle);
   if (ret == false) {
-    ESP_LOGE(TAG, "%s error init", __func__);
+    ESP_LOGE(TAG, "%s error new", __func__);
     return false;
   }
-
-  xTaskCreate((TaskFunction_t)mt_btn_task_loop, "MT_BTN_TASK", 1024 * 2,
+  xTaskCreate((TaskFunction_t)mt_gpio_btn_task_loop, "MT_BTN_TASK", 1024 * 2,
               btn_handle, 10, NULL);
   return true;
 }

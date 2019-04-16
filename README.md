@@ -15,6 +15,7 @@ esp32官方 [ESP-IDF framework](https://github.com/espressif/esp-idf)
 | 模块              | 描述                                                                     | 授权 | 线程安全|
 |-------------------|-------------------------------------------------------------------------|------|--------|
 | **gpio_button**   | 硬件gpio按键,短按--长按                                                  | -     | 是     |
+| **gpio_light**    | 硬件gpio灯, 亮灭,自定义时间闪烁                                           | -     | 是     |
 | **cryptolib**     | cryptoauthlib 基础库                                                    | GNU   | 是     |
 | **cryptolibhal**  | cryptoauthlib hal 对接esp32                                             | GNU   | -      |
 | **i2c_atecc608a** | 硬件I2C加密芯片,安全密钥存储器                                            | MIT  | -      |
