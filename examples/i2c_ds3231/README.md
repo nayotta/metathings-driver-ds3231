@@ -1,0 +1,4 @@
+# 说明
+
+SDA_GPIO 21
+SCL_GPIO 19
