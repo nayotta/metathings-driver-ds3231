@@ -1,7 +1,7 @@
-#include <stdio.h>
+#include <ds1307.h>
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
-#include <ds1307.h>
+#include <stdio.h>
 
 #define SDA_GPIO 21
 #define SCL_GPIO 19
@@ -23,14 +23,12 @@ void ds1307_test(void *pvParameters)
     }
 
     // setup datetime: 2018-04-11 00:52:10
-    struct tm time = {
-        .tm_year = 2018,
-        .tm_mon  = 3,  // 0-based
-        .tm_mday = 11,
-        .tm_hour = 0,
-        .tm_min  = 52,
-        .tm_sec  = 10
-    };
+    struct tm time = {.tm_year = 2018,
+                      .tm_mon = 3, // 0-based
+                      .tm_mday = 11,
+                      .tm_hour = 0,
+                      .tm_min = 52,
+                      .tm_sec = 10};
     ds1307_set_time(&dev, &time);
 
     while (1)
@@ -38,7 +36,7 @@ void ds1307_test(void *pvParameters)
         ds1307_get_time(&dev, &time);
 
         printf("%04d-%02d-%02d %02d:%02d:%02d\n", time.tm_year, time.tm_mon + 1,
-            time.tm_mday, time.tm_hour, time.tm_min, time.tm_sec);
+               time.tm_mday, time.tm_hour, time.tm_min, time.tm_sec);
 
         vTaskDelay(500 / portTICK_PERIOD_MS);
     }
@@ -46,6 +44,6 @@ void ds1307_test(void *pvParameters)
 
 void app_main()
 {
-    xTaskCreate(ds1307_test, "ds1307_test", configMINIMAL_STACK_SIZE * 8, NULL, 5, NULL);
+    xTaskCreate(ds1307_test, "ds1307_test", configMINIMAL_STACK_SIZE * 8, NULL, 5,
+                NULL);
 }
-

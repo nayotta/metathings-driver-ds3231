@@ -12,6 +12,11 @@
 #define CONFIG_ESP32_WIFI_TX_BUFFER_TYPE 1
 #endif
 
+#ifndef _MT_SMARTCONFIG_H
+#define _MT_SMARTCONFIG_H
+
 void mt_smartconfig_set_light_handle(mt_gpio_light_t *light_handle);
 
 void mt_smartconfig_task(void);
+
+#endif
