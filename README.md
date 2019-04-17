@@ -23,3 +23,4 @@ esp32官方 [ESP-IDF framework](https://github.com/espressif/esp-idf)
 | **i2c_ds3231**    | 硬件I2C时钟模块附带温度测量                                               | MIT  | 是     |
 | **i2cdev**        | ESP32 i2c driver                                                        | GNU  | -      |
 | **mt_nvs_storage**| esp32 nvs 键值对持久存储                                                 | -    | 是     |
+| **mt_smartconfig**| smartconfig 和 airkiss配网                                               | -   | 是     |

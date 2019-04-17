@@ -4,20 +4,9 @@
             "name": "Win32",
             "includePath": [
                 "D:/0软件/mingw/mingw64/x86_64-w64-mingw32/include",
-                "${workspaceFolder}/src/cryptoauthlib",
-                "${workspaceFolder}/src/cryptoauthlib/lib",
-                "${workspaceFolder}/src/cryptoauthlib/lib/atcacert/",
-                "${workspaceFolder}/src/",
                 "${workspaceFolder}/**",
-                "${workspaceFolder}/main/include/",
-                "${workspaceFolder}/components/nyt-proto-c/include/",
-                "${workspaceFolder}/components/protobuf-c/include/",
-                "${workspaceFolder}/components/nyt-protobuf-c/include/",
-                "${workspaceFolder}/components/esp-modbus/include/",
-                "${workspaceFolder}/components/esp-modbus/port/",
-                "${workspaceFolder}/components/esp_cron/include/",
-                "${workspaceFolder}/components/esp_cron/library/ccronexpr",
-                "${workspaceFolder}/build/include/",
+                "${workspaceFolder}/components/cryptoauthlib/",
+                "${workspaceFolder}/components/gpio_button",
                 "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/newlib/platform_include/",
                 "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/newlib/include/",
                 "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/nvs_flash/include/",
@@ -44,8 +33,7 @@
                 "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/esp_ringbuf/include/",
                 "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/driver/include/",
                 "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/wpa_supplicant/include/",
-                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/wpa_supplicant/port/include/",
-                "${workspaceFolder}/components/gpio_button"
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/wpa_supplicant/port/include/"
             ],
             "defines": [
                 "_DEBUG",

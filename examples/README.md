@@ -13,3 +13,4 @@ esp32 examples
 | **i2c_ds3231**    | 硬件I2C时钟模块附带温度测量                                               |
 | **mt_hmac**       | 软件计算hmac                                                            |
 | **mt_nvs_storage**| esp32 nvs 键值对持久存储                                                 |
+| **mt_smartconfig**| smartconfig 和 airkiss配网                                               |
