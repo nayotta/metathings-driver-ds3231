@@ -4,7 +4,7 @@
             "name": "Win32",
             "includePath": [
                 "D:/0软件/mingw/mingw64/x86_64-w64-mingw32/include",
-                "${workspaceFolder}/**",
+                "${workspaceFolder}/components/**",
                 "${workspaceFolder}/components/cryptoauthlib/",
                 "${workspaceFolder}/components/gpio_button",
                 "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/newlib/platform_include/",

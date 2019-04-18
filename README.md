@@ -25,3 +25,4 @@ esp32官方 [ESP-IDF framework](https://github.com/espressif/esp-idf)
 | **mt_nvs_storage**| metathings nvs 键值对持久存储                                            | -    | 是     |
 | **mt_rtc_time**   | metathings 硬件rtc时间 读写                                              | -    | 是     |
 | **mt_smartconfig**| metathings smartconfig 和 airkiss配网                                   | -   | 是     |
+| **mt_sntp**       | metathings wifi时间 硬件rtc时间 系统时间三者同步服务                       | -   | 是     |

@@ -1,3 +1,6 @@
+#ifndef _GPIO_BUTTON_H
+#define _GPIO_BUTTON_H
+
 #include "stdio.h"
 
 #ifndef CONFIG_LOG_DEFAULT_LEVEL
@@ -29,3 +32,5 @@ typedef struct
 mt_gpio_btn_t *mt_gpio_btn_default();
 
 bool mt_gpio_btn_task(mt_gpio_btn_t *btn_handle);
+
+#endif

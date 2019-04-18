@@ -11,7 +11,6 @@
 #include "freertos/task.h"
 #include "tcpip_adapter.h"
 
-#include "gpio_light.h"
 #include "mt_nvs_storage.h"
 #include "mt_smartconfig.h"
 
@@ -99,7 +98,7 @@ static void sc_callback(smartconfig_status_t status, void *pdata) {
   }
 }
 
-static void mt_smartconfig_task_loop(void *parm) {
+static void mt_smartconfig_loop(void *parm) {
   int ret = 0;
   EventBits_t uxBits;
 
@@ -207,8 +206,8 @@ static esp_err_t event_handler(void *ctx, system_event_t *event) {
           }
         }
 
-        xTaskCreate(mt_smartconfig_task_loop, "MT_SMARTCONFIG_TASK", 4096, NULL,
-                    0, NULL);
+        xTaskCreate(mt_smartconfig_loop, "MT_SMARTCONFIG_TASK", 4096, NULL, 0,
+                    NULL);
       }
       break;
     }
@@ -275,13 +274,10 @@ static esp_err_t event_handler(void *ctx, system_event_t *event) {
   return ESP_OK;
 }
 
-// public func ================================================================
-void mt_smartconfig_set_light_handle(mt_gpio_light_t *light_handle) {
-  LIGHT_HANDLE = light_handle;
-}
-
-void mt_smartconfig_task(void) {
+static void mt_wifi_loop(void) {
   int ret = 0;
+
+  ESP_LOGI(TAG, "mt_smartconfig_task created");
 
   tcpip_adapter_init();
 
@@ -312,5 +308,16 @@ void mt_smartconfig_task(void) {
   xEventGroupWaitBits(WIFI_EVENT_GROUP, CONNECTED_BIT, false, true,
                       portMAX_DELAY);
 
-  ESP_LOGI(TAG, "mt_smartconfig_task finished");
+  ESP_LOGW(TAG, "mt_smartconfig_task deleted");
+  vTaskDelete(NULL);
+}
+
+// public func ================================================================
+void mt_smartconfig_set_light_handle(mt_gpio_light_t *light_handle) {
+  LIGHT_HANDLE = light_handle;
+}
+
+void mt_smartconfig_task() {
+  xTaskCreate((TaskFunction_t)mt_wifi_loop, "MT_WIFI_TASK", 1024 * 2, NULL, 10,
+              NULL);
 }

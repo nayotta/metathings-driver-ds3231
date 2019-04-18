@@ -1,3 +1,6 @@
+#ifndef _GPIO_LIGH_H
+#define _GPIO_LIGH_H
+
 #include "stdio.h"
 #include "stdbool.h"
 
@@ -29,4 +32,4 @@ bool mt_gpio_light_set_blink(mt_gpio_light_t *light_handle, int intr);
 
 bool mt_gpio_light_task(mt_gpio_light_t *light_handle);
 
-
+#endif

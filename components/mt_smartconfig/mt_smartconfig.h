@@ -1,4 +1,8 @@
+#ifndef _MT_SMARTCONFIG_H
+#define _MT_SMARTCONFIG_H
+
 #include "freertos/event_groups.h"
+#include "gpio_light.h"
 
 #ifndef CONFIG_ESP32_WIFI_STATIC_RX_BUFFER_NUM
 #define CONFIG_ESP32_WIFI_STATIC_RX_BUFFER_NUM 10
@@ -12,11 +16,8 @@
 #define CONFIG_ESP32_WIFI_TX_BUFFER_TYPE 1
 #endif
 
-#ifndef _MT_SMARTCONFIG_H
-#define _MT_SMARTCONFIG_H
-
 void mt_smartconfig_set_light_handle(mt_gpio_light_t *light_handle);
 
-void mt_smartconfig_task(void);
+void mt_smartconfig_task();
 
 #endif
