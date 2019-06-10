@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+message MtDeviceRequest {
+  int32 session_id = 1;
+  oneof payload {
+    ExampleReq example_req = 2;
+  }
+}
+
+message MtDeviceResponse {
+  oneof payload {
+    ExampleRes example_res = 2;
+  }
+}
+
+// 2 req
+message ExampleReq {
+  int32 code = 1;
+}
+
+// 2 res
+message ExampleRes {
+  int32 code = 1;
+}

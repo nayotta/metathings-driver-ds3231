@@ -1,0 +1,101 @@
+syntax = "proto3";
+
+import "mt_proto_device.proto";
+
+message MtDeviceSysRequest {
+  int32 session_id = 1;
+
+  oneof payload {
+    Heartbeat heartbeat = 2;
+    HeartbeatSelectRes heartbeat_select_res = 3;
+    HeartbeatRes heartbeat_res = 4;
+    RunTimeReq run_time_req = 5;
+    ConfigReq config_req = 6;
+    SetTimeTaskReq set_time_task_req = 7;
+    GetTimeTaskReq get_time_task_req = 8;
+  }
+}
+
+message MtDeviceSysResponse {
+  oneof payload {
+    HeartbeatSelectReq heartbeat_select_req = 2;
+    HeartbeatRes heartbeat = 3;
+    HeartbeatReq heartbeat_req = 4;
+    RunTimeRes run_time_res = 5;
+    ConfigRes config_res = 6;
+    SetTimeTaskRes set_time_task_res = 7;
+    GetTimeTaskRes get_time_task_res = 8;
+  }
+}
+
+// 100 hearbeat req
+message Heartbeat {
+  int32 status = 1;
+}
+
+// 100 heartbeat res
+message HeartbeatRes {
+  int32 status = 1;
+}
+
+// 102 stream heartbeat res
+message HeartbeatReq {
+  int32 status = 1;
+}
+
+// 101 heartbeat select host res
+message HeartbeatSelectRes {
+  int32 status = 1;
+}
+
+// 101 heartbeat select host req
+message HeartbeatSelectReq {
+  int32 status = 1;
+}
+
+// 103 sys run time req
+message RunTimeReq {
+  int32 time = 1;
+}
+
+// 103 sys run time res
+message RunTimeRes {
+  int64 time = 1;
+  int64 app_start_time = 2;
+  int32 restart_times = 3;
+}
+
+message TimeTask {
+  string time = 1;  // cron string  6位 "秒 分 时 日 月 星期"
+  repeated MtDeviceRequest tasks = 2;  // session_id 需要设置成 99
+}
+
+// 104 sys config req
+message ConfigReq {
+  int32 config = 1;
+}
+
+// 104 sys config res
+message ConfigRes {
+  int32 config = 1;
+}
+
+// 105 time tasks req
+message SetTimeTaskReq {
+  repeated TimeTask time_tasks = 1;
+}
+
+// 105 time tasks res
+message SetTimeTaskRes {
+  int32 code = 1;
+}
+
+// 106 get time tasks req
+message GetTimeTaskReq {
+  int32 code = 1;  // not use now
+}
+
+// 106 get time tasks res
+message GetTimeTaskRes {
+  repeated TimeTask time_tasks = 1;
+}
