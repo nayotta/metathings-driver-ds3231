@@ -91,10 +91,10 @@ RESET:
 }
 
 int mt_mqtt_init(char *host, char *port, char *username, char *password,
-                 char *device_id, void (*handle)(void *buf, int size)) {
+                 char *module_id, void (*handle)(void *buf, int size)) {
   esp_err_t err;
 
-  err = mqtt_init(host, port, username, password, device_id, handle);
+  err = mqtt_init(host, port, username, password, module_id, handle);
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%d  mqtt_init failed", __LINE__);
   }
