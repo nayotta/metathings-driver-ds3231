@@ -101,7 +101,7 @@ int mqtt_pub_msg(char *topic, uint8_t *buf, int size) {
 }
 
 int mqtt_init(char *host, char *port, char *username, char *password,
-              char *device_id, void (*handle)(void *buf, int size)) {
+              char *module_id, void (*handle)(void *buf, int size)) {
   esp_err_t err;
 
   char mqtt_uri_str[URI_MAX_SIZE] = "";
@@ -110,7 +110,7 @@ int mqtt_init(char *host, char *port, char *username, char *password,
   strcat(mqtt_uri_str, ":");
   strcat(mqtt_uri_str, port);
 
-  strcpy(Device_Id, device_id);
+  strcpy(Device_Id, module_id);
   msg_process = handle;
 
   const esp_mqtt_client_config_t mqtt_cfg = {

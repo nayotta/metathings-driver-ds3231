@@ -26,8 +26,7 @@ static const char *TAG = "MT_MQTT_LAN_EXAMPLE";
 #define MQTT_PORT "1883"
 #define MQTT_CRED "d692d6c9322b4c7b8f416f51b04a2270"
 #define MQTT_SKEY "0WXViH7SYRJWaHJfJbmiite/uDncJ642pxrXv8LIwKU="
-#define MQTT_DEVICE_ID "86f63fff1bb64d62a8c9c30aa8e00f31"
-#define test_passwd "7v8dPjcxnQfvohesyXduK5peArDZ6jPjsBqOWY8qHsk="
+#define MQTT_MODULE_ID "86f63fff1bb64d62a8c9c30aa8e00f31"
 #define MQTT_USE_LAN
 
 static EventGroupHandle_t wifi_event_group;
@@ -95,11 +94,11 @@ void app_main() {
 
   hmac_str = mt_hmac_sha256_mqtt((uint8_t *)MQTT_SKEY, sizeof(MQTT_SKEY) - 1,
                                  (uint8_t *)MQTT_CRED, sizeof(MQTT_CRED) - 1);
-  ESP_LOGW(TAG, "deviceid=%s", MQTT_DEVICE_ID);
+  ESP_LOGW(TAG, "deviceid=%s", MQTT_MODULE_ID);
   ESP_LOGW(TAG, "username=%s", MQTT_CRED);
 
   ret = mt_mqtt_init(MQTT_HOST, MQTT_PORT, MQTT_CRED, (char *)hmac_str,
-                     MQTT_DEVICE_ID, mt_mqtt_handle);
+                     MQTT_MODULE_ID, mt_mqtt_handle);
   if (ret != ESP_OK) {
     ESP_LOGE(TAG, "%s %d mqtt_init failed", __func__, __LINE__);
     return;

@@ -18,7 +18,7 @@
 int mt_mqtt_pub_msg(char *topic, uint8_t *buf, int size);
 
 int mt_mqtt_init(char *host, char *port, char *username, char *password,
-                 char *device_id, void (*handle)(void *buf, int size));
+                 char *module_id, void (*handle)(void *buf, int size));
 
 void mt_mqtt_task();
 
