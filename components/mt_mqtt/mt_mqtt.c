@@ -44,13 +44,11 @@ static int Keep_Count_Limit = 3;                 // keepalive limit
 static int keepalive_Interval = 30;              // keepalive count 90s
 static long unsigned int LastKeepAliveTime = 0;  // keepalive record
 
-// global func ================================================================
-int mt_mqtt_pub_msg(char *topic, uint8_t *buf, int size) {
-  int ret = 0;
+static char *Heartbeat_Topic = "mt/heartbeat";
 
-  ret = mqtt_pub_msg(topic, buf, size);
-
-  return ret;
+// static func ===============================================================
+static void mt_mqtt_heartbeat(){
+  
 }
 
 static TaskFunction_t mt_mqtt_loop(void *pvParameters) {
@@ -88,6 +86,15 @@ RESET:
   }
 
   return NULL;
+}
+
+// global func ================================================================
+int mt_mqtt_pub_msg(char *topic, uint8_t *buf, int size) {
+  int ret = 0;
+
+  ret = mqtt_pub_msg(topic, buf, size);
+
+  return ret;
 }
 
 int mt_mqtt_init(char *host, char *port, char *username, char *password,
