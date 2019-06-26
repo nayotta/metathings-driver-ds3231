@@ -20,21 +20,21 @@ static esp_err_t _http_event_handler(esp_http_client_event_t *evt)
   switch (evt->event_id)
   {
   case HTTP_EVENT_ERROR:
-    ESP_LOGD(TAG, "%d HTTP_EVENT_ERROR", __LINE__);
+    ESP_LOGI(TAG, "%d HTTP_EVENT_ERROR", __LINE__);
     break;
   case HTTP_EVENT_ON_CONNECTED:
-    ESP_LOGD(TAG, "%d HTTP_EVENT_ON_CONNECTED", __LINE__);
+    ESP_LOGI(TAG, "%d HTTP_EVENT_ON_CONNECTED", __LINE__);
     break;
   case HTTP_EVENT_HEADER_SENT:
-    ESP_LOGD(TAG, "%d HTTP_EVENT_HEADER_SENT", __LINE__);
+    ESP_LOGI(TAG, "%d HTTP_EVENT_HEADER_SENT", __LINE__);
     break;
   case HTTP_EVENT_ON_HEADER:
-    ESP_LOGD(TAG, "%d HTTP_EVENT_ON_HEADER, key=%s, value=%s", __LINE__,
+    ESP_LOGI(TAG, "%d HTTP_EVENT_ON_HEADER, key=%s, value=%s", __LINE__,
              evt->header_key, evt->header_value);
     break;
   case HTTP_EVENT_ON_DATA:
-    ESP_LOGD(TAG, "%d HTTP_EVENT_ON_DATA, len=%d, data=%s", __LINE__,
-             evt->data_len, evt->data);
+    ESP_LOGI(TAG, "%d HTTP_EVENT_ON_DATA, len=%d, data=%s", __LINE__,
+             evt->data_len, (char *)evt->data);
     if (!esp_http_client_is_chunked_response(evt->client))
     {
       // Write out data
@@ -42,19 +42,20 @@ static esp_err_t _http_event_handler(esp_http_client_event_t *evt)
     }
     break;
   case HTTP_EVENT_ON_FINISH:
-    ESP_LOGD(TAG, "%d HTTP_EVENT_ON_FINISH", __LINE__);
+    ESP_LOGI(TAG, "%d HTTP_EVENT_ON_FINISH", __LINE__);
     break;
   case HTTP_EVENT_DISCONNECTED:
-    ESP_LOGD(TAG, "%d HTTP_EVENT_DISCONNECTED", __LINE__);
+    ESP_LOGI(TAG, "%d HTTP_EVENT_DISCONNECTED", __LINE__);
     break;
   }
   return ESP_OK;
 }
 
 // global func ================================================================
-esp_err_t mt_module_http_actions_issue_module_token(
-    struct credential_t *cred_in, int timestamp, int nonce, char *hmac,
-    struct token_t *tkn_out)
+esp_err_t mt_module_http_actions_issue_module_token(credential_t *cred_in,
+                                                    int timestamp, int nonce,
+                                                    char *hmac,
+                                                    token_t *tkn_out)
 {
   esp_err_t err;
   char *post_data = NULL;
@@ -113,7 +114,7 @@ esp_err_t mt_module_http_actions_issue_module_token(
   post_data = cJSON_Print(root);
   cJSON_Delete(root);
 
-  ESP_LOGW(TAG, "debug %d %f post_data =%s", __LINE__, __func__, post_data);
+  ESP_LOGI(TAG, "%d %s post_data =%s", __LINE__, __func__, post_data);
 
   // request
   err = mt_http_client_post_request(client, NULL, post_data);
@@ -128,7 +129,7 @@ esp_err_t mt_module_http_actions_issue_module_token(
   int res_code = esp_http_client_get_status_code(client);
   if (res_code != 201)
   {
-    ESP_LOGE(TAG, "%d %f requst failed code:%d", __LINE__, __func__, res_code);
+    ESP_LOGI(TAG, "%d %s requst failed code:%d", __LINE__, __func__, res_code);
     return ESP_ERR_HTTP_BASE;
   }
 
@@ -141,7 +142,7 @@ esp_err_t mt_module_http_actions_issue_module_token(
 }
 
 esp_err_t mt_module_http_actions_show_module(char *token_in,
-                                             struct module_t *mdl_out)
+                                             module_t *mdl_out)
 {
   esp_err_t err;
   esp_http_client_handle_t client = NULL;
@@ -174,7 +175,7 @@ esp_err_t mt_module_http_actions_show_module(char *token_in,
   int res_code = esp_http_client_get_status_code(client);
   if (res_code != 200)
   {
-    ESP_LOGE(TAG, "%d %f requst failed code:%d", __LINE__, __func__, res_code);
+    ESP_LOGE(TAG, "%d %s requst failed code:%d", __LINE__, __func__, res_code);
     return ESP_ERR_HTTP_BASE;
   }
 
@@ -186,8 +187,7 @@ esp_err_t mt_module_http_actions_show_module(char *token_in,
   return ESP_OK;
 }
 
-esp_err_t mt_module_http_actions_heartbeat(char *token_in,
-                                           struct module_t *mod_in)
+esp_err_t mt_module_http_actions_heartbeat(char *token_in, module_t *mod_in)
 {
   esp_err_t err;
   char *post_data = NULL;
@@ -228,9 +228,9 @@ esp_err_t mt_module_http_actions_heartbeat(char *token_in,
   cJSON_AddItemToObject(root, "module", mod_in_json = cJSON_CreateObject());
   cJSON_AddStringToObject(mod_in_json, "id", mod_in->id);
   post_data = cJSON_Print(root);
-  cJSON_DELETE(root);
+  cJSON_Delete(root);
 
-  ESP_LOGI(TAG, "%d %f post_data =%s", __LINE__, __func__, post_data);
+  ESP_LOGI(TAG, "%d %s post_data =%s", __LINE__, __func__, post_data);
 
   // request
   err = mt_http_client_post_request(client, token_in, post_data);
@@ -245,7 +245,7 @@ esp_err_t mt_module_http_actions_heartbeat(char *token_in,
   int res_code = esp_http_client_get_status_code(client);
   if (res_code != 204)
   {
-    ESP_LOGE(TAG, "%d %f requst failed code:%d", __LINE__, __func__, res_code);
+    ESP_LOGE(TAG, "%d %s requst failed code:%d", __LINE__, __func__, res_code);
     return ESP_ERR_HTTP_BASE;
   }
 
@@ -257,14 +257,13 @@ esp_err_t mt_module_http_actions_heartbeat(char *token_in,
   return ESP_OK;
 }
 
-esp_err_t mt_module_http_actions_put_object(char *token_in,
-                                            struct object_t *obj_in,
+esp_err_t mt_module_http_actions_put_object(char *token_in, object_t *obj_in,
                                             char *content_in)
 {
   esp_err_t err;
   char *post_data;
   esp_http_client_handle_t client = NULL;
-  cJSON *root, *obj_in_json, *obj_in_device_json, *content_in_json;
+  cJSON *root, *obj_in_json, *obj_in_device_json;
 
   esp_http_client_config_t config = {
       .host = MT_MODULE_HOST,
@@ -331,9 +330,9 @@ esp_err_t mt_module_http_actions_put_object(char *token_in,
   cJSON_AddStringToObject(obj_in_json, "name", obj_in->name);
   cJSON_AddStringToObject(root, "content", content_in);
   post_data = cJSON_Print(root);
-  cJSON_DELETE(NULL);
+  cJSON_Delete(NULL);
 
-  ESP_LOGI(TAG, "%d %f post_data =%s", __LINE__, __func__, post_data);
+  ESP_LOGI(TAG, "%d %s post_data =%s", __LINE__, __func__, post_data);
 
   // requset
   err = mt_http_client_post_request(client, token_in, post_data);
@@ -348,7 +347,7 @@ esp_err_t mt_module_http_actions_put_object(char *token_in,
   int res_code = esp_http_client_get_status_code(client);
   if (res_code != 204)
   {
-    ESP_LOGE(TAG, "%d %f requst failed code:%d", __LINE__, __func__, res_code);
+    ESP_LOGE(TAG, "%d %s requst failed code:%d", __LINE__, __func__, res_code);
     return ESP_ERR_HTTP_BASE;
   }
 
@@ -361,12 +360,12 @@ esp_err_t mt_module_http_actions_put_object(char *token_in,
 }
 
 esp_err_t mt_module_http_actions_remove_object(char *token_in,
-                                               struct object_t *obj_in)
+                                               object_t *obj_in)
 {
   esp_err_t err;
   char *post_data;
   esp_http_client_handle_t client = NULL;
-  cJSON *root, *obj_in_json, *obj_in_device_json, *content_in_json;
+  cJSON *root, *obj_in_json, *obj_in_device_json;
 
   esp_http_client_config_t config = {
       .host = MT_MODULE_HOST,
@@ -426,9 +425,9 @@ esp_err_t mt_module_http_actions_remove_object(char *token_in,
   cJSON_AddStringToObject(obj_in_json, "prefix", obj_in->prefix);
   cJSON_AddStringToObject(obj_in_json, "name", obj_in->name);
   post_data = cJSON_Print(root);
-  cJSON_DELETE(NULL);
+  cJSON_Delete(NULL);
 
-  ESP_LOGI(TAG, "%d %f post_data =%s", __LINE__, __func__, post_data);
+  ESP_LOGI(TAG, "%d %s post_data =%s", __LINE__, __func__, post_data);
 
   // requset
   err = mt_http_client_post_request(client, token_in, post_data);
@@ -443,7 +442,7 @@ esp_err_t mt_module_http_actions_remove_object(char *token_in,
   int res_code = esp_http_client_get_status_code(client);
   if (res_code != 204)
   {
-    ESP_LOGE(TAG, "%d %f requst failed code:%d", __LINE__, __func__, res_code);
+    ESP_LOGE(TAG, "%d %s requst failed code:%d", __LINE__, __func__, res_code);
     return ESP_ERR_HTTP_BASE;
   }
 
@@ -455,9 +454,8 @@ esp_err_t mt_module_http_actions_remove_object(char *token_in,
   return ESP_OK;
 }
 
-esp_err_t mt_module_http_actions_rename_object(char *token_in,
-                                               struct object_t *src_in,
-                                               struct object_t *des_in)
+esp_err_t mt_module_http_actions_rename_object(char *token_in, object_t *src_in,
+                                               object_t *des_in)
 {
   esp_err_t err;
   char *post_data;
@@ -564,9 +562,9 @@ esp_err_t mt_module_http_actions_rename_object(char *token_in,
   cJSON_AddStringToObject(des_in_json, "prefix", des_in->prefix);
   cJSON_AddStringToObject(des_in_json, "name", des_in->name);
   post_data = cJSON_Print(root);
-  cJSON_DELETE(NULL);
+  cJSON_Delete(NULL);
 
-  ESP_LOGI(TAG, "%d %f post_data =%s", __LINE__, __func__, post_data);
+  ESP_LOGI(TAG, "%d %s post_data =%s", __LINE__, __func__, post_data);
 
   // requset
   err = mt_http_client_post_request(client, token_in, post_data);
@@ -581,7 +579,7 @@ esp_err_t mt_module_http_actions_rename_object(char *token_in,
   int res_code = esp_http_client_get_status_code(client);
   if (res_code != 204)
   {
-    ESP_LOGE(TAG, "%d %f requst failed code:%d", __LINE__, __func__, res_code);
+    ESP_LOGE(TAG, "%d %s requst failed code:%d", __LINE__, __func__, res_code);
     return ESP_ERR_HTTP_BASE;
   }
 
@@ -593,14 +591,13 @@ esp_err_t mt_module_http_actions_rename_object(char *token_in,
   return ESP_OK;
 }
 
-esp_err_t mt_module_http_actions_get_object(char *token_in,
-                                            struct object_t *obj_in,
-                                            struct object_t *obj_out)
+esp_err_t mt_module_http_actions_get_object(char *token_in, object_t *obj_in,
+                                            object_t *obj_out)
 {
   esp_err_t err;
   char *post_data;
   esp_http_client_handle_t client = NULL;
-  cJSON *root, *obj_in_json, *obj_in_device_json, *content_in_json;
+  cJSON *root, *obj_in_json, *obj_in_device_json;
 
   esp_http_client_config_t config = {
       .host = MT_MODULE_HOST,
@@ -660,9 +657,9 @@ esp_err_t mt_module_http_actions_get_object(char *token_in,
   cJSON_AddStringToObject(obj_in_json, "prefix", obj_in->prefix);
   cJSON_AddStringToObject(obj_in_json, "name", obj_in->name);
   post_data = cJSON_Print(root);
-  cJSON_DELETE(NULL);
+  cJSON_Delete(NULL);
 
-  ESP_LOGI(TAG, "%d %f post_data =%s", __LINE__, __func__, post_data);
+  ESP_LOGI(TAG, "%d %s post_data =%s", __LINE__, __func__, post_data);
 
   // requset
   err = mt_http_client_post_request(client, token_in, post_data);
@@ -677,7 +674,7 @@ esp_err_t mt_module_http_actions_get_object(char *token_in,
   int res_code = esp_http_client_get_status_code(client);
   if (res_code != 200)
   {
-    ESP_LOGE(TAG, "%d %f requst failed code:%d", __LINE__, __func__, res_code);
+    ESP_LOGE(TAG, "%d %s requst failed code:%d", __LINE__, __func__, res_code);
     return ESP_ERR_HTTP_BASE;
   }
 
@@ -690,13 +687,13 @@ esp_err_t mt_module_http_actions_get_object(char *token_in,
 }
 
 esp_err_t mt_module_http_actions_get_object_content(char *token_in,
-                                                    struct object_t *obj_in,
+                                                    object_t *obj_in,
                                                     char *content_out)
 {
   esp_err_t err;
   char *post_data;
   esp_http_client_handle_t client = NULL;
-  cJSON *root, *obj_in_json, *obj_in_device_json, *content_in_json;
+  cJSON *root, *obj_in_json, *obj_in_device_json;
 
   esp_http_client_config_t config = {
       .host = MT_MODULE_HOST,
@@ -756,9 +753,9 @@ esp_err_t mt_module_http_actions_get_object_content(char *token_in,
   cJSON_AddStringToObject(obj_in_json, "prefix", obj_in->prefix);
   cJSON_AddStringToObject(obj_in_json, "name", obj_in->name);
   post_data = cJSON_Print(root);
-  cJSON_DELETE(NULL);
+  cJSON_Delete(NULL);
 
-  ESP_LOGI(TAG, "%d %f post_data =%s", __LINE__, __func__, post_data);
+  ESP_LOGI(TAG, "%d %s post_data =%s", __LINE__, __func__, post_data);
 
   // requset
   err = mt_http_client_post_request(client, token_in, post_data);
@@ -773,7 +770,7 @@ esp_err_t mt_module_http_actions_get_object_content(char *token_in,
   int res_code = esp_http_client_get_status_code(client);
   if (res_code != 200)
   {
-    ESP_LOGE(TAG, "%d %f requst failed code:%d", __LINE__, __func__, res_code);
+    ESP_LOGE(TAG, "%d %s requst failed code:%d", __LINE__, __func__, res_code);
     return ESP_ERR_HTTP_BASE;
   }
 
@@ -785,14 +782,13 @@ esp_err_t mt_module_http_actions_get_object_content(char *token_in,
   return ESP_OK;
 }
 
-esp_err_t mt_module_http_actions_list_objects(char *token_in,
-                                              struct object_t *obj_in,
-                                              struct object_t **objs_out)
+esp_err_t mt_module_http_actions_list_objects(char *token_in, object_t *obj_in,
+                                              object_t **objs_out)
 {
   esp_err_t err;
   char *post_data;
   esp_http_client_handle_t client = NULL;
-  cJSON *root, *obj_in_json, *obj_in_device_json, *content_in_json;
+  cJSON *root, *obj_in_json, *obj_in_device_json;
 
   esp_http_client_config_t config = {
       .host = MT_MODULE_HOST,
@@ -836,9 +832,9 @@ esp_err_t mt_module_http_actions_list_objects(char *token_in,
     cJSON_AddStringToObject(obj_in_json, "name", obj_in->name);
   }
   post_data = cJSON_Print(root);
-  cJSON_DELETE(NULL);
+  cJSON_Delete(NULL);
 
-  ESP_LOGI(TAG, "%d %f post_data =%s", __LINE__, __func__, post_data);
+  ESP_LOGI(TAG, "%d %s post_data =%s", __LINE__, __func__, post_data);
 
   // requset
   err = mt_http_client_post_request(client, token_in, post_data);
@@ -853,7 +849,7 @@ esp_err_t mt_module_http_actions_list_objects(char *token_in,
   int res_code = esp_http_client_get_status_code(client);
   if (res_code != 204)
   {
-    ESP_LOGE(TAG, "%d %f requst failed code:%d", __LINE__, __func__, res_code);
+    ESP_LOGE(TAG, "%d %s requst failed code:%d", __LINE__, __func__, res_code);
     return ESP_ERR_HTTP_BASE;
   }
 

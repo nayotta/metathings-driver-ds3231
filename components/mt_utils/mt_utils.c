@@ -9,7 +9,7 @@
 
 #include "mt_utils.h"
 
-static const char *TAG = "MT_UTILS";
+// static const char *TAG = "MT_UTILS";
 
 int mt_hmac_sha256(const uint8_t *key, int key_size, const uint8_t *id,
                    int id_size, uint8_t *time_stamp, int time_stamp_size,

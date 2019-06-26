@@ -14,6 +14,7 @@
 #include "lwip/netdb.h"
 #include "lwip/sockets.h"
 
+#include "mt_nvs_storage.h"
 #include "mt_module_http.h"
 
 static const char *TAG = "MT_MODULE_HTTP_EXAMPLE";
@@ -23,7 +24,7 @@ static const char *TAG = "MT_MODULE_HTTP_EXAMPLE";
 #define HTTP_HOST "http://10.1.1.130:8080"
 
 char *TEST_CRED_ID = "test_cred_id";
-int TEST_TIMESTAMP = 10000000000;
+int TEST_TIMESTAMP = 10000000;
 int TEST_NONCE = 10000;
 char *TEST_HMAC = "test_hmac";
 char *TEST_TOKEN = "test_token";
@@ -90,12 +91,12 @@ esp_err_t test_mt_module_http_actions_issue_module_token()
   ESP_LOGD(TAG, "=============================== %d %s test", __LINE__,
            __func__);
 
-  struct credential_t cred_in = {
+  credential_t cred_in = {
       .id = TEST_CRED_ID,
   };
 
   err = mt_module_http_actions_issue_module_token(&cred_in, TEST_TIMESTAMP,
-                                                  TEST_NONCE, TEST_HMAC);
+                                                  TEST_NONCE, TEST_HMAC, NULL);
   if (err != ESP_OK)
   {
     ESP_LOGE(TAG, "%d %s failed code=%d", __LINE__, __func__, err);
@@ -127,7 +128,7 @@ esp_err_t test_mt_module_http_actions_heartbeat()
   ESP_LOGD(TAG, "=============================== %d %s test", __LINE__,
            __func__);
 
-  struct module_t mod_in = {
+  module_t mod_in = {
       .name = TEST_MODULE_NAME,
   };
 
@@ -147,11 +148,12 @@ esp_err_t test_mt_module_http_actions_put_object()
   ESP_LOGD(TAG, "=============================== %d %s test", __LINE__,
            __func__);
 
-  struct object_t obj_in = {
+  object_t obj_in = {
+      .device = NULL,
       .prefix = TEST_OBJ_PREFIX,
       .name = TEST_OBJ_NAME,
   };
-  obj_in.device = malloc(sizeof(struct device_t));
+  obj_in.device = malloc(sizeof(device_t));
   obj_in.device->id = TEST_OBJ_ID;
 
   err =
@@ -171,11 +173,11 @@ esp_err_t test_mt_module_http_actions_remove_object()
   ESP_LOGD(TAG, "=============================== %d %s test", __LINE__,
            __func__);
 
-  struct object_t obj_in = {
+  object_t obj_in = {
       .prefix = TEST_OBJ_PREFIX,
       .name = TEST_OBJ_NAME,
   };
-  obj_in.device = malloc(sizeof(struct device_t));
+  obj_in.device = malloc(sizeof(device_t));
   obj_in.device->id = TEST_OBJ_ID;
 
   err = mt_module_http_actions_remove_object(TEST_TOKEN, &obj_in);
@@ -194,18 +196,18 @@ esp_err_t test_mt_module_http_actions_rename_object()
   ESP_LOGD(TAG, "=============================== %d %s test", __LINE__,
            __func__);
 
-  struct object_t src_in = {
+  object_t src_in = {
       .prefix = TEST_OBJ_NAME,
       .name = TEST_OBJ_NAME,
   };
-  src_in.device = malloc(sizeof(struct device_t));
+  src_in.device = malloc(sizeof(device_t));
   src_in.device->id = TEST_OBJ_ID;
 
-  struct object_t des_in = {
+  object_t des_in = {
       .prefix = TEST_OBJ_NAME,
       .name = TEST_OBJ_NEW_NAME,
   };
-  des_in.device = malloc(sizeof(struct device_t));
+  des_in.device = malloc(sizeof(device_t));
   des_in.device->id = TEST_OBJ_ID;
 
   err = mt_module_http_actions_rename_object(TEST_TOKEN, &src_in, &des_in);
@@ -224,11 +226,11 @@ esp_err_t test_mt_module_http_actions_get_object()
   ESP_LOGD(TAG, "=============================== %d %s test", __LINE__,
            __func__);
 
-  struct object_t obj_in = {
+  object_t obj_in = {
       .prefix = TEST_OBJ_PREFIX,
       .name = TEST_OBJ_NAME,
   };
-  obj_in.device = malloc(sizeof(struct device_t));
+  obj_in.device = malloc(sizeof(device_t));
   obj_in.device->id = TEST_OBJ_ID;
 
   err = mt_module_http_actions_rename_object(TEST_TOKEN, &obj_in, NULL);
@@ -247,11 +249,11 @@ esp_err_t test_mt_module_http_actions_get_object_content()
   ESP_LOGD(TAG, "=============================== %d %s test", __LINE__,
            __func__);
 
-  struct object_t obj_in = {
+  object_t obj_in = {
       .prefix = TEST_OBJ_PREFIX,
       .name = TEST_OBJ_NAME,
   };
-  obj_in.device = malloc(sizeof(struct device_t));
+  obj_in.device = malloc(sizeof(device_t));
   obj_in.device->id = TEST_OBJ_ID;
 
   err = mt_module_http_actions_get_object_content(TEST_TOKEN, &obj_in, NULL);
@@ -270,11 +272,11 @@ esp_err_t test_mt_module_http_actions_list_objects()
   ESP_LOGD(TAG, "=============================== %d %s test", __LINE__,
            __func__);
 
-  struct object_t obj_in = {
+  object_t obj_in = {
       .prefix = TEST_OBJ_PREFIX,
       .name = TEST_OBJ_NAME,
   };
-  obj_in.device = malloc(sizeof(struct device_t));
+  obj_in.device = malloc(sizeof(device_t));
   obj_in.device->id = TEST_OBJ_ID;
 
   err = mt_module_http_actions_list_objects(TEST_TOKEN, &obj_in, NULL);
