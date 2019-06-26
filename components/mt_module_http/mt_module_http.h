@@ -130,7 +130,7 @@ esp_err_t mt_module_http_actions_rename_object(char *token_in,
                                                object_t *src_in,
                                                object_t *des_in);
 
-esp_err_t mt_module_http_acitons_get_object(char *token_in,
+esp_err_t mt_module_http_actions_get_object(char *token_in,
                                             object_t *obj_in,
                                             object_t *obj_out);
 

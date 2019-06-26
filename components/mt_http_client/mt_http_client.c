@@ -6,7 +6,7 @@
 #include "mt_http_client.h"
 
 // global define ==============================================================
-static const char *TAG = "MT_HTTP";
+static const char *TAG = "MT_HTTP_CLIENT";
 
 // global func ================================================================
 esp_err_t mt_http_client_post_request(esp_http_client_handle_t client,
@@ -18,7 +18,7 @@ esp_err_t mt_http_client_post_request(esp_http_client_handle_t client,
   err = esp_http_client_set_method(client, HTTP_METHOD_POST);
   if (err != ESP_OK)
   {
-    ESP_LOGE(TAG, "%d esp_http_client_set_method failed", __LINE__);
+    ESP_LOGE(TAG, "%4d esp_http_client_set_method failed code=%d", __LINE__, err);
     return err;
   }
 
@@ -28,7 +28,7 @@ esp_err_t mt_http_client_post_request(esp_http_client_handle_t client,
     err = esp_http_client_set_header(client, "authorization", token);
     if (err != ESP_OK)
     {
-      ESP_LOGE(TAG, "%d esp_http_client_set_header authorization failed", __LINE__);
+      ESP_LOGE(TAG, "%4d esp_http_client_set_header authorization failed code=%d", __LINE__, err);
       return err;
     }
   }
@@ -37,7 +37,7 @@ esp_err_t mt_http_client_post_request(esp_http_client_handle_t client,
   err = esp_http_client_set_header(client, "accept", "application/json");
   if (err != ESP_OK)
   {
-    ESP_LOGE(TAG, "%d esp_http_client_set_header accept failed", __LINE__);
+    ESP_LOGE(TAG, "%4d esp_http_client_set_header accept failed code=%d", __LINE__, err);
     return err;
   }
 
@@ -48,7 +48,7 @@ esp_err_t mt_http_client_post_request(esp_http_client_handle_t client,
         esp_http_client_set_header(client, "Content-Type", "application/json");
     if (err != ESP_OK)
     {
-      ESP_LOGE(TAG, "%d esp_http_client_set_header Content-Type failed", __LINE__);
+      ESP_LOGE(TAG, "%4d esp_http_client_set_header Content-Type failed code=%d", __LINE__, err);
       return err;
     }
 
@@ -56,32 +56,21 @@ esp_err_t mt_http_client_post_request(esp_http_client_handle_t client,
                                          strlen(post_data));
     if (err != ESP_OK)
     {
-      ESP_LOGE(TAG, "%d esp_http_client_set_post_field failed", __LINE__);
+      ESP_LOGE(TAG, "%4d esp_http_client_set_post_field failed code=%d", __LINE__, err);
       return err;
     }
   }
   else
   {
-    err = esp_http_client_set_header(client, "Content-Type", NULL);
-    if (err != ESP_OK)
-    {
-      ESP_LOGE(TAG, "%d esp_http_client_set_header Content-Type failed", __LINE__);
-      return err;
-    }
-
-    err = esp_http_client_set_post_field(client, NULL, 0);
-    if (err != ESP_OK)
-    {
-      ESP_LOGE(TAG, "%d esp_http_client_set_post_field failed", __LINE__);
-      return err;
-    }
+    // do not check ret may be return no-exist error
+    esp_http_client_set_post_field(client, NULL, 0);
   }
 
   //sync request
   err = esp_http_client_perform(client);
   if (err != ESP_OK)
   {
-    ESP_LOGE(TAG, "%d esp_http_client_perform failed code:%d", __LINE__, err);
+    ESP_LOGE(TAG, "%4d esp_http_client_perform failed code:%d", __LINE__, err);
     return err;
   }
 

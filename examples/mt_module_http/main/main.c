@@ -14,14 +14,15 @@
 #include "lwip/netdb.h"
 #include "lwip/sockets.h"
 
-#include "mt_nvs_storage.h"
 #include "mt_module_http.h"
+#include "mt_nvs_storage.h"
 
 static const char *TAG = "MT_MODULE_HTTP_EXAMPLE";
 
 #define WIFI_SSID "Nayotta"
 #define WIFI_PASS "pink_man"
-#define HTTP_HOST "http://10.1.1.130:8080"
+#define HTTP_HOST "10.1.1.130"
+#define HTTP_PORT 8080
 
 char *TEST_CRED_ID = "test_cred_id";
 int TEST_TIMESTAMP = 10000000;
@@ -233,7 +234,7 @@ esp_err_t test_mt_module_http_actions_get_object()
   obj_in.device = malloc(sizeof(device_t));
   obj_in.device->id = TEST_OBJ_ID;
 
-  err = mt_module_http_actions_rename_object(TEST_TOKEN, &obj_in, NULL);
+  err = mt_module_http_actions_get_object(TEST_TOKEN, &obj_in, NULL);
   if (err != ESP_OK)
   {
     ESP_LOGE(TAG, "%d %s failed code=%d", __LINE__, __func__, err);

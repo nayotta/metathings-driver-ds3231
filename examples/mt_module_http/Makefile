@@ -1,5 +1,5 @@
 #V := 1
-PROJECT_NAME := example-mt-mqtt-lan
+PROJECT_NAME := example-mt-module-http-client
 
 EXTRA_COMPONENT_DIRS := $(CURDIR)/../../components
 
