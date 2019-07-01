@@ -21,4 +21,6 @@ int mt_hmac_sha256(const uint8_t *key, int key_size, const uint8_t *id,
 unsigned char *mt_hmac_sha256_mqtt(const uint8_t *key, int key_size, const uint8_t *id,
                    int id_size);
 
+char *mt_utils_int64_to_string(uint64_t src, uint8_t *size_out);
+
 #endif

@@ -13,7 +13,7 @@
 #endif
 
 #define URI_MAX_SIZE 128
-#define TOPIC_MAX_SIZE 128
+#define TOPIC_MAX_SIZE 1280
 
 int mt_mqtt_pub_msg(char *topic, uint8_t *buf, int size);
 

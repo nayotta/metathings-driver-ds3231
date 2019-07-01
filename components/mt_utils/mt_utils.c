@@ -1,4 +1,5 @@
 #include "stddef.h"
+#include "string.h"
 
 #include "crypto/base64.h"
 #include "crypto/common.h"
@@ -69,4 +70,28 @@ unsigned char *mt_hmac_sha256_mqtt(const uint8_t *key, int key_size,
     }
 
     return hmac_base64;
+}
+
+char *mt_utils_int64_to_string(uint64_t src, uint8_t *size_out)
+{
+    char des[64] = "";
+    char *ret = NULL;
+
+    sprintf(des, "%llu", src);
+    if (des != NULL)
+    {
+        *size_out = (uint8_t)strlen(des);
+    }
+
+    if (*size_out > 0)
+    {
+        ret = malloc(strlen(des));
+        memcpy(ret, des, *size_out);
+    }
+    else
+    {
+        return NULL;
+    }
+
+    return des;
 }

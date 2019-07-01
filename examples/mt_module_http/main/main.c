@@ -87,20 +87,22 @@ static void wifi_init(void)
 
 esp_err_t test_mt_module_http_actions_issue_module_token()
 {
-  esp_err_t err;
+  esp_err_t err = ESP_OK;
+  token_t *tkn = NULL;
 
-  ESP_LOGD(TAG, "=============================== %d %s test", __LINE__,
+  ESP_LOGI(TAG, "=============================== %d %s test", __LINE__,
            __func__);
 
   credential_t cred_in = {
       .id = TEST_CRED_ID,
   };
 
-  err = mt_module_http_actions_issue_module_token(&cred_in, TEST_TIMESTAMP,
-                                                  TEST_NONCE, TEST_HMAC, NULL);
-  if (err != ESP_OK)
+  tkn = mt_module_http_actions_issue_module_token(&cred_in, TEST_TIMESTAMP,
+                                                  TEST_NONCE, TEST_HMAC);
+  if (tkn == NULL)
   {
     ESP_LOGE(TAG, "%d %s failed code=%d", __LINE__, __func__, err);
+    return ESP_ERR_INVALID_RESPONSE;
   }
 
   return ESP_OK;
@@ -108,15 +110,17 @@ esp_err_t test_mt_module_http_actions_issue_module_token()
 
 esp_err_t test_mt_module_http_actions_show_module()
 {
-  esp_err_t err;
+  esp_err_t err = ESP_OK;
+  module_t *mdl;
 
-  ESP_LOGD(TAG, "=============================== %d %s test", __LINE__,
+  ESP_LOGI(TAG, "=============================== %d %s test", __LINE__,
            __func__);
 
-  err = mt_module_http_actions_show_module(TEST_TOKEN, NULL);
-  if (err != ESP_OK)
+  mdl = mt_module_http_actions_show_module(TEST_TOKEN);
+  if (mdl == NULL)
   {
     ESP_LOGE(TAG, "%d %s failed code=%d", __LINE__, __func__, err);
+    return ESP_ERR_INVALID_RESPONSE;
   }
 
   return ESP_OK;
@@ -124,19 +128,20 @@ esp_err_t test_mt_module_http_actions_show_module()
 
 esp_err_t test_mt_module_http_actions_heartbeat()
 {
-  esp_err_t err;
+  esp_err_t err = ESP_OK;
 
-  ESP_LOGD(TAG, "=============================== %d %s test", __LINE__,
+  ESP_LOGI(TAG, "=============================== %d %s test", __LINE__,
            __func__);
 
   module_t mod_in = {
       .name = TEST_MODULE_NAME,
   };
 
-  err = mt_module_http_actions_heartbeat(TEST_TOKEN, &mod_in);
+  err = mt_module_http_actions_heartbeat(TEST_TOKEN, 12345678910, &mod_in);
   if (err != ESP_OK)
   {
     ESP_LOGE(TAG, "%d %s failed code=%d", __LINE__, __func__, err);
+    return ESP_ERR_INVALID_RESPONSE;
   }
 
   return ESP_OK;
@@ -144,9 +149,9 @@ esp_err_t test_mt_module_http_actions_heartbeat()
 
 esp_err_t test_mt_module_http_actions_put_object()
 {
-  esp_err_t err;
+  esp_err_t err = ESP_OK;
 
-  ESP_LOGD(TAG, "=============================== %d %s test", __LINE__,
+  ESP_LOGI(TAG, "=============================== %d %s test", __LINE__,
            __func__);
 
   object_t obj_in = {
@@ -162,6 +167,7 @@ esp_err_t test_mt_module_http_actions_put_object()
   if (err != ESP_OK)
   {
     ESP_LOGE(TAG, "%d %s failed code=%d", __LINE__, __func__, err);
+    return ESP_ERR_INVALID_RESPONSE;
   }
 
   return ESP_OK;
@@ -169,9 +175,9 @@ esp_err_t test_mt_module_http_actions_put_object()
 
 esp_err_t test_mt_module_http_actions_remove_object()
 {
-  esp_err_t err;
+  esp_err_t err = ESP_OK;
 
-  ESP_LOGD(TAG, "=============================== %d %s test", __LINE__,
+  ESP_LOGI(TAG, "=============================== %d %s test", __LINE__,
            __func__);
 
   object_t obj_in = {
@@ -185,6 +191,7 @@ esp_err_t test_mt_module_http_actions_remove_object()
   if (err != ESP_OK)
   {
     ESP_LOGE(TAG, "%d %s failed code=%d", __LINE__, __func__, err);
+    return ESP_ERR_INVALID_RESPONSE;
   }
 
   return ESP_OK;
@@ -192,9 +199,9 @@ esp_err_t test_mt_module_http_actions_remove_object()
 
 esp_err_t test_mt_module_http_actions_rename_object()
 {
-  esp_err_t err;
+  esp_err_t err = ESP_OK;
 
-  ESP_LOGD(TAG, "=============================== %d %s test", __LINE__,
+  ESP_LOGI(TAG, "=============================== %d %s test", __LINE__,
            __func__);
 
   object_t src_in = {
@@ -215,6 +222,7 @@ esp_err_t test_mt_module_http_actions_rename_object()
   if (err != ESP_OK)
   {
     ESP_LOGE(TAG, "%d %s failed code=%d", __LINE__, __func__, err);
+    return ESP_ERR_INVALID_RESPONSE;
   }
 
   return ESP_OK;
@@ -222,9 +230,10 @@ esp_err_t test_mt_module_http_actions_rename_object()
 
 esp_err_t test_mt_module_http_actions_get_object()
 {
-  esp_err_t err;
+  esp_err_t err = ESP_OK;
+  object_t *obj = NULL;
 
-  ESP_LOGD(TAG, "=============================== %d %s test", __LINE__,
+  ESP_LOGI(TAG, "=============================== %d %s test", __LINE__,
            __func__);
 
   object_t obj_in = {
@@ -234,10 +243,11 @@ esp_err_t test_mt_module_http_actions_get_object()
   obj_in.device = malloc(sizeof(device_t));
   obj_in.device->id = TEST_OBJ_ID;
 
-  err = mt_module_http_actions_get_object(TEST_TOKEN, &obj_in, NULL);
-  if (err != ESP_OK)
+  obj = mt_module_http_actions_get_object(TEST_TOKEN, &obj_in);
+  if (obj == NULL)
   {
     ESP_LOGE(TAG, "%d %s failed code=%d", __LINE__, __func__, err);
+    return ESP_ERR_INVALID_RESPONSE;
   }
 
   return ESP_OK;
@@ -245,9 +255,10 @@ esp_err_t test_mt_module_http_actions_get_object()
 
 esp_err_t test_mt_module_http_actions_get_object_content()
 {
-  esp_err_t err;
+  esp_err_t err = ESP_OK;
+  char *content = NULL;
 
-  ESP_LOGD(TAG, "=============================== %d %s test", __LINE__,
+  ESP_LOGI(TAG, "=============================== %d %s test", __LINE__,
            __func__);
 
   object_t obj_in = {
@@ -257,10 +268,11 @@ esp_err_t test_mt_module_http_actions_get_object_content()
   obj_in.device = malloc(sizeof(device_t));
   obj_in.device->id = TEST_OBJ_ID;
 
-  err = mt_module_http_actions_get_object_content(TEST_TOKEN, &obj_in, NULL);
-  if (err != ESP_OK)
+  content = mt_module_http_actions_get_object_content(TEST_TOKEN, &obj_in);
+  if (content == NULL)
   {
     ESP_LOGE(TAG, "%d %s failed code=%d", __LINE__, __func__, err);
+    return ESP_ERR_INVALID_RESPONSE;
   }
 
   return ESP_OK;
@@ -268,9 +280,11 @@ esp_err_t test_mt_module_http_actions_get_object_content()
 
 esp_err_t test_mt_module_http_actions_list_objects()
 {
-  esp_err_t err;
+  esp_err_t err = ESP_OK;
+  uint8_t *objs = NULL;
+  int objs_num;
 
-  ESP_LOGD(TAG, "=============================== %d %s test", __LINE__,
+  ESP_LOGI(TAG, "=============================== %d %s test", __LINE__,
            __func__);
 
   object_t obj_in = {
@@ -280,10 +294,11 @@ esp_err_t test_mt_module_http_actions_list_objects()
   obj_in.device = malloc(sizeof(device_t));
   obj_in.device->id = TEST_OBJ_ID;
 
-  err = mt_module_http_actions_list_objects(TEST_TOKEN, &obj_in, NULL);
-  if (err != ESP_OK)
+  objs = mt_module_http_actions_list_objects(TEST_TOKEN, &obj_in, &objs_num);
+  if (objs == NULL)
   {
     ESP_LOGE(TAG, "%d %s failed code=%d", __LINE__, __func__, err);
+    return ESP_ERR_INVALID_RESPONSE;
   }
 
   return ESP_OK;
@@ -291,7 +306,7 @@ esp_err_t test_mt_module_http_actions_list_objects()
 
 void app_main()
 {
-  int ret;
+  int ret = ESP_OK;
 
   ESP_LOGI(TAG, "test begin");
 

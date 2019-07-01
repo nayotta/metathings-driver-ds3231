@@ -19,7 +19,7 @@ typedef struct _module_t
   char *component;
   char *name;
   char *alias;
-  char *heartbeat_at;
+  int *heartbeat_at;
 } module_t;
 
 typedef struct _flow_t
@@ -37,9 +37,11 @@ typedef struct _device_t
   char *state;
   char *name;
   char *alias;
-  module_t *modules;
-  char *heartbeat_at;
-  flow_t *flows;
+  uint8_t *modules;
+  int module_num;
+  int *heartbeat_at;
+  uint8_t *flows;
+  int flow_num;
 } device_t;
 
 typedef struct _object_t
@@ -72,14 +74,17 @@ typedef struct _role_t
   char *id;
   char *name;
   char *alias;
-  action_t *actions;
+  uint8_t *actions;
+  int actions_num;
 } role_t;
 
 typedef struct _group_t
 {
   char *id;
-  domain_t *domains;
-  role_t *roles;
+  uint8_t *domains;
+  int domains_num;
+  uint8_t *roles;
+  int roles_num;
   char *name;
   char *alias;
   char *description;
@@ -88,14 +93,26 @@ typedef struct _group_t
 typedef struct _entity_t
 {
   char *id;
+  uint8_t *entities;
+  int entities_num;
+  uint8_t *groups;
+  int groups_num;
+  uint8_t *roles;
+  int roles_num;
+  char *name;
+  char *password;
+  char *extra;
 } entity_t;
 
 typedef struct _credential_t
 {
   char *id;
-  domain_t *domains;
-  role_t *roles;
-  entity_t *entities;
+  uint8_t *domains;
+  int domains_num;
+  uint8_t *roles;
+  int rolse_num;
+  uint8_t *entities;
+  int entities_num;
   char *name;
   char *alias;
   char *sectret;
@@ -106,40 +123,41 @@ typedef struct _credential_t
 typedef struct _token_t
 {
   char *id;
-  char *issued_at;
+  int *issued_at;
+  entity_t *entity;
+  uint8_t *roles;
+  int roles_num;
+  domain_t *domain;
+  credential_t *credential;
+  char *text;
+  uint8_t *groups;
+  int groups_num;
 } token_t;
 
-esp_err_t mt_module_http_actions_issue_module_token(
-    credential_t *cred_in, int timestamp, int nonce, char *hmac,
-    token_t *tkn_out);
+token_t *mt_module_http_actions_issue_module_token(credential_t *cred_in,
+                                                   int timestamp, int nonce,
+                                                   char *hmac);
 
-esp_err_t mt_module_http_actions_show_module(char *token_in,
-                                             module_t *mdl_out);
+module_t *mt_module_http_actions_show_module(char *token_in);
 
-esp_err_t mt_module_http_actions_heartbeat(char *token_in,
+esp_err_t mt_module_http_actions_heartbeat(char *token_in, uint64_t session_id,
                                            module_t *mod_in);
 
-esp_err_t mt_module_http_actions_put_object(char *token_in,
-                                            object_t *obj_in,
+esp_err_t mt_module_http_actions_put_object(char *token_in, object_t *obj_in,
                                             char *content_in);
 
 esp_err_t mt_module_http_actions_remove_object(char *token_in,
                                                object_t *obj_in);
 
-esp_err_t mt_module_http_actions_rename_object(char *token_in,
-                                               object_t *src_in,
+esp_err_t mt_module_http_actions_rename_object(char *token_in, object_t *src_in,
                                                object_t *des_in);
 
-esp_err_t mt_module_http_actions_get_object(char *token_in,
-                                            object_t *obj_in,
-                                            object_t *obj_out);
+object_t *mt_module_http_actions_get_object(char *token_in, object_t *obj_in);
 
-esp_err_t mt_module_http_actions_get_object_content(char *token_in,
-                                                    object_t *obj_in,
-                                                    char *content_out);
+char *mt_module_http_actions_get_object_content(char *token_in,
+                                                object_t *obj_in);
 
-esp_err_t mt_module_http_actions_list_objects(char *token_in,
-                                              object_t *obj_in,
-                                              object_t **objs_out);
+uint8_t *mt_module_http_actions_list_objects(char *token_in, object_t *obj_in,
+                                             int *obj_num);
 
 #endif
