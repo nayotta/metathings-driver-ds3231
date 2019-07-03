@@ -1,0 +1,5 @@
+# 说明
+
+SDA_GPIO 18
+SCL_GPIO 19
+BUSY     5
