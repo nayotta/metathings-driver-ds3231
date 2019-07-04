@@ -17,16 +17,92 @@ int TX_PIN = 23;
 int RX_PIN = 22;
 int EN_PIN = 18;
 
+int ADDR = 1;
+
+// test func =================================================================
+void test_ld100_get_addr()
+{
+  esp_err_t err = ESP_OK;
+  bool state = true;
+
+  err = mt_ld100_get_addr(ADDR, &state);
+  if (err != ESP_OK)
+  {
+    ESP_LOGE(TAG, "%4d %s failed code:%d", __LINE__, __func__, err);
+    return;
+  }
+
+  ESP_LOGI(TAG, "%4d %s ret:%d", __LINE__, __func__, state);
+
+  return;
+}
+
+void test_ld100_set_addr()
+{
+  esp_err_t err = ESP_OK;
+
+  err = mt_ld100_set_addr(ADDR, ADDR);
+  if (err != ESP_OK)
+  {
+    ESP_LOGE(TAG, "%4d %s failed code:%d", __LINE__, __func__, err);
+    return;
+  }
+
+  ESP_LOGI(TAG, "%4d %s success", __LINE__, __func__);
+
+  return;
+}
+
+void test_ld100_get_state_and_relay()
+{
+  esp_err_t err = ESP_OK;
+  bool state = true;
+  bool relay = true;
+
+  err = mt_ld100_get_state(ADDR, &state);
+  if (err != ESP_OK)
+  {
+    ESP_LOGE(TAG, "%4d %s failed code:%d", __LINE__, __func__, err);
+    return;
+  }
+
+  err = mt_ld100_get_relay(ADDR, &relay);
+  if (err != ESP_OK)
+  {
+    ESP_LOGE(TAG, "%4d %s failed code:%d", __LINE__, __func__, err);
+    return;
+  }
+
+  ESP_LOGI(TAG, "%4d %s state:%d, relay:%d", __LINE__, __func__, state, relay);
+
+  return;
+}
+
+void test_ld100_set_relay(bool state)
+{
+  esp_err_t err = ESP_OK;
+
+  err = mt_ld100_set_relay(ADDR, state);
+  if (err != ESP_OK)
+  {
+    ESP_LOGE(TAG, "%4d %s failed code:%d", __LINE__, __func__, err);
+    return;
+  }
+
+  ESP_LOGI(TAG, "%4d %s to %d success", __LINE__, __func__, state);
+
+  return;
+}
+
 // main func ==================================================================
 void app_main()
 {
-  eMBMasterReqErrCode cmd_ret = 0;
   eMBErrorCode emb_ret = 0;
-  struct RetMsg_t cmd_ret_payload;
 
   ESP_LOGI(TAG, "test begin");
 
-  emb_ret = modbus_init(RS485_PORT, RS485_BAUD, RS485_PARITY, TX_PIN, RX_PIN, EN_PIN);
+  emb_ret =
+      modbus_init(RS485_PORT, RS485_BAUD, RS485_PARITY, TX_PIN, RX_PIN, EN_PIN);
   if (emb_ret != 0)
   {
     ESP_LOGE(TAG, "%4d modbus_init failed", __LINE__);
@@ -35,68 +111,26 @@ void app_main()
 
   mt_modbus_task();
 
+  // test get addr
   vTaskDelay(2000 / portTICK_RATE_MS);
-  // test addr
-  cmd_ret = modbus_ld100_sync_Cmd_04(01, 00, 01, &cmd_ret_payload);
-  if (cmd_ret != MB_MRE_NO_ERR)
-  {
-    ESP_LOGE(TAG, "%4d modbus_ld100_sync_Cmd_04 failed", __LINE__);
-  }
-  ESP_LOGI(TAG, "%4d test addr cmd:%d len:%d buf:%2x%2x", __LINE__,
-           cmd_ret_payload.recvCmd, cmd_ret_payload.retLen,
-           (unsigned int)(cmd_ret_payload.retBuf[0]),
-           (unsigned int)(cmd_ret_payload.retBuf[1]));
+  test_ld100_get_addr();
 
+  // test set addr
   vTaskDelay(2000 / portTICK_RATE_MS);
-  // test relay status
-  cmd_ret = modbus_ld100_sync_Cmd_04(01, 03, 01, &cmd_ret_payload);
-  if (cmd_ret != MB_MRE_NO_ERR)
-  {
-    ESP_LOGE(TAG, "%4d modbus_ld100_sync_Cmd_04 failed", __LINE__);
-  }
-  ESP_LOGI(TAG, "%4d test relay status cmd:%d len:%d buf:%2x%2x", __LINE__,
-           cmd_ret_payload.recvCmd, cmd_ret_payload.retLen,
-           (unsigned int)(cmd_ret_payload.retBuf[0]),
-           (unsigned int)(cmd_ret_payload.retBuf[1]));
+  test_ld100_set_addr();
 
+  // test set relay 1
   vTaskDelay(2000 / portTICK_RATE_MS);
-  // test set relay on
-  cmd_ret = modbus_ld100_sync_Cmd_06(01, 03, 01, &cmd_ret_payload);
-  if (cmd_ret != MB_MRE_NO_ERR)
-  {
-    ESP_LOGE(TAG, "%4d modbus_ld100_sync_Cmd_06 failed", __LINE__);
-  }
-  ESP_LOGI(TAG, "%4d test relay status cmd:%d len:%d buf:%2x%2x", __LINE__,
-           cmd_ret_payload.recvCmd, cmd_ret_payload.retLen,
-           (unsigned int)(cmd_ret_payload.retBuf[0]),
-           (unsigned int)(cmd_ret_payload.retBuf[1]));
+  test_ld100_set_relay(true);
 
+  // test set relay 0
   vTaskDelay(2000 / portTICK_RATE_MS);
-  // test set relay off
-  cmd_ret = modbus_ld100_sync_Cmd_06(01, 03, 00, &cmd_ret_payload);
-  if (cmd_ret != MB_MRE_NO_ERR)
-  {
-    ESP_LOGE(TAG, "%4d modbus_ld100_sync_Cmd_06 failed", __LINE__);
-  }
-  ESP_LOGI(TAG, "%4d test relay status cmd:%d len:%d buf:%2x%2x", __LINE__,
-           cmd_ret_payload.recvCmd, cmd_ret_payload.retLen,
-           (unsigned int)(cmd_ret_payload.retBuf[0]),
-           (unsigned int)(cmd_ret_payload.retBuf[1]));
+  test_ld100_set_relay(false);
 
   ESP_LOGI(TAG, "test end");
 
   while (1)
   {
-    vTaskDelay(200 / portTICK_RATE_MS);
-    // test status
-    cmd_ret = modbus_ld100_sync_Cmd_04(01, 01, 01, &cmd_ret_payload);
-    if (cmd_ret != MB_MRE_NO_ERR)
-    {
-      ESP_LOGE(TAG, "%4d modbus_ld100_sync_Cmd_04 failed", __LINE__);
-    }
-    ESP_LOGI(TAG, "%4d test status cmd:%d len:%d buf:%2x%2x", __LINE__,
-             cmd_ret_payload.recvCmd, cmd_ret_payload.retLen,
-             (unsigned int)(cmd_ret_payload.retBuf[0]),
-             (unsigned int)(cmd_ret_payload.retBuf[1]));
+    test_ld100_get_state_and_relay();
   }
 }

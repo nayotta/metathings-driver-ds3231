@@ -11,6 +11,7 @@ esp32 examples
 | **i2c_atecc608a** | 硬件I2C加密芯片,安全密钥存储器                                            |
 | **i2c_ds1307**    | 硬件I2C时钟模块                                                          |
 | **i2c_ds3231**    | 硬件I2C时钟模块附带温度测量                                               |
+| **modbus_ld100**  | 硬件RS485水浸传感器带一路继电器                                           |
 | **mt_hmac**       | 软件计算hmac                                                            |
 | **mt_nvs_storage**| metathings nvs 键值对持久存储                                            |
 | **mt_rtc_time**   | metathings 硬件rtc时间 读写                                              |

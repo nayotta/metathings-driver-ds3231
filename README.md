@@ -22,6 +22,7 @@ esp32官方 [ESP-IDF framework](https://github.com/espressif/esp-idf)
 | **i2c_ds1307**    | 硬件I2C时钟模块                                                          | MIT  | 是     |
 | **i2c_ds3231**    | 硬件I2C时钟模块附带温度测量                                               | MIT  | 是     |
 | **i2cdev**        | ESP32 i2c driver                                                        | GNU  | -      |
+| **modbus_ld100**  | 硬件RS485水浸传感器带一路继电器                                           | -    | 是     |
 | **mt_nvs_storage**| metathings nvs 键值对持久存储                                            | -    | 是     |
 | **mt_rtc_time**   | metathings 硬件rtc时间 读写                                              | -    | 是     |
 | **mt_smartconfig**| metathings smartconfig 和 airkiss配网                                   | -   | 是     |

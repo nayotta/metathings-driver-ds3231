@@ -18,6 +18,13 @@ static const char *TAG = "MT_MODBUS_LD100";
 static SemaphoreHandle_t SemaphorMasterHdl = NULL;
 static int Lock_Timeout = 50;
 
+#define LD100_READ 04
+#define LD100_WRITE 06
+
+#define LD100_CMD_DEV_ADDR 00
+#define LD100_CMD_DEV_STATE 01
+#define LD100_CMD_DEV_RELAY 03
+
 // static func ================================================================
 static void modbus_lock_init()
 {
@@ -108,9 +115,9 @@ eMBErrorCode modbus_init(UCHAR ucPort, ULONG ulBaudRate, eMBParity eParity,
 {
   eMBErrorCode ret = 0;
 
-  //default 9600 8in1  config
-  ret= eMBMasterInit(MB_RTU, ucPort, ulBaudRate, eParity, tx_pin, rx_pin,
-                          en_pin);
+  // default 9600 8in1  config
+  ret = eMBMasterInit(MB_RTU, ucPort, ulBaudRate, eParity, tx_pin, rx_pin,
+                      en_pin);
   if (ret != 0)
   {
     ESP_LOGE(TAG, "%4d eMBInit failed!!! eStatus: %d", __LINE__, ret);
@@ -211,4 +218,291 @@ EXIT:
 void mt_modbus_task()
 {
   xTaskCreate(modbus_loop, "mt_modbus_task", 1024 * 8, NULL, 8, NULL);
+}
+
+esp_err_t mt_ld100_get_addr(int addr, bool *state)
+{
+  esp_err_t err = ESP_OK;
+  struct RetMsg_t cmd_ret_payload;
+
+  err = modbus_ld100_sync_Cmd_04(addr, LD100_CMD_DEV_ADDR, 1, &cmd_ret_payload);
+  if (err != ESP_OK)
+  {
+    if (err == EV_RES_ERROR_RESPOND_TIMEOUT)
+    {
+      *state = false;
+    }
+    else
+    {
+      ESP_LOGE(TAG, "%4d %s addr:%d failed", __LINE__, __func__, addr);
+      return err;
+    }
+  }
+  else
+  {
+    if (cmd_ret_payload.recvCmd != LD100_READ)
+    {
+      ESP_LOGE(TAG, "%4d %s addr:%d get error ret cmd:%d", __LINE__, __func__,
+               addr, cmd_ret_payload.recvCmd);
+      return ESP_ERR_INVALID_RESPONSE;
+    }
+
+    if (cmd_ret_payload.retLen != 2)
+    {
+      ESP_LOGE(TAG, "%4d %s addr:%d get error ret size:%d", __LINE__, __func__,
+               addr, cmd_ret_payload.retLen);
+      return ESP_ERR_INVALID_RESPONSE;
+    }
+
+    if (cmd_ret_payload.retBuf[0] != 0)
+    {
+      ESP_LOGE(TAG, "%4d %s addr:%d get error ret buf 0:%d", __LINE__, __func__,
+               addr, cmd_ret_payload.retBuf[0]);
+      return ESP_ERR_INVALID_RESPONSE;
+    }
+
+    if (cmd_ret_payload.retBuf[1] != addr)
+    {
+      ESP_LOGE(TAG, "%4d %s addr:%d get error ret buf 1:%d", __LINE__, __func__,
+               addr, cmd_ret_payload.retBuf[1]);
+      return ESP_ERR_INVALID_RESPONSE;
+    }
+
+    *state = true;
+  }
+
+  // ESP_LOGI(TAG, "%4d %s addr:%d state:%d", __LINE__, __func__, addr, *state);
+
+  return ESP_OK;
+}
+
+esp_err_t mt_ld100_set_addr(int addr, int new_addr)
+{
+  esp_err_t err = ESP_OK;
+  struct RetMsg_t cmd_ret_payload;
+
+  err = modbus_ld100_sync_Cmd_06(addr, LD100_CMD_DEV_ADDR, new_addr,
+                                 &cmd_ret_payload);
+  if (err != ESP_OK)
+  {
+    ESP_LOGE(TAG, "%4d %s addr:%d failed", __LINE__, __func__, addr);
+    return err;
+  }
+  else
+  {
+    if (cmd_ret_payload.recvCmd != LD100_WRITE)
+    {
+      ESP_LOGE(TAG, "%4d %s addr:%d get error ret cmd:%d", __LINE__, __func__,
+               addr, cmd_ret_payload.recvCmd);
+      return ESP_ERR_INVALID_RESPONSE;
+    }
+
+    if (cmd_ret_payload.retLen != 2)
+    {
+      ESP_LOGE(TAG, "%4d %s addr:%d get error ret size:%d", __LINE__, __func__,
+               addr, cmd_ret_payload.retLen);
+      return ESP_ERR_INVALID_RESPONSE;
+    }
+
+    if (cmd_ret_payload.retBuf[0] != 0)
+    {
+      ESP_LOGE(TAG, "%4d %s addr:%d get error ret buf 0:%d", __LINE__, __func__,
+               addr, cmd_ret_payload.retBuf[0]);
+      return ESP_ERR_INVALID_RESPONSE;
+    }
+
+    if (cmd_ret_payload.retBuf[1] != new_addr)
+    {
+      ESP_LOGE(TAG, "%4d %s addr:%d new_addr:%d error ret buf 1:%d", __LINE__,
+               __func__, addr, new_addr, cmd_ret_payload.retBuf[1]);
+      return ESP_ERR_INVALID_RESPONSE;
+    }
+  }
+
+  // ESP_LOGI(TAG, "%4d %s addr:%d new_addr:%d success", __LINE__, __func__,
+  // addr, new_addr);
+
+  return ESP_OK;
+}
+
+esp_err_t mt_ld100_get_state(int addr, bool *state)
+{
+  esp_err_t err = ESP_OK;
+  struct RetMsg_t cmd_ret_payload;
+
+  err =
+      modbus_ld100_sync_Cmd_04(addr, LD100_CMD_DEV_STATE, 1, &cmd_ret_payload);
+  if (err != ESP_OK)
+  {
+    ESP_LOGE(TAG, "%4d %s addr:%d failed", __LINE__, __func__, addr);
+    return err;
+  }
+  else
+  {
+    if (cmd_ret_payload.recvCmd != LD100_READ)
+    {
+      ESP_LOGE(TAG, "%4d %s addr:%d get error ret cmd:%d", __LINE__, __func__,
+               addr, cmd_ret_payload.recvCmd);
+      return ESP_ERR_INVALID_RESPONSE;
+    }
+
+    if (cmd_ret_payload.retLen != 2)
+    {
+      ESP_LOGE(TAG, "%4d %s addr:%d get error ret size:%d", __LINE__, __func__,
+               addr, cmd_ret_payload.retLen);
+      return ESP_ERR_INVALID_RESPONSE;
+    }
+
+    if (cmd_ret_payload.retBuf[0] != 0)
+    {
+      ESP_LOGE(TAG, "%4d %s addr:%d get error ret buf 0:%d", __LINE__, __func__,
+               addr, cmd_ret_payload.retBuf[0]);
+      return ESP_ERR_INVALID_RESPONSE;
+    }
+
+    if (cmd_ret_payload.retBuf[1] == 0 || cmd_ret_payload.retBuf[1] == 2)
+    {
+      if (cmd_ret_payload.retBuf[1] == 0)
+        *state = true;
+
+      if (cmd_ret_payload.retBuf[1] == 2)
+        *state = false;
+    }
+    else
+    {
+      ESP_LOGE(TAG, "%4d %s addr:%d error ret buf 1:%d", __LINE__, __func__,
+               addr, cmd_ret_payload.retBuf[1]);
+      return ESP_ERR_INVALID_RESPONSE;
+    }
+  }
+
+  // ESP_LOGI(TAG, "%4d %s addr:%d success state:%d", __LINE__, __func__, addr,
+  //*state);
+
+  return ESP_OK;
+}
+
+esp_err_t mt_ld100_get_relay(int addr, bool *state)
+{
+  esp_err_t err = ESP_OK;
+  struct RetMsg_t cmd_ret_payload;
+
+  err =
+      modbus_ld100_sync_Cmd_04(addr, LD100_CMD_DEV_RELAY, 1, &cmd_ret_payload);
+  if (err != ESP_OK)
+  {
+    ESP_LOGE(TAG, "%4d %s addr:%d failed", __LINE__, __func__, addr);
+    return err;
+  }
+  else
+  {
+    if (cmd_ret_payload.recvCmd != LD100_READ)
+    {
+      ESP_LOGE(TAG, "%4d %s addr:%d get error ret cmd:%d", __LINE__, __func__,
+               addr, cmd_ret_payload.recvCmd);
+      return ESP_ERR_INVALID_RESPONSE;
+    }
+
+    if (cmd_ret_payload.retLen != 2)
+    {
+      ESP_LOGE(TAG, "%4d %s addr:%d get error ret size:%d", __LINE__, __func__,
+               addr, cmd_ret_payload.retLen);
+      return ESP_ERR_INVALID_RESPONSE;
+    }
+
+    if (cmd_ret_payload.retBuf[0] != 0)
+    {
+      ESP_LOGE(TAG, "%4d %s addr:%d get error ret buf 0:%d", __LINE__, __func__,
+               addr, cmd_ret_payload.retBuf[0]);
+      return ESP_ERR_INVALID_RESPONSE;
+    }
+
+    if (cmd_ret_payload.retBuf[1] == 0 || cmd_ret_payload.retBuf[1] == 1)
+    {
+      if (cmd_ret_payload.retBuf[1] == 0)
+        *state = false;
+
+      if (cmd_ret_payload.retBuf[1] == 1)
+        *state = true;
+    }
+    else
+    {
+      ESP_LOGE(TAG, "%4d %s addr:%d error ret buf 1:%d", __LINE__, __func__,
+               addr, cmd_ret_payload.retBuf[1]);
+      return ESP_ERR_INVALID_RESPONSE;
+    }
+  }
+
+  // ESP_LOGI(TAG, "%4d %s addr:%d success state:%d", __LINE__, __func__, addr,
+  //        *state);
+
+  return ESP_OK;
+}
+
+esp_err_t mt_ld100_set_relay(int addr, bool state)
+{
+  esp_err_t err = ESP_OK;
+  struct RetMsg_t cmd_ret_payload;
+  USHORT target_state;
+
+  if (state == true)
+  {
+    target_state = 1;
+  }
+  else
+  {
+    target_state = 0;
+  }
+
+  err = modbus_ld100_sync_Cmd_06(addr, LD100_CMD_DEV_RELAY, target_state,
+                                 &cmd_ret_payload);
+  if (err != ESP_OK)
+  {
+    ESP_LOGE(TAG, "%4d %s addr:%d failed", __LINE__, __func__, addr);
+    return err;
+  }
+  else
+  {
+    if (cmd_ret_payload.recvCmd != LD100_WRITE)
+    {
+      ESP_LOGE(TAG, "%4d %s addr:%d get error ret cmd:%d", __LINE__, __func__,
+               addr, cmd_ret_payload.recvCmd);
+      return ESP_ERR_INVALID_RESPONSE;
+    }
+
+    if (cmd_ret_payload.retLen != 2)
+    {
+      ESP_LOGE(TAG, "%4d %s addr:%d get error ret size:%d", __LINE__, __func__,
+               addr, cmd_ret_payload.retLen);
+      return ESP_ERR_INVALID_RESPONSE;
+    }
+
+    if (cmd_ret_payload.retBuf[0] != 0)
+    {
+      ESP_LOGE(TAG, "%4d %s addr:%d get error ret buf 0:%d", __LINE__, __func__,
+               addr, cmd_ret_payload.retBuf[0]);
+      return ESP_ERR_INVALID_RESPONSE;
+    }
+
+    if (cmd_ret_payload.retBuf[1] == 0 || cmd_ret_payload.retBuf[1] == 1)
+    {
+      if (cmd_ret_payload.retBuf[1] != state)
+      {
+        ESP_LOGE(TAG, "%4d %s addr:%d target:%d ret:%d", __LINE__, __func__,
+                 addr, state, cmd_ret_payload.retBuf[1]);
+        return ESP_ERR_INVALID_RESPONSE;
+      }
+    }
+    else
+    {
+      ESP_LOGE(TAG, "%4d %s addr:%d error ret buf 1:%d", __LINE__, __func__,
+               addr, cmd_ret_payload.retBuf[1]);
+      return ESP_ERR_INVALID_RESPONSE;
+    }
+  }
+
+  // ESP_LOGI(TAG, "%4d %s addr:%d success state:%d", __LINE__, __func__, addr,
+  //         state);
+
+  return ESP_OK;
 }
