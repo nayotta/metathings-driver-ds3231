@@ -115,7 +115,7 @@ typedef struct _credential_t
   int entities_num;
   char *name;
   char *alias;
-  char *sectret;
+  char *secret;
   char *description;
   char *expores_at;
 } credential_t;
@@ -134,30 +134,43 @@ typedef struct _token_t
   int groups_num;
 } token_t;
 
-token_t *mt_module_http_actions_issue_module_token(credential_t *cred_in,
-                                                   int timestamp, int nonce,
-                                                   char *hmac);
+typedef struct _mt_module_http_t
+{
+  char *host;
+  int port;
+  credential_t *cred;
+  char *token;
+  module_t *module;
+  uint64_t session_id;
+  http_event_handle_cb event_handler;
+  char *response_content;
+  int response_content_size;
+} mt_module_http_t;
 
-module_t *mt_module_http_actions_show_module(char *token_in);
+esp_err_t mt_module_http_actions_issue_module_token(mt_module_http_t *module_http);
 
-esp_err_t mt_module_http_actions_heartbeat(char *token_in, uint64_t session_id,
+module_t *mt_module_http_actions_show_module(mt_module_http_t *module_http);
+
+esp_err_t mt_module_http_actions_heartbeat(mt_module_http_t *module_http,
                                            module_t *mod_in);
 
-esp_err_t mt_module_http_actions_put_object(char *token_in, object_t *obj_in,
+esp_err_t mt_module_http_actions_put_object(mt_module_http_t *module_http, object_t *obj_in,
                                             char *content_in);
 
-esp_err_t mt_module_http_actions_remove_object(char *token_in,
+esp_err_t mt_module_http_actions_remove_object(mt_module_http_t *module_http,
                                                object_t *obj_in);
 
-esp_err_t mt_module_http_actions_rename_object(char *token_in, object_t *src_in,
+esp_err_t mt_module_http_actions_rename_object(mt_module_http_t *module_http, object_t *src_in,
                                                object_t *des_in);
 
-object_t *mt_module_http_actions_get_object(char *token_in, object_t *obj_in);
+object_t *mt_module_http_actions_get_object(mt_module_http_t *module_http, object_t *obj_in);
 
-char *mt_module_http_actions_get_object_content(char *token_in,
+char *mt_module_http_actions_get_object_content(mt_module_http_t *module_http,
                                                 object_t *obj_in);
 
-uint8_t *mt_module_http_actions_list_objects(char *token_in, object_t *obj_in,
+uint8_t *mt_module_http_actions_list_objects(mt_module_http_t *module_http, object_t *obj_in,
                                              int *obj_num);
+
+void mt_module_http_task(mt_module_http_t *module_http, char *task_name);
 
 #endif

@@ -15,135 +15,82 @@ static const char *TAG = "MT_MODULE_HTTP";
 
 #define MAX_HTTP_RECV_BUFFER 512
 
-char *MT_MODULE_HOST = "10.1.1.130";
-int MT_MODULE_HOST_PORT = 8080;
-
-char *MT_MODULE_RESPONSE_CONTENT = NULL;
-int MT_MODULE_RESPONSE_CONTENT_SIZE = 0;
-
-// static func ================================================================
-static esp_err_t mt_module_save_content(char *content, int size)
-{
-  if (MT_MODULE_RESPONSE_CONTENT != NULL)
-  {
-    free(MT_MODULE_RESPONSE_CONTENT);
-  }
-
-  if (size <= 0)
-  {
-    ESP_LOGE(TAG, "%4d %s content size =%d", __LINE__, __func__, size);
-    return ESP_ERR_INVALID_ARG;
-  }
-
-  MT_MODULE_RESPONSE_CONTENT = malloc(size + 1);
-
-  memcpy(MT_MODULE_RESPONSE_CONTENT, content, size);
-  MT_MODULE_RESPONSE_CONTENT[size] = '\0';
-  MT_MODULE_RESPONSE_CONTENT_SIZE = size;
-
-  ESP_LOGI(TAG, "%4d save content, size=%d, string=%s", __LINE__, size,
-           MT_MODULE_RESPONSE_CONTENT);
-
-  return ESP_OK;
-}
-
-static esp_err_t _http_event_handler(esp_http_client_event_t *evt)
-{
-  switch (evt->event_id)
-  {
-  case HTTP_EVENT_ERROR:
-    ESP_LOGI(TAG, "%4d HTTP_EVENT_EXIT", __LINE__);
-    break;
-  case HTTP_EVENT_ON_CONNECTED:
-    ESP_LOGD(TAG, "%4d HTTP_EVENT_ON_CONNECTED", __LINE__);
-    break;
-  case HTTP_EVENT_HEADER_SENT:
-    ESP_LOGD(TAG, "%4d HTTP_EVENT_HEADER_SENT", __LINE__);
-    break;
-  case HTTP_EVENT_ON_HEADER:
-    ESP_LOGD(TAG, "%4d HTTP_EVENT_ON_HEADER, key=%s, value=%s", __LINE__,
-             evt->header_key, evt->header_value);
-    break;
-  case HTTP_EVENT_ON_DATA:
-    if (!esp_http_client_is_chunked_response(evt->client))
-    {
-      esp_err_t err;
-
-      ESP_LOGD(TAG, "%4d HTTP_EVENT_ON_DATA, len=%d, data=%s", __LINE__,
-               evt->data_len, (char *)evt->data);
-      err = mt_module_save_content((char *)evt->data, evt->data_len);
-      if (err != ESP_OK)
-      {
-        ESP_LOGE(TAG, "%4d mt_module_save_content failed", __LINE__);
-        break;
-      }
-    }
-    break;
-  case HTTP_EVENT_ON_FINISH:
-    ESP_LOGD(TAG, "%4d HTTP_EVENT_ON_FINISH", __LINE__);
-    break;
-  case HTTP_EVENT_DISCONNECTED:
-    ESP_LOGD(TAG, "%4d HTTP_EVENT_DISCONNECTED", __LINE__);
-    break;
-  }
-  return ESP_OK;
-}
-
 // global func ================================================================
-token_t *mt_module_http_actions_issue_module_token(credential_t *cred_in,
-                                                   int timestamp, int nonce,
-                                                   char *hmac)
+esp_err_t mt_module_http_actions_issue_module_token(
+    mt_module_http_t *module_http)
 {
   esp_err_t err = ESP_OK;
   char *post_data = NULL;
   esp_http_client_handle_t client = NULL;
   cJSON *root, *cred_in_json;
-  token_t *tkn_out = NULL;
+  uint8_t *time_stamp = NULL;
+  uint8_t time_stamp_size = 0;
+  uint32_t nonce = 0;
+  uint8_t hmac[32];
 
   esp_http_client_config_t config = {
-      .host = MT_MODULE_HOST,
-      .port = MT_MODULE_HOST_PORT,
+      .host = module_http->host,
+      .port = module_http->port,
       .path = "/actions/issue_module_token",
-      .event_handler = _http_event_handler,
+      .event_handler = module_http->event_handle,
   };
 
   client = esp_http_client_init(&config);
 
   // check argument
-  if (cred_in == NULL)
+  if (module_http == NULL)
   {
-    ESP_LOGE(TAG, "%4d %s cred_in is NULL", __LINE__, __func__);
+    ESP_LOGE(TAG, "%4d %s module_http is NULL", __LINE__, __func__);
     err = ESP_ERR_INVALID_ARG;
     goto EXIT;
   }
   else
   {
-    if (cred_in->id == NULL)
+    if (module_http->cred == NULL)
     {
-      ESP_LOGE(TAG, "%4d %s cred_in->id is NULL", __LINE__, __func__);
+      ESP_LOGE(TAG, "%4d %s module_http->cred_id is NULL", __LINE__, __func__);
       err = ESP_ERR_INVALID_ARG;
       goto EXIT;
     }
+    else
+    {
+      if (module_http->cred->id == NULL)
+      {
+        ESP_LOGE(TAG, "%4d %s module_http->cred->id is NULL", __LINE__,
+                 __func__);
+        err = ESP_ERR_INVALID_ARG;
+        goto EXIT;
+      }
+
+      if (module_http->cred->secret == NULL)
+      {
+        ESP_LOGE(TAG, "%4d %s module_http->cred->secret is NULL", __LINE__,
+                 __func__);
+        err = ESP_ERR_INVALID_ARG;
+        goto EXIT;
+      }
+    }
   }
 
-  if (timestamp <= 0)
+  time_stamp = mt_utils_login_get_time_rfc3339nano_string(&time_stamp_size);
+  if (time_stamp == NULL)
   {
-    ESP_LOGE(TAG, "%4d %s timestamp EXIT:%d", __LINE__, __func__, timestamp);
-    err = ESP_ERR_INVALID_ARG;
-    goto EXIT;
+    ESP_LOGE(TAG, "%4d %s mt_utils_login_get_time_rfc3339nano_string failed",
+             __LINE__, __func__)
+    err = ESP_ERR_INVALID_RESPONSE;
+    goto EXIT
   }
 
-  if (nonce <= 0)
-  {
-    ESP_LOGE(TAG, "%4d %s nonce EXIT:%d", __LINE__, __func__, nonce);
-    err = ESP_ERR_INVALID_ARG;
-    goto EXIT;
-  }
+  nonce = mt_utils_login_get_nonce();
 
-  if (hmac == NULL)
+  err = mt_hmac_sha256(module_http->cred->secret,
+                       strlen(module_http->cred->secret), module_http->cred->id,
+                       strlen(module_http->cred->id), time_stamp,
+                       time_stamp_size, nonce, hmac);
+  if (err != ESP_OK)
   {
-    ESP_LOGE(TAG, "%4d %s hmac is NULL", __LINE__, __func__);
-    err = ESP_ERR_INVALID_ARG;
+    EPS_LOGE(TAG, "%4d %s mt_hmac_sha256 error");
+    err = ESP_ERR_INVALID_RESPONSE;
     goto EXIT;
   }
 
@@ -151,8 +98,8 @@ token_t *mt_module_http_actions_issue_module_token(credential_t *cred_in,
   root = cJSON_CreateArray();
   cJSON_AddItemToObject(root, "credential",
                         cred_in_json = cJSON_CreateObject());
-  cJSON_AddStringToObject(cred_in_json, "id", cred_in->id);
-  cJSON_AddNumberToObject(root, "timestamp", timestamp);
+  cJSON_AddStringToObject(cred_in_json, "id", module_http->cred->id);
+  cJSON_AddStringToObject(root, "timestamp", timestamp);
   cJSON_AddNumberToObject(root, "nonce", nonce);
   cJSON_AddStringToObject(root, "hmac", hmac);
   post_data = cJSON_Print(root);
@@ -179,22 +126,22 @@ token_t *mt_module_http_actions_issue_module_token(credential_t *cred_in,
     goto EXIT;
   }
 
-  goto EXIT;
   // parse res content
   int content_size = esp_http_client_get_content_length(client);
   if (content_size != 0)
   {
-    if (content_size != MT_MODULE_RESPONSE_CONTENT_SIZE)
+    if (content_size != module_http->response_content_size)
     {
-      ESP_LOGE(TAG, "%4d content_size %d != MT_MODULE_RESPONSE_CONTENT_SIZE %d",
-               __LINE__, content_size, MT_MODULE_RESPONSE_CONTENT_SIZE);
+      ESP_LOGE(TAG,
+               "%4d content_size %d != module_http->response_content_size %d",
+               __LINE__, content_size, module_http->response_content_size);
       err = ESP_ERR_HTTP_BASE;
       goto EXIT;
     }
     else
     {
       tkn_out =
-          mt_module_http_utils_parse_token_res(MT_MODULE_RESPONSE_CONTENT);
+          mt_module_http_utils_parse_token_res(module_http->response_content);
       if (tkn_out == NULL)
       {
         ESP_LOGE(TAG, "%4d mt_module_http_utils_parse_token_res failed code=%d",
@@ -230,7 +177,18 @@ token_t *mt_module_http_actions_issue_module_token(credential_t *cred_in,
     }
   }
 
+  if (module_http->token != NULL)
+  {
+    free(module_http->token);
+  }
+
+  module_http->token = malloc(strlen(tkn_out->text));
+  memcpy(module_http->token, tkn_out->text, strlen(tkn_out->text));
+
 EXIT:
+  if (time_stamp != NULL)
+    free(time_stamp);
+
   // clean
   esp_http_client_cleanup(client);
   if (err != ESP_OK)
@@ -240,36 +198,34 @@ EXIT:
       mt_module_http_utils_free_token(tkn_out);
     }
 
-    return NULL;
+    return err;
   }
-
-  return tkn_out;
 }
 
-module_t *mt_module_http_actions_show_module(char *token_in)
+module_t *mt_module_http_actions_show_module(mt_module_http_t *module_http)
 {
   esp_err_t err;
   esp_http_client_handle_t client = NULL;
   module_t *mdl_out = NULL;
   esp_http_client_config_t config = {
-      .host = MT_MODULE_HOST,
-      .port = MT_MODULE_HOST_PORT,
+      .host = module_http->host,
+      .port = module_http->port,
       .path = "/actions/show_module",
-      .event_handler = _http_event_handler,
+      .event_handler = module_http->event_handle,
   };
 
   client = esp_http_client_init(&config);
 
   // check argument
-  if (token_in == NULL)
+  if (module_http->token == NULL)
   {
-    ESP_LOGE(TAG, "%4d token_in is NULL", __LINE__);
+    ESP_LOGE(TAG, "%4d module_http->token is NULL", __LINE__);
     err = ESP_ERR_INVALID_ARG;
     goto EXIT;
   }
 
   // request
-  err = mt_http_client_post_request(client, token_in, NULL);
+  err = mt_http_client_post_request(client, module_http->token, NULL);
   if (err != ESP_OK)
   {
     ESP_LOGE(TAG, "%4d %s mt_http_client_post_request failed", __LINE__,
@@ -291,17 +247,17 @@ module_t *mt_module_http_actions_show_module(char *token_in)
   int content_size = esp_http_client_get_content_length(client);
   if (content_size != 0)
   {
-    if (content_size != MT_MODULE_RESPONSE_CONTENT_SIZE)
+    if (content_size != module_http->response_content_size)
     {
-      ESP_LOGE(TAG, "%4d content_size %d != MT_MODULE_RESPONSE_CONTENT_SIZE %d",
-               __LINE__, content_size, MT_MODULE_RESPONSE_CONTENT_SIZE);
+      ESP_LOGE(TAG, "%4d content_size %d != response_content_size %d", __LINE__,
+               content_size, module_http->response_content_size);
       err = ESP_ERR_HTTP_BASE;
       goto EXIT;
     }
     else
     {
       mdl_out =
-          mt_module_http_uitls_parse_module_res(MT_MODULE_RESPONSE_CONTENT);
+          mt_module_http_uitls_parse_module_res(module_http->response_content);
       if (mdl_out == NULL)
       {
         ESP_LOGE(TAG, "%4d mt_module_http_utils_parse_token_res failed code=%d",
@@ -331,7 +287,7 @@ EXIT:
   return mdl_out;
 }
 
-esp_err_t mt_module_http_actions_heartbeat(char *token_in, uint64_t session_id,
+esp_err_t mt_module_http_actions_heartbeat(mt_module_http_t *module_http,
                                            module_t *mod_in)
 {
   esp_err_t err = ESP_OK;
@@ -340,23 +296,23 @@ esp_err_t mt_module_http_actions_heartbeat(char *token_in, uint64_t session_id,
   cJSON *root, *mod_in_json;
 
   esp_http_client_config_t config = {
-      .host = MT_MODULE_HOST,
-      .port = MT_MODULE_HOST_PORT,
+      .host = module_http->host,
+      .port = module_http->port,
       .path = "/actions/heartbeat",
-      .event_handler = _http_event_handler,
+      .event_handler = module_http->event_handle,
   };
 
   client = esp_http_client_init(&config);
 
   // check argument
-  if (token_in == NULL)
+  if (module_http->token == NULL)
   {
-    ESP_LOGE(TAG, "%4d token_in is NULL", __LINE__);
+    ESP_LOGE(TAG, "%4d token is NULL", __LINE__);
     err = ESP_ERR_INVALID_ARG;
     goto EXIT;
   }
 
-  if (session_id == 0)
+  if (module_http->session_id == 0)
   {
     ESP_LOGE(TAG, "%4d session_id is 0", __LINE__);
     err = ESP_ERR_INVALID_ARG;
@@ -382,7 +338,7 @@ esp_err_t mt_module_http_actions_heartbeat(char *token_in, uint64_t session_id,
   // request post_data
   root = cJSON_CreateArray();
   cJSON_AddItemToObject(root, "module", mod_in_json = cJSON_CreateObject());
-  cJSON_AddStringToObject(mod_in_json, "id", mod_in->id);
+  cJSON_AddStringToObject(mod_in_json, "name", mod_in->name);
   post_data = cJSON_Print(root);
   cJSON_Delete(root);
 
@@ -392,10 +348,8 @@ esp_err_t mt_module_http_actions_heartbeat(char *token_in, uint64_t session_id,
   uint8_t str_size = 0;
   char *session_id_str = NULL;
 
-  session_id_str = mt_utils_int64_to_string(session_id, &str_size);
-  err = esp_http_client_set_header(
-      client, "MT-Module-Session",
-      session_id_str);
+  session_id_str = mt_utils_int64_to_string(module_http->session_id, &str_size);
+  err = esp_http_client_set_header(client, "MT-Module-Session", session_id_str);
 
   if (err != ESP_OK)
   {
@@ -432,7 +386,8 @@ EXIT:
   return err;
 }
 
-esp_err_t mt_module_http_actions_put_object(char *token_in, object_t *obj_in,
+esp_err_t mt_module_http_actions_put_object(mt_module_http_t *module_http,
+                                            object_t *obj_in,
                                             char *content_in)
 {
   esp_err_t err = ESP_OK;
@@ -441,18 +396,18 @@ esp_err_t mt_module_http_actions_put_object(char *token_in, object_t *obj_in,
   cJSON *root, *obj_in_json, *obj_in_device_json;
 
   esp_http_client_config_t config = {
-      .host = MT_MODULE_HOST,
-      .port = MT_MODULE_HOST_PORT,
+      .host = module_http->host,
+      .port = module_http->port,
       .path = "/actions/put_object",
-      .event_handler = _http_event_handler,
+      .event_handler = module_http->event_handle,
   };
 
   client = esp_http_client_init(&config);
 
   // check argument
-  if (token_in == NULL)
+  if (module_http->token == NULL)
   {
-    ESP_LOGE(TAG, "%4d token_in is NULL", __LINE__);
+    ESP_LOGE(TAG, "%4d token is NULL", __LINE__);
     err = ESP_ERR_INVALID_ARG;
     goto EXIT;
   }
@@ -545,7 +500,7 @@ EXIT:
   return err;
 }
 
-esp_err_t mt_module_http_actions_remove_object(char *token_in,
+esp_err_t mt_module_http_actions_remove_object(mt_module_http_t *module_http,
                                                object_t *obj_in)
 {
   esp_err_t err = ESP_OK;
@@ -554,18 +509,18 @@ esp_err_t mt_module_http_actions_remove_object(char *token_in,
   cJSON *root, *obj_in_json, *obj_in_device_json;
 
   esp_http_client_config_t config = {
-      .host = MT_MODULE_HOST,
-      .port = MT_MODULE_HOST_PORT,
+      .host = module_http->host,
+      .port = module_http->port,
       .path = "/actions/remove_object",
-      .event_handler = _http_event_handler,
+      .event_handler = module_http->event_handle,
   };
 
   client = esp_http_client_init(&config);
 
   // check argument
-  if (token_in == NULL)
+  if (module_http->token == NULL)
   {
-    ESP_LOGE(TAG, "%4d token_in is NULL", __LINE__);
+    ESP_LOGE(TAG, "%4d token is NULL", __LINE__);
     err = ESP_ERR_INVALID_ARG;
     goto EXIT;
   }
@@ -650,7 +605,8 @@ EXIT:
   return err;
 }
 
-esp_err_t mt_module_http_actions_rename_object(char *token_in, object_t *src_in,
+esp_err_t mt_module_http_actions_rename_object(mt_module_http_t *module_http,
+                                               object_t *src_in,
                                                object_t *des_in)
 {
   esp_err_t err = ESP_OK;
@@ -660,18 +616,18 @@ esp_err_t mt_module_http_actions_rename_object(char *token_in, object_t *src_in,
       *des_in_device_json;
 
   esp_http_client_config_t config = {
-      .host = MT_MODULE_HOST,
-      .port = MT_MODULE_HOST_PORT,
+      .host = module_http->host,
+      .port = module_http->port,
       .path = "/actions/rename_object",
-      .event_handler = _http_event_handler,
+      .event_handler = module_http->event_handle,
   };
 
   client = esp_http_client_init(&config);
 
   // check argument
-  if (token_in == NULL)
+  if (module_http->token == NULL)
   {
-    ESP_LOGE(TAG, "%4d token_in is NULL", __LINE__);
+    ESP_LOGE(TAG, "%4d token is NULL", __LINE__);
     err = ESP_ERR_INVALID_ARG;
     goto EXIT;
   }
@@ -802,7 +758,8 @@ EXIT:
   return err;
 }
 
-object_t *mt_module_http_actions_get_object(char *token_in, object_t *obj_in)
+object_t *mt_module_http_actions_get_object(mt_module_http_t *module_http,
+                                            object_t *obj_in)
 {
   esp_err_t err = ESP_OK;
   object_t *obj_out = NULL;
@@ -811,18 +768,18 @@ object_t *mt_module_http_actions_get_object(char *token_in, object_t *obj_in)
   cJSON *root, *obj_in_json, *obj_in_device_json;
 
   esp_http_client_config_t config = {
-      .host = MT_MODULE_HOST,
-      .port = MT_MODULE_HOST_PORT,
+      .host = module_http->host,
+      .port = module_http->port,
       .path = "/actions/get_object",
-      .event_handler = _http_event_handler,
+      .event_handler = module_http->event_handle,
   };
 
   client = esp_http_client_init(&config);
 
   // check argument
-  if (token_in == NULL)
+  if (module_http->token == NULL)
   {
-    ESP_LOGE(TAG, "%4d token_in is NULL", __LINE__);
+    ESP_LOGE(TAG, "%4d token is NULL", __LINE__);
     err = ESP_ERR_INVALID_ARG;
     goto EXIT;
   }
@@ -901,17 +858,17 @@ object_t *mt_module_http_actions_get_object(char *token_in, object_t *obj_in)
   int content_size = esp_http_client_get_content_length(client);
   if (content_size != 0)
   {
-    if (content_size != MT_MODULE_RESPONSE_CONTENT_SIZE)
+    if (content_size != module_http->response_content_size)
     {
-      ESP_LOGE(TAG, "%4d content_size %d != MT_MODULE_RESPONSE_CONTENT_SIZE %d",
-               __LINE__, content_size, MT_MODULE_RESPONSE_CONTENT_SIZE);
+      ESP_LOGE(TAG, "%4d content_size %d != response_content_size %d", __LINE__,
+               content_size, response_content_size);
       err = ESP_ERR_HTTP_BASE;
       goto EXIT;
     }
     else
     {
       obj_out =
-          mt_module_http_utils_parse_object_res(MT_MODULE_RESPONSE_CONTENT);
+          mt_module_http_utils_parse_object_res(module_http->response_content);
       if (obj_out == NULL)
       {
         ESP_LOGE(TAG,
@@ -942,7 +899,7 @@ EXIT:
   return obj_out;
 }
 
-char *mt_module_http_actions_get_object_content(char *token_in,
+char *mt_module_http_actions_get_object_content(mt_module_http_t *module_http,
                                                 object_t *obj_in)
 {
   esp_err_t err = ESP_OK;
@@ -952,18 +909,18 @@ char *mt_module_http_actions_get_object_content(char *token_in,
   cJSON *root, *obj_in_json, *obj_in_device_json;
 
   esp_http_client_config_t config = {
-      .host = MT_MODULE_HOST,
-      .port = MT_MODULE_HOST_PORT,
+      .host = module_http->host,
+      .port = module_http->port,
       .path = "/actions/get_object_content",
-      .event_handler = _http_event_handler,
+      .event_handler = module_http->event_handle,
   };
 
   client = esp_http_client_init(&config);
 
   // check argument
-  if (token_in == NULL)
+  if (module_http->token == NULL)
   {
-    ESP_LOGE(TAG, "%4d token_in is NULL", __LINE__);
+    ESP_LOGE(TAG, "%4d token is NULL", __LINE__);
     err = ESP_ERR_INVALID_ARG;
     goto EXIT;
   }
@@ -1043,17 +1000,17 @@ char *mt_module_http_actions_get_object_content(char *token_in,
   int content_size = esp_http_client_get_content_length(client);
   if (content_size != 0)
   {
-    if (content_size != MT_MODULE_RESPONSE_CONTENT_SIZE)
+    if (content_size != module_http->response_content_size)
     {
-      ESP_LOGE(TAG, "%4d content_size %d != MT_MODULE_RESPONSE_CONTENT_SIZE %d",
-               __LINE__, content_size, MT_MODULE_RESPONSE_CONTENT_SIZE);
+      ESP_LOGE(TAG, "%4d content_size %d != response_content_size %d", __LINE__,
+               content_size, response_content_size);
       err = ESP_ERR_HTTP_BASE;
       goto EXIT;
     }
     else
     {
       content_out =
-          mt_module_http_utils_parse_content_res(MT_MODULE_RESPONSE_CONTENT);
+          mt_module_http_utils_parse_content_res(module_http->response_content);
       if (content_out == NULL)
       {
         ESP_LOGE(TAG,
@@ -1082,8 +1039,8 @@ EXIT:
   return content_out;
 }
 
-uint8_t *mt_module_http_actions_list_objects(char *token_in, object_t *obj_in,
-                                             int *objs_num)
+uint8_t *mt_module_http_actions_list_objects(mt_module_http_t *module_http,
+                                             object_t *obj_in, int *objs_num)
 {
   esp_err_t err = ESP_OK;
   uint8_t *objs_out = NULL;
@@ -1092,18 +1049,18 @@ uint8_t *mt_module_http_actions_list_objects(char *token_in, object_t *obj_in,
   cJSON *root, *obj_in_json, *obj_in_device_json;
 
   esp_http_client_config_t config = {
-      .host = MT_MODULE_HOST,
-      .port = MT_MODULE_HOST_PORT,
+      .host = module_http->host,
+      .port = module_http->port,
       .path = "/actions/list_objects",
-      .event_handler = _http_event_handler,
+      .event_handler = module_http->event_handle,
   };
 
   client = esp_http_client_init(&config);
 
   // check argument
-  if (token_in == NULL)
+  if (module_http->token == NULL)
   {
-    ESP_LOGE(TAG, "%4d token_in is NULL", __LINE__);
+    ESP_LOGE(TAG, "%4d token is NULL", __LINE__);
     err = ESP_ERR_INVALID_ARG;
     goto EXIT;
   }
@@ -1163,10 +1120,10 @@ uint8_t *mt_module_http_actions_list_objects(char *token_in, object_t *obj_in,
   int content_size = esp_http_client_get_content_length(client);
   if (content_size != 0)
   {
-    if (content_size != MT_MODULE_RESPONSE_CONTENT_SIZE)
+    if (content_size != module_http->response_content_size)
     {
-      ESP_LOGE(TAG, "%4d content_size %d != MT_MODULE_RESPONSE_CONTENT_SIZE %d",
-               __LINE__, content_size, MT_MODULE_RESPONSE_CONTENT_SIZE);
+      ESP_LOGE(TAG, "%4d content_size %d != response_content_size %d", __LINE__,
+               content_size, response_content_size);
       err = ESP_ERR_HTTP_BASE;
       goto EXIT;
     }
@@ -1202,4 +1159,161 @@ EXIT:
   }
 
   return objs_out;
+}
+
+static void mt_module_http_task_loop(mt_module_http_t *module_http)
+{
+  int issue_module_token_interval = 30;
+  int show_module_retry_max = 10;
+  int show_module_retry_count = 10;
+  int show_module_interval = 30;
+  int heartbeat_max = 6;
+  int heartbeat_count = 6;
+  int heartbeat_interval = 30;
+  esp_err_t err = ESP_OK;
+  module_t *module;
+
+RESTART:
+
+  while (true)
+  {
+    err = mt_module_http_actions_issue_module_token(module_http);
+    if (err != ESP_OK)
+    {
+      ESP_LOGE(TAG, "%4d %s mt_module_http_actions_issue_module_token failed",
+               __LINE__, __func__);
+    }
+    else
+    {
+      ESP_LOGI(TAG, "%4d %s mt_module_http_actions_issue_module_token success",
+               __LINE__, __func__)
+      break;
+    }
+
+    vTaskDelay(issue_module_token_interval / portTICK_PERIOD_MS);
+  }
+
+  show_module_retry_count = show_module_retry_max;
+
+  while (true)
+  {
+    if (module != NULL)
+    {
+      mt_module_http_utils_free_module(module);
+    }
+
+    if (show_module_retry_count <= 0)
+    {
+      ESP_LOGE(TAG, "%4d %s show_module_retry_count get limit, restart loop",
+               __LINE__, __func__);
+      goto RESTART;
+    }
+
+    module = mt_module_http_actions_show_module(module_http);
+    if (module == NULL)
+    {
+      ESP_LOGE(TAG, "%4d %s mt_module_http_actions_show_module failed",
+               __LINE__, __func__);
+      show_module_retry_count--;
+    }
+    else
+    {
+      ESP_LOGI(TAG, "%4d %s mt_module_http_actions_show_module success",
+               __LINE__, __func__)
+      if (module_http->module->id != NULL)
+      {
+        free(module_http->module->id);
+      }
+      module_http->module->id = malloc(strlen(module->id));
+      memcpy(module_http->module->id, module->id,
+             strlen(module->id));
+      mt_module_http_utils_free_module(module);
+      break;
+    }
+    vTaskDelay(show_module_interval / portTICK_PERIOD_MS);
+  }
+
+  heartbeat_count = heartbeat_max;
+  module_http->session_id =
+      mt_utils_session_new_session(mt_utils_session_gen_startup_session(),
+                                   mt_utils_session_gen_major_session());
+
+  while (true)
+  {
+    if (heartbeat_count <= 0)
+    {
+      ESP_LOGE(TAG, "%4d %s heartbeat_count get limit, restart loop");
+      goto RESTART;
+    }
+
+    err = mt_module_http_actions_heartbeat(module_http, module_http->module);
+    if (err != ESP_OK)
+    {
+      ESP_LOGE(TAG, "%4d %s mt_module_http_actions_heartbeat failed", __LINE__, __func__);
+      heartbeat_count--;
+    }
+    else{
+      ESP_LOGI(TAG, "%4d %s mt_module_http_actions_heartbeat success", __LINE__, __func__);
+      heartbeat_count = heartbeat_max;
+    }
+
+    vTaskDelay(heartbeat_interval / portTICK_PERIOD_MS);
+  }
+
+  return;
+}
+
+void mt_module_http_task(mt_module_http_t *module_http, char *task_name)
+{
+  // arg check
+  if (module_http == NULL)
+  {
+    ESP_LOGE(TAG, "%4d %s module_http NULL", __LINE__, __func__);
+    return;
+  }
+  else
+  {
+    if (module_http->host == NULL)
+    {
+      ESP_LOGE(TAG, "%4d %s module_http->host NULL", __LINE__, __func__);
+      return;
+    }
+
+    if (module_http->port == 0)
+    {
+      ESP_LOGE(TAG, "%4d %s module_http->host NULL", __LINE__, __func__);
+      return;
+    }
+
+    if (module_http->cred == NULL)
+    {
+      ESP_LOGE(TAG, "%4d %s module_http->cred NULL", __LINE__, __func__);
+      return;
+    }
+    else
+    {
+      if (module_http->cred->id == NULL)
+      {
+        ESP_LOGE(TAG, "%4d %s module_http->cred->id NULL", __LINE__, __func__);
+        return;
+      }
+
+      if (module_http->cred->secret == NULL)
+      {
+        ESP_LOGE(TAG, "%4d %s module_http->cred->secret NULL", __LINE__,
+                 __func__);
+        return;
+      }
+    }
+
+    if (module_http->event_handle == NULL)
+    {
+      ESP_LOGE(TAG, "%4d %s module_http->event_handle  NULL", __LINE__,
+               __func__);
+      return;
+    }
+  }
+
+  xTaskCreate((TaskFunction_t)mt_module_http_task_loop, task_name, 2 * 1024,
+              module_http, 10, NULL);
 }
