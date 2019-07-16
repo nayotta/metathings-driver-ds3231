@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package ai.metathings.component;
+
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/any.proto";
+
+message StreamCallRequest {
+  oneof request {
+    StreamCallConfigRequest config = 1;
+    StreamCallDataRequest data = 21;
+  }
+}
+
+message StreamCallConfigRequest {
+  google.protobuf.StringValue method = 1;
+}
+
+message StreamCallDataRequest {
+  google.protobuf.Any value = 1;
+}
+
+message StreamCallResponse {
+  oneof response {
+    StreamCallConfigResponse config = 1;
+    StreamCallDataResponse data = 21;
+  }
+}
+
+message StreamCallConfigResponse {
+  string method = 1;
+}
+
+message StreamCallDataResponse {
+  google.protobuf.Any value = 1;
+}

@@ -4,13 +4,50 @@
 #include "esp_log.h"
 
 #include "cJSON.h"
+
 #include "mt_http_client.h"
 #include "mt_module_http.h"
+#include "mt_utils.h"
 
 // global define ==============================================================
 static const char *TAG = "MT_MODULE_HTTP_UTILS";
 
 // global func ================================================================
+token_t *mt_module_http_utils_token_t_init()
+{
+  token_t *token = NULL;
+
+  token = malloc(sizeof(token_t));
+  token->id = NULL;
+  token->issued_at = 0;
+  token->entity = NULL;
+  token->roles = NULL;
+  token->roles_num = 0;
+  token->domain = NULL;
+  token->credential = NULL;
+  token->text = NULL;
+  token->groups = NULL;
+  token->groups_num = 0;
+
+  return token;
+}
+
+module_t *mt_module_http_utils_motule_t_init()
+{
+  module_t *module = NULL;
+
+  module = malloc(sizeof(module_t));
+  module->id = NULL;
+  module->state = NULL;
+  module->endpoint = NULL;
+  module->component = NULL;
+  module->name = NULL;
+  module->alias = NULL;
+  module->heartbeat_at = NULL;
+
+  return module;
+}
+
 esp_err_t mt_module_http_utils_free_module(module_t *module)
 {
   if (module == NULL)
@@ -291,8 +328,8 @@ esp_err_t mt_module_http_utils_free_credenital(credential_t *credential)
   if (credential->alias != NULL)
     free(credential->alias);
 
-  if (credential->sectret != NULL)
-    free(credential->sectret);
+  if (credential->secret != NULL)
+    free(credential->secret);
 
   if (credential->description != NULL)
     free(credential->description);
@@ -361,7 +398,7 @@ token_t *mt_module_http_utils_parse_token_res(char *content_in)
 {
   esp_err_t err = ESP_OK;
   cJSON *root = NULL, *item = NULL, *tkn_item = NULL;
-  token_t *tkn_out = malloc(sizeof(token_t));
+  token_t *tkn_out = mt_module_http_utils_token_t_init();
 
   root = cJSON_Parse(content_in);
   if (root == NULL)
@@ -384,11 +421,7 @@ token_t *mt_module_http_utils_parse_token_res(char *content_in)
           {
             if (strcmp(tkn_item->string, "text") == 0)
             {
-              int len = strlen(tkn_item->valuestring);
-              tkn_out->text = malloc(len);
-              strcpy(tkn_out->text, tkn_item->valuestring);
-              printf("debug: len=%d src=%s des=%s\n", len,
-                     tkn_item->valuestring, tkn_out->text);
+              tkn_out->text = mt_utils_string_copy(tkn_item->valuestring);
             }
           }
         }
@@ -397,10 +430,10 @@ token_t *mt_module_http_utils_parse_token_res(char *content_in)
   }
 
 ERROR:
-  if (root != NULL)
-  {
-    cJSON_Delete(root);
-  }
+  item = NULL;
+  tkn_item = NULL;
+  // free(root);
+  // cJSON_Delete(root);
 
   if (err != ESP_OK)
   {
@@ -420,8 +453,8 @@ ERROR:
 module_t *mt_module_http_uitls_parse_module_res(char *content_in)
 {
   esp_err_t err = ESP_OK;
-  cJSON *root = NULL, *item = NULL;
-  module_t *mdl_out = malloc(sizeof(module_t));
+  cJSON *root = NULL, *item = NULL, *mdl_item = NULL;
+  module_t *mdl_out = mt_module_http_utils_motule_t_init();
 
   root = cJSON_Parse(content_in);
   if (root == NULL)
@@ -433,52 +466,48 @@ module_t *mt_module_http_uitls_parse_module_res(char *content_in)
   for (int i = 0; i < cJSON_GetArraySize(root); i++)
   {
     item = cJSON_GetArrayItem(root, i);
-    if (cJSON_String == item->type)
+
+    if (cJSON_Object == item->type)
     {
-      if (strcmp(item->string, "id") == 0)
+      if (strcmp(item->string, "module") == 0)
       {
-        mdl_out->id = item->valuestring;
-      }
+        for (int j = 0; j < cJSON_GetArraySize(item); j++)
+        {
+          mdl_item = cJSON_GetArrayItem(item, j);
+          if (cJSON_String == mdl_item->type)
+          {
+            if (strcmp(mdl_item->string, "id") == 0)
+              mdl_out->id = mt_utils_string_copy(mdl_item->valuestring);
 
-      if (strcmp(item->string, "state") == 0)
-      {
-        mdl_out->state = item->valuestring;
-      }
+            if (strcmp(mdl_item->string, "state") == 0)
+              mdl_out->state = mt_utils_string_copy(mdl_item->valuestring);
 
-      if (strcmp(item->string, "endpoint") == 0)
-      {
-        mdl_out->endpoint = item->valuestring;
-      }
+            if (strcmp(mdl_item->string, "endpoint") == 0)
+              mdl_out->endpoint = mt_utils_string_copy(mdl_item->valuestring);
 
-      if (strcmp(item->string, "component") == 0)
-      {
-        mdl_out->component = item->valuestring;
-      }
+            if (strcmp(mdl_item->string, "component") == 0)
+              mdl_out->component = mt_utils_string_copy(mdl_item->valuestring);
 
-      if (strcmp(item->string, "name") == 0)
-      {
-        mdl_out->name = item->valuestring;
-      }
+            if (strcmp(mdl_item->string, "name") == 0)
+              mdl_out->name = mt_utils_string_copy(mdl_item->valuestring);
 
-      if (strcmp(item->string, "alias") == 0)
-      {
-        mdl_out->alias = item->valuestring;
-      }
-    }
-    if (cJSON_Number == item->type)
-    {
-      if (strcmp(item->string, "heartbeat_at") == 0)
-      {
-        *mdl_out->heartbeat_at = item->valueint;
+            if (strcmp(mdl_item->string, "alias") == 0)
+              mdl_out->alias = mt_utils_string_copy(mdl_item->valuestring);
+          }
+          if (cJSON_Number == mdl_item->type)
+          {
+            if (strcmp(mdl_item->string, "heartbeat_at") == 0)
+            {
+              *mdl_out->heartbeat_at = mdl_item->valueint;
+            }
+          }
+        }
       }
     }
   }
 
 ERROR:
-  if (root != NULL)
-  {
-    cJSON_Delete(root);
-  }
+  // cJSON_Delete(root);
 
   if (err != ESP_OK)
   {
@@ -587,10 +616,7 @@ object_t *mt_module_http_utils_parse_object_res(char *content_in)
   }
 
 ERROR:
-  if (root != NULL)
-  {
-    cJSON_Delete(root);
-  }
+  cJSON_Delete(root);
 
   if (err != ESP_OK)
   {
@@ -635,10 +661,7 @@ char *mt_module_http_utils_parse_content_res(char *content_in)
   }
 
 ERROR:
-  if (root != NULL)
-  {
-    cJSON_Delete(root);
-  }
+  cJSON_Delete(root);
 
   if (item != NULL)
   {
@@ -687,7 +710,8 @@ uint8_t *mt_module_http_utils_parse_objects_res(char *content_in,
         {
           object_t *obj_temp = NULL;
           item_obj = cJSON_GetArrayItem(item, j);
-          obj_temp = mt_module_http_utils_parse_object_res(cJSON_Print(item_obj));
+          obj_temp =
+              mt_module_http_utils_parse_object_res(cJSON_Print(item_obj));
           if (obj_temp == NULL)
           {
             err = ESP_ERR_HTTP_BASE;
@@ -703,10 +727,7 @@ uint8_t *mt_module_http_utils_parse_objects_res(char *content_in,
   }
 
 ERROR:
-  if (root != NULL)
-  {
-    cJSON_Delete(root);
-  }
+  cJSON_Delete(root);
 
   if (err != ESP_OK)
   {

@@ -1,6 +1,10 @@
 #ifndef MT_MODULE_HTTP_UTILS_H
 #define MT_MODULE_HTTP_UTILS_H
 
+token_t *mt_module_http_utils_token_t_init();
+
+module_t *mt_module_http_utils_motule_t_init();
+
 esp_err_t mt_module_http_utils_free_module(module_t *module);
 
 esp_err_t mt_module_http_utils_free_flow(flow_t *flow);

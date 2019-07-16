@@ -25,7 +25,13 @@ esp_err_t mt_http_client_post_request(esp_http_client_handle_t client,
   // set auth head
   if (token != NULL)
   {
-    err = esp_http_client_set_header(client, "authorization", token);
+    char token_bearer[128];
+    strcpy(token_bearer, "Bearer ");
+    strcat(token_bearer, token);
+    
+    ESP_LOGW(TAG, "%4d %s get token:%s", __LINE__, __func__, token_bearer);
+    
+    err = esp_http_client_set_header(client, "Authorization", token_bearer);
     if (err != ESP_OK)
     {
       ESP_LOGE(TAG, "%4d esp_http_client_set_header authorization failed code=%d", __LINE__, err);

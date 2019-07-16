@@ -96,11 +96,13 @@ int mt_mqtt_pub_msg(char *topic, uint8_t *buf, int size)
 }
 
 int mt_mqtt_init(char *host, char *port, char *username, char *password,
-                 char *module_id, void (*handle)(void *buf, int size))
+                 char *module_id, uint64_t session_id,
+                 void (*handle)(char *topic, void *buf, int size))
 {
   esp_err_t err;
 
-  err = mqtt_init(host, port, username, password, module_id, handle);
+  err =
+      mqtt_init(host, port, username, password, module_id, session_id, handle);
   if (err != ESP_OK)
   {
     ESP_LOGE(TAG, "%d  mqtt_init failed", __LINE__);
