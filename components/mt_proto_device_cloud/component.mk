@@ -1,2 +1,2 @@
 COMPONENT_ADD_INCLUDEDIRS = ./include
-COMPONENT_DEPENDS = freertos
+COMPONENT_DEPENDS = driver freertos

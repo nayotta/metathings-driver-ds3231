@@ -96,6 +96,7 @@ void app_main() {
                                  (uint8_t *)MQTT_CRED, sizeof(MQTT_CRED) - 1);
   ESP_LOGW(TAG, "deviceid=%s", MQTT_MODULE_ID);
   ESP_LOGW(TAG, "username=%s", MQTT_CRED);
+  ESP_LOGW(TAG, "password=%s", hmac_str);
 
   ret = mt_mqtt_init(MQTT_HOST, MQTT_PORT, MQTT_CRED, (char *)hmac_str,
                      MQTT_MODULE_ID, mt_mqtt_handle);
@@ -105,6 +106,22 @@ void app_main() {
   }
 
   mt_mqtt_task();
+
+  while (1) {
+    uint8_t *buf = (uint8_t *)"test";
+    int buf_size = 4;
+    mt_mqtt_pub_msg(
+        "mt/"
+        "86f63fff1bb64d62a8c9c30aa8e00f3186f63fff1bb64d62a8c9c30aa8e00f3186f63f"
+        "ff1bb64d62a8c9c30aa8e00f3186f63fff1bb64d62a8c9c30aa8e00f3186f63fff1bb6"
+        "4d62a8c9c30aa8e00f3186f63fff1bb64d62a8c9c30aa8e00f3186f63fff1bb64d62a8"
+        "c9c30aa8e00f3186f63fff1bb64d62a8c9c30aa8e00f3186f63fff1bb64d62a8c9c30a"
+        "a8e00f3186f63fff1bb64d62a8c9c30aa8e00f3186f63fff1bb64d62a8c9c30aa8e00f"
+        "31/down", buf, buf_size);
+
+    vTaskDelay(2000 / portTICK_PERIOD_MS);
+    
+  }
 
   ESP_LOGI(TAG, "test end");
 }

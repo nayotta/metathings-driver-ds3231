@@ -35,25 +35,18 @@
 // global value ===============================================================
 static const char *TAG = "MT_MQTT";
 
-long unsigned int App_Start_Time = 0;  // task start time
-int Restart_Times = -1;                // task start count
+long unsigned int App_Start_Time = 0; // task start time
+int Restart_Times = -1;               // task start count
 
 // static value ===============================================================
-static int Keep_Count = 0;                       // keepalive count
-static int Keep_Count_Limit = 3;                 // keepalive limit
-static int keepalive_Interval = 30;              // keepalive count 90s
-static long unsigned int LastKeepAliveTime = 0;  // keepalive record
+static int Keep_Count = 0;                      // keepalive count
+static int Keep_Count_Limit = 3;                // keepalive limit
+static int keepalive_Interval = 30;             // keepalive count 90s
+static long unsigned int LastKeepAliveTime = 0; // keepalive record
 
-// global func ================================================================
-int mt_mqtt_pub_msg(char *topic, uint8_t *buf, int size) {
-  int ret = 0;
-
-  ret = mqtt_pub_msg(topic, buf, size);
-
-  return ret;
-}
-
-static TaskFunction_t mt_mqtt_loop(void *pvParameters) {
+// static func ===============================================================
+static TaskFunction_t mt_mqtt_loop(void *pvParameters)
+{
 RESET:
   ESP_LOGI(TAG, "%d %s start", __LINE__, __func__);
 
@@ -63,7 +56,8 @@ RESET:
   Restart_Times++;
 
   // heartbeat loop
-  while (1) {
+  while (1)
+  {
     if (xTaskGetTickCount() - LastKeepAliveTime >=
         keepalive_Interval * 1000 / portTICK_RATE_MS)
 
@@ -74,7 +68,8 @@ RESET:
       // mt_mqtt_pub_heartbeat();
 
       // check heartbeat failed
-      if (Keep_Count >= Keep_Count_Limit) {
+      if (Keep_Count >= Keep_Count_Limit)
+      {
         ESP_LOGE(TAG, "%d Heartbeat failed reach limited, restart app",
                  __LINE__);
         goto RESET;
@@ -90,19 +85,34 @@ RESET:
   return NULL;
 }
 
+// global func ================================================================
+int mt_mqtt_pub_msg(char *topic, uint8_t *buf, int size)
+{
+  int ret = 0;
+
+  ret = mqtt_pub_msg(topic, buf, size);
+
+  return ret;
+}
+
 int mt_mqtt_init(char *host, char *port, char *username, char *password,
-                 char *module_id, void (*handle)(void *buf, int size)) {
+                 char *module_id, uint64_t session_id,
+                 void (*handle)(char *topic, void *buf, int size))
+{
   esp_err_t err;
 
-  err = mqtt_init(host, port, username, password, module_id, handle);
-  if (err != ESP_OK) {
+  err =
+      mqtt_init(host, port, username, password, module_id, session_id, handle);
+  if (err != ESP_OK)
+  {
     ESP_LOGE(TAG, "%d  mqtt_init failed", __LINE__);
   }
 
   return err;
 }
 
-void mt_mqtt_task() {
+void mt_mqtt_task()
+{
   ESP_LOGI(TAG, "Mqtt init");
 
   // task start

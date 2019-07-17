@@ -16,7 +16,7 @@ static const char *TAG = "MT_SNTP";
 #define MT_SNTP_NVS_MON "SNTP_MON"
 #define MT_SNTP_NVS_DAY "SNTP_DAY"
 #define MT_SNTP_SYNC_RTC_TIME (2 * 60)  // 2分钟
-#define MT_SNTP_FROM_RTC_TIMEOUT (30)  // 30秒
+#define MT_SNTP_FROM_RTC_TIMEOUT (30)   // 30秒
 
 extern EventGroupHandle_t WIFI_EVENT_GROUP;
 bool MT_SNTP_SYNCED = false;
@@ -121,7 +121,7 @@ static void mt_sntp_from_rtc_loop() {
   struct tm timeinfo = {0};
   struct timeval tv;
   int count = 0;
-  time_t now = 0;
+  // time_t now = 0;
 
   ESP_LOGI(TAG, "mt_sntp_from_rtc_task created");
 
