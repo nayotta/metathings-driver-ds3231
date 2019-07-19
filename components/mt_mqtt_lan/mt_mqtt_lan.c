@@ -44,7 +44,7 @@ static esp_err_t message_arrived_callback(esp_mqtt_event_handle_t event)
   {
     ESP_LOGI(TAG, "mqtt connect");
     char topic[TOPIC_MAX_SIZE] = "";
-    sprintf(topic, "mt/modules/%s/sessions/%llu/downstream", Module_id, Session_id);
+    sprintf(topic, "mt/modules/%s/proxy/sessions/%llu/downstream", Module_id, Session_id);
 
     ESP_LOGI(TAG, "%d sub %s", __LINE__, topic);
     err = esp_mqtt_client_subscribe(client, topic, 0);

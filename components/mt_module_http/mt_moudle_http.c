@@ -82,7 +82,8 @@ esp_err_t mt_module_http_actions_issue_module_token(
 
   // count hmac
   now = mt_utils_login_get_time_now();
-  time_stamp = mt_utils_login_get_time_rfc3339nano_string(now, &time_stamp_size);
+  time_stamp =
+      mt_utils_login_get_time_rfc3339nano_string(now, &time_stamp_size);
   if (time_stamp == NULL)
   {
     ESP_LOGE(TAG, "%4d %s mt_utils_login_get_time_rfc3339nano_string failed",
@@ -130,7 +131,7 @@ esp_err_t mt_module_http_actions_issue_module_token(
 
   // check res code
   int res_code = esp_http_client_get_status_code(client);
-  if (res_code != 200)
+  if (res_code != 201)
   {
     ESP_LOGI(TAG, "%4d %s requst failed code:%d", __LINE__, __func__, res_code);
     err = ESP_ERR_INVALID_ARG;
@@ -285,7 +286,8 @@ module_t *mt_module_http_actions_show_module(mt_module_http_t *module_http)
       {
         if (mdl_out->id == NULL)
         {
-          ESP_LOGE(TAG, "%4d mt_module_http_utils_parse_token_res module_id NULL",
+          ESP_LOGE(TAG,
+                   "%4d mt_module_http_utils_parse_token_res module_id NULL",
                    __LINE__);
           err = ESP_ERR_HTTP_BASE;
           goto EXIT;
@@ -319,7 +321,8 @@ esp_err_t mt_module_http_actions_heartbeat(mt_module_http_t *module_http,
   esp_err_t err = ESP_OK;
   char *post_data = NULL;
   esp_http_client_handle_t client = NULL;
-  cJSON *root, *mod_in_json;
+  cJSON *root;
+  // cJSON *mod_in_json;
 
   esp_http_client_config_t config = {
       .host = module_http->host,
@@ -363,8 +366,8 @@ esp_err_t mt_module_http_actions_heartbeat(mt_module_http_t *module_http,
 
   // request post_data
   root = cJSON_CreateObject();
-  //cJSON_AddItemToObject(root, "module", mod_in_json = cJSON_CreateObject());
-  //cJSON_AddStringToObject(mod_in_json, "name", mod_in->name);
+  // cJSON_AddItemToObject(root, "module", mod_in_json = cJSON_CreateObject());
+  // cJSON_AddStringToObject(mod_in_json, "name", mod_in->name);
   post_data = cJSON_Print(root);
   cJSON_Delete(root);
 
@@ -1187,15 +1190,113 @@ EXIT:
   return objs_out;
 }
 
+esp_err_t mt_module_http_actions_push_frame_to_flow(
+    mt_module_http_t *module_http, flow_t *flow_in, bool config_ack_in,
+    bool push_ack_in, char *id_out, char *session_out)
+{
+  esp_err_t err = ESP_OK;
+  char *post_data = NULL;
+  esp_http_client_handle_t client = NULL;
+  cJSON *root = NULL;
+  cJSON *flow_in_json = NULL;
+
+  esp_http_client_config_t config = {
+      .host = module_http->host,
+      .port = module_http->port,
+      .path = "/v1/device_cloud/actions/push_frame_to_flow",
+  };
+
+  client = esp_http_client_init(&config);
+
+  // check argument
+  if (module_http->token == NULL)
+  {
+    ESP_LOGE(TAG, "%4d token is NULL", __LINE__);
+    err = ESP_ERR_INVALID_ARG;
+    goto EXIT;
+  }
+
+  if (module_http->module == NULL)
+  {
+    ESP_LOGE(TAG, "%4d %s module_http->module is NULL", __LINE__, __func__);
+    err = ESP_ERR_INVALID_ARG;
+    goto EXIT;
+  }
+  else
+  {
+    if (module_http->module->id == NULL)
+    {
+      ESP_LOGE(TAG, "%4d %s module_http->module->id is NULL", __LINE__,
+               __func__);
+      err = ESP_ERR_INVALID_ARG;
+      goto EXIT;
+    }
+  }
+
+  if (flow_in == NULL)
+  {
+    ESP_LOGE(TAG, "%4d %s flow_in is NULL", __LINE__, __func__);
+    err = ESP_ERR_INVALID_ARG;
+    goto EXIT;
+  }
+  else
+  {
+    if (flow_in->name == NULL)
+    {
+      ESP_LOGE(TAG, "%4d %s flow_in->name is NULL", __LINE__, __func__);
+      err = ESP_ERR_INVALID_ARG;
+      goto EXIT;
+    }
+  }
+
+  // request post_data
+  root = cJSON_CreateObject();
+  cJSON_AddStringToObject(root, "id", module_http->module->id);
+  cJSON_AddItemToObject(root, "flow", flow_in_json = cJSON_CreateObject());
+  cJSON_AddStringToObject(flow_in_json, "name", flow_in->name);
+  cJSON_AddBoolToObject(root, "config_ack", push_ack_in);
+  cJSON_AddBoolToObject(root, "push_ack", push_ack_in);
+  post_data = cJSON_Print(root);
+  cJSON_Delete(root);
+
+  ESP_LOGI(TAG, "%4d %s post_data =%s", __LINE__, __func__, post_data);
+
+  // request
+  err = mt_http_client_post_request(client, module_http->token, post_data);
+  if (err != ESP_OK)
+  {
+    ESP_LOGE(TAG, "%4d %s mt_http_client_post_request failed", __LINE__,
+             __func__);
+    goto EXIT;
+  }
+
+  // check res code
+  int res_code = esp_http_client_get_status_code(client);
+  if (res_code != 200)
+  {
+    ESP_LOGE(TAG, "%4d %s requst failed code:%d", __LINE__, __func__, res_code);
+    err = ESP_ERR_HTTP_BASE;
+    goto EXIT;
+  }
+
+  ESP_LOGI(TAG, "%4d %s request ok", __LINE__, __func__);
+
+EXIT:
+  // clean
+  esp_http_client_cleanup(client);
+
+  return err;
+}
+
 static void mt_module_http_task_loop(mt_module_http_t *module_http)
 {
-  int issue_module_token_interval = 30 * 1000; // 30ms
+  int issue_module_token_interval = 30 * 1000; // 30s
   int show_module_retry_max = 10;
   int show_module_retry_count = 10;
-  int show_module_interval = 30 * 1000; // 30ms
+  int show_module_interval = 30 * 1000; // 30s
   int heartbeat_max = 6;
   int heartbeat_count = 6;
-  int heartbeat_interval = 30 * 1000; // 30ms
+  int heartbeat_interval = 30 * 1000; // 30s
   esp_err_t err = ESP_OK;
   module_t *module = NULL;
 
@@ -1246,18 +1347,15 @@ RESTART:
     {
       ESP_LOGI(TAG, "%4d %s mt_module_http_actions_show_module success",
                __LINE__, __func__);
-      if (module_http->module->id != NULL)
+      if (module_http->module != NULL)
       {
-        free(module_http->module->id);
+        //mt_module_http_utils_free_module(module_http->module);
+        ESP_LOGW(TAG, "%4d %s mt_module_http_utils_free_module success", __LINE__,
+               __func__);
       }
-      module_http->module->id = malloc(strlen(module->id) + 1);
-      module_http->module->id[strlen(module->id)] = '\0';
-      memcpy(module_http->module->id, module->id, strlen(module->id));
-      ESP_LOGW(TAG, "%4d %s mt_module_http_utils_free_module",
-               __LINE__, __func__);
-      mt_module_http_utils_free_module(module);
-      ESP_LOGW(TAG, "%4d %s mt_module_http_utils_free_module success",
-               __LINE__, __func__);
+
+      module_http->module = module;
+      
       break;
     }
     vTaskDelay(show_module_interval / portTICK_PERIOD_MS);
@@ -1268,7 +1366,7 @@ RESTART:
       mt_utils_session_new_session(mt_utils_session_gen_startup_session(),
                                    mt_utils_session_gen_major_session());
 
-  //debug here
+  // debug here
   module_http->session_id = 12345678;
   while (true)
   {
