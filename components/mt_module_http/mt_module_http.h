@@ -137,6 +137,12 @@ typedef struct _token_t
   int groups_num;
 } token_t;
 
+typedef struct _push_frame_res_t
+{
+  char *id;
+  char *sesssion_id;
+} push_frame_res_t;
+
 typedef struct _mt_module_http_t
 {
   char *host;
@@ -177,9 +183,9 @@ char *mt_module_http_actions_get_object_content(mt_module_http_t *module_http,
 uint8_t *mt_module_http_actions_list_objects(mt_module_http_t *module_http,
                                              object_t *obj_in, int *obj_num);
 
-esp_err_t mt_module_http_actions_push_frame_to_flow(
+push_frame_res_t *mt_module_http_actions_push_frame_to_flow(
     mt_module_http_t *module_http, flow_t *flow_in, bool config_ack_in,
-    bool push_ack_in, char *id_out, char *session_out);
+    bool push_ack_in);
 
 void mt_module_http_task(mt_module_http_t *module_http, char *task_name);
 

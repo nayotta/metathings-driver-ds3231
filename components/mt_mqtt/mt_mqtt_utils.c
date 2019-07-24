@@ -145,6 +145,7 @@ esp_err_t mt_mqtt_utils_get_session_id_from_topic(char *topic,
 char *mt_mqtt_utils_get_path_from_topic(char *topic)
 {
   // mt/modules/%s/proxy/sessions/%s/upstream/
+  // mt/devices/%s/flow_channel/sessions/%s/downstream
   uint8_t i = 0;
   uint8_t split_count = 0;
   uint8_t min_split_size = 3;
@@ -155,6 +156,8 @@ char *mt_mqtt_utils_get_path_from_topic(char *topic)
   char s3[64] = "";
   char s4[64] = "";
   char *path_out = NULL;
+
+  ESP_LOGW(TAG, "%4d %s topic:%s size:%d", __LINE__,__func__,topic, strlen(topic));
 
   for (i = 0; i < strlen(topic); i++)
   {
@@ -193,12 +196,13 @@ char *mt_mqtt_utils_get_path_from_topic(char *topic)
     offset++;
   }
   s2[start] = '\0';
+  /*
   if (strcmp(s2, "modules") != 0)
   {
     ESP_LOGE(TAG, "%4d %s unexcept string location 2:%s", __LINE__, __func__,
              s2);
     return NULL;
-  }
+  }*/
 
   start = 0;
   offset++;
@@ -226,9 +230,9 @@ char *mt_mqtt_utils_get_path_from_topic(char *topic)
   }
   s4[start] = '\0';
 
-  path_out = malloc(start);
-  path_out[start - 1] = '\0';
-  memcpy(path_out, s4, start - 1);
+  path_out = malloc(start+1);
+  path_out[start] = '\0';
+  memcpy(path_out, s4, start);
 
   return path_out;
 }

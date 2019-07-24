@@ -1190,20 +1190,23 @@ EXIT:
   return objs_out;
 }
 
-esp_err_t mt_module_http_actions_push_frame_to_flow(
+push_frame_res_t *mt_module_http_actions_push_frame_to_flow(
     mt_module_http_t *module_http, flow_t *flow_in, bool config_ack_in,
-    bool push_ack_in, char *id_out, char *session_out)
+    bool push_ack_in)
 {
   esp_err_t err = ESP_OK;
   char *post_data = NULL;
   esp_http_client_handle_t client = NULL;
   cJSON *root = NULL;
+  cJSON *config_in_json = NULL;
   cJSON *flow_in_json = NULL;
+  push_frame_res_t *res_out = NULL;
 
   esp_http_client_config_t config = {
       .host = module_http->host,
       .port = module_http->port,
       .path = "/v1/device_cloud/actions/push_frame_to_flow",
+      .event_handler = module_http->event_handler,
   };
 
   client = esp_http_client_init(&config);
@@ -1252,16 +1255,18 @@ esp_err_t mt_module_http_actions_push_frame_to_flow(
   // request post_data
   root = cJSON_CreateObject();
   cJSON_AddStringToObject(root, "id", module_http->module->id);
-  cJSON_AddItemToObject(root, "flow", flow_in_json = cJSON_CreateObject());
+  cJSON_AddItemToObject(root, "config", config_in_json = cJSON_CreateObject());
+  cJSON_AddItemToObject(config_in_json, "flow", flow_in_json = cJSON_CreateObject());
   cJSON_AddStringToObject(flow_in_json, "name", flow_in->name);
-  cJSON_AddBoolToObject(root, "config_ack", push_ack_in);
-  cJSON_AddBoolToObject(root, "push_ack", push_ack_in);
+  cJSON_AddBoolToObject(config_in_json, "config_ack", push_ack_in);
+  cJSON_AddBoolToObject(config_in_json, "push_ack", push_ack_in);
   post_data = cJSON_Print(root);
   cJSON_Delete(root);
 
   ESP_LOGI(TAG, "%4d %s post_data =%s", __LINE__, __func__, post_data);
 
   // request
+
   err = mt_http_client_post_request(client, module_http->token, post_data);
   if (err != ESP_OK)
   {
@@ -1279,13 +1284,59 @@ esp_err_t mt_module_http_actions_push_frame_to_flow(
     goto EXIT;
   }
 
+  // parse res content
+  int content_size = esp_http_client_get_content_length(client);
+  if (content_size != 0)
+  {
+    if (content_size != module_http->response_content_size)
+    {
+      ESP_LOGE(TAG,
+               "%4d content_size %d != module_http->response_content_size %d",
+               __LINE__, content_size, module_http->response_content_size);
+      err = ESP_ERR_HTTP_BASE;
+      goto EXIT;
+    }
+    else
+    {
+      res_out =
+          mt_module_http_utils_parse_push_frame_res(module_http->response_content);
+      if (res_out == NULL)
+      {
+        ESP_LOGE(TAG, "%4d mt_module_http_utils_parse_token_res failed code=%d",
+                 __LINE__, err);
+        err = ESP_ERR_HTTP_BASE;
+        goto EXIT;
+      }
+
+      if (res_out == NULL)
+      {
+        ESP_LOGE(TAG, "%4d %s token NULL", __LINE__, __func__);
+        err = ESP_ERR_HTTP_BASE;
+        goto EXIT;
+      }
+      else
+      {
+        if (res_out->sesssion_id == NULL)
+        {
+          ESP_LOGE(TAG, "%4d %s res_out->sesssion_id NULL", __LINE__, __func__);
+          err = ESP_ERR_HTTP_BASE;
+          goto EXIT;
+        }
+      }
+    }
+  }
+
   ESP_LOGI(TAG, "%4d %s request ok", __LINE__, __func__);
 
 EXIT:
+if(err != ESP_OK)
+{
+  mt_module_http_utils_free_push_frame_res(res_out);
+}
   // clean
   esp_http_client_cleanup(client);
 
-  return err;
+  return res_out;
 }
 
 static void mt_module_http_task_loop(mt_module_http_t *module_http)
@@ -1351,11 +1402,11 @@ RESTART:
       {
         //mt_module_http_utils_free_module(module_http->module);
         ESP_LOGW(TAG, "%4d %s mt_module_http_utils_free_module success", __LINE__,
-               __func__);
+                 __func__);
       }
 
       module_http->module = module;
-      
+
       break;
     }
     vTaskDelay(show_module_interval / portTICK_PERIOD_MS);
