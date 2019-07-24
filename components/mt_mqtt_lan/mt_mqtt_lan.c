@@ -29,6 +29,7 @@ static const char *TAG = "MT_MQTT_LAN";
 
 esp_mqtt_client_handle_t Mqtt_Client;
 char Module_id[128] = "";
+char Device_id[128] = "";
 uint64_t Session_id = 0;
 void (*msg_process)(char *topic, void *buf, int size);
 
@@ -44,13 +45,26 @@ static esp_err_t message_arrived_callback(esp_mqtt_event_handle_t event)
   {
     ESP_LOGI(TAG, "mqtt connect");
     char topic[TOPIC_MAX_SIZE] = "";
-    sprintf(topic, "mt/modules/%s/sessions/%llu/downstream", Module_id, Session_id);
+    sprintf(topic, "mt/modules/%s/+/sessions/+/downstream", Module_id);
 
     ESP_LOGI(TAG, "%d sub %s", __LINE__, topic);
     err = esp_mqtt_client_subscribe(client, topic, 0);
     if (err == -1)
     {
       ESP_LOGE(TAG, "%d esp_mqtt_client_subscribe error", __LINE__);
+    }
+
+    if (strcmp(Device_id, "") != 0)
+    {
+      char topic[TOPIC_MAX_SIZE] = "";
+      sprintf(topic, "mt/devices/%s/+/sessions/+/downstream", Device_id);
+
+      ESP_LOGI(TAG, "%d sub %s", __LINE__, topic);
+      err = esp_mqtt_client_subscribe(client, topic, 0);
+      if (err == -1)
+      {
+        ESP_LOGE(TAG, "%d esp_mqtt_client_subscribe error", __LINE__);
+      }
     }
 
     break;
@@ -109,7 +123,8 @@ int mqtt_pub_msg(char *topic, uint8_t *buf, int size)
 }
 
 int mqtt_init(char *host, char *port, char *username, char *password,
-              char *module_id, uint64_t session_id, void (*handle)(char *topic, void *buf, int size))
+              char *module_id, uint64_t session_id, char *device_id,
+              void (*handle)(char *topic, void *buf, int size))
 {
   esp_err_t err;
 
@@ -120,6 +135,7 @@ int mqtt_init(char *host, char *port, char *username, char *password,
   strcat(mqtt_uri_str, port);
 
   strcpy(Module_id, module_id);
+  strcpy(Device_id, device_id);
   Session_id = session_id;
   msg_process = handle;
 

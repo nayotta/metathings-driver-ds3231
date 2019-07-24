@@ -48,6 +48,17 @@ module_t *mt_module_http_utils_motule_t_init()
   return module;
 }
 
+push_frame_res_t *mt_module_http_utils_push_frame_res_t_init()
+{
+  push_frame_res_t *res = NULL;
+
+  res = malloc(sizeof(push_frame_res_t));
+  res->id = NULL;
+  res->sesssion_id = NULL;
+
+  return res;
+}
+
 esp_err_t mt_module_http_utils_free_module(module_t *module)
 {
   if (module == NULL)
@@ -75,6 +86,25 @@ esp_err_t mt_module_http_utils_free_module(module_t *module)
     free(module->alias);
 
   free(module);
+
+  return ESP_OK;
+}
+
+esp_err_t mt_module_http_utils_free_push_frame_res(push_frame_res_t *res)
+{
+  if (res == NULL)
+  {
+    ESP_LOGE(TAG, "%4d %s NULL, no need to free", __LINE__, __func__);
+    return ESP_ERR_INVALID_ARG;
+  }
+
+  if (res->id != NULL)
+    free(res->id);
+
+  if (res->sesssion_id != NULL)
+    free(res->sesssion_id);
+
+  free(res);
 
   return ESP_OK;
 }
@@ -482,6 +512,9 @@ module_t *mt_module_http_uitls_parse_module_res(char *content_in)
             if (strcmp(mdl_item->string, "state") == 0)
               mdl_out->state = mt_utils_string_copy(mdl_item->valuestring);
 
+            if (strcmp(mdl_item->string, "deviceId") == 0)
+              mdl_out->deviceID = mt_utils_string_copy(mdl_item->valuestring);
+
             if (strcmp(mdl_item->string, "endpoint") == 0)
               mdl_out->endpoint = mt_utils_string_copy(mdl_item->valuestring);
 
@@ -521,6 +554,65 @@ ERROR:
   else
   {
     return mdl_out;
+  }
+}
+
+push_frame_res_t *mt_module_http_utils_parse_push_frame_res(char *content_in)
+{
+  esp_err_t err = ESP_OK;
+  cJSON *root = NULL, *item = NULL, *config_item = NULL;
+  push_frame_res_t *res_out = mt_module_http_utils_push_frame_res_t_init();
+
+  root = cJSON_Parse(content_in);
+  if (root == NULL)
+  {
+    ESP_LOGE(TAG, "%4d cJSON_Parse NULL", __LINE__);
+    err = ESP_ERR_HTTP_BASE;
+    goto ERROR;
+  }
+  for (int i = 0; i < cJSON_GetArraySize(root); i++)
+  {
+    item = cJSON_GetArrayItem(root, i);
+
+    if (cJSON_String == item->type)
+    {
+
+      if (strcmp(item->string, "id") == 0)
+        res_out->id = mt_utils_string_copy(item->valuestring);
+    }
+
+    if (item->type == cJSON_Object)
+    {
+      if (strcmp(item->string, "config") == 0)
+      {
+        for (int j = 0; j < cJSON_GetArraySize(item); j++)
+        {
+          config_item = cJSON_GetArrayItem(item, j);
+          if (cJSON_String == config_item->type)
+          {
+            if (strcmp(config_item->string, "session") == 0)
+              res_out->sesssion_id = mt_utils_string_copy(config_item->valuestring);
+          }
+        }
+      }
+    }
+  }
+
+ERROR:
+  // cJSON_Delete(root);
+
+  if (err != ESP_OK)
+  {
+    if (res_out != NULL)
+    {
+      mt_module_http_utils_free_push_frame_res(res_out);
+    }
+
+    return NULL;
+  }
+  else
+  {
+    return res_out;
   }
 }
 

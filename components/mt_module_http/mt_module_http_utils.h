@@ -1,6 +1,9 @@
 #ifndef MT_MODULE_HTTP_UTILS_H
 #define MT_MODULE_HTTP_UTILS_H
 
+#include "esp_err.h"
+#include "mt_module_http.h"
+
 token_t *mt_module_http_utils_token_t_init();
 
 module_t *mt_module_http_utils_motule_t_init();
@@ -8,6 +11,8 @@ module_t *mt_module_http_utils_motule_t_init();
 esp_err_t mt_module_http_utils_free_module(module_t *module);
 
 esp_err_t mt_module_http_utils_free_flow(flow_t *flow);
+
+esp_err_t mt_module_http_utils_free_push_frame_res(push_frame_res_t *res);
 
 esp_err_t mt_module_http_utils_free_device(device_t *device);
 
@@ -32,6 +37,8 @@ esp_err_t mt_module_http_utils_free_objects(uint8_t *objects, int num);
 token_t *mt_module_http_utils_parse_token_res(char *content_in);
 
 module_t *mt_module_http_uitls_parse_module_res(char *content_in);
+
+push_frame_res_t *mt_module_http_utils_parse_push_frame_res(char *content_in);
 
 object_t *mt_module_http_utils_parse_object_res(char *content_in);
 
