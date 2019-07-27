@@ -72,7 +72,7 @@ typedef enum
 } eMBMasterSndState;
 
 /* ----------------------- Static variables ---------------------------------*/
-// static const char *TAG = "FREE_MODBUS_SERIAL";
+static const char *TAG = "MODBUS_MASTER_MBRTU";
 static volatile eMBMasterSndState eSndState;
 static volatile eMBMasterRcvState eRcvState;
 
@@ -163,6 +163,11 @@ eMBErrorCode eMBMasterRTUReceive(UCHAR *pucRcvAddress, UCHAR **pucFrame,
   eMBErrorCode eStatus = MB_ENOERR;
 
   // ESP_LOGI(TAG, "RTU RECV");
+  for (int i = 0; i < 6; i++)
+  {
+    printf("%2x ", ucMasterRTURcvBuf[i]);
+  }
+  printf("\n");
   ENTER_CRITICAL_SECTION();
   assert(usMasterRcvBufferPos < MB_SER_PDU_SIZE_MAX);
 
@@ -198,9 +203,6 @@ eMBErrorCode eMBMasterRTUSend(UCHAR ucSlaveAddress, const UCHAR *pucFrame,
 {
   eMBErrorCode eStatus = MB_ENOERR;
   USHORT usCRC16;
-
-  if (ucSlaveAddress > MB_MASTER_TOTAL_SLAVE_NUM)
-    return MB_EINVAL;
 
   ENTER_CRITICAL_SECTION();
 
@@ -280,12 +282,13 @@ BOOL xMBMasterRTUReceiveFSM(void)
        * idle.
        */
     // ESP_LOGI(TAG, "xMBMasterRTUReceiveFSM");
+    ESP_LOGW(TAG, "now state=%d", eRcvState);
+    
     vMBMasterPortTimersDisable();
     eSndState = STATE_M_TX_IDLE;
 
     usMasterRcvBufferPos = 0;
     ucMasterRTURcvBuf[usMasterRcvBufferPos++] = ucByte;
-    eRcvState = STATE_M_RX_RCV;
 
     /* Enable t3.5 timers. */
     vMBMasterPortTimersT35Enable();

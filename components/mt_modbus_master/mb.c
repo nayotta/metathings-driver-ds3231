@@ -258,6 +258,7 @@ eMBErrorCode eMBMasterPoll(void)
       }
       else
       {
+        printf("debug:%d rcvadd=%d getadd=%d\n", eStatus,ucRcvAddress,ucMBMasterGetDestAddress());
         vMBMasterSetErrorType(EV_RES_ERROR_RECEIVE_DATA);
         xMBMasterPortEventPost(EV_MASTER_ERROR_PROCESS);
       }

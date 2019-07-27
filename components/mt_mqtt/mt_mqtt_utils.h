@@ -13,6 +13,8 @@
 
 esp_err_t mt_mqtt_utils_get_session_id_from_topic(char *topic, uint64_t *session_id);
 
+char *mt_mqtt_utils_get_session_string_from_topic(char *topic);
+
 char *mt_mqtt_utils_get_path_from_topic(char *topic);
 
 #endif

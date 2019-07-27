@@ -1256,9 +1256,10 @@ push_frame_res_t *mt_module_http_actions_push_frame_to_flow(
   root = cJSON_CreateObject();
   cJSON_AddStringToObject(root, "id", module_http->module->id);
   cJSON_AddItemToObject(root, "config", config_in_json = cJSON_CreateObject());
-  cJSON_AddItemToObject(config_in_json, "flow", flow_in_json = cJSON_CreateObject());
+  cJSON_AddItemToObject(config_in_json, "flow",
+                        flow_in_json = cJSON_CreateObject());
   cJSON_AddStringToObject(flow_in_json, "name", flow_in->name);
-  cJSON_AddBoolToObject(config_in_json, "config_ack", push_ack_in);
+  cJSON_AddBoolToObject(config_in_json, "config_ack", config_ack_in);
   cJSON_AddBoolToObject(config_in_json, "push_ack", push_ack_in);
   post_data = cJSON_Print(root);
   cJSON_Delete(root);
@@ -1298,8 +1299,8 @@ push_frame_res_t *mt_module_http_actions_push_frame_to_flow(
     }
     else
     {
-      res_out =
-          mt_module_http_utils_parse_push_frame_res(module_http->response_content);
+      res_out = mt_module_http_utils_parse_push_frame_res(
+          module_http->response_content);
       if (res_out == NULL)
       {
         ESP_LOGE(TAG, "%4d mt_module_http_utils_parse_token_res failed code=%d",
@@ -1329,10 +1330,10 @@ push_frame_res_t *mt_module_http_actions_push_frame_to_flow(
   ESP_LOGI(TAG, "%4d %s request ok", __LINE__, __func__);
 
 EXIT:
-if(err != ESP_OK)
-{
-  mt_module_http_utils_free_push_frame_res(res_out);
-}
+  if (err != ESP_OK)
+  {
+    mt_module_http_utils_free_push_frame_res(res_out);
+  }
   // clean
   esp_http_client_cleanup(client);
 
@@ -1400,9 +1401,9 @@ RESTART:
                __LINE__, __func__);
       if (module_http->module != NULL)
       {
-        //mt_module_http_utils_free_module(module_http->module);
-        ESP_LOGW(TAG, "%4d %s mt_module_http_utils_free_module success", __LINE__,
-                 __func__);
+        // mt_module_http_utils_free_module(module_http->module);
+        ESP_LOGW(TAG, "%4d %s mt_module_http_utils_free_module success",
+                 __LINE__, __func__);
       }
 
       module_http->module = module;
@@ -1501,4 +1502,27 @@ void mt_module_http_task(mt_module_http_t *module_http, char *task_name)
 
   xTaskCreate((TaskFunction_t)mt_module_http_task_loop, task_name, 8 * 1024,
               module_http, 10, NULL);
+}
+
+mt_module_http_t *mt_module_http_new(char *host, int port, char *module_name,
+                                     char *module_cred_id,
+                                     char *module_cred_key,
+                                     http_event_handle_cb handle)
+{
+  mt_module_http_t *module_http = malloc(sizeof(mt_module_http_t));
+
+  module_http->host = host;
+  module_http->port = port;
+  module_http->cred = malloc(sizeof(credential_t));
+  module_http->cred->name = module_name;
+  module_http->cred->id = module_cred_id;
+  module_http->cred->secret = module_cred_key;
+  module_http->token = NULL;
+  module_http->module = malloc(sizeof(module_t));
+  module_http->module->id = NULL;
+  module_http->module->name = module_name;
+  module_http->event_handler = handle;
+  module_http->response_content = NULL;
+
+  return module_http;
 }
