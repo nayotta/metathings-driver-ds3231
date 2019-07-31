@@ -226,7 +226,7 @@ esp_err_t mt_bits001_get_temp(int addr, double *temp)
 
     *temp = (((uint32_t)(cmd_ret_payload.retBuf[0]) << 8) +
              cmd_ret_payload.retBuf[1] - 2000) /
-            100;
+            100.0;
   }
 
   ESP_LOGI(TAG, "%4d %s addr:%d temp:%f", __LINE__, __func__, addr, *temp);
@@ -264,7 +264,7 @@ esp_err_t mt_bits001_get_hum(int addr, double *hum)
 
     *hum = (((uint32_t)(cmd_ret_payload.retBuf[0]) << 8) +
             cmd_ret_payload.retBuf[1]) /
-           100;
+           100.0;
   }
 
   ESP_LOGI(TAG, "%4d %s addr:%d hum:%f", __LINE__, __func__, addr, *hum);
@@ -301,8 +301,7 @@ esp_err_t mt_bits001_get_frog(int addr, double *frog)
     }
 
     *frog = (((uint32_t)(cmd_ret_payload.retBuf[0]) << 8) +
-             cmd_ret_payload.retBuf[1]) /
-            100;
+             cmd_ret_payload.retBuf[1]);
   }
 
   ESP_LOGI(TAG, "%4d %s addr:%d frog:%f", __LINE__, __func__, addr, *frog);

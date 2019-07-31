@@ -14,7 +14,6 @@ static const char *TAG = "MT_MODULE_FLOW_MANAGE";
 esp_err_t mt_module_flow_manage_mqtt_process(char *topic, uint8_t *buf,
                                              uint8_t size)
 {
-    esp_err_t err = ESP_OK;
     char *session_string = NULL;
     bool match = false;
 

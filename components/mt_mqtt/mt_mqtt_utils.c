@@ -62,6 +62,13 @@ esp_err_t mt_mqtt_utils_get_session_id_from_topic(char *topic,
     offset++;
   }
   s2[start] = '\0';
+  if (strcmp(s2, "") == 0)
+  {
+    ESP_LOGE(TAG, "%4d %s unexcept string location 2:%s", __LINE__, __func__,
+             s2);
+    return NULL;
+  }
+  
 
   start = 0;
   offset++;
@@ -86,6 +93,13 @@ esp_err_t mt_mqtt_utils_get_session_id_from_topic(char *topic,
     s4[start] = topic[offset];
     start++;
     offset++;
+  }
+  s5[start] = '\0';
+  if (strcmp(s2, "") == 0)
+  {
+    ESP_LOGE(TAG, "%4d %s unexcept string location5:%s", __LINE__, __func__,
+             s5);
+    return NULL;
   }
 
   start = 0;
@@ -132,7 +146,6 @@ esp_err_t mt_mqtt_utils_get_session_id_from_topic(char *topic,
 char *mt_mqtt_utils_get_session_string_from_topic(char *topic)
 {
   // mt/modules/%s/proxy/sessions/%s/upstream/
-  esp_err_t err = ESP_OK;
   int offset = 0;
   int start = 0;
   int i = 0;
@@ -183,6 +196,12 @@ char *mt_mqtt_utils_get_session_string_from_topic(char *topic)
     offset++;
   }
   s2[start] = '\0';
+  if (strcmp(s2, "") == 0)
+  {
+    ESP_LOGE(TAG, "%4d %s unexcept string location 2:%s", __LINE__, __func__,
+             s2);
+    return NULL;
+  }
 
   start = 0;
   offset++;
@@ -207,6 +226,13 @@ char *mt_mqtt_utils_get_session_string_from_topic(char *topic)
     s4[start] = topic[offset];
     start++;
     offset++;
+  }
+  s3[start] = '\0';
+  if (strcmp(s4, "") == 0)
+  {
+    ESP_LOGE(TAG, "%4d %s unexcept string location 4:%s", __LINE__, __func__,
+             s4);
+    return NULL;
   }
 
   start = 0;
