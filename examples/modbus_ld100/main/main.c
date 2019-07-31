@@ -102,14 +102,14 @@ void app_main()
   ESP_LOGI(TAG, "test begin");
 
   emb_ret =
-      modbus_init(RS485_PORT, RS485_BAUD, RS485_PARITY, TX_PIN, RX_PIN, EN_PIN);
+      modbus_ld100_init(RS485_PORT, RS485_BAUD, RS485_PARITY, TX_PIN, RX_PIN, EN_PIN);
   if (emb_ret != 0)
   {
     ESP_LOGE(TAG, "%4d modbus_init failed", __LINE__);
     return;
   }
 
-  mt_modbus_task();
+  mt_modbus_ld100_task();
 
   // test get addr
   vTaskDelay(2000 / portTICK_RATE_MS);
