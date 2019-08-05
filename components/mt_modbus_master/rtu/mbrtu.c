@@ -30,6 +30,7 @@
 
 /* ----------------------- System includes ----------------------------------*/
 #include "esp_log.h"
+#include "esp_timer.h"
 #include "stdlib.h"
 #include "string.h"
 
@@ -73,6 +74,7 @@ typedef enum
 
 /* ----------------------- Static variables ---------------------------------*/
 static const char *TAG = "MODBUS_MASTER_MBRTU";
+int DEBUG_COUNT = 0;
 static volatile eMBMasterSndState eSndState;
 static volatile eMBMasterRcvState eRcvState;
 
@@ -80,7 +82,7 @@ static volatile UCHAR ucMasterRTUSndBuf[MB_PDU_SIZE_MAX];
 static volatile UCHAR ucMasterRTURcvBuf[MB_SER_PDU_SIZE_MAX];
 static volatile USHORT usMasterSendPDULength;
 
-static volatile UCHAR *pucMasterSndBufferCur;
+static volatile UCHAR *pucMasterSndBufferCur = NULL;
 static volatile USHORT usMasterSndBufferCount;
 
 static volatile USHORT usMasterRcvBufferPos;
@@ -142,9 +144,8 @@ void eMBMasterRTUStart(void)
    * to STATE_M_RX_IDLE. This makes sure that we delay startup of the
    * modbus protocol stack until the bus is free.
    */
-  eRcvState = STATE_M_RX_INIT;
+  eRcvState = STATE_M_RX_IDLE;
   vMBMasterPortSerialEnable(TRUE, FALSE);
-  vMBMasterPortTimersT35Enable();
 
   EXIT_CRITICAL_SECTION();
 }
@@ -163,11 +164,15 @@ eMBErrorCode eMBMasterRTUReceive(UCHAR *pucRcvAddress, UCHAR **pucFrame,
   eMBErrorCode eStatus = MB_ENOERR;
 
   // ESP_LOGI(TAG, "RTU RECV");
-  for (int i = 0; i < 6; i++)
+  /*
+  for (int i = 0; i < usMasterSendPDULength + 2; i++)
   {
     printf("%2x ", ucMasterRTURcvBuf[i]);
   }
-  printf("\n");
+  printf("\n");*/
+  printf("pos:%d, crc:%d\n", usMasterRcvBufferPos,
+         usMBCRC16((UCHAR *)ucMasterRTURcvBuf, usMasterRcvBufferPos));
+
   ENTER_CRITICAL_SECTION();
   assert(usMasterRcvBufferPos < MB_SER_PDU_SIZE_MAX);
 
@@ -203,6 +208,8 @@ eMBErrorCode eMBMasterRTUSend(UCHAR ucSlaveAddress, const UCHAR *pucFrame,
 {
   eMBErrorCode eStatus = MB_ENOERR;
   USHORT usCRC16;
+
+  // printf("eMBMasterRTUSend recv:%d, sent:%d\n", eRcvState, eSndState);
 
   ENTER_CRITICAL_SECTION();
 
@@ -255,6 +262,9 @@ BOOL xMBMasterRTUReceiveFSM(void)
   /* Always read the character. */
   (void)xMBMasterPortSerialGetByte((CHAR *)&ucByte);
 
+  printf("rtu count:%4d recv:%d, sent:%d, pos:%d, byte:%2x time:%lld\n", DEBUG_COUNT, eRcvState, eSndState,
+         usMasterRcvBufferPos, ucByte, esp_timer_get_time() / 1000);
+
   switch (eRcvState)
   {
     /* If we have received a character in the init state we have to
@@ -282,13 +292,15 @@ BOOL xMBMasterRTUReceiveFSM(void)
        * idle.
        */
     // ESP_LOGI(TAG, "xMBMasterRTUReceiveFSM");
-    ESP_LOGW(TAG, "now state=%d", eRcvState);
-    
+    // ESP_LOGW(TAG, "now state=%d", eRcvState);
+    eRcvState = STATE_M_RX_RCV;
     vMBMasterPortTimersDisable();
     eSndState = STATE_M_TX_IDLE;
 
     usMasterRcvBufferPos = 0;
     ucMasterRTURcvBuf[usMasterRcvBufferPos++] = ucByte;
+
+    printf("begin time:%lld\n", esp_timer_get_time() / 1000);
 
     /* Enable t3.5 timers. */
     vMBMasterPortTimersT35Enable();
@@ -370,6 +382,7 @@ BOOL xMBMasterRTUTransmitFSM(void)
 
 BOOL xMBMasterRTUTimerExpired(void)
 {
+  DEBUG_COUNT++;
   BOOL xNeedPoll = FALSE;
   switch (eRcvState)
   {

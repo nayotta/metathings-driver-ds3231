@@ -191,6 +191,10 @@ BOOL xMBMasterRunResTake(LONG lTimeOut)
   return FALSE;
 }
 
-void vMBMasterRunResRelease(void) { xSemaphoreGive(SemaphorMasterHdl); }
+void vMBMasterRunResRelease(void)
+{
+  xSemaphoreGive(SemaphorMasterHdl);
+  return;
+}
 
 void vMBMasterOsResInit(void) { SemaphorMasterHdl = xSemaphoreCreateMutex(); }

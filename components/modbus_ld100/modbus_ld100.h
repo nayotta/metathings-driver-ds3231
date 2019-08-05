@@ -21,7 +21,7 @@ struct RetMsg_t  // ret message struct
   USHORT retLen;             // ret len
 } * RetMsg;                  // global save point
 
-eMBErrorCode modbus_init(UCHAR ucPort, ULONG ulBaudRate, eMBParity eParity,
+eMBErrorCode modbus_ld100_init(UCHAR ucPort, ULONG ulBaudRate, eMBParity eParity,
                          int tx_pin, int rx_pin, int en_pin);
 
 eMBMasterReqErrCode modbus_ld100_sync_Cmd_04(UCHAR slaveAddr, USHORT target,
@@ -40,6 +40,6 @@ esp_err_t mt_ld100_get_relay(int addr, bool *state);
 
 esp_err_t mt_ld100_set_relay(int addr, bool state);
 
-void mt_modbus_task();
+void mt_modbus_ld100_task();
 
 #endif

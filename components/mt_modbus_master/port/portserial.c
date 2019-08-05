@@ -34,6 +34,7 @@
 #include "soc/dport_access.h"
 
 #include "esp_log.h"
+#include "esp_timer.h"
 
 static const char *TAG = "FREE_MODBUS_SERIAL";
 #define MB_LOG(...) ESP_LOGW(__VA_ARGS__)
@@ -47,7 +48,7 @@ static const char *TAG = "FREE_MODBUS_SERIAL";
 #define RS_TX_MODE 1
 #define RS_RX_MODE 0
 
-static QueueHandle_t mb_uart_queue;
+static QueueHandle_t mb_uart_queue = NULL;
 static uint8_t *mbDataP = NULL;
 
 /* ----------------------- static functions ---------------------------------*/
@@ -58,6 +59,7 @@ static uint8_t mb_serial_read(uint8_t *data, uint8_t size)
 {
   mbDataP = data;
   uint8_t remaindBytes = size;
+  printf("get %d byte %lld\n", size, esp_timer_get_time()/1000);
   while (remaindBytes--)
   {
     prvvUARTRxISR();
