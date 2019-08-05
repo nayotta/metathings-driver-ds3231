@@ -110,7 +110,7 @@ eMBErrorCode eMBMasterCB06(UCHAR *recvBuf, UCHAR recvCmd, USHORT recvLen)
   return eStatus;
 }
 
-eMBErrorCode modbus_init(UCHAR ucPort, ULONG ulBaudRate, eMBParity eParity,
+eMBErrorCode modbus_ld100_init(UCHAR ucPort, ULONG ulBaudRate, eMBParity eParity,
                          int tx_pin, int rx_pin, int en_pin)
 {
   eMBErrorCode ret = 0;
@@ -127,7 +127,7 @@ eMBErrorCode modbus_init(UCHAR ucPort, ULONG ulBaudRate, eMBParity eParity,
 }
 
 // modbus main loop
-void modbus_loop(void *parameter)
+static void modbus_loop(void *parameter)
 {
   eMBErrorCode eStatus;
 
@@ -215,7 +215,7 @@ EXIT:
   return errorCode;
 }
 
-void mt_modbus_task()
+void mt_modbus_ld100_task()
 {
   xTaskCreate(modbus_loop, "mt_modbus_task", 1024 * 8, NULL, 8, NULL);
 }

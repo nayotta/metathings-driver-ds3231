@@ -1,5 +1,5 @@
 #V := 1
-PROJECT_NAME := example-mt-modbuls-ld100
+PROJECT_NAME := example-mt-modbus-xycwa6a
 
 EXTRA_COMPONENT_DIRS := $(CURDIR)/../../components
 

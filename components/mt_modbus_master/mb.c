@@ -258,7 +258,7 @@ eMBErrorCode eMBMasterPoll(void)
       }
       else
       {
-        printf("debug:%d rcvadd=%d getadd=%d\n", eStatus,ucRcvAddress,ucMBMasterGetDestAddress());
+        // printf("debug:%d rcvadd=%d getadd=%d\n", eStatus,ucRcvAddress,ucMBMasterGetDestAddress());
         vMBMasterSetErrorType(EV_RES_ERROR_RECEIVE_DATA);
         xMBMasterPortEventPost(EV_MASTER_ERROR_PROCESS);
       }
@@ -349,6 +349,9 @@ eMBErrorCode eMBMasterPoll(void)
       case EV_RES_PROCESS_SUCESS:
         break;
       }
+      vMBMasterRunResRelease();
+      break;
+    default:
       vMBMasterRunResRelease();
       break;
     }
