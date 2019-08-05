@@ -27,26 +27,31 @@
 #include "mt_mbport.h"
 
 #include "driver/timer.h"
+#include "esp_timer.h"
 #include "soc/timer_group_struct.h"
 
-#define TIMER_INTR_SEL TIMER_INTR_LEVEL // Timer level interrupt
-#define TIMER_GROUP TIMER_GROUP_0       // Test on timer group 0
-#define TIMER_DIVIDER 2                 // Hardware timer clock divider
-#define TIMER_INTERVAL0_SEC (0.00005)   // [50us interval] test interval for timer 0
-                                        // [1000usec/1.0msec(0.001),100usec/0.1msec(0.0001),8.5usec/0.0085msec(0.00001)]
-#define TIMER_CPU_CLOCK 160000000L      // CPU Clock 160Mhz
+#define TIMER_INTR_SEL TIMER_INTR_LEVEL  // Timer level interrupt
+#define TIMER_GROUP TIMER_GROUP_0        // Test on timer group 0
+#define TIMER_DIVIDER 2                  // Hardware timer clock divider
+#define TIMER_INTERVAL0_SEC (0.00005)
+/* [50us interval] test interval for timer 0
+  [1000usec/1.0msec(0.001),100usec/0.1msec(0.0001),8.5usec/0.0085msec(0.00001)]*/
+#define TIMER_CPU_CLOCK 160000000L  // CPU Clock 160Mhz
 #define TIMER_SCALE \
-  (TIMER_BASE_CLK / TIMER_DIVIDER) // used to calculate counter value
+  (TIMER_BASE_CLK / TIMER_DIVIDER)  // used to calculate counter value
 #define TIMER_SCALE160 \
-  (TIMER_CPU_CLOCK / TIMER_DIVIDER) // used to calculate counter value
+  (TIMER_CPU_CLOCK / TIMER_DIVIDER)  // used to calculate counter value
+
+// global define ==============================================================
+int MB_MASTER_TIMEOUT_MS_RESPOND = 1000;  // ms
+
 
 /* ----------------------- static functions ---------------------------------*/
 static void prvvMasterTIMERExpiredISR(void *p);
 
 /* ----------------------- Start implementation -----------------------------*/
 
-static void init_timer_group_0(USHORT N50us)
-{
+static void init_timer_group_0(USHORT N50us) {
   int timer_group = TIMER_GROUP;
   int timer_idx = TIMER_0;
 
@@ -69,44 +74,39 @@ static void init_timer_group_0(USHORT N50us)
                      (void *)timer_idx, ESP_INTR_FLAG_LOWMED, NULL);
 }
 
-static void timer_value_update(USHORT val)
-{
+static void timer_value_update(USHORT val) {
   int timer_group = TIMER_GROUP;
   int timer_idx = TIMER_0;
 
   timer_pause(timer_group, timer_idx);
   timer_set_alarm_value(timer_group, timer_idx,
                         val * TIMER_INTERVAL0_SEC * TIMER_SCALE);
+  printf("timer %lld set %d\n", esp_timer_get_time() / 1000, val / 20);
 }
 
-BOOL xMBPortTimersInit(USHORT usTim1Timerout50us)
-{
+BOOL xMBPortTimersInit(USHORT usTim1Timerout50us) {
   init_timer_group_0(usTim1Timerout50us);
   return TRUE;
 }
 
-inline void vMBPortTimersEnable()
-{
+inline void vMBPortTimersEnable() {
   /* Enable the timer with the timeout passed to xMBPortTimersInit( ) */
   timer_start(TIMER_GROUP, TIMER_0);
 }
 
-inline void vMBPortTimersDisable()
-{
+inline void vMBPortTimersDisable() {
   /* Disable any pending timers. */
   timer_pause(TIMER_GROUP, TIMER_0);
 }
 
 /*  master device   APIs */
-BOOL xMBMasterPortTimersInit(USHORT usTim1Timerout50us)
-{
+BOOL xMBMasterPortTimersInit(USHORT usTim1Timerout50us) {
   return xMBPortTimersInit(usTim1Timerout50us);
 }
 
 INLINE
-void vMBMasterPortTimersT35Enable()
-{
-  USHORT timer_tick = 250 * 10; // 1000;
+void vMBMasterPortTimersT35Enable() {
+  USHORT timer_tick = 125 * 20;  // 1000;
   /* Set current timer mode, don't change it.*/
   vMBMasterSetCurTimerMode(MB_TMODE_T35);
   timer_value_update(timer_tick);
@@ -117,8 +117,7 @@ INLINE
 void vMBMasterPortTimersDisable() { vMBPortTimersDisable(); }
 
 INLINE
-void vMBMasterPortTimersConvertDelayEnable()
-{
+void vMBMasterPortTimersConvertDelayEnable() {
   USHORT timer_tick = MB_MASTER_DELAY_MS_CONVERT * 20;
   /* Set current timer mode, don't change it.*/
   vMBMasterSetCurTimerMode(MB_TMODE_CONVERT_DELAY);
@@ -127,17 +126,15 @@ void vMBMasterPortTimersConvertDelayEnable()
 }
 
 INLINE
-void vMBMasterPortTimersRespondTimeoutEnable()
-{
-  USHORT timer_tick = MB_MASTER_TIMEOUT_MS_RESPOND * 40;
+void vMBMasterPortTimersRespondTimeoutEnable() {
+  USHORT timer_tick = MB_MASTER_TIMEOUT_MS_RESPOND * 20;
   /* Set current timer mode, don't change it.*/
   vMBMasterSetCurTimerMode(MB_TMODE_RESPOND_TIMEOUT);
   timer_value_update(timer_tick);
   vMBPortTimersEnable();
 }
 
-static void prvvMasterTIMERExpiredISR(void *p)
-{
+static void prvvMasterTIMERExpiredISR(void *p) {
   TIMERG0.hw_timer[0].update = 1;
   TIMERG0.int_clr_timers.t0 = 1;
   (void)pxMBMasterPortCBTimerExpired();

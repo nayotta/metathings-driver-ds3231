@@ -81,7 +81,7 @@ static const char *TAG = "MT_MODBUS_MASTER";
 eMBMasterReqErrCode eMBMasterReq01(UCHAR slaveAddr, USHORT target, USHORT num,
                                    LONG lTimeOut)
 {
-    UCHAR *frame;
+    UCHAR *frame = NULL;
     eMBMasterReqErrCode err = MB_MRE_NO_ERR;
 
     if (xMBMasterRunResTake(lTimeOut) == FALSE)
@@ -105,7 +105,7 @@ eMBMasterReqErrCode eMBMasterReq01(UCHAR slaveAddr, USHORT target, USHORT num,
 
 eMBException eMBMasterFunc01(UCHAR *recvFrame, USHORT *recvBit)
 {
-    UCHAR *sendFrame;
+    UCHAR *sendFrame = NULL;
     UCHAR recvCmd;
     USHORT recvNum;
     UCHAR recvLen;
@@ -173,7 +173,7 @@ eMBException eMBMasterFunc01(UCHAR *recvFrame, USHORT *recvBit)
 eMBMasterReqErrCode eMBMasterReq02(UCHAR slaveAddr, USHORT target, USHORT num,
                                    LONG lTimeOut)
 {
-    UCHAR *frame;
+    UCHAR *frame = NULL;
     eMBMasterReqErrCode err = MB_MRE_NO_ERR;
 
     if (xMBMasterRunResTake(lTimeOut) == FALSE)
@@ -197,7 +197,7 @@ eMBMasterReqErrCode eMBMasterReq02(UCHAR slaveAddr, USHORT target, USHORT num,
 
 eMBException eMBMasterFunc02(UCHAR *recvFrame, USHORT *recvBit)
 {
-    UCHAR *sendFrame;
+    UCHAR *sendFrame = NULL;
     UCHAR recvCmd;
     USHORT recvNum;
     UCHAR recvLen;
@@ -265,7 +265,7 @@ eMBException eMBMasterFunc02(UCHAR *recvFrame, USHORT *recvBit)
 eMBMasterReqErrCode eMBMasterReq03(UCHAR slaveAddr, USHORT target, USHORT num,
                                    LONG lTimeOut)
 {
-    UCHAR *frame;
+    UCHAR *frame = NULL;
     eMBMasterReqErrCode err = MB_MRE_NO_ERR;
 
     if (xMBMasterRunResTake(lTimeOut) == FALSE)
@@ -280,8 +280,8 @@ eMBMasterReqErrCode eMBMasterReq03(UCHAR slaveAddr, USHORT target, USHORT num,
         frame[MB_PDU_REQ_NUM_OFF] = num >> 8;
         frame[MB_PDU_REQ_NUM_OFF + 1] = num;
         vMBMasterSetPDUSndLength(MB_PDU_SIZE_MIN + MB_PDU_REQ_CMD_SIZE);
-        (void)xMBMasterResEventClean();
-        (void)xMBMasterPortEventPost(EV_MASTER_FRAME_SENT);
+        xMBMasterResEventClean();
+        xMBMasterPortEventPost(EV_MASTER_FRAME_SENT);
         err = eMBMasterWaitRequestFinish();
     }
     return err;
@@ -289,7 +289,7 @@ eMBMasterReqErrCode eMBMasterReq03(UCHAR slaveAddr, USHORT target, USHORT num,
 
 eMBException eMBMasterFunc03(UCHAR *recvFrame, USHORT *recvBit)
 {
-    UCHAR *sendFrame;
+    UCHAR *sendFrame = NULL;
     UCHAR recvCmd;
     USHORT recvNum;
 
@@ -341,12 +341,11 @@ eMBException eMBMasterFunc03(UCHAR *recvFrame, USHORT *recvBit)
 eMBMasterReqErrCode eMBMasterReq04(UCHAR slaveAddr, USHORT target, USHORT num,
                                    LONG lTimeOut)
 {
-    UCHAR *frame;
+    UCHAR *frame = NULL;
     eMBMasterReqErrCode err = MB_MRE_NO_ERR;
 
     if (xMBMasterRunResTake(lTimeOut) == FALSE)
     {
-        ESP_LOGW(TAG, "%4d xMBMasterRunResTake timeout", __LINE__);
         err = MB_MRE_MASTER_BUSY;
     }
     else
@@ -368,7 +367,7 @@ eMBMasterReqErrCode eMBMasterReq04(UCHAR slaveAddr, USHORT target, USHORT num,
 
 eMBException eMBMasterFunc04(UCHAR *recvFrame, USHORT *recvBit)
 {
-    UCHAR *sendFrame;
+    UCHAR *sendFrame = NULL;
     UCHAR recvCmd;
     USHORT recvNum;
 
@@ -420,7 +419,7 @@ eMBException eMBMasterFunc04(UCHAR *recvFrame, USHORT *recvBit)
 eMBMasterReqErrCode eMBMasterReq05(UCHAR slaveAddr, USHORT target, USHORT num,
                                    LONG lTimeOut)
 {
-    UCHAR *frame;
+    UCHAR *frame = NULL;
     eMBMasterReqErrCode err = MB_MRE_NO_ERR;
 
     if (xMBMasterRunResTake(lTimeOut) == FALSE)
@@ -444,7 +443,7 @@ eMBMasterReqErrCode eMBMasterReq05(UCHAR slaveAddr, USHORT target, USHORT num,
 
 eMBException eMBMasterFunc05(UCHAR *recvFrame, USHORT *recvBit)
 {
-    UCHAR *sendFrame;
+    UCHAR *sendFrame = NULL;
     UCHAR recvCmd;
     USHORT recvNum;
 
@@ -488,7 +487,7 @@ eMBException eMBMasterFunc05(UCHAR *recvFrame, USHORT *recvBit)
 eMBMasterReqErrCode eMBMasterReq06(UCHAR slaveAddr, USHORT target, USHORT num,
                                    LONG lTimeOut)
 {
-    UCHAR *frame;
+    UCHAR *frame = NULL;
     eMBMasterReqErrCode err = MB_MRE_NO_ERR;
 
     if (xMBMasterRunResTake(lTimeOut) == FALSE)
@@ -512,7 +511,7 @@ eMBMasterReqErrCode eMBMasterReq06(UCHAR slaveAddr, USHORT target, USHORT num,
 
 eMBException eMBMasterFunc06(UCHAR *recvFrame, USHORT *recvBit)
 {
-    UCHAR *sendFrame;
+    UCHAR *sendFrame = NULL;
     UCHAR recvCmd;
     USHORT recvNum;
 
