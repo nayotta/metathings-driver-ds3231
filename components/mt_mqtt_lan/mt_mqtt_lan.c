@@ -84,16 +84,21 @@ static esp_err_t message_arrived_callback(esp_mqtt_event_handle_t event)
     break;
   case MQTT_EVENT_DATA:
   {
-    ESP_LOGI(TAG, "%d get data, size=%d", __LINE__, (int)event->data_len);
+    char *topic = malloc(event->topic_len + 1);
+    memcpy(topic, event->topic, event->topic_len);
+    topic[event->topic_len] = '\0';
+    ESP_LOGI(TAG, "%d get data, topic:%s size=%d", __LINE__, topic,
+             (int)event->data_len);
     if (msg_process != NULL)
     {
-      (*msg_process)(event->topic, (void *)event->data, (int)event->data_len);
+      (*msg_process)(topic, (void *)event->data, (int)event->data_len);
     }
     else
     {
       ESP_LOGE(TAG, "%d msg_process not init", __LINE__);
       return ESP_ERR_INVALID_ARG;
     }
+    free(topic);
     break;
   }
   case MQTT_EVENT_ERROR:

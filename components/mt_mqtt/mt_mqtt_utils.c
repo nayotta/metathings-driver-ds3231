@@ -283,9 +283,6 @@ char *mt_mqtt_utils_get_path_from_topic(char *topic)
   char s4[64] = "";
   char *path_out = NULL;
 
-  ESP_LOGW(TAG, "%4d %s topic:%s size:%d", __LINE__, __func__, topic,
-           strlen(topic));
-
   for (i = 0; i < strlen(topic); i++)
   {
     if (topic[i] == '/')
