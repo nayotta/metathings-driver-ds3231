@@ -158,6 +158,8 @@ void vMBMasterPortTimersRespondTimeoutEnable(void);
 
 void vMBMasterPortTimersDisable(void);
 
+void mt_vMBMaster_set_T35_interval(int interval);
+
 /* ----------------- Callback for the master error process ------------------*/
 void vMBMasterResErrorCBRespondTimeout();
 
