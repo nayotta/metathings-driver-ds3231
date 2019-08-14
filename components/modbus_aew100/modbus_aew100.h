@@ -14,12 +14,42 @@
 
 #define BUF_MAXLEN 64
 
-struct RetMsg_t  // ret message struct
+struct _Aew100_data_t
 {
-  UCHAR retBuf[BUF_MAXLEN];  // ret buffer
-  USHORT recvCmd;            // ret addr
-  USHORT retLen;             // ret len
-} * RetMsg;                  // global save point
+  double currentA;
+  double currentB;
+  double currentC;
+  double votageA;
+  double votageB;
+  double votageC;
+  double activePowerA;
+  double activePowerB;
+  double activePowerC;
+  double reactivePowerA;
+  double reactivePowerB;
+  double reactivePowerC;
+  double powerFactorA;
+  double powerFactorB;
+  double powerFactorC;
+  double qualityA;
+  double qualityB;
+  double qualityC;
+  double tempA;
+  double tempB;
+  double tempC;
+  double maxPowerA;
+  double maxPowerB;
+  double maxPowerC;
+};
+
+typedef struct _Aew100_data_t Aew100_data_t;
+
+struct RetMsg_t // ret message struct
+{
+  UCHAR retBuf[BUF_MAXLEN]; // ret buffer
+  USHORT recvCmd;           // ret addr
+  USHORT retLen;            // ret len
+} * RetMsg;                 // global save point
 
 eMBErrorCode modbus_aew100_init(UCHAR ucPort, ULONG ulBaudRate,
                                 eMBParity eParity, int tx_pin, int rx_pin,
@@ -28,8 +58,39 @@ eMBErrorCode modbus_aew100_init(UCHAR ucPort, ULONG ulBaudRate,
 eMBMasterReqErrCode modbus_aew100_sync_cmd_03(UCHAR slaveAddr, USHORT target,
                                               USHORT num, struct RetMsg_t *ret);
 
-esp_err_t mt_aew100_get_current(UCHAR addr, double *currentA, double *currentB,
-                                double *currentC);
+esp_err_t mt_aew100_get_currentA(UCHAR addr, double *data);
+esp_err_t mt_aew100_get_currentB(UCHAR addr, double *data);
+esp_err_t mt_aew100_get_currentC(UCHAR addr, double *data);
+
+esp_err_t mt_aew100_get_votageA(UCHAR addr, double *data);
+esp_err_t mt_aew100_get_votageB(UCHAR addr, double *data);
+esp_err_t mt_aew100_get_votageC(UCHAR addr, double *data);
+
+esp_err_t mt_aew100_get_activePowerA(UCHAR addr, double *data);
+esp_err_t mt_aew100_get_activePowerB(UCHAR addr, double *data);
+esp_err_t mt_aew100_get_activePowerC(UCHAR addr, double *data);
+
+esp_err_t mt_aew100_get_reactivePowerA(UCHAR addr, double *data);
+esp_err_t mt_aew100_get_reactivePowerB(UCHAR addr, double *data);
+esp_err_t mt_aew100_get_reactivePowerC(UCHAR addr, double *data);
+
+esp_err_t mt_aew100_get_powerFactorA(UCHAR addr, double *data);
+esp_err_t mt_aew100_get_powerFactorB(UCHAR addr, double *data);
+esp_err_t mt_aew100_get_powerFactorC(UCHAR addr, double *data);
+
+esp_err_t mt_aew100_get_qualityA(UCHAR addr, double *data);
+esp_err_t mt_aew100_get_qualityB(UCHAR addr, double *data);
+esp_err_t mt_aew100_get_qualityC(UCHAR addr, double *data);
+
+esp_err_t mt_aew100_get_tempA(UCHAR addr, double *data);
+esp_err_t mt_aew100_get_tempB(UCHAR addr, double *data);
+esp_err_t mt_aew100_get_tempC(UCHAR addr, double *data);
+
+esp_err_t mt_aew100_get_maxPowerA(UCHAR addr, double *data);
+esp_err_t mt_aew100_get_maxPowerB(UCHAR addr, double *data);
+esp_err_t mt_aew100_get_maxPowerC(UCHAR addr, double *data);
+
+esp_err_t mt_aew100_get_data(UCHAR addr, Aew100_data_t *data);
 
 void mt_modbus_aew100_task();
 

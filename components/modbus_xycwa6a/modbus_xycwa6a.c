@@ -11,6 +11,7 @@
 
 #include "mt_mbfunc.h"
 #include "mt_port.h"
+#include "mt_mbport.h"
 
 #include "modbus_xycwa6a.h"
 
@@ -116,6 +117,8 @@ eMBErrorCode modbus_xycwa6a_init(UCHAR ucPort, ULONG ulBaudRate,
   {
     ESP_LOGE(TAG, "%4d eMBInit failed!!! eStatus: %d", __LINE__, ret);
   }
+
+  mt_vMBMaster_set_T35_interval(350); // T35 set 350ms
 
   return ret;
 }
