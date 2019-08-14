@@ -13,9 +13,9 @@ static const char *TAG = "modbus_airswitch001_example";
 UCHAR RS485_PORT = 2;
 ULONG RS485_BAUD = 19200;
 eMBParity RS485_PARITY = MB_PAR_NONE;
-int TX_PIN = 23;
-int RX_PIN = 22;
-int EN_PIN = 18;
+int TX_PIN = 13;
+int RX_PIN = 15;
+int EN_PIN = 05;
 
 UCHAR ADDR = 1;
 
