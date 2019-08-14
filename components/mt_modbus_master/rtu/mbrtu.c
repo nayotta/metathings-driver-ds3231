@@ -300,7 +300,7 @@ BOOL xMBMasterRTUReceiveFSM(void)
     usMasterRcvBufferPos = 0;
     ucMasterRTURcvBuf[usMasterRcvBufferPos++] = ucByte;
 
-    printf("begin time:%lld\n", esp_timer_get_time() / 1000);
+    //printf("begin time:%lld\n", esp_timer_get_time() / 1000);
 
     /* Enable t3.5 timers. */
     vMBMasterPortTimersT35Enable();

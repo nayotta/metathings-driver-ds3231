@@ -59,7 +59,7 @@ static uint8_t mb_serial_read(uint8_t *data, uint8_t size)
 {
   mbDataP = data;
   uint8_t remaindBytes = size;
-  printf("get %d byte %lld\n", size, esp_timer_get_time()/1000);
+  //printf("get %d byte %lld\n", size, esp_timer_get_time()/1000);
   while (remaindBytes--)
   {
     prvvUARTRxISR();

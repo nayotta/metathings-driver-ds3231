@@ -81,7 +81,7 @@ static void timer_value_update(USHORT val) {
   timer_pause(timer_group, timer_idx);
   timer_set_alarm_value(timer_group, timer_idx,
                         val * TIMER_INTERVAL0_SEC * TIMER_SCALE);
-  printf("timer %lld set %d\n", esp_timer_get_time() / 1000, val / 20);
+  //("timer %lld set %d\n", esp_timer_get_time() / 1000, val / 20);
 }
 
 BOOL xMBPortTimersInit(USHORT usTim1Timerout50us) {
@@ -106,7 +106,7 @@ BOOL xMBMasterPortTimersInit(USHORT usTim1Timerout50us) {
 
 INLINE
 void vMBMasterPortTimersT35Enable() {
-  USHORT timer_tick = 125 * 20;  // 1000;
+  USHORT timer_tick = 250 * 20;  // 1000;
   /* Set current timer mode, don't change it.*/
   vMBMasterSetCurTimerMode(MB_TMODE_T35);
   timer_value_update(timer_tick);
