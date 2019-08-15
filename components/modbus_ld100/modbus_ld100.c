@@ -135,6 +135,10 @@ static void modbus_loop(void *parameter)
   modbus_lock_init();
 
   RetMsg = malloc(sizeof(struct RetMsg_t)); // global no need free
+  memset(RetMsg->retBuf, 0, BUF_MAXLEN);
+  RetMsg->recvCmd = 0;
+  RetMsg->retLen = 0;
+
 
   // master enable
   ESP_LOGI(TAG, "%4d eMBInit OK.", __LINE__);
