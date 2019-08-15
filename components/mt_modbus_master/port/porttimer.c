@@ -85,7 +85,7 @@ static void timer_value_update(USHORT val)
   timer_pause(timer_group, timer_idx);
   timer_set_alarm_value(timer_group, timer_idx,
                         val * TIMER_INTERVAL0_SEC * TIMER_SCALE);
-  //("timer %lld set %d\n", esp_timer_get_time() / 1000, val / 20);
+  //printf("timer %lld set %d\n", esp_timer_get_time() / 1000, val / 20);
 }
 
 BOOL xMBPortTimersInit(USHORT usTim1Timerout50us)

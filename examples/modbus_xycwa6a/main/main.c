@@ -13,9 +13,9 @@ static const char *TAG = "modbus_xycwa6a_example";
 UCHAR RS485_PORT = 2;
 ULONG RS485_BAUD = 9600;
 eMBParity RS485_PARITY = MB_PAR_NONE;
-int TX_PIN = 23;
-int RX_PIN = 22;
-int EN_PIN = 18;
+int TX_PIN = 13;
+int RX_PIN = 15;
+int EN_PIN = 05;
 
 int ADDR = 1;
 
