@@ -141,6 +141,8 @@ eMBErrorCode modbus_aew100_init(UCHAR ucPort, ULONG ulBaudRate,
     ESP_LOGE(TAG, "%4d eMBInit failed!!! eStatus: %d", __LINE__, ret);
   }
 
+  mt_vMBMaster_set_T35_interval(250); // T35 set 350ms
+
   return ret;
 }
 
@@ -153,6 +155,9 @@ static void modbus_aew100_loop(void *parameter)
   modbus_lock_init();
 
   RetMsg = malloc(sizeof(struct RetMsg_t)); // global no need free
+  memset(RetMsg->retBuf, 0, BUF_MAXLEN);
+  RetMsg->recvCmd = 0;
+  RetMsg->retLen = 0;
 
   // master enable
   ESP_LOGI(TAG, "%4d eMBInit OK.", __LINE__);
