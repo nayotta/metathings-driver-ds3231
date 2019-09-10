@@ -108,20 +108,23 @@ char *mt_utils_int64_to_string(uint64_t src, uint8_t *size_out)
     sprintf(des, "%llu", src);
     if (des != NULL)
     {
-        *size_out = (uint8_t)strlen(des);
+        *size_out = (uint8_t)strlen(des) + 1;
     }
 
     if (*size_out > 0)
     {
-        ret = malloc(strlen(des));
-        memcpy(ret, des, *size_out);
+        ret = malloc(strlen(des) + 1);
+        ret[strlen(des)] = '\0';
+        memcpy(ret, des, strlen(des));
     }
     else
     {
         return NULL;
     }
+    if (des != NULL)
+        free(des);
 
-    return des;
+    return ret;
 }
 
 char *mt_utils_string_copy(char *str_in)

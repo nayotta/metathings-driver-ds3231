@@ -200,21 +200,23 @@ esp_err_t mt_module_http_actions_issue_module_token(
   memcpy(module_http->token, tkn_out->text, strlen(tkn_out->text));
 
 EXIT:
+  // clean
+  esp_http_client_cleanup(client);
+
+  if (post_data != NULL)
+    free(post_data);
+
   if (time_stamp != NULL)
     free(time_stamp);
+
+  if (time_stamp_str != NULL)
+    free(time_stamp_str);
 
   if (hmac != NULL)
     free(hmac);
 
-  // clean
-  esp_http_client_cleanup(client);
-  if (err != ESP_OK)
-  {
-    if (tkn_out != NULL)
-    {
-      mt_module_http_utils_free_token(tkn_out);
-    }
-  }
+  if (tkn_out != NULL)
+    mt_module_http_utils_free_token(tkn_out);
 
   return err;
 }
@@ -321,8 +323,9 @@ esp_err_t mt_module_http_actions_heartbeat(mt_module_http_t *module_http,
   esp_err_t err = ESP_OK;
   char *post_data = NULL;
   esp_http_client_handle_t client = NULL;
-  cJSON *root;
-  // cJSON *mod_in_json;
+  cJSON *root = NULL;
+  uint8_t str_size = 0;
+  char *session_id_str = NULL;
 
   esp_http_client_config_t config = {
       .host = module_http->host,
@@ -366,20 +369,12 @@ esp_err_t mt_module_http_actions_heartbeat(mt_module_http_t *module_http,
 
   // request post_data
   root = cJSON_CreateObject();
-  // cJSON_AddItemToObject(root, "module", mod_in_json = cJSON_CreateObject());
-  // cJSON_AddStringToObject(mod_in_json, "name", mod_in->name);
   post_data = cJSON_Print(root);
   cJSON_Delete(root);
 
-  ESP_LOGI(TAG, "%4d %s post_data =%s", __LINE__, __func__, post_data);
-
   // request extra header
-  uint8_t str_size = 0;
-  char *session_id_str = NULL;
-
   session_id_str = mt_utils_int64_to_string(module_http->session_id, &str_size);
   err = esp_http_client_set_header(client, "MT-Module-Session", session_id_str);
-
   if (err != ESP_OK)
   {
     ESP_LOGE(TAG,
@@ -387,6 +382,9 @@ esp_err_t mt_module_http_actions_heartbeat(mt_module_http_t *module_http,
              __LINE__, err);
     goto EXIT;
   }
+
+  ESP_LOGI(TAG, "%4d %s session:%s post_data:%s", __LINE__, __func__,
+           session_id_str, post_data);
 
   // request
   err = mt_http_client_post_request(client, module_http->token, post_data);
@@ -410,6 +408,16 @@ esp_err_t mt_module_http_actions_heartbeat(mt_module_http_t *module_http,
 
 EXIT:
   // clean
+  if (post_data != NULL)
+  {
+    free(post_data);
+  }
+
+  if (session_id_str != NULL)
+  {
+    free(session_id_str);
+  }
+
   esp_http_client_cleanup(client);
 
   return err;
@@ -1330,12 +1338,14 @@ push_frame_res_t *mt_module_http_actions_push_frame_to_flow(
   ESP_LOGI(TAG, "%4d %s request ok", __LINE__, __func__);
 
 EXIT:
-  if (err != ESP_OK)
-  {
-    mt_module_http_utils_free_push_frame_res(res_out);
-  }
   // clean
   esp_http_client_cleanup(client);
+
+  if (post_data != NULL)
+    free(post_data);
+
+  if (err != ESP_OK)
+    mt_module_http_utils_free_push_frame_res(res_out);
 
   return res_out;
 }

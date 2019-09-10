@@ -81,6 +81,7 @@ static void ping_once(mt_module_flow_t *module_flow)
   push_frame_to_flow_request__pack(&frame, frame_buf);
 
   err = mqtt_pub_msg(ping_topic, frame_buf, frame_size);
+  free(frame_buf);
   if (err != ESP_OK)
   {
     ESP_LOGE(TAG, "%4d %s mqtt_pub_msg failed", __LINE__, __func__);
@@ -103,6 +104,12 @@ RESTART:
   // http create push_flow session first
   while (true)
   {
+    if (flow_res != NULL)
+      free(flow_res);
+
+    if (module_flow->session != NULL)
+      free(module_flow->session);
+
     flow_res = mt_module_http_actions_push_frame_to_flow(
         module_flow->module_http, module_flow->flow, module_flow->config_ack,
         module_flow->data_ack);
@@ -117,7 +124,10 @@ RESTART:
                "%4d %s mt_module_http_actions_push_frame_to_flow success, "
                "session:%s",
                __LINE__, __func__, flow_res->sesssion_id);
-      module_flow->session = flow_res->sesssion_id;
+      module_flow->session = malloc(strlen(flow_res->sesssion_id) + 1);
+      memcpy(module_flow->session, flow_res->sesssion_id,
+             strlen(flow_res->sesssion_id) + 1);
+      free(flow_res);
       break;
     }
 
@@ -172,7 +182,7 @@ static void module_switch_flow_ack_process(mt_module_flow_t *module_flow,
 }
 
 void mt_module_flow_process(mt_module_flow_t *module_flow, char *topic,
-                                uint8_t *buf, uint8_t size)
+                            uint8_t *buf, uint8_t size)
 {
   PushFrameToFlowResponse *frame_res = NULL;
 
@@ -198,8 +208,12 @@ void mt_module_flow_process(mt_module_flow_t *module_flow, char *topic,
   default:
     ESP_LOGE(TAG, "%4d %s unexcept frame_res->response_case:%d", __LINE__,
              __func__, frame_res->response_case);
-    return;
+    goto EXIT;
   }
+
+EXIT:
+  push_frame_to_flow_response__free_unpacked(frame_res, NULL);
+  return;
 }
 
 void mt_module_flow_task(mt_module_flow_t *module_flow, char *task_name)
@@ -251,7 +265,7 @@ void mt_module_flow_task(mt_module_flow_t *module_flow, char *task_name)
     }
   }
 
-  xTaskCreate((TaskFunction_t)module_flow_task_loop, task_name, 8 * 1024,
+  xTaskCreate((TaskFunction_t)module_flow_task_loop, task_name, 4 * 1024,
               module_flow, 10, NULL);
 }
 

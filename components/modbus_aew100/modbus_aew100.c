@@ -16,7 +16,7 @@
 // global define ==============================================================
 static const char *TAG = "MT_MODBUS_AEW100";
 static SemaphoreHandle_t SemaphorMasterHdl = NULL;
-static int Lock_Timeout = 50;
+static int Lock_Timeout = 50000;
 
 #define MODBUS_READ 03
 #define MODBUS_WRITE 10
@@ -1130,6 +1130,94 @@ esp_err_t mt_aew100_get_data(UCHAR addr, Aew100_data_t *data)
              __func__, addr);
     return err;
   }
+
+  return ESP_OK;
+}
+
+esp_err_t mt_aew100_get_data2(UCHAR addr, Aew100_data_t *data)
+{
+  esp_err_t err = ESP_OK;
+  addr = 9;
+
+  err = mt_aew100_get_currentA(addr, &data->currentA);
+  if (err != ESP_OK)
+  {
+    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_currentA failed", __LINE__,
+             __func__, addr);
+    return err;
+  }
+
+  err = mt_aew100_get_currentB(addr, &data->currentB);
+  if (err != ESP_OK)
+  {
+    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_currentB failed", __LINE__,
+             __func__, addr);
+    return err;
+  }
+
+  err = mt_aew100_get_currentC(addr, &data->currentC);
+  if (err != ESP_OK)
+  {
+    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_currentC failed", __LINE__,
+             __func__, addr);
+    return err;
+  }
+
+  err = mt_aew100_get_votageA(addr, &data->votageA);
+  if (err != ESP_OK)
+  {
+    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_votageA failed", __LINE__,
+             __func__, addr);
+    return err;
+  }
+
+  err = mt_aew100_get_votageB(addr, &data->votageB);
+  if (err != ESP_OK)
+  {
+    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_votageB failed", __LINE__,
+             __func__, addr);
+    return err;
+  }
+
+  err = mt_aew100_get_votageC(addr, &data->votageC);
+  if (err != ESP_OK)
+  {
+    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_votageC failed", __LINE__,
+             __func__, addr);
+    return err;
+  }
+
+  err = mt_aew100_get_tempA(addr, &data->tempA);
+  if (err != ESP_OK)
+  {
+    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_tempA failed", __LINE__,
+             __func__, addr);
+    return err;
+  }
+
+  err = mt_aew100_get_tempB(addr, &data->tempB);
+  if (err != ESP_OK)
+  {
+    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_tempB failed", __LINE__,
+             __func__, addr);
+    return err;
+  }
+
+  err = mt_aew100_get_tempC(addr, &data->tempC);
+  if (err != ESP_OK)
+  {
+    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_tempC failed", __LINE__,
+             __func__, addr);
+    return err;
+  }
+
+  data->powerFactorA = 100.0;
+  data->powerFactorB = 100.0;
+  data->powerFactorC = 100.0;
+
+  data->activePowerA = data->votageA * data->currentA;
+  data->activePowerB = data->votageB * data->currentC;
+  data->activePowerC = data->votageC * data->currentC;
 
   return ESP_OK;
 }
