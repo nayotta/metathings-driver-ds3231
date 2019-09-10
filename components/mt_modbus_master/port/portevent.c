@@ -174,6 +174,8 @@ eMBMasterReqErrCode eMBMasterWaitRequestFinish(void)
     break;
   }
   default:
+    ESP_LOGE(TAG, "%4d unexcept event %d", __LINE__, recvedEvent);
+    eErrStatus = MB_MRE_EXE_FUN;
     break;
   }
   return eErrStatus;

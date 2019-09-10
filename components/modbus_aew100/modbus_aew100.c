@@ -16,6 +16,7 @@
 // global define ==============================================================
 static const char *TAG = "MT_MODBUS_AEW100";
 static SemaphoreHandle_t SemaphorMasterHdl = NULL;
+static SemaphoreHandle_t SemaphorAEW100 = NULL;
 static int Lock_Timeout = 50000;
 
 #define MODBUS_READ 03
@@ -61,6 +62,33 @@ static bool modbus_lock_take(LONG timeout)
 static void modbus_lock_release()
 {
   xSemaphoreGive(SemaphorMasterHdl);
+  return;
+}
+
+static void aew100_lock_init()
+{
+  SemaphorAEW100 = xSemaphoreCreateMutex();
+  return;
+}
+
+static bool aew100_lock_take(LONG timeout)
+{
+  if (SemaphorAEW100 == NULL)
+    aew100_lock_init();
+
+  if (xSemaphoreTake(SemaphorAEW100, (portTickType)timeout) == pdTRUE)
+  {
+    return true;
+  }
+  return false;
+}
+
+static void aew100_lock_release()
+{
+  if (SemaphorAEW100 == NULL)
+    aew100_lock_init();
+
+  xSemaphoreGive(SemaphorAEW100);
   return;
 }
 
@@ -988,6 +1016,7 @@ esp_err_t mt_aew100_get_data(UCHAR addr, Aew100_data_t *data)
 {
   esp_err_t err = ESP_OK;
 
+  // TODO(ZH) need lock
   err = mt_aew100_get_currentA(addr, &data->currentA);
   if (err != ESP_OK)
   {
@@ -1137,14 +1166,25 @@ esp_err_t mt_aew100_get_data(UCHAR addr, Aew100_data_t *data)
 esp_err_t mt_aew100_get_data2(UCHAR addr, Aew100_data_t *data)
 {
   esp_err_t err = ESP_OK;
-  addr = 9;
+
+  if (aew100_lock_take(Lock_Timeout) == false)
+  {
+    err = ESP_ERR_TIMEOUT;
+    ESP_LOGE(TAG, "%4d aew100_lock_take timeout", __LINE__);
+    return err;
+  }
 
   err = mt_aew100_get_currentA(addr, &data->currentA);
   if (err != ESP_OK)
   {
     ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_currentA failed", __LINE__,
              __func__, addr);
-    return err;
+    goto EXIT;
+  }
+  else
+  {
+    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_currentA success", __LINE__,
+             __func__, addr);
   }
 
   err = mt_aew100_get_currentB(addr, &data->currentB);
@@ -1152,7 +1192,7 @@ esp_err_t mt_aew100_get_data2(UCHAR addr, Aew100_data_t *data)
   {
     ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_currentB failed", __LINE__,
              __func__, addr);
-    return err;
+    goto EXIT;
   }
 
   err = mt_aew100_get_currentC(addr, &data->currentC);
@@ -1160,7 +1200,7 @@ esp_err_t mt_aew100_get_data2(UCHAR addr, Aew100_data_t *data)
   {
     ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_currentC failed", __LINE__,
              __func__, addr);
-    return err;
+    goto EXIT;
   }
 
   err = mt_aew100_get_votageA(addr, &data->votageA);
@@ -1168,7 +1208,7 @@ esp_err_t mt_aew100_get_data2(UCHAR addr, Aew100_data_t *data)
   {
     ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_votageA failed", __LINE__,
              __func__, addr);
-    return err;
+    goto EXIT;
   }
 
   err = mt_aew100_get_votageB(addr, &data->votageB);
@@ -1176,7 +1216,7 @@ esp_err_t mt_aew100_get_data2(UCHAR addr, Aew100_data_t *data)
   {
     ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_votageB failed", __LINE__,
              __func__, addr);
-    return err;
+    goto EXIT;
   }
 
   err = mt_aew100_get_votageC(addr, &data->votageC);
@@ -1184,7 +1224,7 @@ esp_err_t mt_aew100_get_data2(UCHAR addr, Aew100_data_t *data)
   {
     ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_votageC failed", __LINE__,
              __func__, addr);
-    return err;
+    goto EXIT;
   }
 
   err = mt_aew100_get_tempA(addr, &data->tempA);
@@ -1192,7 +1232,7 @@ esp_err_t mt_aew100_get_data2(UCHAR addr, Aew100_data_t *data)
   {
     ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_tempA failed", __LINE__,
              __func__, addr);
-    return err;
+    goto EXIT;
   }
 
   err = mt_aew100_get_tempB(addr, &data->tempB);
@@ -1200,7 +1240,7 @@ esp_err_t mt_aew100_get_data2(UCHAR addr, Aew100_data_t *data)
   {
     ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_tempB failed", __LINE__,
              __func__, addr);
-    return err;
+    goto EXIT;
   }
 
   err = mt_aew100_get_tempC(addr, &data->tempC);
@@ -1208,7 +1248,7 @@ esp_err_t mt_aew100_get_data2(UCHAR addr, Aew100_data_t *data)
   {
     ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_tempC failed", __LINE__,
              __func__, addr);
-    return err;
+    goto EXIT;
   }
 
   data->powerFactorA = 100.0;
@@ -1219,5 +1259,7 @@ esp_err_t mt_aew100_get_data2(UCHAR addr, Aew100_data_t *data)
   data->activePowerB = data->votageB * data->currentC;
   data->activePowerC = data->votageC * data->currentC;
 
-  return ESP_OK;
+EXIT:
+  aew100_lock_release();
+  return err;
 }
