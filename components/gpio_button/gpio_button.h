@@ -1,6 +1,7 @@
 #ifndef _GPIO_BUTTON_H
 #define _GPIO_BUTTON_H
 
+#include "stdbool.h"
 #include "stdio.h"
 
 #ifndef CONFIG_LOG_DEFAULT_LEVEL
@@ -19,14 +20,14 @@
 
 typedef struct
 {
-    int pin;
-    int pin_on_level;
-    int short_press_interval;
-    int long_press_interval;
-    int double_press_interval;
-    void (*mt_gpio_btn_short_press_callback)();
-    void (*mt_gpio_btn_long_press_callback)();
-    //void (*mt_gpio_btn_double_press_callback)();
+  int pin;
+  int pin_on_level;
+  int short_press_interval;
+  int long_press_interval;
+  int double_press_interval;
+  void (*mt_gpio_btn_short_press_callback)();
+  void (*mt_gpio_btn_long_press_callback)();
+  // void (*mt_gpio_btn_double_press_callback)();
 } mt_gpio_btn_t;
 
 mt_gpio_btn_t *mt_gpio_btn_default();
