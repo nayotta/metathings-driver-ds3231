@@ -9,6 +9,7 @@
 #include "mt_module_http.h"
 #include "mt_mqtt_lan.h"
 #include "mt_mqtt_utils.h"
+#include "mt_module_http_utils.h"
 
 #include "google/protobuf/struct.pb-c.h"
 
@@ -104,9 +105,6 @@ RESTART:
   // http create push_flow session first
   while (true)
   {
-    if (flow_res != NULL)
-      free(flow_res);
-
     if (module_flow->session != NULL)
       free(module_flow->session);
 
@@ -127,7 +125,7 @@ RESTART:
       module_flow->session = malloc(strlen(flow_res->sesssion_id) + 1);
       memcpy(module_flow->session, flow_res->sesssion_id,
              strlen(flow_res->sesssion_id) + 1);
-      free(flow_res);
+      mt_module_http_utils_free_push_frame_res(flow_res);
       break;
     }
 

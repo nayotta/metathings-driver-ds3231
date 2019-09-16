@@ -54,7 +54,7 @@ rs232_dev_config_t *rs232_dev_default_new()
   config_out->uart_config = malloc(sizeof(uart_config_t));
 
   config_out->uart_num = UART_NUM_1;
-  config_out->rx_pin = 16;
+  config_out->tx_pin = 16;
   config_out->rx_pin = 04;
   config_out->rts_pin = UART_PIN_NO_CHANGE;
   config_out->cts_pin = UART_PIN_NO_CHANGE;
@@ -86,8 +86,17 @@ esp_err_t rs232_dev_init(rs232_dev_config_t *dev_config)
   err = uart_param_config(dev_config->uart_num, dev_config->uart_config);
   if (err != ESP_OK)
   {
-    ESP_LOGE(TAG, "%4d %s uart_param_config failed, err=%d", __LINE__, __func__,
-             err);
+    ESP_LOGE(TAG,
+             "%4d %s uart_set_pin failed, uart_num:%d, tx_pin:%d, rx_pin:%d, "
+             "rts:%d, cts:%d, "
+             "band:%d, bit:%d, parrity:%d, stop:%d, flowctrl:%d, err=%d",
+             __LINE__, __func__, dev_config->uart_num, dev_config->tx_pin,
+             dev_config->rx_pin, dev_config->rts_pin,
+             dev_config->cts_pin, dev_config->uart_config->baud_rate,
+             dev_config->uart_config->data_bits,
+             dev_config->uart_config->parity,
+             dev_config->uart_config->stop_bits,
+             dev_config->uart_config->flow_ctrl, err);
     return err;
   }
 
@@ -96,8 +105,11 @@ esp_err_t rs232_dev_init(rs232_dev_config_t *dev_config)
                    dev_config->rts_pin, dev_config->cts_pin);
   if (err != ESP_OK)
   {
-    ESP_LOGE(TAG, "%4d %s uart_set_pin failed, err=%d", __LINE__, __func__,
-             err);
+    ESP_LOGE(TAG,
+             "%4d %s uart_set_pin failed, uart_num:%d, tx_pin:%d, rx_pin:%d, "
+             "rts:%d, cts:%d, err=%d",
+             __LINE__, __func__, dev_config->uart_num, dev_config->tx_pin,
+             dev_config->rx_pin, dev_config->rts_pin, dev_config->cts_pin, err);
     return err;
   }
 

@@ -193,7 +193,10 @@ esp_err_t rs232_lora_jxyl001_task(Rs232_Lora_Jxyl001_Devs *devs)
   esp_err_t err = ESP_OK;
 
   if (devs->rs232_config != NULL)
+  {
     rs232_dev_config_free(devs->rs232_config);
+    printf("free\n");
+  }
 
   devs->rs232_config = rs232_dev_default_new();
 
