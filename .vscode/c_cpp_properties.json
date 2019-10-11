@@ -36,6 +36,7 @@
                 "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/wpa_supplicant/port/include/",
                 "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/esp_http_client/include/",
                 "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/nghttp/nghttp2/third-party/http-parser/",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/app_update/include/",
                 "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/json/cJSON/"
             ],
             "defines": [

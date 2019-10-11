@@ -13,7 +13,6 @@ static const char *TAG = "RS232_dev";
 // global func ================================================================
 uint8_t *rs232_dev_read(rs232_dev_config_t *dev_config, int *buf_size_out)
 {
-  esp_err_t err = ESP_OK;
   uint8_t *buf_temp = malloc(dev_config->buf_max_size * sizeof(uint8_t));
   uint8_t *buf_out = NULL;
 
