@@ -376,10 +376,26 @@ EXIT:
   return errorCode;
 }
 
-void mt_modbus_airswitch001_task()
+esp_err_t mt_modbus_airswitch001_task(int tx_pin, int rx_pin, int en_pin)
 {
+  esp_err_t err = ESP_OK;
+
+  err = modbus_airswitch001_init(2, 19200, 0, tx_pin, rx_pin, en_pin);
+  if (err != ESP_OK)
+  {
+    ESP_LOGE(TAG, "%4d modbus_init failed", __LINE__);
+    goto EXIT;
+  }
+
   xTaskCreate(modbus_loop, "mt_modbus_task", 1024 * 8, NULL, 12, NULL);
-  
+
+EXIT:
+  if (err != ESP_OK)
+  {
+    ESP_LOGE(TAG, "%4d %s mt_modbus_airswitch001_task failed", __LINE__,
+             __func__);
+  }
+  return err;
 }
 
 esp_err_t mt_airswitch001_get_addrs(UCHAR slaveAddr, USHORT *addrs)
