@@ -19,7 +19,7 @@
 
 int mt_mqtt_pub_msg(char *topic, uint8_t *buf, int size);
 
-int mt_mqtt_init(char *host, char *port, char *username, char *password,
+int mt_mqtt_init(int mod_index,
                  char *module_id, uint64_t session_id, char *device_id,
                  void (*handle)(char *topic, void *buf, int size));
 

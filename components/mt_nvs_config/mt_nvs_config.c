@@ -1,3 +1,5 @@
+#include "esp_log.h"
+
 #include "mt_nvs_config.h"
 #include "mt_nvs_storage.h"
 
@@ -17,8 +19,6 @@ esp_err_t mt_nvs_config_get_host_config(mt_nvs_host_t *host_out)
   }
 
   // get host_out->host
-  if (host_out->host != NULL)
-    free(host_out->host);
   host_out->host = mt_nvs_read_string_config("host", &size);
   if (host_out->host == NULL)
   {
@@ -27,8 +27,6 @@ esp_err_t mt_nvs_config_get_host_config(mt_nvs_host_t *host_out)
   }
 
   // get host_out->mqtt_port
-  if (host_out->mqtt_port != NULL)
-    free(host_out->mqtt_port);
   host_out->mqtt_port = mt_nvs_read_string_config("mqtt_port", &size);
   if (host_out->mqtt_port == NULL)
   {
@@ -79,8 +77,6 @@ esp_err_t mt_nvs_config_get_module(int index_in, mt_nvs_module_t *module_out)
   module_out->index = index_in;
 
   // get id
-  if (module_out->id != NULL)
-    free(module_out->id);
   sprintf(key, "mod_id_%d", index_in);
   module_out->id = mt_nvs_read_string_config(key, &size);
   if (module_out->id == NULL)
@@ -91,8 +87,6 @@ esp_err_t mt_nvs_config_get_module(int index_in, mt_nvs_module_t *module_out)
   }
 
   // get key
-  if (module_out->key != NULL)
-    free(module_out->key);
   sprintf(key, "mod_key_%d", index_in);
   module_out->key = mt_nvs_read_string_config(key, &size);
   if (module_out->key == NULL)
@@ -102,9 +96,17 @@ esp_err_t mt_nvs_config_get_module(int index_in, mt_nvs_module_t *module_out)
     return ESP_ERR_INVALID_ARG;
   }
 
+  // get name
+  sprintf(key, "mod_name_%d", index_in);
+  module_out->name = mt_nvs_read_string_config(key, &size);
+  if (module_out->name == NULL)
+  {
+    ESP_LOGE(TAG, "%4d %s get module %d name failed", __LINE__, __func__,
+             index_in);
+    return ESP_ERR_INVALID_ARG;
+  }
+
   // get flow
-  if (module_out->flows != NULL)
-    free(module_out->flows);
   module_out->flows = malloc(sizeof(mt_nvs_flows_t));
   sprintf(key, "mod_%d_flow_num", index_in);
   if (mt_nvs_read_int32_config(key, &module_out->flows->flow_num) == false)
@@ -129,7 +131,7 @@ esp_err_t mt_nvs_config_get_module(int index_in, mt_nvs_module_t *module_out)
         malloc(sizeof(char) * module_out->flows->flow_num);
     for (int i = 0; i < module_out->flows->flow_num; i++)
     {
-      sprintf(key, "mod_%d_flow_%d", index_in, i);
+      sprintf(key, "mod_%d_flow_%d", index_in, i + 1);
       module_out->flows->flows[i] = mt_nvs_read_string_config(key, &size);
       if (module_out->flows->flows[i] == NULL)
       {
@@ -141,4 +143,68 @@ esp_err_t mt_nvs_config_get_module(int index_in, mt_nvs_module_t *module_out)
   }
 
   return ESP_OK;
+}
+
+esp_err_t mt_nvs_config_get_flow(int index_in, mt_nvs_flows_t *flows_out)
+{
+  size_t size = 0;
+  char key[16] = "";
+
+  // check index_in
+  if (index_in <= 0)
+  {
+    ESP_LOGE(TAG, "%4d %s index num error:%d", __LINE__, __func__, index_in);
+    return ESP_ERR_INVALID_ARG;
+  }
+
+  // check flows_out
+  if (flows_out == NULL)
+  {
+    ESP_LOGE(TAG, "%4d %s flows_out NULL", __LINE__, __func__);
+    return ESP_ERR_INVALID_ARG;
+  }
+
+  // get flow num
+  sprintf(key, "mod_%d_flow_num", index_in);
+  if (mt_nvs_read_int32_config(key, &flows_out->flow_num) == false)
+  {
+    ESP_LOGE(TAG, "%4d %s get mod:%d flow_num failed", __LINE__, __func__, index_in);
+    return ESP_ERR_INVALID_ARG;
+  }
+
+  flows_out->flows = malloc(flows_out->flow_num * sizeof(char));
+
+  // get flows
+  for (int i = 0; i < flows_out->flow_num; i++)
+  {
+    sprintf(key, "mod_%d_flow_%d", index_in, i + 1);
+    flows_out->flows[i] = mt_nvs_read_string_config(key, &size);
+
+    if (flows_out->flows[i] == NULL)
+    {
+      ESP_LOGE(TAG, "%4d %s module:%d flow:%d get failed", __LINE__, __func__,
+               index_in, i);
+      return ESP_ERR_INVALID_ARG;
+    }
+  }
+
+  return ESP_OK;
+}
+
+char *mt_nvs_config_get_flow_name(int module_index, int flow_index)
+{
+  char *flow_name = NULL;
+  char key[16] = "";
+  size_t size = 0;
+
+  sprintf(key, "mod_%d_flow_%d", module_index, flow_index);
+  flow_name = mt_nvs_read_string_config(key, &size);
+  if (flow_name == NULL)
+  {
+    ESP_LOGE(TAG, "%4d %s module:%d flow:%d get flow_name failed", __LINE__, __func__,
+             module_index, flow_index);
+    return NULL;
+  }
+
+  return flow_name;
 }

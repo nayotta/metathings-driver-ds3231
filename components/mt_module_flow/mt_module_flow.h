@@ -7,6 +7,8 @@
 
 typedef struct _module_flow_t
 {
+    int module_index;
+    int flow_index;
     mt_module_http_t *module_http;
     flow_t *flow;
     char *session;
@@ -29,6 +31,7 @@ void mt_module_flow_process(mt_module_flow_t *module_flow, char *topic,
 
 void mt_module_flow_task(mt_module_flow_t *module_flow, char *task_name);
 
-mt_module_flow_t *mt_module_flow_new();
+mt_module_flow_t *mt_module_flow_new(int module_index, int flow_index,
+                                     mt_module_http_t *module_http);
 
 #endif

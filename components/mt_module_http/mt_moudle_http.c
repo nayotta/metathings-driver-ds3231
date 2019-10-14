@@ -11,6 +11,7 @@
 #include "mt_http_client.h"
 #include "mt_module_http.h"
 #include "mt_module_http_utils.h"
+#include "mt_nvs_config.h"
 #include "mt_utils.h"
 #include "mt_utils_login.h"
 #include "mt_utils_session.h"
@@ -19,6 +20,75 @@
 static const char *TAG = "MT_MODULE_HTTP";
 
 #define MAX_HTTP_RECV_BUFFER 512
+mt_module_http_t *MODULE_HTTP = NULL;
+
+// static func ================================================================
+static esp_err_t mt_module_save_content(char *content, int size)
+{
+  if (MODULE_HTTP->response_content != NULL)
+  {
+    free(MODULE_HTTP->response_content);
+  }
+
+  if (size <= 0)
+  {
+    ESP_LOGE(TAG, "%4d %s content size =%d", __LINE__, __func__, size);
+    return ESP_ERR_INVALID_ARG;
+  }
+
+  MODULE_HTTP->response_content = malloc(size + 1);
+
+  memcpy(MODULE_HTTP->response_content, content, size);
+  MODULE_HTTP->response_content[size] = '\0';
+  MODULE_HTTP->response_content_size = size;
+
+  ESP_LOGI(TAG, "%4d save content, size=%d, string=%s", __LINE__, size,
+           MODULE_HTTP->response_content);
+
+  return ESP_OK;
+}
+
+static esp_err_t module_http_event_handler(esp_http_client_event_t *evt)
+{
+  switch (evt->event_id)
+  {
+  case HTTP_EVENT_ERROR:
+    ESP_LOGI(TAG, "%4d HTTP_EVENT_EXIT", __LINE__);
+    break;
+  case HTTP_EVENT_ON_CONNECTED:
+    ESP_LOGD(TAG, "%4d HTTP_EVENT_ON_CONNECTED", __LINE__);
+    break;
+  case HTTP_EVENT_HEADER_SENT:
+    ESP_LOGD(TAG, "%4d HTTP_EVENT_HEADER_SENT", __LINE__);
+    break;
+  case HTTP_EVENT_ON_HEADER:
+    ESP_LOGD(TAG, "%4d HTTP_EVENT_ON_HEADER, key=%s, value=%s", __LINE__,
+             evt->header_key, evt->header_value);
+    break;
+  case HTTP_EVENT_ON_DATA:
+    if (!esp_http_client_is_chunked_response(evt->client))
+    {
+      esp_err_t err;
+
+      ESP_LOGD(TAG, "%4d HTTP_EVENT_ON_DATA, len=%d, data=%s", __LINE__,
+               evt->data_len, (char *)evt->data);
+      err = mt_module_save_content((char *)evt->data, evt->data_len);
+      if (err != ESP_OK)
+      {
+        ESP_LOGE(TAG, "%4d mt_module_save_content failed", __LINE__);
+        break;
+      }
+    }
+    break;
+  case HTTP_EVENT_ON_FINISH:
+    ESP_LOGD(TAG, "%4d HTTP_EVENT_ON_FINISH", __LINE__);
+    break;
+  case HTTP_EVENT_DISCONNECTED:
+    ESP_LOGD(TAG, "%4d HTTP_EVENT_DISCONNECTED", __LINE__);
+    break;
+  }
+  return ESP_OK;
+}
 
 // global func ================================================================
 esp_err_t mt_module_http_actions_issue_module_token(
@@ -1429,7 +1499,7 @@ RESTART:
                                    mt_utils_session_gen_major_session());
 
   // debug here
-  module_http->session_id = 12345678;
+  // module_http->session_id = 12345678;
   while (true)
   {
     if (heartbeat_count <= 0)
@@ -1514,25 +1584,47 @@ void mt_module_http_task(mt_module_http_t *module_http, char *task_name)
               module_http, 10, NULL);
 }
 
-mt_module_http_t *mt_module_http_new(char *host, int port, char *module_name,
-                                     char *module_cred_id,
-                                     char *module_cred_key,
-                                     http_event_handle_cb handle)
+mt_module_http_t *mt_module_http_new(int mod_index_in)
 {
   mt_module_http_t *module_http = malloc(sizeof(mt_module_http_t));
+  mt_nvs_host_t *host = malloc(sizeof(mt_nvs_host_t));
+  mt_nvs_module_t *mod = malloc(sizeof(mt_nvs_module_t));
 
-  module_http->host = host;
-  module_http->port = port;
+  if (mt_nvs_config_get_host_config(host) != ESP_OK)
+  {
+    ESP_LOGE(TAG, "%4d %s mt_nvs_config_get_host_config failed", __LINE__,
+             __func__);
+    return NULL;
+  }
+
+  ESP_LOGI(TAG, "%4d %s host:%s http_port:%d mqtt_port:%s", __LINE__, __func__,
+           host->host, host->http_port, host->mqtt_port);
+
+  if (mt_nvs_config_get_module(mod_index_in, mod) != ESP_OK)
+  {
+    ESP_LOGE(TAG, "%4d %s mt_nvs_config_get_module index:%d failed", __LINE__,
+             __func__, mod_index_in);
+    return NULL;
+  }
+
+  module_http->host = host->host;
+  module_http->port = host->http_port;
   module_http->cred = malloc(sizeof(credential_t));
-  module_http->cred->name = module_name;
-  module_http->cred->id = module_cred_id;
-  module_http->cred->secret = module_cred_key;
+  module_http->cred->id = mod->id;
+  module_http->cred->secret = mod->key;
   module_http->token = NULL;
   module_http->module = malloc(sizeof(module_t));
   module_http->module->id = NULL;
-  module_http->module->name = module_name;
-  module_http->event_handler = handle;
+  module_http->module->deviceID = NULL;
+  module_http->module->name = mod->name;
+  module_http->event_handler = module_http_event_handler;
   module_http->response_content = NULL;
+
+  ESP_LOGI(TAG, "%4d %s module_name:%s cred_id:%s", __LINE__, __func__,
+           mod->name, mod->id);
+
+  MODULE_HTTP = module_http;
+  mt_module_http_task(module_http, module_http->module->name);
 
   return module_http;
 }

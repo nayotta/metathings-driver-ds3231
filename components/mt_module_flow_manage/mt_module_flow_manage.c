@@ -9,6 +9,7 @@
 
 // global define ==============================================================
 static const char *TAG = "MT_MODULE_FLOW_MANAGE";
+static mt_module_flow_manage_t *FLOW_MANAGE = NULL;
 
 // global func ================================================================
 esp_err_t mt_module_flow_manage_mqtt_process(char *topic, uint8_t *buf,
@@ -18,27 +19,26 @@ esp_err_t mt_module_flow_manage_mqtt_process(char *topic, uint8_t *buf,
   char *session_string = NULL;
   bool match = false;
 
-  // check MT_MODULE_FLOW_MANAGE
-  if (MT_MODULE_FLOW_MANAGE == NULL)
+  // check FLOW_MANAGER
+  if (FLOW_MANAGE == NULL)
   {
-    ESP_LOGE(TAG, "%4d %s MT_MODULE_FLOW_MANAGE is NULL", __LINE__, __func__);
+    ESP_LOGE(TAG, "%4d %s FLOW_MANAGER is NULL", __LINE__, __func__);
     err = ESP_ERR_INVALID_ARG;
     goto EXIT;
   }
   else
   {
-    if (MT_MODULE_FLOW_MANAGE->flows_size == 0)
+    if (FLOW_MANAGE->flows_size == 0)
     {
-      ESP_LOGE(TAG, "%4d %s MT_MODULE_FLOW_MANAGE->flows_size is zero",
-               __LINE__, __func__);
+      ESP_LOGE(TAG, "%4d %s FLOW_MANAGER->flows_size is zero", __LINE__,
+               __func__);
       err = ESP_ERR_INVALID_ARG;
       goto EXIT;
     }
 
-    if (MT_MODULE_FLOW_MANAGE->flows == NULL)
+    if (FLOW_MANAGE->flows == NULL)
     {
-      ESP_LOGE(TAG, "%4d %s MT_MODULE_FLOW_MANAGE->flows is NULL", __LINE__,
-               __func__);
+      ESP_LOGE(TAG, "%4d %s FLOW_MANAGER->flows is NULL", __LINE__, __func__);
       err = ESP_ERR_INVALID_ARG;
       goto EXIT;
     }
@@ -56,26 +56,26 @@ esp_err_t mt_module_flow_manage_mqtt_process(char *topic, uint8_t *buf,
   }
 
   // match session
-  for (int i = 0; i < MT_MODULE_FLOW_MANAGE->flows_size; i++)
+  for (int i = 0; i < FLOW_MANAGE->flows_size; i++)
   {
-    if (MT_MODULE_FLOW_MANAGE->flows[i] == NULL)
+    if (FLOW_MANAGE->flows[i] == NULL)
     {
-      ESP_LOGE(TAG, "%4d %s MT_MODULE_FLOW_MANAGE->flows[%d] is NULL", __LINE__,
+      ESP_LOGE(TAG, "%4d %s FLOW_MANAGER->flows[%d] is NULL", __LINE__,
                __func__, i);
       continue;
     }
 
-     if (MT_MODULE_FLOW_MANAGE->flows[i]->session == NULL)
+    if (FLOW_MANAGE->flows[i]->session == NULL)
     {
-      ESP_LOGE(TAG, "%4d %s MT_MODULE_FLOW_MANAGE->flows[%d]->session is NULL", __LINE__,
+      ESP_LOGE(TAG, "%4d %s FLOW_MANAGER->flows[%d]->session is NULL", __LINE__,
                __func__, i);
       continue;
     }
 
-    if (strcmp(MT_MODULE_FLOW_MANAGE->flows[i]->session, session_string) == 0)
+    if (strcmp(FLOW_MANAGE->flows[i]->session, session_string) == 0)
     {
       match = true;
-      mt_module_flow_process(MT_MODULE_FLOW_MANAGE->flows[i], topic, buf, size);
+      mt_module_flow_process(FLOW_MANAGE->flows[i], topic, buf, size);
     }
   }
 
@@ -93,4 +93,33 @@ EXIT:
     free(session_string);
   }
   return err;
+}
+
+esp_err_t mt_module_flow_manage_add(mt_module_flow_t *flow)
+{
+  mt_module_flow_manage_t *temp_manage = NULL;
+
+  if (FLOW_MANAGE == NULL)
+  {
+    FLOW_MANAGE = malloc(sizeof(mt_module_flow_t));
+    FLOW_MANAGE->flows_size = 1;
+    FLOW_MANAGE->flows = malloc(1 * sizeof(mt_module_flow_t));
+    FLOW_MANAGE->flows[0] = flow;
+    return ESP_OK;
+  }
+
+  temp_manage = FLOW_MANAGE;
+  FLOW_MANAGE =
+      malloc((temp_manage->flows_size + 1) * sizeof(mt_module_flow_t));
+  FLOW_MANAGE->flows_size = temp_manage->flows_size + 1;
+  FLOW_MANAGE->flows =
+      malloc(FLOW_MANAGE->flows_size * sizeof(mt_module_flow_t));
+  for (int i = 0; i < FLOW_MANAGE->flows_size - 1; i++)
+  {
+    FLOW_MANAGE->flows[i] = temp_manage->flows[i];
+  }
+  FLOW_MANAGE->flows[FLOW_MANAGE->flows_size - 1] = flow;
+
+  free(temp_manage);
+  return ESP_OK;
 }

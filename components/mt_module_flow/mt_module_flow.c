@@ -6,10 +6,12 @@
 #include "freertos/task.h"
 
 #include "mt_module_flow.h"
+#include "mt_module_flow_manage.h"
 #include "mt_module_http.h"
+#include "mt_module_http_utils.h"
 #include "mt_mqtt_lan.h"
 #include "mt_mqtt_utils.h"
-#include "mt_module_http_utils.h"
+#include "mt_nvs_config.h"
 
 #include "google/protobuf/struct.pb-c.h"
 
@@ -267,12 +269,27 @@ void mt_module_flow_task(mt_module_flow_t *module_flow, char *task_name)
               module_flow, 10, NULL);
 }
 
-mt_module_flow_t *mt_module_flow_new()
+mt_module_flow_t *mt_module_flow_new(int module_index, int flow_index,
+                                     mt_module_http_t *module_http)
 {
   mt_module_flow_t *module_flow = malloc(sizeof(mt_module_flow_t));
+  char *flow_name = NULL;
 
-  module_flow->module_http = NULL;
-  module_flow->flow = NULL;
+  mt_module_flow_manage_add(module_flow);
+
+  flow_name = mt_nvs_config_get_flow_name(module_index, flow_index);
+  if (flow_name == NULL)
+  {
+    ESP_LOGE(TAG, "%4d %s mt_nvs_config_get_flow_name module:%d flow:%d failed",
+             __LINE__, __func__, module_index, flow_index);
+    return NULL;
+  }
+
+  module_flow->module_index = module_index;
+  module_flow->flow_index = flow_index;
+  module_flow->module_http = module_http;
+  module_flow->flow = malloc(sizeof(flow_t));
+  module_flow->flow->name = flow_name;
   module_flow->session = NULL;
   module_flow->create_push_frame_interval = 30 * 1000; // 30s
   module_flow->push_frame_interval = 10 * 1000;        // 10s
@@ -283,6 +300,8 @@ mt_module_flow_t *mt_module_flow_new()
   module_flow->config_ack = true;
   module_flow->data_ack = false;
   module_flow->data_id = NULL;
+
+  mt_module_flow_task(module_flow, "MT_MODULE_FLOW");
 
   return module_flow;
 }

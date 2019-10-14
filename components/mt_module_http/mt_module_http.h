@@ -189,9 +189,6 @@ push_frame_res_t *mt_module_http_actions_push_frame_to_flow(
 
 void mt_module_http_task(mt_module_http_t *module_http, char *task_name);
 
-mt_module_http_t *mt_module_http_new(char *host, int port, char *module_name,
-                                     char *module_cred_id,
-                                     char *module_cred_key,
-                                     http_event_handle_cb handle);
+mt_module_http_t *mt_module_http_new(int module_index);
 
 #endif

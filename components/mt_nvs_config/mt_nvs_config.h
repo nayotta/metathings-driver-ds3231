@@ -29,4 +29,8 @@ esp_err_t mt_nvs_config_get_module_num(int *num_out);
 esp_err_t mt_nvs_config_get_module(int index_in,
                                    mt_nvs_module_t *module_out);
 
+esp_err_t mt_nvs_config_get_flow(int mod_index, mt_nvs_flows_t *flows);
+
+char *mt_nvs_config_get_flow_name(int module_index, int flow_index);
+
 #endif
