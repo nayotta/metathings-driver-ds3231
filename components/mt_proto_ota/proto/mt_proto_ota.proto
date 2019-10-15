@@ -3,7 +3,7 @@ syntax = "proto3";
 import "google/protobuf/empty.proto";
 import "google/protobuf/wrappers.proto";
 
-service Service {
+service MtOtaService {
   rpc GetVersion(google.protobuf.Empty) returns (GetVersionRes) {}
   rpc OtaUpdate(OtaUpdateReq) returns (OtaUpdateRes) {}
 }

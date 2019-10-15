@@ -435,46 +435,46 @@ const ProtobufCMessageDescriptor ota_update_res__descriptor =
   (ProtobufCMessageInit) ota_update_res__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCMethodDescriptor service__method_descriptors[2] =
+static const ProtobufCMethodDescriptor mt_ota_service__method_descriptors[2] =
 {
   { "GetVersion", &google__protobuf__empty__descriptor, &get_version_res__descriptor },
   { "OtaUpdate", &ota_update_req__descriptor, &ota_update_res__descriptor },
 };
-const unsigned service__method_indices_by_name[] = {
+const unsigned mt_ota_service__method_indices_by_name[] = {
   0,        /* GetVersion */
   1         /* OtaUpdate */
 };
-const ProtobufCServiceDescriptor service__descriptor =
+const ProtobufCServiceDescriptor mt_ota_service__descriptor =
 {
   PROTOBUF_C__SERVICE_DESCRIPTOR_MAGIC,
-  "Service",
-  "Service",
-  "Service",
+  "MtOtaService",
+  "MtOtaService",
+  "MtOtaService",
   "",
   2,
-  service__method_descriptors,
-  service__method_indices_by_name
+  mt_ota_service__method_descriptors,
+  mt_ota_service__method_indices_by_name
 };
-void service__get_version(ProtobufCService *service,
-                          const Google__Protobuf__Empty *input,
-                          GetVersionRes_Closure closure,
-                          void *closure_data)
+void mt_ota_service__get_version(ProtobufCService *service,
+                                 const Google__Protobuf__Empty *input,
+                                 GetVersionRes_Closure closure,
+                                 void *closure_data)
 {
-  assert(service->descriptor == &service__descriptor);
+  assert(service->descriptor == &mt_ota_service__descriptor);
   service->invoke(service, 0, (const ProtobufCMessage *) input, (ProtobufCClosure) closure, closure_data);
 }
-void service__ota_update(ProtobufCService *service,
-                         const OtaUpdateReq *input,
-                         OtaUpdateRes_Closure closure,
-                         void *closure_data)
+void mt_ota_service__ota_update(ProtobufCService *service,
+                                const OtaUpdateReq *input,
+                                OtaUpdateRes_Closure closure,
+                                void *closure_data)
 {
-  assert(service->descriptor == &service__descriptor);
+  assert(service->descriptor == &mt_ota_service__descriptor);
   service->invoke(service, 1, (const ProtobufCMessage *) input, (ProtobufCClosure) closure, closure_data);
 }
-void service__init (Service_Service *service,
-                    Service_ServiceDestroy destroy)
+void mt_ota_service__init (MtOtaService_Service *service,
+                           MtOtaService_ServiceDestroy destroy)
 {
   protobuf_c_service_generated_init (&service->base,
-                                     &service__descriptor,
+                                     &mt_ota_service__descriptor,
                                      (ProtobufCServiceDestroy) destroy);
 }

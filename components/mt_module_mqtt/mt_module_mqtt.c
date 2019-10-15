@@ -2,10 +2,10 @@
 
 #include "esp_log.h"
 
-#include "mt_module_mqtt.h"
-#include "mt_mqtt_utils.h"
 #include "mt_module_flow_manage.h"
+#include "mt_module_mqtt.h"
 #include "mt_module_unarycall_ota.h"
+#include "mt_mqtt_utils.h"
 
 #include "google/protobuf/any.pb-c.h"
 #include "google/protobuf/empty.pb-c.h"
@@ -85,7 +85,8 @@ static void mt_module_mqtt_handle_streamcall_config() {}
 
 static void mt_module_mqtt_handle_streamcall_data() {}
 
-static void mt_module_mqtt_handle_streamcall(char *topic, Ai__Metathings__Component__DownStreamFrame *msg)
+static void mt_module_mqtt_handle_streamcall(
+    char *topic, Ai__Metathings__Component__DownStreamFrame *msg)
 {
   uint64_t session_id = 0;
 
@@ -158,13 +159,16 @@ void mt_module_mqtt_add_handle(
                    char module_id[128]),
     char *method)
 {
+  ESP_LOGI(TAG, "%4d %s add handle method:%s", __LINE__, __func__, method);
+
   if (app_handle == NULL)
   {
     app_handle = malloc(sizeof(mt_module_mqtt_t));
     app_handle->handle_size = 1;
-    app_handle->handles = malloc(sizeof(mt_module_mqtt_app_handle_t));
-    app_handle->handles[0] = handle;
-    app_handle->methods = malloc(sizeof(char));
+    app_handle->handles = (mt_module_mqtt_app_handle_t **)malloc(
+        sizeof(mt_module_mqtt_app_handle_t *));
+    app_handle->handles[0] = &handle;
+    app_handle->methods = (char **)malloc(sizeof(char *));
     app_handle->methods[0] = malloc(strlen(method) + 1);
     memcpy(app_handle->methods[0], method, strlen(method) + 1);
   }
@@ -173,20 +177,22 @@ void mt_module_mqtt_add_handle(
     mt_module_mqtt_t *temp_handle = app_handle;
     app_handle = malloc(sizeof(mt_module_mqtt_t));
     app_handle->handle_size = temp_handle->handle_size + 1;
-    app_handle->handles =
-        malloc(sizeof(mt_module_mqtt_app_handle_t) * app_handle->handle_size);
-    app_handle->methods = malloc(sizeof(char) * app_handle->handle_size);
+    app_handle->handles = (mt_module_mqtt_app_handle_t **)malloc(
+        sizeof(mt_module_mqtt_app_handle_t *) * app_handle->handle_size);
+    app_handle->methods =
+        (char **)malloc(sizeof(char *) * app_handle->handle_size);
     for (int i = 0; i < app_handle->handle_size - 1; i++)
     {
       app_handle->handles[i] = temp_handle->handles[i];
       app_handle->methods[i] = temp_handle->methods[i];
     }
-    app_handle->handles[app_handle->handle_size - 1] = handle;
+    app_handle->handles[app_handle->handle_size - 1] = &handle;
     app_handle->methods[app_handle->handle_size - 1] =
         malloc(strlen(method) + 1);
     memcpy(app_handle->methods[app_handle->handle_size - 1], method,
            strlen(method) + 1);
 
+    free(temp_handle->methods);
     free(temp_handle);
   }
 }

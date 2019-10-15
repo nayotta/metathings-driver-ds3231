@@ -201,36 +201,36 @@ typedef void (*OtaUpdateRes_Closure)
 
 /* --- services --- */
 
-typedef struct _Service_Service Service_Service;
-struct _Service_Service
+typedef struct _MtOtaService_Service MtOtaService_Service;
+struct _MtOtaService_Service
 {
   ProtobufCService base;
-  void (*get_version)(Service_Service *service,
+  void (*get_version)(MtOtaService_Service *service,
                       const Google__Protobuf__Empty *input,
                       GetVersionRes_Closure closure,
                       void *closure_data);
-  void (*ota_update)(Service_Service *service,
+  void (*ota_update)(MtOtaService_Service *service,
                      const OtaUpdateReq *input,
                      OtaUpdateRes_Closure closure,
                      void *closure_data);
 };
-typedef void (*Service_ServiceDestroy)(Service_Service *);
-void service__init (Service_Service *service,
-                    Service_ServiceDestroy destroy);
-#define SERVICE__BASE_INIT \
-    { &service__descriptor, protobuf_c_service_invoke_internal, NULL }
-#define SERVICE__INIT(function_prefix__) \
-    { SERVICE__BASE_INIT,\
+typedef void (*MtOtaService_ServiceDestroy)(MtOtaService_Service *);
+void mt_ota_service__init (MtOtaService_Service *service,
+                           MtOtaService_ServiceDestroy destroy);
+#define MT_OTA_SERVICE__BASE_INIT \
+    { &mt_ota_service__descriptor, protobuf_c_service_invoke_internal, NULL }
+#define MT_OTA_SERVICE__INIT(function_prefix__) \
+    { MT_OTA_SERVICE__BASE_INIT,\
       function_prefix__ ## get_version,\
       function_prefix__ ## ota_update  }
-void service__get_version(ProtobufCService *service,
-                          const Google__Protobuf__Empty *input,
-                          GetVersionRes_Closure closure,
-                          void *closure_data);
-void service__ota_update(ProtobufCService *service,
-                         const OtaUpdateReq *input,
-                         OtaUpdateRes_Closure closure,
-                         void *closure_data);
+void mt_ota_service__get_version(ProtobufCService *service,
+                                 const Google__Protobuf__Empty *input,
+                                 GetVersionRes_Closure closure,
+                                 void *closure_data);
+void mt_ota_service__ota_update(ProtobufCService *service,
+                                const OtaUpdateReq *input,
+                                OtaUpdateRes_Closure closure,
+                                void *closure_data);
 
 /* --- descriptors --- */
 
@@ -239,7 +239,7 @@ extern const ProtobufCMessageDescriptor get_version_res__descriptor;
 extern const ProtobufCMessageDescriptor op_ota_update__descriptor;
 extern const ProtobufCMessageDescriptor ota_update_req__descriptor;
 extern const ProtobufCMessageDescriptor ota_update_res__descriptor;
-extern const ProtobufCServiceDescriptor service__descriptor;
+extern const ProtobufCServiceDescriptor mt_ota_service__descriptor;
 
 PROTOBUF_C__END_DECLS
 
