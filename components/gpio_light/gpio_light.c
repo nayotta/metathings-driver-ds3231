@@ -153,3 +153,13 @@ bool mt_gpio_light_task(mt_gpio_light_t *light_handle) {
               1024 * 2, light_handle, 10, NULL);
   return true;
 }
+
+mt_gpio_light_t *mt_gpio_light_new(int pin, int pin_on_level)
+{
+  mt_gpio_light_t *gpio_light_handle = NULL;
+  gpio_light_handle = mt_gpio_light_default();
+  gpio_light_handle->pin = pin;
+  gpio_light_handle->pin_on_level = pin_on_level;
+
+  return gpio_light_handle;
+}

@@ -90,7 +90,7 @@ eMBErrorCode modbus_airswitch001_init(UCHAR ucPort, ULONG ulBaudRate,
                                       eMBParity eParity, int tx_pin, int rx_pin,
                                       int en_pin);
 
-void mt_modbus_airswitch001_task();
+esp_err_t mt_modbus_airswitch001_task(int tx_pin, int rx_pin, int en_pin);
 
 // single api =================================================================
 // cmd 01 read addrs

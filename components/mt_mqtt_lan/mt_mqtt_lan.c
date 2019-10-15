@@ -23,6 +23,8 @@
 
 #include "mt_mqtt.h"
 #include "mt_mqtt_lan.h"
+#include "mt_utils.h"
+#include "mt_nvs_config.h"
 
 // global value ===============================================================
 static const char *TAG = "MT_MQTT_LAN";
@@ -127,27 +129,49 @@ int mqtt_pub_msg(char *topic, uint8_t *buf, int size)
   return ESP_OK;
 }
 
-int mqtt_init(char *host, char *port, char *username, char *password,
+int mqtt_init(int mod_index,
               char *module_id, uint64_t session_id, char *device_id,
               void (*handle)(char *topic, void *buf, int size))
 {
+
+  //char *host, char *port, char *username, char *key,
   esp_err_t err;
+  unsigned char *hmac_str = NULL;
+  mt_nvs_host_t *host = malloc(sizeof(mt_nvs_host_t));
+  mt_nvs_module_t *mod = malloc(sizeof(mt_nvs_module_t));
+
+  if (mt_nvs_config_get_host_config(host) != ESP_OK)
+  {
+    ESP_LOGE(TAG, "%4d %s mt_nvs_config_get_host_config failed", __LINE__,
+             __func__);
+    return ESP_ERR_INVALID_ARG;
+  }
+
+  if (mt_nvs_config_get_module(mod_index, mod) != ESP_OK)
+  {
+    ESP_LOGE(TAG, "%4d %s mt_nvs_config_get_module index:%d failed", __LINE__,
+             __func__, mod_index);
+    return ESP_ERR_INVALID_ARG;
+  }
 
   char mqtt_uri_str[URI_MAX_SIZE] = "";
   strcpy(mqtt_uri_str, "mqtt://");
-  strcat(mqtt_uri_str, host);
+  strcat(mqtt_uri_str, host->host);
   strcat(mqtt_uri_str, ":");
-  strcat(mqtt_uri_str, port);
+  strcat(mqtt_uri_str, host->mqtt_port);
 
   strcpy(Module_id, module_id);
   strcpy(Device_id, device_id);
   Session_id = session_id;
   msg_process = handle;
 
+  hmac_str = mt_hmac_sha256_mqtt((uint8_t *)mod->key, strlen(mod->key),
+                                 (uint8_t *)mod->id, strlen(mod->id));
+
   const esp_mqtt_client_config_t mqtt_cfg = {
       .uri = mqtt_uri_str,
-      .username = username,
-      .password = password,
+      .username = mod->id,
+      .password = (char *)hmac_str,
       .event_handle = (mqtt_event_callback_t)message_arrived_callback,
   };
 
