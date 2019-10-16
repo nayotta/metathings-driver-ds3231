@@ -68,7 +68,7 @@ static void mt_module_mqtt_handle_unarycall(
     {
       if (strcmp(msg->unary_call->method->value, app_handle->methods[i]) == 0)
       {
-        (*app_handle->handles[i])(msg, Module_id);
+        (*(app_handle->handles[i]))(msg, Module_id);
         goto EXIT;
       }
     }
@@ -165,9 +165,9 @@ void mt_module_mqtt_add_handle(
   {
     app_handle = malloc(sizeof(mt_module_mqtt_t));
     app_handle->handle_size = 1;
-    app_handle->handles = (mt_module_mqtt_app_handle_t **)malloc(
-        sizeof(mt_module_mqtt_app_handle_t *));
-    app_handle->handles[0] = &handle;
+    app_handle->handles = (mt_module_mqtt_app_handle_t *)malloc(
+        sizeof(mt_module_mqtt_app_handle_t));
+    app_handle->handles[0] = handle;
     app_handle->methods = (char **)malloc(sizeof(char *));
     app_handle->methods[0] = malloc(strlen(method) + 1);
     memcpy(app_handle->methods[0], method, strlen(method) + 1);
@@ -177,8 +177,8 @@ void mt_module_mqtt_add_handle(
     mt_module_mqtt_t *temp_handle = app_handle;
     app_handle = malloc(sizeof(mt_module_mqtt_t));
     app_handle->handle_size = temp_handle->handle_size + 1;
-    app_handle->handles = (mt_module_mqtt_app_handle_t **)malloc(
-        sizeof(mt_module_mqtt_app_handle_t *) * app_handle->handle_size);
+    app_handle->handles = (mt_module_mqtt_app_handle_t *)malloc(
+        sizeof(mt_module_mqtt_app_handle_t) * app_handle->handle_size);
     app_handle->methods =
         (char **)malloc(sizeof(char *) * app_handle->handle_size);
     for (int i = 0; i < app_handle->handle_size - 1; i++)
@@ -186,7 +186,7 @@ void mt_module_mqtt_add_handle(
       app_handle->handles[i] = temp_handle->handles[i];
       app_handle->methods[i] = temp_handle->methods[i];
     }
-    app_handle->handles[app_handle->handle_size - 1] = &handle;
+    app_handle->handles[app_handle->handle_size - 1] = handle;
     app_handle->methods[app_handle->handle_size - 1] =
         malloc(strlen(method) + 1);
     memcpy(app_handle->methods[app_handle->handle_size - 1], method,

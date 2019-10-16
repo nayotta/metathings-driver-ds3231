@@ -292,7 +292,7 @@ mt_module_flow_t *mt_module_flow_new(int module_index, int flow_index,
   module_flow->flow->name = flow_name;
   module_flow->session = NULL;
   module_flow->create_push_frame_interval = 30 * 1000; // 30s
-  module_flow->push_frame_interval = 10 * 1000;        // 10s
+  module_flow->push_frame_interval = 20 * 1000;        // 20s
   module_flow->ping_interval = 30 * 1000;              // 30s
   module_flow->ping_retry_times = 3;                   // retry 3 times, nor to restart
   module_flow->ping_count = 0;

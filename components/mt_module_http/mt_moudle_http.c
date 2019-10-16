@@ -255,7 +255,7 @@ esp_err_t mt_module_http_actions_issue_module_token(
   {
     if (tkn_out->text != NULL)
     {
-      ESP_LOGW(TAG, "%4d %s token=%s", __LINE__, __func__, tkn_out->text);
+      //ESP_LOGW(TAG, "%4d %s token=%s", __LINE__, __func__, tkn_out->text);
     }
   }
 
@@ -1499,7 +1499,7 @@ RESTART:
                                    mt_utils_session_gen_major_session());
 
   // debug here
-  // module_http->session_id = 12345678;
+  module_http->session_id = 12345678;
   while (true)
   {
     if (heartbeat_count <= 0)

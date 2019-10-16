@@ -9,7 +9,7 @@ typedef void (*mt_module_mqtt_app_handle_t)(
 typedef struct _mt_module_mqtt_t
 {
   int handle_size;
-  mt_module_mqtt_app_handle_t **handles;
+  mt_module_mqtt_app_handle_t *handles;
   char **methods;
 } mt_module_mqtt_t;
 
