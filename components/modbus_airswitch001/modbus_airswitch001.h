@@ -86,6 +86,23 @@ struct RetMsg_t // ret message struct
   USHORT retLen;            // ret len
 } * RetMsg;                 // global save point
 
+typedef struct airswitch_warn_t
+{
+  bool note_current;
+  bool note_leak;
+  bool note_votage_low;
+  bool note_votage_high;
+  bool warn_fire;
+  bool warn_votage_low;
+  bool warn_votage_high;
+  bool warn_current;
+  bool warn_leak;
+  bool warn_temp;
+  bool warn_power;
+  bool warn_wave;
+  bool warn_short;
+} airswitch_warn_t;
+
 eMBErrorCode modbus_airswitch001_init(UCHAR ucPort, ULONG ulBaudRate,
                                       eMBParity eParity, int tx_pin, int rx_pin,
                                       int en_pin);
@@ -108,6 +125,10 @@ esp_err_t mt_airswitch001_get_data(UCHAR slaveAddr,
                                    Airswitch_Data_Read_Type type, UCHAR target,
                                    USHORT *value_out);
 
+// cmd 03 get warn for switch
+esp_err_t mt_airswitch001_get_warn(UCHAR slaveAddr, UCHAR target,
+                                   airswitch_warn_t *warn);
+
 // cmd 04 get config for switch
 esp_err_t mt_airswitch001_get_config(UCHAR slaveAddr,
                                      Airswitch_Cfg_Read_Type type, UCHAR target,
@@ -127,7 +148,25 @@ esp_err_t mt_airswitch001_get_datas(UCHAR slaveAddr, UCHAR target, bool *state,
                                     double *leak_current, double *power,
                                     double *temp, double *current);
 
+esp_err_t mt_airswitch001_get_configs(UCHAR slaveAddr, UCHAR target,
+                                      double *votage_high, double *votage_low,
+                                      double *leak_current, double *power_high,
+                                      double *temp_high, double *current_high);
+
+esp_err_t mt_airswitch001_set_configs(UCHAR slaveAddr, UCHAR target,
+                                      double *votage_high, double *votage_low,
+                                      double *leak_current_high, double *power_high,
+                                      double *temp_high, double *current_high);
+
 esp_err_t mt_airswitch001_get_model(UCHAR slaveAddr, UCHAR target, int *model,
                                     int *current);
+
+esp_err_t mt_airswtich001_get_cache_quality(UCHAR slaveAddr, UCHAR target,
+                                            double *quality);
+
+esp_err_t mt_airswitch001_set_cache_quality(UCHAR slaveAddr, UCHAR target,
+                                            double quality);
+
+esp_err_t mt_airswitch001_set_leak_test(UCHAR slaveAddr, UCHAR target);
 
 #endif
