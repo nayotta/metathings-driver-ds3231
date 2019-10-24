@@ -28,7 +28,7 @@ static esp_err_t cache_quality_update(int addr, int32_t quality_in)
   int32_t quality_save = 0;
   int32_t update_value = 0;
 
-  if (cache_quality_get(addr, &quality, &quality_save) == false)
+  if (cache_quality_get(addr, &quality, &quality_save) != ESP_OK)
   {
     ESP_LOGE(TAG, "%4d %s cache_quality_get failed", __LINE__, __func__);
     return ESP_ERR_INVALID_ARG;
@@ -66,17 +66,17 @@ static esp_err_t cache_quality_update(int addr, int32_t quality_in)
 
 static void quality_cache_loop()
 {
-  esp_err_t err = ESP_OK;
-  int32_t quality = 0;
-  int num = NUM_SLAVER + NUM_MASTER;
-
+  vTaskDelay(10 * 1000 / portTICK_RATE_MS);
   while (true)
   {
-    for (int i = 0; i < num; i++)
+    esp_err_t err = ESP_OK;
+    int32_t quality = 0;
+    int num = NUM_SLAVER + NUM_MASTER;
+
+    for (int i = 1; i <= num; i++)
     {
       USHORT value_high = 0;
       USHORT value_low = 0;
-      int32_t quality_cache = 0;
 
       err = mt_airswitch001_get_data(1, DATA_QUALITY_H, i, &value_high);
       if (err != ESP_OK)
@@ -194,7 +194,7 @@ esp_err_t cache_set(Cache_t *cache)
 
   cache_print(cache);
 
-  if (cache->num_master <= 0)
+  if (cache->num_master < 0)
   {
     ESP_LOGE(TAG, "%4d %s num_master:%d error", __LINE__, __func__,
              cache->num_master);
@@ -219,7 +219,7 @@ esp_err_t cache_set(Cache_t *cache)
     }
   }
 
-  if (cache->num_slaver <= 0)
+  if (cache->num_slaver < 0)
   {
     ESP_LOGE(TAG, "%4d %s num_slaver:%d error", __LINE__, __func__,
              cache->num_slaver);
@@ -351,6 +351,7 @@ RESTART:
     ESP_LOGE(TAG, "%4d %s slaver:%d get addrs error:%d", __LINE__, __func__,
              slaveAddr, err);
     vTaskDelay(3000 / portTICK_RATE_MS);
+    goto RESTART;
   }
 
   ESP_LOGI(TAG, "%4d %s slave:%d get addrs:%d", __LINE__, __func__, slaveAddr,
@@ -362,7 +363,7 @@ RESTART:
 
     if (SWITCH_EXIST[i] == true)
     {
-      err = mt_airswitch001_get_model(slaveAddr, i, &model, &current);
+      err = mt_airswitch001_get_model_no_cache(slaveAddr, i, &model, &current);
       if (err != ESP_OK)
       {
         ESP_LOGE(TAG, "%4d %s slaver:%d target:%d get model error:%d", __LINE__,
@@ -371,7 +372,7 @@ RESTART:
         goto RESTART;
       }
 
-      ESP_LOGW(TAG, "debug:%d, type=%d", SWITCH_EXIST[i], model);
+      ESP_LOGI(TAG, "ADDR:%d, type=%d", i, model);
 
       switch (model)
       {
@@ -473,15 +474,22 @@ esp_err_t cache_task()
     return ESP_ERR_INVALID_ARG;
   }
 
+  ESP_LOGI(TAG, "%4d %s cache task master:%d slaver:%d", __LINE__, __func__,
+           NUM_MASTER, NUM_SLAVER);
+
   vTaskDelay(2000 / portTICK_RATE_MS);
   xTaskCreate((TaskFunction_t)cache_loop, "CACHE_TASK", 8 * 1024, NULL, 10,
               NULL);
+
+  return ESP_OK;
 }
 
 esp_err_t cache_get_target(int addr_in, UCHAR *target)
 {
   esp_err_t err = ESP_OK;
   Cache_t cache;
+  cache.masters = NULL;
+  cache.slavers = NULL;
 
   err = cache_get(&cache);
   if (err != ESP_OK)
@@ -540,8 +548,7 @@ EXIT:
   return err;
 }
 
-esp_err_t cache_quality_get(int addr, int32_t *quality,
-                            int32_t *quality_save)
+esp_err_t cache_quality_get(int addr, int32_t *quality, int32_t *quality_save)
 {
   char key[16] = "";
 
@@ -551,7 +558,7 @@ esp_err_t cache_quality_get(int addr, int32_t *quality,
     *quality = 0;
     if (mt_nvs_write_int32_config(key, 0) == false)
     {
-      ESP_LOGE(TAG, "%4d %s cache reset %d faild", __LINE__, __func__);
+      ESP_LOGE(TAG, "%4d %s cache reset faild", __LINE__, __func__);
       return ESP_ERR_INVALID_ARG;
     }
   }
@@ -562,7 +569,7 @@ esp_err_t cache_quality_get(int addr, int32_t *quality,
     *quality_save = 0;
     if (mt_nvs_write_int32_config(key, 0) == false)
     {
-      ESP_LOGE(TAG, "%4d %s cache reset %d faild", __LINE__, __func__);
+      ESP_LOGE(TAG, "%4d %s cache reset faild", __LINE__, __func__);
       return ESP_ERR_INVALID_ARG;
     }
   }
@@ -575,10 +582,10 @@ esp_err_t cache_quality_set(int addr, int32_t quality)
   char key[16];
 
   sprintf(key, "qual_%d", addr);
-  if(mt_nvs_write_int32_config(key, quality) == false)
+  if (mt_nvs_write_int32_config(key, quality) == false)
   {
     ESP_LOGE(TAG, "%4d %s cache set faild", __LINE__, __func__);
-      return ESP_ERR_INVALID_ARG;
+    return ESP_ERR_INVALID_ARG;
   }
 
   return ESP_OK;

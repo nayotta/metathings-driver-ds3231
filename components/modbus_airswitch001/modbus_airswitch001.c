@@ -13,7 +13,7 @@
 #include "modbus_airswitch001.h"
 
 // global define ==============================================================
-static const char *TAG = "MT_MODBUS_airswitch001";
+static const char *TAG = "MODBUS_airswitch001";
 static SemaphoreHandle_t SemaphorMasterHdl = NULL;
 static int Lock_Timeout = 50;
 
@@ -321,6 +321,7 @@ EXIT:
   return errorCode;
 }
 
+/*
 // sync cmd 05
 static eMBMasterReqErrCode modbus_airswitch001_sync_cmd_05(
     UCHAR slaveAddr, USHORT target, USHORT num, struct RetMsg_t *ret)
@@ -348,7 +349,7 @@ static eMBMasterReqErrCode modbus_airswitch001_sync_cmd_05(
 EXIT:
   modbus_lock_release();
   return errorCode;
-}
+}*/
 
 // sync cmd 06
 static eMBMasterReqErrCode modbus_airswitch001_sync_cmd_06(
@@ -436,7 +437,7 @@ esp_err_t mt_airswitch001_get_addrs(UCHAR slaveAddr, USHORT *addrs)
 
   // data process
   *addrs = (int)cmd_ret_payload.retBuf[0] | (int)cmd_ret_payload.retBuf[1] << 8;
-  ESP_LOGW(TAG, "get addrs:%d", *addrs);
+  ESP_LOGI(TAG, "%4d %s get addrs:%d", __LINE__, __func__, *addrs);
 
   return ESP_OK;
 }
@@ -578,7 +579,8 @@ esp_err_t mt_airswitch001_get_data(UCHAR slaveAddr,
   err = cache_get_target(target, &real_target);
   if (err != ESP_OK)
   {
-    ESP_LOGE(TAG, "%4d %s cache_get_target failed", __LINE__, __func__);
+    ESP_LOGE(TAG, "%4d %s cache_get_target:%d failed", __LINE__, __func__,
+             target);
     return ESP_ERR_INVALID_ARG;
   }
 
@@ -966,61 +968,74 @@ esp_err_t mt_airswitch001_get_configs(UCHAR slaveAddr, UCHAR target,
                                       double *leak_current, double *power_high,
                                       double *temp_high, double *current_high)
 {
+  USHORT value = 0;
   esp_err_t err = ESP_OK;
 
   // votage high
-  err = mt_airswitch001_get_config(slaveAddr, target, CFG_READ_VOTAGE_HIGH,
-                                   votage_high);
+  err = mt_airswitch001_get_config(slaveAddr, CFG_READ_VOTAGE_HIGH, target,
+                                   &value);
+  if (err != ESP_OK)
   {
     ESP_LOGE(TAG, "%4d %s addr:%d target:%d config failed code:%d", __LINE__,
              __func__, slaveAddr, target, err);
     return ESP_ERR_INVALID_RESPONSE;
   }
+  *votage_high = (double)value;
 
   // votage low
-  err = mt_airswitch001_get_config(slaveAddr, target, CFG_READ_VOTAGE_LOW,
-                                   votage_low);
+  err = mt_airswitch001_get_config(slaveAddr, CFG_READ_VOTAGE_LOW, target,
+                                   &value);
+  if (err != ESP_OK)
   {
     ESP_LOGE(TAG, "%4d %s addr:%d target:%d config failed code:%d", __LINE__,
              __func__, slaveAddr, target, err);
     return ESP_ERR_INVALID_RESPONSE;
   }
+  *votage_low = (double)value;
 
   // leak current
-  err = mt_airswitch001_get_config(slaveAddr, target, CFG_READ_LEAK_CURRENT,
-                                   leak_current);
+  err = mt_airswitch001_get_config(slaveAddr, CFG_READ_LEAK_CURRENT, target,
+                                   &value);
+  if (err != ESP_OK)
   {
     ESP_LOGE(TAG, "%4d %s addr:%d target:%d config failed code:%d", __LINE__,
              __func__, slaveAddr, target, err);
     return ESP_ERR_INVALID_RESPONSE;
   }
+  *leak_current = (double)value / 10.0;
 
   // power high
-  err = mt_airswitch001_get_config(slaveAddr, target, CFG_READ_POWER_HIGH,
-                                   power_high);
+  err = mt_airswitch001_get_config(slaveAddr, CFG_READ_POWER_HIGH, target,
+                                   &value);
+  if (err != ESP_OK)
   {
     ESP_LOGE(TAG, "%4d %s addr:%d target:%d config failed code:%d", __LINE__,
              __func__, slaveAddr, target, err);
     return ESP_ERR_INVALID_RESPONSE;
   }
+  *power_high = (double)value / 1.0;
 
   // temp high
-  err = mt_airswitch001_get_config(slaveAddr, target, CFG_READ_TEMP_HIGH,
-                                   temp_high);
+  err =
+      mt_airswitch001_get_config(slaveAddr, CFG_READ_TEMP_HIGH, target, &value);
+  if (err != ESP_OK)
   {
     ESP_LOGE(TAG, "%4d %s addr:%d target:%d config failed code:%d", __LINE__,
              __func__, slaveAddr, target, err);
     return ESP_ERR_INVALID_RESPONSE;
   }
+  *temp_high = (double)value / 10.0;
 
   // current high
-  err = mt_airswitch001_get_config(slaveAddr, target, CFG_READ_CURRENT_HIGH,
-                                   current_high);
+  err = mt_airswitch001_get_config(slaveAddr, CFG_READ_CURRENT_HIGH, target,
+                                   &value);
+  if (err != ESP_OK)
   {
     ESP_LOGE(TAG, "%4d %s addr:%d target:%d config failed code:%d", __LINE__,
              __func__, slaveAddr, target, err);
     return ESP_ERR_INVALID_RESPONSE;
   }
+  *current_high = (double)value / 100.0;
 
   return ESP_OK;
 }
@@ -1040,7 +1055,8 @@ esp_err_t mt_airswitch001_set_configs(UCHAR slaveAddr, UCHAR target,
                                      (int)(*votage_high));
     if (err != ESP_OK)
     {
-      ESP_LOGE(TAG, "%4d %s set CFG_WRITE_VOTAGE_HIGH failed", __LINE__, __func__);
+      ESP_LOGE(TAG, "%4d %s set CFG_WRITE_VOTAGE_HIGH failed", __LINE__,
+               __func__);
       return ESP_ERR_INVALID_ARG;
     }
   }
@@ -1052,7 +1068,8 @@ esp_err_t mt_airswitch001_set_configs(UCHAR slaveAddr, UCHAR target,
                                      (int)(*votage_low));
     if (err != ESP_OK)
     {
-      ESP_LOGE(TAG, "%4d %s set CFG_WRITE_VOTAGE_LOW failed", __LINE__, __func__);
+      ESP_LOGE(TAG, "%4d %s set CFG_WRITE_VOTAGE_LOW failed", __LINE__,
+               __func__);
       return ESP_ERR_INVALID_ARG;
     }
   }
@@ -1060,11 +1077,12 @@ esp_err_t mt_airswitch001_set_configs(UCHAR slaveAddr, UCHAR target,
   // leak current
   if (leak_current_high != NULL)
   {
-    err = mt_airswitch001_set_config(slaveAddr, CFG_WRITE_LEAK_CURRENT_HIGH, target,
-                                     (int)(*leak_current_high));
+    err = mt_airswitch001_set_config(slaveAddr, CFG_WRITE_LEAK_CURRENT_HIGH,
+                                     target, (int)(*leak_current_high * 10));
     if (err != ESP_OK)
     {
-      ESP_LOGE(TAG, "%4d %s set CFG_WRITE_LEAK_CURRENT_HIGH failed", __LINE__, __func__);
+      ESP_LOGE(TAG, "%4d %s set CFG_WRITE_LEAK_CURRENT_HIGH failed", __LINE__,
+               __func__);
       return ESP_ERR_INVALID_ARG;
     }
   }
@@ -1076,7 +1094,8 @@ esp_err_t mt_airswitch001_set_configs(UCHAR slaveAddr, UCHAR target,
                                      (int)(*power_high));
     if (err != ESP_OK)
     {
-      ESP_LOGE(TAG, "%4d %s set CFG_WRITE_POWER_HIGH failed", __LINE__, __func__);
+      ESP_LOGE(TAG, "%4d %s set CFG_WRITE_POWER_HIGH failed", __LINE__,
+               __func__);
       return ESP_ERR_INVALID_ARG;
     }
   }
@@ -1085,10 +1104,13 @@ esp_err_t mt_airswitch001_set_configs(UCHAR slaveAddr, UCHAR target,
   if (temp_high != NULL)
   {
     err = mt_airswitch001_set_config(slaveAddr, CFG_WRITE_TEMP_HIGH, target,
-                                     (int)(*temp_high));
+                                     (int)(*temp_high * 10));
+    printf("debug origin:%f new:%d", *temp_high,
+           (int)(*temp_high * 10));
     if (err != ESP_OK)
     {
-      ESP_LOGE(TAG, "%4d %s set CFG_WRITE_TEMP_HIGH failed", __LINE__, __func__);
+      ESP_LOGE(TAG, "%4d %s set CFG_WRITE_TEMP_HIGH failed", __LINE__,
+               __func__);
       return ESP_ERR_INVALID_ARG;
     }
   }
@@ -1097,10 +1119,11 @@ esp_err_t mt_airswitch001_set_configs(UCHAR slaveAddr, UCHAR target,
   if (current_high != NULL)
   {
     err = mt_airswitch001_set_config(slaveAddr, CFG_WRITE_CURRENT_HIGH, target,
-                                     (int)(*current_high));
+                                     (int)(*current_high * 100));
     if (err != ESP_OK)
     {
-      ESP_LOGE(TAG, "%4d %s set CFG_WRITE_CURRENT_HIGH failed", __LINE__, __func__);
+      ESP_LOGE(TAG, "%4d %s set CFG_WRITE_CURRENT_HIGH failed", __LINE__,
+               __func__);
       return ESP_ERR_INVALID_ARG;
     }
   }
@@ -1128,7 +1151,28 @@ esp_err_t mt_airswitch001_get_model(UCHAR slaveAddr, UCHAR target, int *model,
   return ESP_OK;
 }
 
-esp_err_t mt_airswtich001_get_cache_quality(UCHAR slaveAddr, UCHAR target,
+esp_err_t mt_airswitch001_get_model_no_cache(UCHAR slaveAddr, UCHAR target,
+                                             int *model, int *current)
+{
+  esp_err_t err = ESP_OK;
+  struct RetMsg_t cmd_ret_payload;
+
+  err = modbus_airswitch001_sync_cmd_04(slaveAddr, CFG_READ_MODEL, target, 1,
+                                        &cmd_ret_payload);
+  if (err != ESP_OK)
+  {
+    ESP_LOGE(TAG, "%4d %s addr:%d target:%d failed code:%d", __LINE__, __func__,
+             slaveAddr, target, err);
+    return ESP_ERR_INVALID_RESPONSE;
+  }
+
+  *model = (int)cmd_ret_payload.retBuf[0];
+  *current = (int)cmd_ret_payload.retBuf[1];
+
+  return ESP_OK;
+}
+
+esp_err_t mt_airswitch001_get_cache_quality(UCHAR slaveAddr, UCHAR target,
                                             double *quality)
 {
   esp_err_t err = ESP_OK;
@@ -1167,10 +1211,12 @@ esp_err_t mt_airswitch001_set_leak_test(UCHAR slaveAddr, UCHAR target)
   esp_err_t err = ESP_OK;
   USHORT value = 0;
 
-  err = mt_airswitch001_set_config(slaveAddr, CFG_WRITE_LEAK_TEST, target, &value);
+  err =
+      mt_airswitch001_set_config(slaveAddr, CFG_WRITE_LEAK_TEST, target, value);
   if (err != ESP_OK)
   {
-    ESP_LOGE(TAG, "%4d %s mt_airswitch001_set_config failed", __LINE__, __func__);
+    ESP_LOGE(TAG, "%4d %s mt_airswitch001_set_config failed", __LINE__,
+             __func__);
     return ESP_ERR_INVALID_ARG;
   }
 

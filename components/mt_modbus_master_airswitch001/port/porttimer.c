@@ -127,7 +127,7 @@ void vMBMasterPortTimersConvertDelayEnable() {
 
 INLINE
 void vMBMasterPortTimersRespondTimeoutEnable() {
-  USHORT timer_tick = MB_MASTER_TIMEOUT_MS_RESPOND * 20;
+  USHORT timer_tick = MB_MASTER_TIMEOUT_MS_RESPOND * 30;
   /* Set current timer mode, don't change it.*/
   vMBMasterSetCurTimerMode(MB_TMODE_RESPOND_TIMEOUT);
   timer_value_update(timer_tick);

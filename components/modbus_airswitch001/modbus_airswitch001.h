@@ -86,7 +86,7 @@ struct RetMsg_t // ret message struct
   USHORT retLen;            // ret len
 } * RetMsg;                 // global save point
 
-typedef struct airswitch_warn_t
+typedef struct _airswitch_warn_t
 {
   bool note_current;
   bool note_leak;
@@ -102,6 +102,27 @@ typedef struct airswitch_warn_t
   bool warn_wave;
   bool warn_short;
 } airswitch_warn_t;
+
+typedef struct _airswitch_data_t
+{
+  bool state;
+  bool ctrl;
+  double votage;
+  double leak_current;
+  double power;
+  double temp;
+  double current;
+} airswitch_data_t;
+
+typedef struct _airswitch_config_t
+{
+  double votage_high;
+  double votage_low;
+  double leak_current_high;
+  double power_high;
+  double temp_high;
+  double current_high;
+} airswitch_config_t;
 
 eMBErrorCode modbus_airswitch001_init(UCHAR ucPort, ULONG ulBaudRate,
                                       eMBParity eParity, int tx_pin, int rx_pin,
@@ -155,13 +176,17 @@ esp_err_t mt_airswitch001_get_configs(UCHAR slaveAddr, UCHAR target,
 
 esp_err_t mt_airswitch001_set_configs(UCHAR slaveAddr, UCHAR target,
                                       double *votage_high, double *votage_low,
-                                      double *leak_current_high, double *power_high,
-                                      double *temp_high, double *current_high);
+                                      double *leak_current_high,
+                                      double *power_high, double *temp_high,
+                                      double *current_high);
 
 esp_err_t mt_airswitch001_get_model(UCHAR slaveAddr, UCHAR target, int *model,
                                     int *current);
 
-esp_err_t mt_airswtich001_get_cache_quality(UCHAR slaveAddr, UCHAR target,
+esp_err_t mt_airswitch001_get_model_no_cache(UCHAR slaveAddr, UCHAR target,
+                                             int *model, int *current);
+
+esp_err_t mt_airswitch001_get_cache_quality(UCHAR slaveAddr, UCHAR target,
                                             double *quality);
 
 esp_err_t mt_airswitch001_set_cache_quality(UCHAR slaveAddr, UCHAR target,
