@@ -1,0 +1,50 @@
+# yaml
+version: v1beta
+description: jxyl001
+flow:
+  name: m1
+  fields:
+    temp1:
+      description: 温度
+      unit: centigrade
+      driver: jxyl001
+      type: float
+      period: 60000
+      min: -200
+      max: 200
+    hum1:
+      description: 湿度
+      unit: percent
+      driver: jxyl001
+      type: float
+      period: 60000
+      min: 0
+      max: 100
+    frog1:
+      description: 烟雾浓度
+      unit: ppm
+      driver: jxyl001
+      type: float
+      period: 10000
+      min: 0
+      max: 1000000
+    votagefog1:
+      description: 烟雾传感器电压
+      unit: v
+      driver: jxyl001
+      type: float
+      period: 0
+      min: 0
+      max: 20
+    votagetemp1:
+      description: 温湿度传感器电压
+      unit: v
+      driver: jxyl001
+      type: float
+      period: 0
+      min: 0
+      max: 20
+     
+
+
+      

@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+service Jxyl001Service {
+	rpc GetData(google.protobuf.Empty) returns (DataRes) {}
+}
+
+message Temp // push frame
+{
+	int32 addr = 1;       // 温湿度地址
+	double temp = 2;      // 温度
+	double hum = 3;       // 湿度
+	double votagetemp = 4;// 温湿度传感器电压
+}
+
+message Fog 
+{
+	int32 addr = 1;       // 烟雾地址
+	double frog = 2;      // 烟雾
+	double votagefog = 3; // 烟雾传感器电压
+}
+
+message DataRes 
+{
+	int32 resCode = 1;
+	repeated Temp temps = 2;
+	repeated Fog fogs = 3;
+}
