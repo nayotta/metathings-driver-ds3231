@@ -35,7 +35,7 @@ static esp_err_t mt_rtc_time_init()
   while (i2cdev_init() != ESP_OK)
   {
     ESP_LOGE(TAG, "%d i2cdev_init failed", __LINE__);
-    vTaskDelay(1000 / portTICK_PERIOD_MS);
+    vTaskDelay(2000 / portTICK_PERIOD_MS);
   }
 
   switch (RTC_MODULE)
@@ -44,7 +44,7 @@ static esp_err_t mt_rtc_time_init()
     while (ds1307_init_desc(&RTC_I2C_DEV, 0, SDA_GPIO, SCL_GPIO))
     {
       ESP_LOGE(TAG, "%d ds1307_init_desc failed", __LINE__);
-      vTaskDelay(1000 / portTICK_PERIOD_MS);
+      vTaskDelay(2000 / portTICK_PERIOD_MS);
     }
 
     if (ds1307_get_time(&RTC_I2C_DEV, &time) != ESP_OK)
@@ -58,7 +58,7 @@ static esp_err_t mt_rtc_time_init()
     while (ds3231_init_desc(&RTC_I2C_DEV, 0, SDA_GPIO, SCL_GPIO))
     {
       ESP_LOGE(TAG, "%d ds3231_init_desc failed", __LINE__);
-      vTaskDelay(1000 / portTICK_PERIOD_MS);
+      vTaskDelay(2000 / portTICK_PERIOD_MS);
     }
 
     if (ds3231_get_time(&RTC_I2C_DEV, &time) != ESP_OK)
@@ -71,6 +71,18 @@ static esp_err_t mt_rtc_time_init()
   default:
     ESP_LOGE(TAG, "%d error rtc_module type", __LINE__);
     return ESP_ERR_INVALID_STATE;
+  }
+
+  // check sync data
+  if (time.tm_year < 2019)
+  {
+    ESP_LOGW(TAG, "%4d %s sync time:%d error, reset sync state", __LINE__,
+             __func__, time.tm_year);
+    if (mt_nvs_write_int32_config(MT_RTC_TIME_NVS, 0) == false)
+    {
+      ESP_LOGE(TAG, "%4d %s mt_nvs_write_int32_config MT_RTC_TIME_NVS failed",
+               __LINE__, __func__);
+    }
   }
 
   // check nvs storage
@@ -97,15 +109,23 @@ static esp_err_t mt_rtc_time_init()
 
 static void mt_rtc_time_task_loop()
 {
+  int32_t time_synced = 0;
+
+  if (mt_nvs_read_int32_config(MT_RTC_TIME_NVS, &time_synced) == false)
+  {
+    ESP_LOGW(TAG, "%4d %s mt_nvs_read_int32_config MT_RTC_TIME_NVS failed",
+             __LINE__, __func__);
+    if (mt_nvs_write_int32_config(MT_RTC_TIME_NVS, 0) == false)
+    {
+      ESP_LOGE(TAG, "%4d %s mt_nvs_write_int32_config MT_RTC_TIME_NVS failed",
+               __LINE__, __func__);
+    }
+  }
+
   if (mt_rtc_time_init() != ESP_OK)
   {
     ESP_LOGE(TAG, "%d mt_rtc_time_setup failed", __LINE__);
     vTaskDelete(NULL);
-  }
-
-  while (1)
-  {
-    vTaskDelay(1000 / portTICK_PERIOD_MS);
   }
 
   vTaskDelete(NULL);
@@ -117,7 +137,8 @@ esp_err_t mt_rtc_time_get_time(struct tm *time)
   int32_t time_synced = 0;
 
   // check if task synced
-  if(TASK_SYNCED != true){
+  if (TASK_SYNCED != true)
+  {
     ESP_LOGE(TAG, "%d TASK_SYNCED not finish", __LINE__);
     return ESP_ERR_INVALID_STATE;
   }
@@ -156,13 +177,26 @@ esp_err_t mt_rtc_time_get_time(struct tm *time)
     return ESP_ERR_INVALID_STATE;
   }
 
+  if (time->tm_year < 2019)
+  {
+    ESP_LOGE(TAG, "%4d %s sync year error", __LINE__, __func__);
+    if (mt_nvs_write_int32_config(MT_RTC_TIME_NVS, 0) == false)
+    {
+      ESP_LOGE(TAG, "%4d %s mt_nvs_write_int32_config failed", __LINE__,
+               __func__);
+      return ESP_ERR_INVALID_STATE;
+    }
+    return ESP_ERR_INVALID_STATE;
+  }
+
   return ESP_OK;
 }
 
 esp_err_t mt_rtc_time_set_time(struct tm *time)
 {
   // check if task synced
-  if(TASK_SYNCED != true){
+  if (TASK_SYNCED != true)
+  {
     ESP_LOGE(TAG, "%d TASK_SYNCED not finish", __LINE__);
     return ESP_ERR_INVALID_STATE;
   }
@@ -204,6 +238,8 @@ esp_err_t mt_rtc_time_set_time(struct tm *time)
 
   return ESP_OK;
 }
+
+esp_err_t mt_rtc_time_syncd(bool *sync) {}
 
 void mt_rtc_time_task(enum MT_RTC_MODULE_TYPE rtc_module, int sda_gpio,
                       int scl_gpio)

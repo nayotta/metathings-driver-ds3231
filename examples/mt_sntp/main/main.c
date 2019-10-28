@@ -16,8 +16,8 @@
 
 #define LIGHT_GPIO 26
 #define LIGHT_GPIO_ON_LEVEL 0
-#define SDA_GPIO 21
-#define SCL_GPIO 19
+#define SDA_GPIO 32
+#define SCL_GPIO 33
 
 #define BUTTON_GPIO 14
 #define BUTTON_GPIO_PRESS_LEVEL 0
