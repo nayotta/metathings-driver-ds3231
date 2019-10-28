@@ -188,7 +188,7 @@ static void mt_sntp_loop() {
   localtime_r(&now, &timeinfo);
 
   while (timeinfo.tm_year < (2019 - 1900)) {
-    ESP_LOGI(TAG, "wait time sync...");
+    // ESP_LOGI(TAG, "wait time sync...");
     vTaskDelay(2 * 1000 / portTICK_PERIOD_MS);
     time(&now);
     localtime_r(&now, &timeinfo);
@@ -211,8 +211,8 @@ static void mt_sntp_loop() {
     goto EXIT;
   }
   printf("debug:%d nvs %d-%d-%d  now %d-%d-%d\n", __LINE__, last_sync_time.year,
-         last_sync_time.mon, last_sync_time.day, timeinfo.tm_year + 1900,
-         timeinfo.tm_mon, timeinfo.tm_mday);
+         last_sync_time.mon + 1, last_sync_time.day, timeinfo.tm_year + 1900,
+         timeinfo.tm_mon + 1, timeinfo.tm_mday);
 
   // check if need dayly sync rtc time
   // check last sync year, month and day, if not sync rtc module dayly
