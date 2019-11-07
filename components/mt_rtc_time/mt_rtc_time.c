@@ -239,7 +239,7 @@ esp_err_t mt_rtc_time_set_time(struct tm *time)
   return ESP_OK;
 }
 
-esp_err_t mt_rtc_time_syncd(bool *sync) {}
+esp_err_t mt_rtc_time_syncd(bool *sync) { return ESP_OK; }
 
 void mt_rtc_time_task(enum MT_RTC_MODULE_TYPE rtc_module, int sda_gpio,
                       int scl_gpio)
