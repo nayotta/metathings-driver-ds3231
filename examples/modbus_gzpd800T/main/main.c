@@ -31,7 +31,7 @@ void test_get_data()
     return;
   }
 
-  ESP_LOGW(TAG,
+  ESP_LOGI(TAG,
            "%4d %s \n"
            "index 1 amp:%8u freq:%8u power:%8u\n"
            "index 2 amp:%8u freq:%8u power:%8u\n"
@@ -68,21 +68,16 @@ void test_get_warn()
 // main func ==================================================================
 void app_main()
 {
-  eMBErrorCode emb_ret = 0;
+  esp_err_t err = ESP_OK;
 
   ESP_LOGI(TAG, "test begin");
 
-  emb_ret =
-      modbus_init(RS485_PORT, RS485_BAUD, RS485_PARITY, TX_PIN, RX_PIN, EN_PIN);
-  if (emb_ret != 0)
+  err = mt_gzpd800T_init(TX_PIN, RX_PIN, EN_PIN);
+  if (err != ESP_OK)
   {
     ESP_LOGE(TAG, "%4d modbus_init failed", __LINE__);
     return;
   }
-
-  mt_vMBMaster_set_T35_interval(125);
-
-  mt_modbus_task();
 
   while (1)
   {
@@ -91,7 +86,6 @@ void app_main()
     test_get_data();
 
     // test get warn
-    // vTaskDelay(2000 / portTICK_RATE_MS);
-    // test_get_warn();
+    test_get_warn();
   }
 }

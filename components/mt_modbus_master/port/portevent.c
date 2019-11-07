@@ -150,6 +150,7 @@ eMBMasterReqErrCode eMBMasterWaitRequestFinish(void)
 {
   eMBMasterReqErrCode eErrStatus = MB_MRE_NO_ERR;
   eMBMasterResEventType recvedEvent;
+RESTART:
   xMBMasterResEventGet(&recvedEvent);
   switch (recvedEvent)
   {
@@ -175,8 +176,7 @@ eMBMasterReqErrCode eMBMasterWaitRequestFinish(void)
   }
   default:
     ESP_LOGE(TAG, "%4d unexcept event %d", __LINE__, recvedEvent);
-    eErrStatus = MB_MRE_NO_ERR;
-    break;
+    goto RESTART;
   }
   return eErrStatus;
 }

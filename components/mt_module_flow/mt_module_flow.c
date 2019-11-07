@@ -305,3 +305,84 @@ mt_module_flow_t *mt_module_flow_new(int module_index, int flow_index,
 
   return module_flow;
 }
+
+uint8_t *mt_module_flow_pack_frame(module_struct_group_t *value_in,
+                                   char *session_id, int *size_out)
+{
+  uint8_t frame_num = value_in->size;
+  uint8_t frame_count = 0;
+
+  if (frame_num <= 0)
+    return NULL;
+
+  PushFrameToFlowRequest frame_req = PUSH_FRAME_TO_FLOW_REQUEST__INIT;
+
+  // frame id
+  Google__Protobuf__StringValue frame_id = GOOGLE__PROTOBUF__STRING_VALUE__INIT;
+  frame_req.id = &frame_id;
+  frame_req.id->value = session_id;
+  frame_req.request_case = PUSH_FRAME_TO_FLOW_REQUEST__REQUEST_FRAME;
+
+  // frame struct
+  OpFrame frame = OP_FRAME__INIT;
+  frame_req.frame = &frame;
+  Google__Protobuf__Struct frame_data = GOOGLE__PROTOBUF__STRUCT__INIT;
+  frame_req.frame->data = &frame_data;
+
+  // struct data fields
+  frame_req.frame->data->n_fields = frame_num;
+  frame_req.frame->data->fields =
+      malloc(frame_num * sizeof(Google__Protobuf__Struct__FieldsEntry *));
+
+  for (int i = 0; i < frame_num; i++)
+  {
+    frame_req.frame->data->fields[frame_count] =
+        malloc(sizeof(Google__Protobuf__Struct__FieldsEntry));
+    google__protobuf__struct__fields_entry__init(
+        frame_req.frame->data->fields[frame_count]);
+    frame_req.frame->data->fields[frame_count]->key = value_in->value[i]->key;
+    Google__Protobuf__Value *value_value =
+        malloc(sizeof(Google__Protobuf__Value));
+    google__protobuf__value__init(value_value);
+    frame_req.frame->data->fields[frame_count]->value = value_value;
+    frame_req.frame->data->fields[frame_count]->value->kind_case =
+        value_in->value[i]->type;
+    switch (value_in->value[i]->type)
+    {
+    case GOOGLE__PROTOBUF__VALUE__KIND_NUMBER_VALUE:
+      frame_req.frame->data->fields[frame_count]->value->number_value =
+          value_in->value[i]->number_value;
+      break;
+    case GOOGLE__PROTOBUF__VALUE__KIND_STRING_VALUE:
+      frame_req.frame->data->fields[frame_count]->value->string_value =
+          value_in->value[i]->string_value;
+      break;
+    case GOOGLE__PROTOBUF__VALUE__KIND_BOOL_VALUE:
+      frame_req.frame->data->fields[frame_count]->value->bool_value =
+          value_in->value[i]->bool_value;
+      break;
+    default:
+      ESP_LOGE(TAG, "%4d %s unexcept type:%d", __LINE__, __func__,
+               value_in->value[i]->type);
+      break;
+    }
+    frame_count++;
+  }
+
+  // pack frame
+  *size_out = push_frame_to_flow_request__get_packed_size(&frame_req);
+  uint8_t *frame_req_buf = malloc(*size_out);
+  push_frame_to_flow_request__pack(&frame_req, frame_req_buf);
+
+  // free buf
+  /*
+  for (int i = 0; i < frame_num; i++)
+  {
+    free(frame_req.frame->data->fields[i]->value);
+    free(frame_req.frame->data->fields[i]);
+  }
+  free(frame_req.frame->data->fields);
+  */
+
+  return frame_req_buf;
+}

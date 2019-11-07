@@ -32,4 +32,6 @@ esp_err_t mt_gzpd800T_get_4ch_data(gzpd800T_4ch_data_t *data);
 
 esp_err_t mt_gzpd800T_get_warn(int addr, bool *warn);
 
+esp_err_t mt_gzpd800T_init(int tx_pin, int rx_pin, int en_pin);
+
 #endif
