@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+service EA900IIService
+{
+  rpc GetData(google.protobuf.Empty) returns (DataRes) {}
+}
+
+message Data // push frame
+{
+  float votageIn = 1;    // 输入电压
+  float votageOut = 2;   // 输出电压
+  float loadPercent = 3; // 输出负载百分比
+  float freqIn = 4;      // 输入电源频率
+  float votageBat = 5;   // 电池电压
+  float temp = 6;        // 电池温度
+  bool w7 = 7;           // 市电故障 true:故障 false:正常
+  bool w6 = 8;           // 电池电压低 true:电压低 false:正常
+  bool w5 = 9;           // 旁路/逆变状态 true:旁路 false:逆变
+  bool w4 = 10;          // UPS故障 true:故障 false:正常
+  bool w3 = 11;          // UPS类型 true:后备机 false:在线机
+  bool w2 = 12;          // 系统测试状态 true:测试中 false:无
+  bool w1 = 13;          // 系统关机状态 true:关机激活 false:无
+  bool w0 = 14;          // 告警音 true:开启 false:关闭
+}
+
+message DataRes
+{
+  int32 resCode = 1;
+  Data datas = 2;
+}

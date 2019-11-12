@@ -1,0 +1,94 @@
+# yaml
+version: v1beta
+description: EA900II
+flow:
+  name: m1
+  fields:
+    vIn:
+      description: 输入电压
+      unit: v
+      driver: EA900II
+      type: float
+      period: 60000
+      min: 0
+      max: 100000
+    vOut:
+      description: 输出电压
+      unit: v
+      driver: EA900II
+      type: float
+      period: 60000
+      min: 0
+      max: 100000
+    load:
+      description: 输出负载百分比
+      unit: 百分比
+      driver: EA900II
+      type: float
+      period: 60000
+      min: 0
+      max: 100000
+    freqIn:
+      description: 输入频率
+      unit: hz
+      driver: EA900II
+      type: float
+      period: 60000
+      min: 0
+      max: 100000
+    vBat:
+      description: 电池电压
+      unit: v
+      driver: EA900II
+      type: float
+      period: 60000
+      min: 0
+      max: 100000
+    temp:
+      description: 电池温度
+      unit: 摄氏度
+      driver: EA900II
+      type: float
+      period: 60000
+      min: -80
+      max: 200
+    w7:
+      description: 市电故障 true:正常 false:故障
+      driver: EA900II
+      type: bool
+      period: 60000
+    w6:
+      description: 电池电压低 true:电压低 false:电压正常
+      driver: EA900II
+      type: bool
+      period: 60000
+    w5:
+      description: 旁路/逆变状态 true:旁路 false:逆变
+      driver: EA900II
+      type: bool
+      period: 60000
+    w4:
+      description: ups内部故障 true:内部故障 false:正常
+      driver: EA900II
+      type: bool
+      period: 60000
+    w3:
+      description: ups类型 true:后备机 false:在线机
+      driver: EA900II
+      type: bool
+      period: 60000
+    w2:
+      description: 系统测试状态 true:测试中 false:无
+      driver: EA900II
+      type: bool
+      period: 60000
+    w1:
+      description: 系统关机 true:激活关机 false:无
+      driver: EA900II
+      type: bool
+      period: 60000
+    w0:
+      description: 告警音 true:开启 false:关闭
+      driver: EA900II
+      type: bool
+      period: 60000
