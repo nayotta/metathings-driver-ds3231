@@ -52,6 +52,96 @@ void   data__free_unpacked
   assert(message->base.descriptor == &data__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
+void   model__init
+                     (Model         *message)
+{
+  static const Model init_value = MODEL__INIT;
+  *message = init_value;
+}
+size_t model__get_packed_size
+                     (const Model *message)
+{
+  assert(message->base.descriptor == &model__descriptor);
+  return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
+}
+size_t model__pack
+                     (const Model *message,
+                      uint8_t       *out)
+{
+  assert(message->base.descriptor == &model__descriptor);
+  return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
+}
+size_t model__pack_to_buffer
+                     (const Model *message,
+                      ProtobufCBuffer *buffer)
+{
+  assert(message->base.descriptor == &model__descriptor);
+  return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
+}
+Model *
+       model__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data)
+{
+  return (Model *)
+     protobuf_c_message_unpack (&model__descriptor,
+                                allocator, len, data);
+}
+void   model__free_unpacked
+                     (Model *message,
+                      ProtobufCAllocator *allocator)
+{
+  if(!message)
+    return;
+  assert(message->base.descriptor == &model__descriptor);
+  protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
+}
+void   config__init
+                     (Config         *message)
+{
+  static const Config init_value = CONFIG__INIT;
+  *message = init_value;
+}
+size_t config__get_packed_size
+                     (const Config *message)
+{
+  assert(message->base.descriptor == &config__descriptor);
+  return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
+}
+size_t config__pack
+                     (const Config *message,
+                      uint8_t       *out)
+{
+  assert(message->base.descriptor == &config__descriptor);
+  return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
+}
+size_t config__pack_to_buffer
+                     (const Config *message,
+                      ProtobufCBuffer *buffer)
+{
+  assert(message->base.descriptor == &config__descriptor);
+  return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
+}
+Config *
+       config__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data)
+{
+  return (Config *)
+     protobuf_c_message_unpack (&config__descriptor,
+                                allocator, len, data);
+}
+void   config__free_unpacked
+                     (Config *message,
+                      ProtobufCAllocator *allocator)
+{
+  if(!message)
+    return;
+  assert(message->base.descriptor == &config__descriptor);
+  protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
+}
 void   data_res__init
                      (DataRes         *message)
 {
@@ -95,6 +185,96 @@ void   data_res__free_unpacked
   if(!message)
     return;
   assert(message->base.descriptor == &data_res__descriptor);
+  protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
+}
+void   model_res__init
+                     (ModelRes         *message)
+{
+  static const ModelRes init_value = MODEL_RES__INIT;
+  *message = init_value;
+}
+size_t model_res__get_packed_size
+                     (const ModelRes *message)
+{
+  assert(message->base.descriptor == &model_res__descriptor);
+  return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
+}
+size_t model_res__pack
+                     (const ModelRes *message,
+                      uint8_t       *out)
+{
+  assert(message->base.descriptor == &model_res__descriptor);
+  return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
+}
+size_t model_res__pack_to_buffer
+                     (const ModelRes *message,
+                      ProtobufCBuffer *buffer)
+{
+  assert(message->base.descriptor == &model_res__descriptor);
+  return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
+}
+ModelRes *
+       model_res__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data)
+{
+  return (ModelRes *)
+     protobuf_c_message_unpack (&model_res__descriptor,
+                                allocator, len, data);
+}
+void   model_res__free_unpacked
+                     (ModelRes *message,
+                      ProtobufCAllocator *allocator)
+{
+  if(!message)
+    return;
+  assert(message->base.descriptor == &model_res__descriptor);
+  protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
+}
+void   config_res__init
+                     (ConfigRes         *message)
+{
+  static const ConfigRes init_value = CONFIG_RES__INIT;
+  *message = init_value;
+}
+size_t config_res__get_packed_size
+                     (const ConfigRes *message)
+{
+  assert(message->base.descriptor == &config_res__descriptor);
+  return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
+}
+size_t config_res__pack
+                     (const ConfigRes *message,
+                      uint8_t       *out)
+{
+  assert(message->base.descriptor == &config_res__descriptor);
+  return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
+}
+size_t config_res__pack_to_buffer
+                     (const ConfigRes *message,
+                      ProtobufCBuffer *buffer)
+{
+  assert(message->base.descriptor == &config_res__descriptor);
+  return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
+}
+ConfigRes *
+       config_res__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data)
+{
+  return (ConfigRes *)
+     protobuf_c_message_unpack (&config_res__descriptor,
+                                allocator, len, data);
+}
+void   config_res__free_unpacked
+                     (ConfigRes *message,
+                      ProtobufCAllocator *allocator)
+{
+  if(!message)
+    return;
+  assert(message->base.descriptor == &config_res__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
 static const ProtobufCFieldDescriptor data__field_descriptors[14] =
@@ -304,15 +484,156 @@ const ProtobufCMessageDescriptor data__descriptor =
   (ProtobufCMessageInit) data__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
+static const ProtobufCFieldDescriptor model__field_descriptors[3] =
+{
+  {
+    "name",
+    1,
+    PROTOBUF_C_LABEL_NONE,
+    PROTOBUF_C_TYPE_STRING,
+    0,   /* quantifier_offset */
+    offsetof(Model, name),
+    NULL,
+    &protobuf_c_empty_string,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "model",
+    2,
+    PROTOBUF_C_LABEL_NONE,
+    PROTOBUF_C_TYPE_STRING,
+    0,   /* quantifier_offset */
+    offsetof(Model, model),
+    NULL,
+    &protobuf_c_empty_string,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "version",
+    3,
+    PROTOBUF_C_LABEL_NONE,
+    PROTOBUF_C_TYPE_STRING,
+    0,   /* quantifier_offset */
+    offsetof(Model, version),
+    NULL,
+    &protobuf_c_empty_string,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+};
+static const unsigned model__field_indices_by_name[] = {
+  1,   /* field[1] = model */
+  0,   /* field[0] = name */
+  2,   /* field[2] = version */
+};
+static const ProtobufCIntRange model__number_ranges[1 + 1] =
+{
+  { 1, 0 },
+  { 0, 3 }
+};
+const ProtobufCMessageDescriptor model__descriptor =
+{
+  PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "Model",
+  "Model",
+  "Model",
+  "",
+  sizeof(Model),
+  3,
+  model__field_descriptors,
+  model__field_indices_by_name,
+  1,  model__number_ranges,
+  (ProtobufCMessageInit) model__init,
+  NULL,NULL,NULL    /* reserved[123] */
+};
+static const ProtobufCFieldDescriptor config__field_descriptors[4] =
+{
+  {
+    "votage",
+    1,
+    PROTOBUF_C_LABEL_NONE,
+    PROTOBUF_C_TYPE_FLOAT,
+    0,   /* quantifier_offset */
+    offsetof(Config, votage),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "current",
+    2,
+    PROTOBUF_C_LABEL_NONE,
+    PROTOBUF_C_TYPE_FLOAT,
+    0,   /* quantifier_offset */
+    offsetof(Config, current),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "batVotage",
+    3,
+    PROTOBUF_C_LABEL_NONE,
+    PROTOBUF_C_TYPE_FLOAT,
+    0,   /* quantifier_offset */
+    offsetof(Config, batvotage),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "freq",
+    4,
+    PROTOBUF_C_LABEL_NONE,
+    PROTOBUF_C_TYPE_FLOAT,
+    0,   /* quantifier_offset */
+    offsetof(Config, freq),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+};
+static const unsigned config__field_indices_by_name[] = {
+  2,   /* field[2] = batVotage */
+  1,   /* field[1] = current */
+  3,   /* field[3] = freq */
+  0,   /* field[0] = votage */
+};
+static const ProtobufCIntRange config__number_ranges[1 + 1] =
+{
+  { 1, 0 },
+  { 0, 4 }
+};
+const ProtobufCMessageDescriptor config__descriptor =
+{
+  PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "Config",
+  "Config",
+  "Config",
+  "",
+  sizeof(Config),
+  4,
+  config__field_descriptors,
+  config__field_indices_by_name,
+  1,  config__number_ranges,
+  (ProtobufCMessageInit) config__init,
+  NULL,NULL,NULL    /* reserved[123] */
+};
 static const ProtobufCFieldDescriptor data_res__field_descriptors[2] =
 {
   {
-    "resCode",
+    "code",
     1,
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_INT32,
     0,   /* quantifier_offset */
-    offsetof(DataRes, rescode),
+    offsetof(DataRes, code),
     NULL,
     NULL,
     0,             /* flags */
@@ -332,8 +653,8 @@ static const ProtobufCFieldDescriptor data_res__field_descriptors[2] =
   },
 };
 static const unsigned data_res__field_indices_by_name[] = {
+  0,   /* field[0] = code */
   1,   /* field[1] = datas */
-  0,   /* field[0] = resCode */
 };
 static const ProtobufCIntRange data_res__number_ranges[1 + 1] =
 {
@@ -355,12 +676,118 @@ const ProtobufCMessageDescriptor data_res__descriptor =
   (ProtobufCMessageInit) data_res__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCMethodDescriptor ea900_iiservice__method_descriptors[1] =
+static const ProtobufCFieldDescriptor model_res__field_descriptors[2] =
+{
+  {
+    "code",
+    1,
+    PROTOBUF_C_LABEL_NONE,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(ModelRes, code),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "model",
+    2,
+    PROTOBUF_C_LABEL_NONE,
+    PROTOBUF_C_TYPE_MESSAGE,
+    0,   /* quantifier_offset */
+    offsetof(ModelRes, model),
+    &model__descriptor,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+};
+static const unsigned model_res__field_indices_by_name[] = {
+  0,   /* field[0] = code */
+  1,   /* field[1] = model */
+};
+static const ProtobufCIntRange model_res__number_ranges[1 + 1] =
+{
+  { 1, 0 },
+  { 0, 2 }
+};
+const ProtobufCMessageDescriptor model_res__descriptor =
+{
+  PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "ModelRes",
+  "ModelRes",
+  "ModelRes",
+  "",
+  sizeof(ModelRes),
+  2,
+  model_res__field_descriptors,
+  model_res__field_indices_by_name,
+  1,  model_res__number_ranges,
+  (ProtobufCMessageInit) model_res__init,
+  NULL,NULL,NULL    /* reserved[123] */
+};
+static const ProtobufCFieldDescriptor config_res__field_descriptors[2] =
+{
+  {
+    "code",
+    1,
+    PROTOBUF_C_LABEL_NONE,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(ConfigRes, code),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "config",
+    2,
+    PROTOBUF_C_LABEL_NONE,
+    PROTOBUF_C_TYPE_MESSAGE,
+    0,   /* quantifier_offset */
+    offsetof(ConfigRes, config),
+    &config__descriptor,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+};
+static const unsigned config_res__field_indices_by_name[] = {
+  0,   /* field[0] = code */
+  1,   /* field[1] = config */
+};
+static const ProtobufCIntRange config_res__number_ranges[1 + 1] =
+{
+  { 1, 0 },
+  { 0, 2 }
+};
+const ProtobufCMessageDescriptor config_res__descriptor =
+{
+  PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "ConfigRes",
+  "ConfigRes",
+  "ConfigRes",
+  "",
+  sizeof(ConfigRes),
+  2,
+  config_res__field_descriptors,
+  config_res__field_indices_by_name,
+  1,  config_res__number_ranges,
+  (ProtobufCMessageInit) config_res__init,
+  NULL,NULL,NULL    /* reserved[123] */
+};
+static const ProtobufCMethodDescriptor ea900_iiservice__method_descriptors[3] =
 {
   { "GetData", &google__protobuf__empty__descriptor, &data_res__descriptor },
+  { "GetModel", &google__protobuf__empty__descriptor, &model_res__descriptor },
+  { "GetConfig", &google__protobuf__empty__descriptor, &config_res__descriptor },
 };
 const unsigned ea900_iiservice__method_indices_by_name[] = {
-  0         /* GetData */
+  2,        /* GetConfig */
+  0,        /* GetData */
+  1         /* GetModel */
 };
 const ProtobufCServiceDescriptor ea900_iiservice__descriptor =
 {
@@ -369,7 +796,7 @@ const ProtobufCServiceDescriptor ea900_iiservice__descriptor =
   "EA900IIService",
   "EA900IIService",
   "",
-  1,
+  3,
   ea900_iiservice__method_descriptors,
   ea900_iiservice__method_indices_by_name
 };
@@ -380,6 +807,22 @@ void ea900_iiservice__get_data(ProtobufCService *service,
 {
   assert(service->descriptor == &ea900_iiservice__descriptor);
   service->invoke(service, 0, (const ProtobufCMessage *) input, (ProtobufCClosure) closure, closure_data);
+}
+void ea900_iiservice__get_model(ProtobufCService *service,
+                                const Google__Protobuf__Empty *input,
+                                ModelRes_Closure closure,
+                                void *closure_data)
+{
+  assert(service->descriptor == &ea900_iiservice__descriptor);
+  service->invoke(service, 1, (const ProtobufCMessage *) input, (ProtobufCClosure) closure, closure_data);
+}
+void ea900_iiservice__get_config(ProtobufCService *service,
+                                 const Google__Protobuf__Empty *input,
+                                 ConfigRes_Closure closure,
+                                 void *closure_data)
+{
+  assert(service->descriptor == &ea900_iiservice__descriptor);
+  service->invoke(service, 2, (const ProtobufCMessage *) input, (ProtobufCClosure) closure, closure_data);
 }
 void ea900_iiservice__init (EA900IIService_Service *service,
                             EA900IIService_ServiceDestroy destroy)
