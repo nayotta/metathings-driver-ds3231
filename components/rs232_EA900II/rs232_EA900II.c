@@ -561,9 +561,25 @@ rs232_EA900II_status_t *rs232_EA900II_get_status() {
   }
 }
 
-rs232_EA900II_model_t *rs232_EA900II_get_model() { return MODEL; }
+rs232_EA900II_model_t *rs232_EA900II_get_model() {
+  if (MODEL != NULL) {
+    rs232_EA900II_model_t *model = malloc(sizeof(rs232_EA900II_model_t));
+    memcpy(model, (void *)MODEL, sizeof(rs232_EA900II_model_t));
+    return model;
+  } else {
+    return NULL;
+  }
+}
 
-rs232_EA900II_config_t *rs232_EA900II_get_config() { return CONFIG; }
+rs232_EA900II_config_t *rs232_EA900II_get_config() {
+  if (CONFIG != NULL) {
+    rs232_EA900II_config_t *config = malloc(sizeof(rs232_EA900II_config_t));
+    memcpy(config, (void *)CONFIG, sizeof(rs232_EA900II_config_t));
+    return config;
+  } else {
+    return NULL;
+  }
+}
 
 esp_err_t rs232_EA900II_task() {
   esp_err_t err = ESP_OK;
