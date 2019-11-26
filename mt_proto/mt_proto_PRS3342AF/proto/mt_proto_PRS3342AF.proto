@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+service PRS3342AFService
+{
+  rpc GetDatas(google.protobuf.Empty) returns (DatasRes) {}
+  rpc GetStates(google.protobuf.Empty) returns (StatesRes) {}
+}
+
+message Data // push frame
+{
+  string name = 1; // 名称
+  float value = 2; // 值
+}
+
+message DatasRes
+{
+  int32 resCode = 1;
+  repeated Data datas = 2;
+}
+
+message State
+{
+  string name = 1;
+  bool value = 2;
+}
+
+message StatesRes
+{
+  int32 resCode = 1;
+  repeated State states = 2;
+}
