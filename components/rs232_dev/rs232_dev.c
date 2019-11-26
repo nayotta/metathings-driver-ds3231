@@ -65,6 +65,7 @@ rs232_dev_config_t *rs232_dev_default_new()
   config_out->uart_config->parity = UART_PARITY_DISABLE;
   config_out->uart_config->stop_bits = UART_STOP_BITS_1;
   config_out->uart_config->flow_ctrl = UART_HW_FLOWCTRL_DISABLE;
+  config_out->uart_config->rx_flow_ctrl_thresh = 0;
 
   return config_out;
 }

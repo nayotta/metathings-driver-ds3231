@@ -2,13 +2,13 @@ syntax = "proto3";
 
 import "google/protobuf/empty.proto";
 
-service EA900IIService
-{
+service EA900IIService {
   rpc GetData(google.protobuf.Empty) returns (DataRes) {}
+  rpc GetModel(google.protobuf.Empty) returns (ModelRes) {}
+  rpc GetConfig(google.protobuf.Empty) returns (ConfigRes) {}
 }
 
-message Data // push frame
-{
+message Data {
   float votageIn = 1;    // 输入电压
   float votageOut = 2;   // 输出电压
   float loadPercent = 3; // 输出负载百分比
@@ -25,8 +25,30 @@ message Data // push frame
   bool w0 = 14;          // 告警音 true:开启 false:关闭
 }
 
-message DataRes
-{
-  int32 resCode = 1;
+message Model {
+  string name = 1;    // ups公司名称
+  string model = 2;   // UPS型号
+  string version = 3; // UPS版本
+}
+
+message Config {
+  float votage = 1;    // 额定电压
+  float current = 2;   // 额定电流
+  float batVotage = 3; // 电池最大电压
+  float freq = 4;      // 额定频率
+}
+
+message DataRes {
+  int32 code = 1;
   Data datas = 2;
+}
+
+message ModelRes {
+  int32 code = 1;
+  Model model = 2;
+}
+
+message ConfigRes {
+  int32 code = 1;
+  Config config = 2;
 }

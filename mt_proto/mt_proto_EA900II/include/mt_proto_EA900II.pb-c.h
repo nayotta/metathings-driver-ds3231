@@ -17,7 +17,11 @@ PROTOBUF_C__BEGIN_DECLS
 #include "google/protobuf/empty.pb-c.h"
 
 typedef struct _Data Data;
+typedef struct _Model Model;
+typedef struct _Config Config;
 typedef struct _DataRes DataRes;
+typedef struct _ModelRes ModelRes;
+typedef struct _ConfigRes ConfigRes;
 
 
 /* --- enums --- */
@@ -90,14 +94,82 @@ struct  _Data
     , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 
 
+struct  _Model
+{
+  ProtobufCMessage base;
+  /*
+   * ups公司名称
+   */
+  char *name;
+  /*
+   * UPS型号
+   */
+  char *model;
+  /*
+   * UPS版本
+   */
+  char *version;
+};
+#define MODEL__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&model__descriptor) \
+    , (char *)protobuf_c_empty_string, (char *)protobuf_c_empty_string, (char *)protobuf_c_empty_string }
+
+
+struct  _Config
+{
+  ProtobufCMessage base;
+  /*
+   * 额定电压
+   */
+  float votage;
+  /*
+   * 额定电流
+   */
+  float current;
+  /*
+   * 电池最大电压
+   */
+  float batvotage;
+  /*
+   * 额定频率
+   */
+  float freq;
+};
+#define CONFIG__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&config__descriptor) \
+    , 0, 0, 0, 0 }
+
+
 struct  _DataRes
 {
   ProtobufCMessage base;
-  int32_t rescode;
+  int32_t code;
   Data *datas;
 };
 #define DATA_RES__INIT \
  { PROTOBUF_C_MESSAGE_INIT (&data_res__descriptor) \
+    , 0, NULL }
+
+
+struct  _ModelRes
+{
+  ProtobufCMessage base;
+  int32_t code;
+  Model *model;
+};
+#define MODEL_RES__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&model_res__descriptor) \
+    , 0, NULL }
+
+
+struct  _ConfigRes
+{
+  ProtobufCMessage base;
+  int32_t code;
+  Config *config;
+};
+#define CONFIG_RES__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&config_res__descriptor) \
     , 0, NULL }
 
 
@@ -120,6 +192,44 @@ Data *
 void   data__free_unpacked
                      (Data *message,
                       ProtobufCAllocator *allocator);
+/* Model methods */
+void   model__init
+                     (Model         *message);
+size_t model__get_packed_size
+                     (const Model   *message);
+size_t model__pack
+                     (const Model   *message,
+                      uint8_t             *out);
+size_t model__pack_to_buffer
+                     (const Model   *message,
+                      ProtobufCBuffer     *buffer);
+Model *
+       model__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data);
+void   model__free_unpacked
+                     (Model *message,
+                      ProtobufCAllocator *allocator);
+/* Config methods */
+void   config__init
+                     (Config         *message);
+size_t config__get_packed_size
+                     (const Config   *message);
+size_t config__pack
+                     (const Config   *message,
+                      uint8_t             *out);
+size_t config__pack_to_buffer
+                     (const Config   *message,
+                      ProtobufCBuffer     *buffer);
+Config *
+       config__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data);
+void   config__free_unpacked
+                     (Config *message,
+                      ProtobufCAllocator *allocator);
 /* DataRes methods */
 void   data_res__init
                      (DataRes         *message);
@@ -139,13 +249,63 @@ DataRes *
 void   data_res__free_unpacked
                      (DataRes *message,
                       ProtobufCAllocator *allocator);
+/* ModelRes methods */
+void   model_res__init
+                     (ModelRes         *message);
+size_t model_res__get_packed_size
+                     (const ModelRes   *message);
+size_t model_res__pack
+                     (const ModelRes   *message,
+                      uint8_t             *out);
+size_t model_res__pack_to_buffer
+                     (const ModelRes   *message,
+                      ProtobufCBuffer     *buffer);
+ModelRes *
+       model_res__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data);
+void   model_res__free_unpacked
+                     (ModelRes *message,
+                      ProtobufCAllocator *allocator);
+/* ConfigRes methods */
+void   config_res__init
+                     (ConfigRes         *message);
+size_t config_res__get_packed_size
+                     (const ConfigRes   *message);
+size_t config_res__pack
+                     (const ConfigRes   *message,
+                      uint8_t             *out);
+size_t config_res__pack_to_buffer
+                     (const ConfigRes   *message,
+                      ProtobufCBuffer     *buffer);
+ConfigRes *
+       config_res__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data);
+void   config_res__free_unpacked
+                     (ConfigRes *message,
+                      ProtobufCAllocator *allocator);
 /* --- per-message closures --- */
 
 typedef void (*Data_Closure)
                  (const Data *message,
                   void *closure_data);
+typedef void (*Model_Closure)
+                 (const Model *message,
+                  void *closure_data);
+typedef void (*Config_Closure)
+                 (const Config *message,
+                  void *closure_data);
 typedef void (*DataRes_Closure)
                  (const DataRes *message,
+                  void *closure_data);
+typedef void (*ModelRes_Closure)
+                 (const ModelRes *message,
+                  void *closure_data);
+typedef void (*ConfigRes_Closure)
+                 (const ConfigRes *message,
                   void *closure_data);
 
 /* --- services --- */
@@ -158,6 +318,14 @@ struct _EA900IIService_Service
                    const Google__Protobuf__Empty *input,
                    DataRes_Closure closure,
                    void *closure_data);
+  void (*get_model)(EA900IIService_Service *service,
+                    const Google__Protobuf__Empty *input,
+                    ModelRes_Closure closure,
+                    void *closure_data);
+  void (*get_config)(EA900IIService_Service *service,
+                     const Google__Protobuf__Empty *input,
+                     ConfigRes_Closure closure,
+                     void *closure_data);
 };
 typedef void (*EA900IIService_ServiceDestroy)(EA900IIService_Service *);
 void ea900_iiservice__init (EA900IIService_Service *service,
@@ -166,16 +334,30 @@ void ea900_iiservice__init (EA900IIService_Service *service,
     { &ea900_iiservice__descriptor, protobuf_c_service_invoke_internal, NULL }
 #define EA900_IISERVICE__INIT(function_prefix__) \
     { EA900_IISERVICE__BASE_INIT,\
-      function_prefix__ ## get_data  }
+      function_prefix__ ## get_data,\
+      function_prefix__ ## get_model,\
+      function_prefix__ ## get_config  }
 void ea900_iiservice__get_data(ProtobufCService *service,
                                const Google__Protobuf__Empty *input,
                                DataRes_Closure closure,
                                void *closure_data);
+void ea900_iiservice__get_model(ProtobufCService *service,
+                                const Google__Protobuf__Empty *input,
+                                ModelRes_Closure closure,
+                                void *closure_data);
+void ea900_iiservice__get_config(ProtobufCService *service,
+                                 const Google__Protobuf__Empty *input,
+                                 ConfigRes_Closure closure,
+                                 void *closure_data);
 
 /* --- descriptors --- */
 
 extern const ProtobufCMessageDescriptor data__descriptor;
+extern const ProtobufCMessageDescriptor model__descriptor;
+extern const ProtobufCMessageDescriptor config__descriptor;
 extern const ProtobufCMessageDescriptor data_res__descriptor;
+extern const ProtobufCMessageDescriptor model_res__descriptor;
+extern const ProtobufCMessageDescriptor config_res__descriptor;
 extern const ProtobufCServiceDescriptor ea900_iiservice__descriptor;
 
 PROTOBUF_C__END_DECLS
