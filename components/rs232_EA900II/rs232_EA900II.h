@@ -5,37 +5,42 @@
 #include "rs232_dev.h"
 #include "stdio.h"
 
-typedef enum
-{
-  RS232_LORA_JXYL001_TYPE_UNKNOWN,
-  RS232_LORA_JXYL001_TYPE_YL102,
-  RS232_LORA_JXYL001_TYPE_YL103
-} Rs232_Lora_Jxyl001_Type;
+typedef struct _rs232_EA900II_status_t {
+  double vIn;    // 输入电压
+  double vOut;   // 输出电压
+  double load;   // 负载百分比
+  double freqIn; // 输入频率
+  double vBat;   // 电池电压
+  double temp;   // 电池温度
+  bool w7;       // 市电故障
+  bool w6;       // 电池电压低
+  bool w5;       // 旁路/逆变状态
+  bool w4;       // 内不故障
+  bool w3;       // ups 类型
+  bool w2;       // 系统测试状态
+  bool w1;       // 系统关机状态
+  bool w0;       // 告警音
+} rs232_EA900II_status_t;
 
-typedef struct _rs232_lora_jxyl001_t
-{
-  uint32_t addr;
-  Rs232_Lora_Jxyl001_Type type; // 设备类型
-  int64_t update_time;         // 数据更新时间
-  double yl102_votage;          // 烟雾传感器 电压
-  bool yl102_fog;               // 烟雾传感器 状态
-  double yl103_votage;          // 温湿度传感器 电压
-  double yl103_temp;            // 温湿度传感器 温度
-  double yl103_hum;             // 温湿度传感器 湿度
-} Rs232_Lora_Jxyl001_t;
+typedef struct _rs232_EA900II_model_t {
+  char name[16];    // 公司名称
+  char model[11];   // UPS型号
+  char version[11]; // UPS版本
+} rs232_EA900II_model_t;
 
-typedef struct _rs232_lora_jxyl001_devs
-{
-  rs232_dev_config_t *rs232_config;
-  int dev_num;
-  Rs232_Lora_Jxyl001_t **devs;
-} Rs232_Lora_Jxyl001_Devs;
+typedef struct _rs232_EA900II_config_t {
+  double votage;    // 额定电压
+  double current;   // 额定电流
+  double batVotage; // 电池最大电压
+  double freq;      // 额定频率
+} rs232_EA900II_config_t;
 
-Rs232_Lora_Jxyl001_t *rs232_lora_jxyl001_default_new(
-    uint32_t addr, Rs232_Lora_Jxyl001_Type type);
+rs232_EA900II_status_t *rs232_EA900II_get_status();
 
-Rs232_Lora_Jxyl001_Devs *rs232_lora_jxyl001_devs_default_new(int dev_num);
+rs232_EA900II_model_t *rs232_EA900II_get_model();
 
-esp_err_t rs232_lora_jxyl001_task(Rs232_Lora_Jxyl001_Devs *devs);
+rs232_EA900II_config_t *rs232_EA900II_get_config();
+
+esp_err_t rs232_EA900II_task();
 
 #endif
