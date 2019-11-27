@@ -7,6 +7,7 @@ typedef struct _mt_nvs_host_t {
   char *host;
   char *mqtt_port;
   int http_port;
+  bool use_ssl;
 } mt_nvs_host_t;
 
 typedef struct _mt_nvs_flows_t {
