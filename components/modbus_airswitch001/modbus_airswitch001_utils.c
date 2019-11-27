@@ -7,16 +7,13 @@ static const char *TAG = "modbus_airswitch001_utils";
 
 // global func ================================================================
 esp_err_t modbus_airswitch001_util_copy_datas(airswitch_data_t *datas_in,
-                                              Data *datas_out)
-{
-  if (datas_in == NULL)
-  {
+                                              MtAirswitch001__Data *datas_out) {
+  if (datas_in == NULL) {
     ESP_LOGE(TAG, "%4d %s datas_in NULL", __LINE__, __func__);
     return ESP_ERR_INVALID_ARG;
   }
 
-  if (datas_out == NULL)
-  {
+  if (datas_out == NULL) {
     ESP_LOGE(TAG, "%4d %s datas_out NULL", __LINE__, __func__);
     return ESP_ERR_INVALID_ARG;
   }
@@ -32,17 +29,15 @@ esp_err_t modbus_airswitch001_util_copy_datas(airswitch_data_t *datas_in,
   return ESP_OK;
 }
 
-esp_err_t modbus_airswitch001_util_copy_configs(airswitch_config_t *config_in,
-                                                Config *config_out)
-{
-  if (config_in == NULL)
-  {
+esp_err_t
+modbus_airswitch001_util_copy_configs(airswitch_config_t *config_in,
+                                      MtAirswitch001__Config *config_out) {
+  if (config_in == NULL) {
     ESP_LOGE(TAG, "%4d %s datas_in NULL", __LINE__, __func__);
     return ESP_ERR_INVALID_ARG;
   }
 
-  if (config_out == NULL)
-  {
+  if (config_out == NULL) {
     ESP_LOGE(TAG, "%4d %s datas_out NULL", __LINE__, __func__);
     return ESP_ERR_INVALID_ARG;
   }
@@ -57,16 +52,14 @@ esp_err_t modbus_airswitch001_util_copy_configs(airswitch_config_t *config_in,
   return ESP_OK;
 }
 
-esp_err_t modbus_airswitch001_util_check_get_req(int32_t *addr, GetReq *req)
-{
-  if (req == NULL)
-  {
+esp_err_t modbus_airswitch001_util_check_get_req(int32_t *addr,
+                                                 MtAirswitch001__GetReq *req) {
+  if (req == NULL) {
     ESP_LOGE(TAG, "%4d %s req NULL", __LINE__, __func__);
     return ESP_ERR_INVALID_ARG;
   }
 
-  if (req->addr <= 0)
-  {
+  if (req->addr <= 0) {
     ESP_LOGE(TAG, "%4d %s req->addr:%d check error", __LINE__, __func__,
              req->addr);
     return ESP_ERR_INVALID_ARG;
@@ -77,17 +70,15 @@ esp_err_t modbus_airswitch001_util_check_get_req(int32_t *addr, GetReq *req)
   return ESP_OK;
 }
 
-esp_err_t modbus_airswitch001_util_check_set_state_req(int32_t *addr,
-                                                       SetStateReq *req)
-{
-  if (req == NULL)
-  {
+esp_err_t
+modbus_airswitch001_util_check_set_state_req(int32_t *addr,
+                                             MtAirswitch001__SetStateReq *req) {
+  if (req == NULL) {
     ESP_LOGE(TAG, "%4d %s req NULL", __LINE__, __func__);
     return ESP_ERR_INVALID_ARG;
   }
 
-  if (req->addr <= 0)
-  {
+  if (req->addr <= 0) {
     ESP_LOGE(TAG, "%4d %s req->addr:%d check error", __LINE__, __func__,
              req->addr);
     return ESP_ERR_INVALID_ARG;
@@ -95,14 +86,12 @@ esp_err_t modbus_airswitch001_util_check_set_state_req(int32_t *addr,
 
   *addr = req->addr;
 
-  if (req->state == NULL)
-  {
+  if (req->state == NULL) {
     ESP_LOGE(TAG, "%4d %s req->state  NULL", __LINE__, __func__);
     return ESP_ERR_INVALID_ARG;
   }
 
-  if (req->state->data == NULL)
-  {
+  if (req->state->data == NULL) {
     ESP_LOGE(TAG, "%4d %s req->state->data  NULL", __LINE__, __func__);
     return ESP_ERR_INVALID_ARG;
   }
@@ -110,17 +99,14 @@ esp_err_t modbus_airswitch001_util_check_set_state_req(int32_t *addr,
   return ESP_OK;
 }
 
-esp_err_t modbus_airswitch001_util_check_set_config_req(int32_t *addr,
-                                                        SetConfigReq *req)
-{
-  if (req == NULL)
-  {
+esp_err_t modbus_airswitch001_util_check_set_config_req(
+    int32_t *addr, MtAirswitch001__SetConfigReq *req) {
+  if (req == NULL) {
     ESP_LOGE(TAG, "%4d %s req NULL", __LINE__, __func__);
     return ESP_ERR_INVALID_ARG;
   }
 
-  if (req->addr <= 0)
-  {
+  if (req->addr <= 0) {
     ESP_LOGE(TAG, "%4d %s req->addr:%d check error", __LINE__, __func__,
              req->addr);
     return ESP_ERR_INVALID_ARG;
@@ -128,8 +114,7 @@ esp_err_t modbus_airswitch001_util_check_set_config_req(int32_t *addr,
 
   *addr = req->addr;
 
-  if (req->config == NULL)
-  {
+  if (req->config == NULL) {
     ESP_LOGE(TAG, "%4d %s req->config  NULL", __LINE__, __func__);
     return ESP_ERR_INVALID_ARG;
   }
@@ -137,17 +122,14 @@ esp_err_t modbus_airswitch001_util_check_set_config_req(int32_t *addr,
   return ESP_OK;
 }
 
-esp_err_t modbus_airswitch001_util_check_set_quality_req(int32_t *addr,
-                                                         SetQualityReq *req)
-{
-  if (req == NULL)
-  {
+esp_err_t modbus_airswitch001_util_check_set_quality_req(
+    int32_t *addr, MtAirswitch001__SetQualityReq *req) {
+  if (req == NULL) {
     ESP_LOGE(TAG, "%4d %s req NULL", __LINE__, __func__);
     return ESP_ERR_INVALID_ARG;
   }
 
-  if (req->addr <= 0)
-  {
+  if (req->addr <= 0) {
     ESP_LOGE(TAG, "%4d %s req->addr:%d check error", __LINE__, __func__,
              req->addr);
     return ESP_ERR_INVALID_ARG;
@@ -155,14 +137,12 @@ esp_err_t modbus_airswitch001_util_check_set_quality_req(int32_t *addr,
 
   *addr = req->addr;
 
-  if (req->quality == NULL)
-  {
+  if (req->quality == NULL) {
     ESP_LOGE(TAG, "%4d %s req->quality  NULL", __LINE__, __func__);
     return ESP_ERR_INVALID_ARG;
   }
 
-  if (req->quality->quality == NULL)
-  {
+  if (req->quality->quality == NULL) {
     ESP_LOGE(TAG, "%4d %s req->quality->quality  NULL", __LINE__, __func__);
     return ESP_ERR_INVALID_ARG;
   }
@@ -171,16 +151,13 @@ esp_err_t modbus_airswitch001_util_check_set_quality_req(int32_t *addr,
 }
 
 esp_err_t modbus_airswitch001_util_check_set_leak_test_req(
-    int32_t *addr, SetLeakTestReq *req)
-{
-  if (req == NULL)
-  {
+    int32_t *addr, MtAirswitch001__SetLeakTestReq *req) {
+  if (req == NULL) {
     ESP_LOGE(TAG, "%4d %s req NULL", __LINE__, __func__);
     return ESP_ERR_INVALID_ARG;
   }
 
-  if (req->addr <= 0)
-  {
+  if (req->addr <= 0) {
     ESP_LOGE(TAG, "%4d %s req->addr:%d check error", __LINE__, __func__,
              req->addr);
     return ESP_ERR_INVALID_ARG;
