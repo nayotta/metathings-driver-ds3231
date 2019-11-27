@@ -16,10 +16,10 @@ PROTOBUF_C__BEGIN_DECLS
 
 #include "google/protobuf/empty.pb-c.h"
 
-typedef struct _Data Data;
-typedef struct _DatasRes DatasRes;
-typedef struct _State State;
-typedef struct _StatesRes StatesRes;
+typedef struct _MtPrs3342__Data MtPrs3342__Data;
+typedef struct _MtPrs3342__DatasRes MtPrs3342__DatasRes;
+typedef struct _MtPrs3342__State MtPrs3342__State;
+typedef struct _MtPrs3342__StatesRes MtPrs3342__StatesRes;
 
 
 /* --- enums --- */
@@ -27,7 +27,7 @@ typedef struct _StatesRes StatesRes;
 
 /* --- messages --- */
 
-struct  _Data
+struct  _MtPrs3342__Data
 {
   ProtobufCMessage base;
   /*
@@ -39,177 +39,177 @@ struct  _Data
    */
   float value;
 };
-#define DATA__INIT \
- { PROTOBUF_C_MESSAGE_INIT (&data__descriptor) \
+#define MT_PRS3342__DATA__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&mt_prs3342__data__descriptor) \
     , (char *)protobuf_c_empty_string, 0 }
 
 
-struct  _DatasRes
+struct  _MtPrs3342__DatasRes
 {
   ProtobufCMessage base;
   int32_t rescode;
   size_t n_datas;
-  Data **datas;
+  MtPrs3342__Data **datas;
 };
-#define DATAS_RES__INIT \
- { PROTOBUF_C_MESSAGE_INIT (&datas_res__descriptor) \
+#define MT_PRS3342__DATAS_RES__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&mt_prs3342__datas_res__descriptor) \
     , 0, 0,NULL }
 
 
-struct  _State
+struct  _MtPrs3342__State
 {
   ProtobufCMessage base;
   char *name;
   protobuf_c_boolean value;
 };
-#define STATE__INIT \
- { PROTOBUF_C_MESSAGE_INIT (&state__descriptor) \
+#define MT_PRS3342__STATE__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&mt_prs3342__state__descriptor) \
     , (char *)protobuf_c_empty_string, 0 }
 
 
-struct  _StatesRes
+struct  _MtPrs3342__StatesRes
 {
   ProtobufCMessage base;
   int32_t rescode;
   size_t n_states;
-  State **states;
+  MtPrs3342__State **states;
 };
-#define STATES_RES__INIT \
- { PROTOBUF_C_MESSAGE_INIT (&states_res__descriptor) \
+#define MT_PRS3342__STATES_RES__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&mt_prs3342__states_res__descriptor) \
     , 0, 0,NULL }
 
 
-/* Data methods */
-void   data__init
-                     (Data         *message);
-size_t data__get_packed_size
-                     (const Data   *message);
-size_t data__pack
-                     (const Data   *message,
+/* MtPrs3342__Data methods */
+void   mt_prs3342__data__init
+                     (MtPrs3342__Data         *message);
+size_t mt_prs3342__data__get_packed_size
+                     (const MtPrs3342__Data   *message);
+size_t mt_prs3342__data__pack
+                     (const MtPrs3342__Data   *message,
                       uint8_t             *out);
-size_t data__pack_to_buffer
-                     (const Data   *message,
+size_t mt_prs3342__data__pack_to_buffer
+                     (const MtPrs3342__Data   *message,
                       ProtobufCBuffer     *buffer);
-Data *
-       data__unpack
+MtPrs3342__Data *
+       mt_prs3342__data__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data);
-void   data__free_unpacked
-                     (Data *message,
+void   mt_prs3342__data__free_unpacked
+                     (MtPrs3342__Data *message,
                       ProtobufCAllocator *allocator);
-/* DatasRes methods */
-void   datas_res__init
-                     (DatasRes         *message);
-size_t datas_res__get_packed_size
-                     (const DatasRes   *message);
-size_t datas_res__pack
-                     (const DatasRes   *message,
+/* MtPrs3342__DatasRes methods */
+void   mt_prs3342__datas_res__init
+                     (MtPrs3342__DatasRes         *message);
+size_t mt_prs3342__datas_res__get_packed_size
+                     (const MtPrs3342__DatasRes   *message);
+size_t mt_prs3342__datas_res__pack
+                     (const MtPrs3342__DatasRes   *message,
                       uint8_t             *out);
-size_t datas_res__pack_to_buffer
-                     (const DatasRes   *message,
+size_t mt_prs3342__datas_res__pack_to_buffer
+                     (const MtPrs3342__DatasRes   *message,
                       ProtobufCBuffer     *buffer);
-DatasRes *
-       datas_res__unpack
+MtPrs3342__DatasRes *
+       mt_prs3342__datas_res__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data);
-void   datas_res__free_unpacked
-                     (DatasRes *message,
+void   mt_prs3342__datas_res__free_unpacked
+                     (MtPrs3342__DatasRes *message,
                       ProtobufCAllocator *allocator);
-/* State methods */
-void   state__init
-                     (State         *message);
-size_t state__get_packed_size
-                     (const State   *message);
-size_t state__pack
-                     (const State   *message,
+/* MtPrs3342__State methods */
+void   mt_prs3342__state__init
+                     (MtPrs3342__State         *message);
+size_t mt_prs3342__state__get_packed_size
+                     (const MtPrs3342__State   *message);
+size_t mt_prs3342__state__pack
+                     (const MtPrs3342__State   *message,
                       uint8_t             *out);
-size_t state__pack_to_buffer
-                     (const State   *message,
+size_t mt_prs3342__state__pack_to_buffer
+                     (const MtPrs3342__State   *message,
                       ProtobufCBuffer     *buffer);
-State *
-       state__unpack
+MtPrs3342__State *
+       mt_prs3342__state__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data);
-void   state__free_unpacked
-                     (State *message,
+void   mt_prs3342__state__free_unpacked
+                     (MtPrs3342__State *message,
                       ProtobufCAllocator *allocator);
-/* StatesRes methods */
-void   states_res__init
-                     (StatesRes         *message);
-size_t states_res__get_packed_size
-                     (const StatesRes   *message);
-size_t states_res__pack
-                     (const StatesRes   *message,
+/* MtPrs3342__StatesRes methods */
+void   mt_prs3342__states_res__init
+                     (MtPrs3342__StatesRes         *message);
+size_t mt_prs3342__states_res__get_packed_size
+                     (const MtPrs3342__StatesRes   *message);
+size_t mt_prs3342__states_res__pack
+                     (const MtPrs3342__StatesRes   *message,
                       uint8_t             *out);
-size_t states_res__pack_to_buffer
-                     (const StatesRes   *message,
+size_t mt_prs3342__states_res__pack_to_buffer
+                     (const MtPrs3342__StatesRes   *message,
                       ProtobufCBuffer     *buffer);
-StatesRes *
-       states_res__unpack
+MtPrs3342__StatesRes *
+       mt_prs3342__states_res__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data);
-void   states_res__free_unpacked
-                     (StatesRes *message,
+void   mt_prs3342__states_res__free_unpacked
+                     (MtPrs3342__StatesRes *message,
                       ProtobufCAllocator *allocator);
 /* --- per-message closures --- */
 
-typedef void (*Data_Closure)
-                 (const Data *message,
+typedef void (*MtPrs3342__Data_Closure)
+                 (const MtPrs3342__Data *message,
                   void *closure_data);
-typedef void (*DatasRes_Closure)
-                 (const DatasRes *message,
+typedef void (*MtPrs3342__DatasRes_Closure)
+                 (const MtPrs3342__DatasRes *message,
                   void *closure_data);
-typedef void (*State_Closure)
-                 (const State *message,
+typedef void (*MtPrs3342__State_Closure)
+                 (const MtPrs3342__State *message,
                   void *closure_data);
-typedef void (*StatesRes_Closure)
-                 (const StatesRes *message,
+typedef void (*MtPrs3342__StatesRes_Closure)
+                 (const MtPrs3342__StatesRes *message,
                   void *closure_data);
 
 /* --- services --- */
 
-typedef struct _PRS3342AFService_Service PRS3342AFService_Service;
-struct _PRS3342AFService_Service
+typedef struct _MtPrs3342__PRS3342AFService_Service MtPrs3342__PRS3342AFService_Service;
+struct _MtPrs3342__PRS3342AFService_Service
 {
   ProtobufCService base;
-  void (*get_datas)(PRS3342AFService_Service *service,
+  void (*get_datas)(MtPrs3342__PRS3342AFService_Service *service,
                     const Google__Protobuf__Empty *input,
-                    DatasRes_Closure closure,
+                    MtPrs3342__DatasRes_Closure closure,
                     void *closure_data);
-  void (*get_states)(PRS3342AFService_Service *service,
+  void (*get_states)(MtPrs3342__PRS3342AFService_Service *service,
                      const Google__Protobuf__Empty *input,
-                     StatesRes_Closure closure,
+                     MtPrs3342__StatesRes_Closure closure,
                      void *closure_data);
 };
-typedef void (*PRS3342AFService_ServiceDestroy)(PRS3342AFService_Service *);
-void prs3342_afservice__init (PRS3342AFService_Service *service,
-                              PRS3342AFService_ServiceDestroy destroy);
-#define PRS3342_AFSERVICE__BASE_INIT \
-    { &prs3342_afservice__descriptor, protobuf_c_service_invoke_internal, NULL }
-#define PRS3342_AFSERVICE__INIT(function_prefix__) \
-    { PRS3342_AFSERVICE__BASE_INIT,\
+typedef void (*MtPrs3342__PRS3342AFService_ServiceDestroy)(MtPrs3342__PRS3342AFService_Service *);
+void mt_prs3342__prs3342_afservice__init (MtPrs3342__PRS3342AFService_Service *service,
+                                          MtPrs3342__PRS3342AFService_ServiceDestroy destroy);
+#define MT_PRS3342__PRS3342_AFSERVICE__BASE_INIT \
+    { &mt_prs3342__prs3342_afservice__descriptor, protobuf_c_service_invoke_internal, NULL }
+#define MT_PRS3342__PRS3342_AFSERVICE__INIT(function_prefix__) \
+    { MT_PRS3342__PRS3342_AFSERVICE__BASE_INIT,\
       function_prefix__ ## get_datas,\
       function_prefix__ ## get_states  }
-void prs3342_afservice__get_datas(ProtobufCService *service,
-                                  const Google__Protobuf__Empty *input,
-                                  DatasRes_Closure closure,
-                                  void *closure_data);
-void prs3342_afservice__get_states(ProtobufCService *service,
-                                   const Google__Protobuf__Empty *input,
-                                   StatesRes_Closure closure,
-                                   void *closure_data);
+void mt_prs3342__prs3342_afservice__get_datas(ProtobufCService *service,
+                                              const Google__Protobuf__Empty *input,
+                                              MtPrs3342__DatasRes_Closure closure,
+                                              void *closure_data);
+void mt_prs3342__prs3342_afservice__get_states(ProtobufCService *service,
+                                               const Google__Protobuf__Empty *input,
+                                               MtPrs3342__StatesRes_Closure closure,
+                                               void *closure_data);
 
 /* --- descriptors --- */
 
-extern const ProtobufCMessageDescriptor data__descriptor;
-extern const ProtobufCMessageDescriptor datas_res__descriptor;
-extern const ProtobufCMessageDescriptor state__descriptor;
-extern const ProtobufCMessageDescriptor states_res__descriptor;
-extern const ProtobufCServiceDescriptor prs3342_afservice__descriptor;
+extern const ProtobufCMessageDescriptor mt_prs3342__data__descriptor;
+extern const ProtobufCMessageDescriptor mt_prs3342__datas_res__descriptor;
+extern const ProtobufCMessageDescriptor mt_prs3342__state__descriptor;
+extern const ProtobufCMessageDescriptor mt_prs3342__states_res__descriptor;
+extern const ProtobufCServiceDescriptor mt_prs3342__prs3342_afservice__descriptor;
 
 PROTOBUF_C__END_DECLS
 

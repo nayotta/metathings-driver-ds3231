@@ -1,0 +1,12 @@
+# yaml
+version: v1beta
+description: maglock, 门磁
+flow:
+  name: m1
+  fields:
+    state1:
+      description: true:打开 false:关闭, repeat from 1
+      unit:
+      driver: maglock
+      type: bool
+      period: 20000

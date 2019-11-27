@@ -7,187 +7,187 @@
 #endif
 
 #include "mt_proto_PRS3342AF.pb-c.h"
-void   data__init
-                     (Data         *message)
+void   mt_prs3342__data__init
+                     (MtPrs3342__Data         *message)
 {
-  static const Data init_value = DATA__INIT;
+  static const MtPrs3342__Data init_value = MT_PRS3342__DATA__INIT;
   *message = init_value;
 }
-size_t data__get_packed_size
-                     (const Data *message)
+size_t mt_prs3342__data__get_packed_size
+                     (const MtPrs3342__Data *message)
 {
-  assert(message->base.descriptor == &data__descriptor);
+  assert(message->base.descriptor == &mt_prs3342__data__descriptor);
   return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
 }
-size_t data__pack
-                     (const Data *message,
+size_t mt_prs3342__data__pack
+                     (const MtPrs3342__Data *message,
                       uint8_t       *out)
 {
-  assert(message->base.descriptor == &data__descriptor);
+  assert(message->base.descriptor == &mt_prs3342__data__descriptor);
   return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
 }
-size_t data__pack_to_buffer
-                     (const Data *message,
+size_t mt_prs3342__data__pack_to_buffer
+                     (const MtPrs3342__Data *message,
                       ProtobufCBuffer *buffer)
 {
-  assert(message->base.descriptor == &data__descriptor);
+  assert(message->base.descriptor == &mt_prs3342__data__descriptor);
   return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
 }
-Data *
-       data__unpack
+MtPrs3342__Data *
+       mt_prs3342__data__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data)
 {
-  return (Data *)
-     protobuf_c_message_unpack (&data__descriptor,
+  return (MtPrs3342__Data *)
+     protobuf_c_message_unpack (&mt_prs3342__data__descriptor,
                                 allocator, len, data);
 }
-void   data__free_unpacked
-                     (Data *message,
+void   mt_prs3342__data__free_unpacked
+                     (MtPrs3342__Data *message,
                       ProtobufCAllocator *allocator)
 {
   if(!message)
     return;
-  assert(message->base.descriptor == &data__descriptor);
+  assert(message->base.descriptor == &mt_prs3342__data__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
-void   datas_res__init
-                     (DatasRes         *message)
+void   mt_prs3342__datas_res__init
+                     (MtPrs3342__DatasRes         *message)
 {
-  static const DatasRes init_value = DATAS_RES__INIT;
+  static const MtPrs3342__DatasRes init_value = MT_PRS3342__DATAS_RES__INIT;
   *message = init_value;
 }
-size_t datas_res__get_packed_size
-                     (const DatasRes *message)
+size_t mt_prs3342__datas_res__get_packed_size
+                     (const MtPrs3342__DatasRes *message)
 {
-  assert(message->base.descriptor == &datas_res__descriptor);
+  assert(message->base.descriptor == &mt_prs3342__datas_res__descriptor);
   return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
 }
-size_t datas_res__pack
-                     (const DatasRes *message,
+size_t mt_prs3342__datas_res__pack
+                     (const MtPrs3342__DatasRes *message,
                       uint8_t       *out)
 {
-  assert(message->base.descriptor == &datas_res__descriptor);
+  assert(message->base.descriptor == &mt_prs3342__datas_res__descriptor);
   return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
 }
-size_t datas_res__pack_to_buffer
-                     (const DatasRes *message,
+size_t mt_prs3342__datas_res__pack_to_buffer
+                     (const MtPrs3342__DatasRes *message,
                       ProtobufCBuffer *buffer)
 {
-  assert(message->base.descriptor == &datas_res__descriptor);
+  assert(message->base.descriptor == &mt_prs3342__datas_res__descriptor);
   return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
 }
-DatasRes *
-       datas_res__unpack
+MtPrs3342__DatasRes *
+       mt_prs3342__datas_res__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data)
 {
-  return (DatasRes *)
-     protobuf_c_message_unpack (&datas_res__descriptor,
+  return (MtPrs3342__DatasRes *)
+     protobuf_c_message_unpack (&mt_prs3342__datas_res__descriptor,
                                 allocator, len, data);
 }
-void   datas_res__free_unpacked
-                     (DatasRes *message,
+void   mt_prs3342__datas_res__free_unpacked
+                     (MtPrs3342__DatasRes *message,
                       ProtobufCAllocator *allocator)
 {
   if(!message)
     return;
-  assert(message->base.descriptor == &datas_res__descriptor);
+  assert(message->base.descriptor == &mt_prs3342__datas_res__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
-void   state__init
-                     (State         *message)
+void   mt_prs3342__state__init
+                     (MtPrs3342__State         *message)
 {
-  static const State init_value = STATE__INIT;
+  static const MtPrs3342__State init_value = MT_PRS3342__STATE__INIT;
   *message = init_value;
 }
-size_t state__get_packed_size
-                     (const State *message)
+size_t mt_prs3342__state__get_packed_size
+                     (const MtPrs3342__State *message)
 {
-  assert(message->base.descriptor == &state__descriptor);
+  assert(message->base.descriptor == &mt_prs3342__state__descriptor);
   return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
 }
-size_t state__pack
-                     (const State *message,
+size_t mt_prs3342__state__pack
+                     (const MtPrs3342__State *message,
                       uint8_t       *out)
 {
-  assert(message->base.descriptor == &state__descriptor);
+  assert(message->base.descriptor == &mt_prs3342__state__descriptor);
   return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
 }
-size_t state__pack_to_buffer
-                     (const State *message,
+size_t mt_prs3342__state__pack_to_buffer
+                     (const MtPrs3342__State *message,
                       ProtobufCBuffer *buffer)
 {
-  assert(message->base.descriptor == &state__descriptor);
+  assert(message->base.descriptor == &mt_prs3342__state__descriptor);
   return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
 }
-State *
-       state__unpack
+MtPrs3342__State *
+       mt_prs3342__state__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data)
 {
-  return (State *)
-     protobuf_c_message_unpack (&state__descriptor,
+  return (MtPrs3342__State *)
+     protobuf_c_message_unpack (&mt_prs3342__state__descriptor,
                                 allocator, len, data);
 }
-void   state__free_unpacked
-                     (State *message,
+void   mt_prs3342__state__free_unpacked
+                     (MtPrs3342__State *message,
                       ProtobufCAllocator *allocator)
 {
   if(!message)
     return;
-  assert(message->base.descriptor == &state__descriptor);
+  assert(message->base.descriptor == &mt_prs3342__state__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
-void   states_res__init
-                     (StatesRes         *message)
+void   mt_prs3342__states_res__init
+                     (MtPrs3342__StatesRes         *message)
 {
-  static const StatesRes init_value = STATES_RES__INIT;
+  static const MtPrs3342__StatesRes init_value = MT_PRS3342__STATES_RES__INIT;
   *message = init_value;
 }
-size_t states_res__get_packed_size
-                     (const StatesRes *message)
+size_t mt_prs3342__states_res__get_packed_size
+                     (const MtPrs3342__StatesRes *message)
 {
-  assert(message->base.descriptor == &states_res__descriptor);
+  assert(message->base.descriptor == &mt_prs3342__states_res__descriptor);
   return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
 }
-size_t states_res__pack
-                     (const StatesRes *message,
+size_t mt_prs3342__states_res__pack
+                     (const MtPrs3342__StatesRes *message,
                       uint8_t       *out)
 {
-  assert(message->base.descriptor == &states_res__descriptor);
+  assert(message->base.descriptor == &mt_prs3342__states_res__descriptor);
   return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
 }
-size_t states_res__pack_to_buffer
-                     (const StatesRes *message,
+size_t mt_prs3342__states_res__pack_to_buffer
+                     (const MtPrs3342__StatesRes *message,
                       ProtobufCBuffer *buffer)
 {
-  assert(message->base.descriptor == &states_res__descriptor);
+  assert(message->base.descriptor == &mt_prs3342__states_res__descriptor);
   return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
 }
-StatesRes *
-       states_res__unpack
+MtPrs3342__StatesRes *
+       mt_prs3342__states_res__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data)
 {
-  return (StatesRes *)
-     protobuf_c_message_unpack (&states_res__descriptor,
+  return (MtPrs3342__StatesRes *)
+     protobuf_c_message_unpack (&mt_prs3342__states_res__descriptor,
                                 allocator, len, data);
 }
-void   states_res__free_unpacked
-                     (StatesRes *message,
+void   mt_prs3342__states_res__free_unpacked
+                     (MtPrs3342__StatesRes *message,
                       ProtobufCAllocator *allocator)
 {
   if(!message)
     return;
-  assert(message->base.descriptor == &states_res__descriptor);
+  assert(message->base.descriptor == &mt_prs3342__states_res__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
-static const ProtobufCFieldDescriptor data__field_descriptors[2] =
+static const ProtobufCFieldDescriptor mt_prs3342__data__field_descriptors[2] =
 {
   {
     "name",
@@ -195,7 +195,7 @@ static const ProtobufCFieldDescriptor data__field_descriptors[2] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_STRING,
     0,   /* quantifier_offset */
-    offsetof(Data, name),
+    offsetof(MtPrs3342__Data, name),
     NULL,
     &protobuf_c_empty_string,
     0,             /* flags */
@@ -207,38 +207,38 @@ static const ProtobufCFieldDescriptor data__field_descriptors[2] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_FLOAT,
     0,   /* quantifier_offset */
-    offsetof(Data, value),
+    offsetof(MtPrs3342__Data, value),
     NULL,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
 };
-static const unsigned data__field_indices_by_name[] = {
+static const unsigned mt_prs3342__data__field_indices_by_name[] = {
   0,   /* field[0] = name */
   1,   /* field[1] = value */
 };
-static const ProtobufCIntRange data__number_ranges[1 + 1] =
+static const ProtobufCIntRange mt_prs3342__data__number_ranges[1 + 1] =
 {
   { 1, 0 },
   { 0, 2 }
 };
-const ProtobufCMessageDescriptor data__descriptor =
+const ProtobufCMessageDescriptor mt_prs3342__data__descriptor =
 {
   PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "mt_prs3342.Data",
   "Data",
-  "Data",
-  "Data",
-  "",
-  sizeof(Data),
+  "MtPrs3342__Data",
+  "mt_prs3342",
+  sizeof(MtPrs3342__Data),
   2,
-  data__field_descriptors,
-  data__field_indices_by_name,
-  1,  data__number_ranges,
-  (ProtobufCMessageInit) data__init,
+  mt_prs3342__data__field_descriptors,
+  mt_prs3342__data__field_indices_by_name,
+  1,  mt_prs3342__data__number_ranges,
+  (ProtobufCMessageInit) mt_prs3342__data__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor datas_res__field_descriptors[2] =
+static const ProtobufCFieldDescriptor mt_prs3342__datas_res__field_descriptors[2] =
 {
   {
     "resCode",
@@ -246,7 +246,7 @@ static const ProtobufCFieldDescriptor datas_res__field_descriptors[2] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_INT32,
     0,   /* quantifier_offset */
-    offsetof(DatasRes, rescode),
+    offsetof(MtPrs3342__DatasRes, rescode),
     NULL,
     NULL,
     0,             /* flags */
@@ -257,39 +257,39 @@ static const ProtobufCFieldDescriptor datas_res__field_descriptors[2] =
     2,
     PROTOBUF_C_LABEL_REPEATED,
     PROTOBUF_C_TYPE_MESSAGE,
-    offsetof(DatasRes, n_datas),
-    offsetof(DatasRes, datas),
-    &data__descriptor,
+    offsetof(MtPrs3342__DatasRes, n_datas),
+    offsetof(MtPrs3342__DatasRes, datas),
+    &mt_prs3342__data__descriptor,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
 };
-static const unsigned datas_res__field_indices_by_name[] = {
+static const unsigned mt_prs3342__datas_res__field_indices_by_name[] = {
   1,   /* field[1] = datas */
   0,   /* field[0] = resCode */
 };
-static const ProtobufCIntRange datas_res__number_ranges[1 + 1] =
+static const ProtobufCIntRange mt_prs3342__datas_res__number_ranges[1 + 1] =
 {
   { 1, 0 },
   { 0, 2 }
 };
-const ProtobufCMessageDescriptor datas_res__descriptor =
+const ProtobufCMessageDescriptor mt_prs3342__datas_res__descriptor =
 {
   PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "mt_prs3342.DatasRes",
   "DatasRes",
-  "DatasRes",
-  "DatasRes",
-  "",
-  sizeof(DatasRes),
+  "MtPrs3342__DatasRes",
+  "mt_prs3342",
+  sizeof(MtPrs3342__DatasRes),
   2,
-  datas_res__field_descriptors,
-  datas_res__field_indices_by_name,
-  1,  datas_res__number_ranges,
-  (ProtobufCMessageInit) datas_res__init,
+  mt_prs3342__datas_res__field_descriptors,
+  mt_prs3342__datas_res__field_indices_by_name,
+  1,  mt_prs3342__datas_res__number_ranges,
+  (ProtobufCMessageInit) mt_prs3342__datas_res__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor state__field_descriptors[2] =
+static const ProtobufCFieldDescriptor mt_prs3342__state__field_descriptors[2] =
 {
   {
     "name",
@@ -297,7 +297,7 @@ static const ProtobufCFieldDescriptor state__field_descriptors[2] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_STRING,
     0,   /* quantifier_offset */
-    offsetof(State, name),
+    offsetof(MtPrs3342__State, name),
     NULL,
     &protobuf_c_empty_string,
     0,             /* flags */
@@ -309,38 +309,38 @@ static const ProtobufCFieldDescriptor state__field_descriptors[2] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_BOOL,
     0,   /* quantifier_offset */
-    offsetof(State, value),
+    offsetof(MtPrs3342__State, value),
     NULL,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
 };
-static const unsigned state__field_indices_by_name[] = {
+static const unsigned mt_prs3342__state__field_indices_by_name[] = {
   0,   /* field[0] = name */
   1,   /* field[1] = value */
 };
-static const ProtobufCIntRange state__number_ranges[1 + 1] =
+static const ProtobufCIntRange mt_prs3342__state__number_ranges[1 + 1] =
 {
   { 1, 0 },
   { 0, 2 }
 };
-const ProtobufCMessageDescriptor state__descriptor =
+const ProtobufCMessageDescriptor mt_prs3342__state__descriptor =
 {
   PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "mt_prs3342.State",
   "State",
-  "State",
-  "State",
-  "",
-  sizeof(State),
+  "MtPrs3342__State",
+  "mt_prs3342",
+  sizeof(MtPrs3342__State),
   2,
-  state__field_descriptors,
-  state__field_indices_by_name,
-  1,  state__number_ranges,
-  (ProtobufCMessageInit) state__init,
+  mt_prs3342__state__field_descriptors,
+  mt_prs3342__state__field_indices_by_name,
+  1,  mt_prs3342__state__number_ranges,
+  (ProtobufCMessageInit) mt_prs3342__state__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor states_res__field_descriptors[2] =
+static const ProtobufCFieldDescriptor mt_prs3342__states_res__field_descriptors[2] =
 {
   {
     "resCode",
@@ -348,7 +348,7 @@ static const ProtobufCFieldDescriptor states_res__field_descriptors[2] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_INT32,
     0,   /* quantifier_offset */
-    offsetof(StatesRes, rescode),
+    offsetof(MtPrs3342__StatesRes, rescode),
     NULL,
     NULL,
     0,             /* flags */
@@ -359,78 +359,78 @@ static const ProtobufCFieldDescriptor states_res__field_descriptors[2] =
     2,
     PROTOBUF_C_LABEL_REPEATED,
     PROTOBUF_C_TYPE_MESSAGE,
-    offsetof(StatesRes, n_states),
-    offsetof(StatesRes, states),
-    &state__descriptor,
+    offsetof(MtPrs3342__StatesRes, n_states),
+    offsetof(MtPrs3342__StatesRes, states),
+    &mt_prs3342__state__descriptor,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
 };
-static const unsigned states_res__field_indices_by_name[] = {
+static const unsigned mt_prs3342__states_res__field_indices_by_name[] = {
   0,   /* field[0] = resCode */
   1,   /* field[1] = states */
 };
-static const ProtobufCIntRange states_res__number_ranges[1 + 1] =
+static const ProtobufCIntRange mt_prs3342__states_res__number_ranges[1 + 1] =
 {
   { 1, 0 },
   { 0, 2 }
 };
-const ProtobufCMessageDescriptor states_res__descriptor =
+const ProtobufCMessageDescriptor mt_prs3342__states_res__descriptor =
 {
   PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "mt_prs3342.StatesRes",
   "StatesRes",
-  "StatesRes",
-  "StatesRes",
-  "",
-  sizeof(StatesRes),
+  "MtPrs3342__StatesRes",
+  "mt_prs3342",
+  sizeof(MtPrs3342__StatesRes),
   2,
-  states_res__field_descriptors,
-  states_res__field_indices_by_name,
-  1,  states_res__number_ranges,
-  (ProtobufCMessageInit) states_res__init,
+  mt_prs3342__states_res__field_descriptors,
+  mt_prs3342__states_res__field_indices_by_name,
+  1,  mt_prs3342__states_res__number_ranges,
+  (ProtobufCMessageInit) mt_prs3342__states_res__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCMethodDescriptor prs3342_afservice__method_descriptors[2] =
+static const ProtobufCMethodDescriptor mt_prs3342__prs3342_afservice__method_descriptors[2] =
 {
-  { "GetDatas", &google__protobuf__empty__descriptor, &datas_res__descriptor },
-  { "GetStates", &google__protobuf__empty__descriptor, &states_res__descriptor },
+  { "GetDatas", &google__protobuf__empty__descriptor, &mt_prs3342__datas_res__descriptor },
+  { "GetStates", &google__protobuf__empty__descriptor, &mt_prs3342__states_res__descriptor },
 };
-const unsigned prs3342_afservice__method_indices_by_name[] = {
+const unsigned mt_prs3342__prs3342_afservice__method_indices_by_name[] = {
   0,        /* GetDatas */
   1         /* GetStates */
 };
-const ProtobufCServiceDescriptor prs3342_afservice__descriptor =
+const ProtobufCServiceDescriptor mt_prs3342__prs3342_afservice__descriptor =
 {
   PROTOBUF_C__SERVICE_DESCRIPTOR_MAGIC,
+  "mt_prs3342.PRS3342AFService",
   "PRS3342AFService",
-  "PRS3342AFService",
-  "PRS3342AFService",
-  "",
+  "MtPrs3342__PRS3342AFService",
+  "mt_prs3342",
   2,
-  prs3342_afservice__method_descriptors,
-  prs3342_afservice__method_indices_by_name
+  mt_prs3342__prs3342_afservice__method_descriptors,
+  mt_prs3342__prs3342_afservice__method_indices_by_name
 };
-void prs3342_afservice__get_datas(ProtobufCService *service,
-                                  const Google__Protobuf__Empty *input,
-                                  DatasRes_Closure closure,
-                                  void *closure_data)
+void mt_prs3342__prs3342_afservice__get_datas(ProtobufCService *service,
+                                              const Google__Protobuf__Empty *input,
+                                              MtPrs3342__DatasRes_Closure closure,
+                                              void *closure_data)
 {
-  assert(service->descriptor == &prs3342_afservice__descriptor);
+  assert(service->descriptor == &mt_prs3342__prs3342_afservice__descriptor);
   service->invoke(service, 0, (const ProtobufCMessage *) input, (ProtobufCClosure) closure, closure_data);
 }
-void prs3342_afservice__get_states(ProtobufCService *service,
-                                   const Google__Protobuf__Empty *input,
-                                   StatesRes_Closure closure,
-                                   void *closure_data)
+void mt_prs3342__prs3342_afservice__get_states(ProtobufCService *service,
+                                               const Google__Protobuf__Empty *input,
+                                               MtPrs3342__StatesRes_Closure closure,
+                                               void *closure_data)
 {
-  assert(service->descriptor == &prs3342_afservice__descriptor);
+  assert(service->descriptor == &mt_prs3342__prs3342_afservice__descriptor);
   service->invoke(service, 1, (const ProtobufCMessage *) input, (ProtobufCClosure) closure, closure_data);
 }
-void prs3342_afservice__init (PRS3342AFService_Service *service,
-                              PRS3342AFService_ServiceDestroy destroy)
+void mt_prs3342__prs3342_afservice__init (MtPrs3342__PRS3342AFService_Service *service,
+                                          MtPrs3342__PRS3342AFService_ServiceDestroy destroy)
 {
   protobuf_c_service_generated_init (&service->base,
-                                     &prs3342_afservice__descriptor,
+                                     &mt_prs3342__prs3342_afservice__descriptor,
                                      (ProtobufCServiceDestroy) destroy);
 }

@@ -16,9 +16,9 @@ PROTOBUF_C__BEGIN_DECLS
 
 #include "google/protobuf/empty.pb-c.h"
 
-typedef struct _Temp Temp;
-typedef struct _Fog Fog;
-typedef struct _DataRes DataRes;
+typedef struct _MtJxyl001__Temp MtJxyl001__Temp;
+typedef struct _MtJxyl001__Fog MtJxyl001__Fog;
+typedef struct _MtJxyl001__DataRes MtJxyl001__DataRes;
 
 
 /* --- enums --- */
@@ -26,7 +26,7 @@ typedef struct _DataRes DataRes;
 
 /* --- messages --- */
 
-struct  _Temp
+struct  _MtJxyl001__Temp
 {
   ProtobufCMessage base;
   /*
@@ -42,16 +42,16 @@ struct  _Temp
    */
   double hum;
   /*
-   * 温湿度传感器电压
+   * 温湿度传感器电量百分比
    */
-  double votagetemp;
+  double battemp;
 };
-#define TEMP__INIT \
- { PROTOBUF_C_MESSAGE_INIT (&temp__descriptor) \
+#define MT_JXYL001__TEMP__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&mt_jxyl001__temp__descriptor) \
     , 0, 0, 0, 0 }
 
 
-struct  _Fog
+struct  _MtJxyl001__Fog
 {
   ProtobufCMessage base;
   /*
@@ -63,128 +63,128 @@ struct  _Fog
    */
   double frog;
   /*
-   * 烟雾传感器电压
+   * 烟雾传感器电量百分比
    */
-  double votagefog;
+  double batfog;
 };
-#define FOG__INIT \
- { PROTOBUF_C_MESSAGE_INIT (&fog__descriptor) \
+#define MT_JXYL001__FOG__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&mt_jxyl001__fog__descriptor) \
     , 0, 0, 0 }
 
 
-struct  _DataRes
+struct  _MtJxyl001__DataRes
 {
   ProtobufCMessage base;
   int32_t rescode;
   size_t n_temps;
-  Temp **temps;
+  MtJxyl001__Temp **temps;
   size_t n_fogs;
-  Fog **fogs;
+  MtJxyl001__Fog **fogs;
 };
-#define DATA_RES__INIT \
- { PROTOBUF_C_MESSAGE_INIT (&data_res__descriptor) \
+#define MT_JXYL001__DATA_RES__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&mt_jxyl001__data_res__descriptor) \
     , 0, 0,NULL, 0,NULL }
 
 
-/* Temp methods */
-void   temp__init
-                     (Temp         *message);
-size_t temp__get_packed_size
-                     (const Temp   *message);
-size_t temp__pack
-                     (const Temp   *message,
+/* MtJxyl001__Temp methods */
+void   mt_jxyl001__temp__init
+                     (MtJxyl001__Temp         *message);
+size_t mt_jxyl001__temp__get_packed_size
+                     (const MtJxyl001__Temp   *message);
+size_t mt_jxyl001__temp__pack
+                     (const MtJxyl001__Temp   *message,
                       uint8_t             *out);
-size_t temp__pack_to_buffer
-                     (const Temp   *message,
+size_t mt_jxyl001__temp__pack_to_buffer
+                     (const MtJxyl001__Temp   *message,
                       ProtobufCBuffer     *buffer);
-Temp *
-       temp__unpack
+MtJxyl001__Temp *
+       mt_jxyl001__temp__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data);
-void   temp__free_unpacked
-                     (Temp *message,
+void   mt_jxyl001__temp__free_unpacked
+                     (MtJxyl001__Temp *message,
                       ProtobufCAllocator *allocator);
-/* Fog methods */
-void   fog__init
-                     (Fog         *message);
-size_t fog__get_packed_size
-                     (const Fog   *message);
-size_t fog__pack
-                     (const Fog   *message,
+/* MtJxyl001__Fog methods */
+void   mt_jxyl001__fog__init
+                     (MtJxyl001__Fog         *message);
+size_t mt_jxyl001__fog__get_packed_size
+                     (const MtJxyl001__Fog   *message);
+size_t mt_jxyl001__fog__pack
+                     (const MtJxyl001__Fog   *message,
                       uint8_t             *out);
-size_t fog__pack_to_buffer
-                     (const Fog   *message,
+size_t mt_jxyl001__fog__pack_to_buffer
+                     (const MtJxyl001__Fog   *message,
                       ProtobufCBuffer     *buffer);
-Fog *
-       fog__unpack
+MtJxyl001__Fog *
+       mt_jxyl001__fog__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data);
-void   fog__free_unpacked
-                     (Fog *message,
+void   mt_jxyl001__fog__free_unpacked
+                     (MtJxyl001__Fog *message,
                       ProtobufCAllocator *allocator);
-/* DataRes methods */
-void   data_res__init
-                     (DataRes         *message);
-size_t data_res__get_packed_size
-                     (const DataRes   *message);
-size_t data_res__pack
-                     (const DataRes   *message,
+/* MtJxyl001__DataRes methods */
+void   mt_jxyl001__data_res__init
+                     (MtJxyl001__DataRes         *message);
+size_t mt_jxyl001__data_res__get_packed_size
+                     (const MtJxyl001__DataRes   *message);
+size_t mt_jxyl001__data_res__pack
+                     (const MtJxyl001__DataRes   *message,
                       uint8_t             *out);
-size_t data_res__pack_to_buffer
-                     (const DataRes   *message,
+size_t mt_jxyl001__data_res__pack_to_buffer
+                     (const MtJxyl001__DataRes   *message,
                       ProtobufCBuffer     *buffer);
-DataRes *
-       data_res__unpack
+MtJxyl001__DataRes *
+       mt_jxyl001__data_res__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data);
-void   data_res__free_unpacked
-                     (DataRes *message,
+void   mt_jxyl001__data_res__free_unpacked
+                     (MtJxyl001__DataRes *message,
                       ProtobufCAllocator *allocator);
 /* --- per-message closures --- */
 
-typedef void (*Temp_Closure)
-                 (const Temp *message,
+typedef void (*MtJxyl001__Temp_Closure)
+                 (const MtJxyl001__Temp *message,
                   void *closure_data);
-typedef void (*Fog_Closure)
-                 (const Fog *message,
+typedef void (*MtJxyl001__Fog_Closure)
+                 (const MtJxyl001__Fog *message,
                   void *closure_data);
-typedef void (*DataRes_Closure)
-                 (const DataRes *message,
+typedef void (*MtJxyl001__DataRes_Closure)
+                 (const MtJxyl001__DataRes *message,
                   void *closure_data);
 
 /* --- services --- */
 
-typedef struct _Jxyl001Service_Service Jxyl001Service_Service;
-struct _Jxyl001Service_Service
+typedef struct _MtJxyl001__Jxyl001Service_Service MtJxyl001__Jxyl001Service_Service;
+struct _MtJxyl001__Jxyl001Service_Service
 {
   ProtobufCService base;
-  void (*get_data)(Jxyl001Service_Service *service,
+  void (*get_data)(MtJxyl001__Jxyl001Service_Service *service,
                    const Google__Protobuf__Empty *input,
-                   DataRes_Closure closure,
+                   MtJxyl001__DataRes_Closure closure,
                    void *closure_data);
 };
-typedef void (*Jxyl001Service_ServiceDestroy)(Jxyl001Service_Service *);
-void jxyl001_service__init (Jxyl001Service_Service *service,
-                            Jxyl001Service_ServiceDestroy destroy);
-#define JXYL001_SERVICE__BASE_INIT \
-    { &jxyl001_service__descriptor, protobuf_c_service_invoke_internal, NULL }
-#define JXYL001_SERVICE__INIT(function_prefix__) \
-    { JXYL001_SERVICE__BASE_INIT,\
+typedef void (*MtJxyl001__Jxyl001Service_ServiceDestroy)(MtJxyl001__Jxyl001Service_Service *);
+void mt_jxyl001__jxyl001_service__init (MtJxyl001__Jxyl001Service_Service *service,
+                                        MtJxyl001__Jxyl001Service_ServiceDestroy destroy);
+#define MT_JXYL001__JXYL001_SERVICE__BASE_INIT \
+    { &mt_jxyl001__jxyl001_service__descriptor, protobuf_c_service_invoke_internal, NULL }
+#define MT_JXYL001__JXYL001_SERVICE__INIT(function_prefix__) \
+    { MT_JXYL001__JXYL001_SERVICE__BASE_INIT,\
       function_prefix__ ## get_data  }
-void jxyl001_service__get_data(ProtobufCService *service,
-                               const Google__Protobuf__Empty *input,
-                               DataRes_Closure closure,
-                               void *closure_data);
+void mt_jxyl001__jxyl001_service__get_data(ProtobufCService *service,
+                                           const Google__Protobuf__Empty *input,
+                                           MtJxyl001__DataRes_Closure closure,
+                                           void *closure_data);
 
 /* --- descriptors --- */
 
-extern const ProtobufCMessageDescriptor temp__descriptor;
-extern const ProtobufCMessageDescriptor fog__descriptor;
-extern const ProtobufCMessageDescriptor data_res__descriptor;
-extern const ProtobufCServiceDescriptor jxyl001_service__descriptor;
+extern const ProtobufCMessageDescriptor mt_jxyl001__temp__descriptor;
+extern const ProtobufCMessageDescriptor mt_jxyl001__fog__descriptor;
+extern const ProtobufCMessageDescriptor mt_jxyl001__data_res__descriptor;
+extern const ProtobufCServiceDescriptor mt_jxyl001__jxyl001_service__descriptor;
 
 PROTOBUF_C__END_DECLS
 

@@ -1,9 +1,10 @@
 syntax = "proto3";
 
+package mt_jxyl001;
+
 import "google/protobuf/empty.proto";
 
-service Jxyl001Service
-{
+service Jxyl001Service {
   rpc GetData(google.protobuf.Empty) returns (DataRes) {}
 }
 
@@ -15,15 +16,13 @@ message Temp // push frame
   double battemp = 4; // 温湿度传感器电量百分比
 }
 
-message Fog
-{
+message Fog {
   int32 addr = 1;    // 烟雾地址
   double frog = 2;   // 烟雾
   double batfog = 3; // 烟雾传感器电量百分比
 }
 
-message DataRes
-{
+message DataRes {
   int32 resCode = 1;
   repeated Temp temps = 2;
   repeated Fog fogs = 3;

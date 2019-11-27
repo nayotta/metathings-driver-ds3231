@@ -7,97 +7,97 @@
 #endif
 
 #include "mt_proto_gzpd800T.pb-c.h"
-void   data__init
-                     (Data         *message)
+void   mt_gzpd800_t__data__init
+                     (MtGzpd800T__Data         *message)
 {
-  static const Data init_value = DATA__INIT;
+  static const MtGzpd800T__Data init_value = MT_GZPD800_T__DATA__INIT;
   *message = init_value;
 }
-size_t data__get_packed_size
-                     (const Data *message)
+size_t mt_gzpd800_t__data__get_packed_size
+                     (const MtGzpd800T__Data *message)
 {
-  assert(message->base.descriptor == &data__descriptor);
+  assert(message->base.descriptor == &mt_gzpd800_t__data__descriptor);
   return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
 }
-size_t data__pack
-                     (const Data *message,
+size_t mt_gzpd800_t__data__pack
+                     (const MtGzpd800T__Data *message,
                       uint8_t       *out)
 {
-  assert(message->base.descriptor == &data__descriptor);
+  assert(message->base.descriptor == &mt_gzpd800_t__data__descriptor);
   return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
 }
-size_t data__pack_to_buffer
-                     (const Data *message,
+size_t mt_gzpd800_t__data__pack_to_buffer
+                     (const MtGzpd800T__Data *message,
                       ProtobufCBuffer *buffer)
 {
-  assert(message->base.descriptor == &data__descriptor);
+  assert(message->base.descriptor == &mt_gzpd800_t__data__descriptor);
   return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
 }
-Data *
-       data__unpack
+MtGzpd800T__Data *
+       mt_gzpd800_t__data__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data)
 {
-  return (Data *)
-     protobuf_c_message_unpack (&data__descriptor,
+  return (MtGzpd800T__Data *)
+     protobuf_c_message_unpack (&mt_gzpd800_t__data__descriptor,
                                 allocator, len, data);
 }
-void   data__free_unpacked
-                     (Data *message,
+void   mt_gzpd800_t__data__free_unpacked
+                     (MtGzpd800T__Data *message,
                       ProtobufCAllocator *allocator)
 {
   if(!message)
     return;
-  assert(message->base.descriptor == &data__descriptor);
+  assert(message->base.descriptor == &mt_gzpd800_t__data__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
-void   data_res__init
-                     (DataRes         *message)
+void   mt_gzpd800_t__data_res__init
+                     (MtGzpd800T__DataRes         *message)
 {
-  static const DataRes init_value = DATA_RES__INIT;
+  static const MtGzpd800T__DataRes init_value = MT_GZPD800_T__DATA_RES__INIT;
   *message = init_value;
 }
-size_t data_res__get_packed_size
-                     (const DataRes *message)
+size_t mt_gzpd800_t__data_res__get_packed_size
+                     (const MtGzpd800T__DataRes *message)
 {
-  assert(message->base.descriptor == &data_res__descriptor);
+  assert(message->base.descriptor == &mt_gzpd800_t__data_res__descriptor);
   return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
 }
-size_t data_res__pack
-                     (const DataRes *message,
+size_t mt_gzpd800_t__data_res__pack
+                     (const MtGzpd800T__DataRes *message,
                       uint8_t       *out)
 {
-  assert(message->base.descriptor == &data_res__descriptor);
+  assert(message->base.descriptor == &mt_gzpd800_t__data_res__descriptor);
   return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
 }
-size_t data_res__pack_to_buffer
-                     (const DataRes *message,
+size_t mt_gzpd800_t__data_res__pack_to_buffer
+                     (const MtGzpd800T__DataRes *message,
                       ProtobufCBuffer *buffer)
 {
-  assert(message->base.descriptor == &data_res__descriptor);
+  assert(message->base.descriptor == &mt_gzpd800_t__data_res__descriptor);
   return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
 }
-DataRes *
-       data_res__unpack
+MtGzpd800T__DataRes *
+       mt_gzpd800_t__data_res__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data)
 {
-  return (DataRes *)
-     protobuf_c_message_unpack (&data_res__descriptor,
+  return (MtGzpd800T__DataRes *)
+     protobuf_c_message_unpack (&mt_gzpd800_t__data_res__descriptor,
                                 allocator, len, data);
 }
-void   data_res__free_unpacked
-                     (DataRes *message,
+void   mt_gzpd800_t__data_res__free_unpacked
+                     (MtGzpd800T__DataRes *message,
                       ProtobufCAllocator *allocator)
 {
   if(!message)
     return;
-  assert(message->base.descriptor == &data_res__descriptor);
+  assert(message->base.descriptor == &mt_gzpd800_t__data_res__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
-static const ProtobufCFieldDescriptor data__field_descriptors[5] =
+static const ProtobufCFieldDescriptor mt_gzpd800_t__data__field_descriptors[5] =
 {
   {
     "addr",
@@ -105,7 +105,7 @@ static const ProtobufCFieldDescriptor data__field_descriptors[5] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_INT32,
     0,   /* quantifier_offset */
-    offsetof(Data, addr),
+    offsetof(MtGzpd800T__Data, addr),
     NULL,
     NULL,
     0,             /* flags */
@@ -117,7 +117,7 @@ static const ProtobufCFieldDescriptor data__field_descriptors[5] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_UINT32,
     0,   /* quantifier_offset */
-    offsetof(Data, amp),
+    offsetof(MtGzpd800T__Data, amp),
     NULL,
     NULL,
     0,             /* flags */
@@ -129,7 +129,7 @@ static const ProtobufCFieldDescriptor data__field_descriptors[5] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_UINT32,
     0,   /* quantifier_offset */
-    offsetof(Data, freq),
+    offsetof(MtGzpd800T__Data, freq),
     NULL,
     NULL,
     0,             /* flags */
@@ -141,7 +141,7 @@ static const ProtobufCFieldDescriptor data__field_descriptors[5] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_UINT32,
     0,   /* quantifier_offset */
-    offsetof(Data, power),
+    offsetof(MtGzpd800T__Data, power),
     NULL,
     NULL,
     0,             /* flags */
@@ -153,41 +153,41 @@ static const ProtobufCFieldDescriptor data__field_descriptors[5] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_BOOL,
     0,   /* quantifier_offset */
-    offsetof(Data, warn),
+    offsetof(MtGzpd800T__Data, warn),
     NULL,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
 };
-static const unsigned data__field_indices_by_name[] = {
+static const unsigned mt_gzpd800_t__data__field_indices_by_name[] = {
   0,   /* field[0] = addr */
   1,   /* field[1] = amp */
   2,   /* field[2] = freq */
   3,   /* field[3] = power */
   4,   /* field[4] = warn */
 };
-static const ProtobufCIntRange data__number_ranges[1 + 1] =
+static const ProtobufCIntRange mt_gzpd800_t__data__number_ranges[1 + 1] =
 {
   { 1, 0 },
   { 0, 5 }
 };
-const ProtobufCMessageDescriptor data__descriptor =
+const ProtobufCMessageDescriptor mt_gzpd800_t__data__descriptor =
 {
   PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "mt_gzpd800T.Data",
   "Data",
-  "Data",
-  "Data",
-  "",
-  sizeof(Data),
+  "MtGzpd800T__Data",
+  "mt_gzpd800T",
+  sizeof(MtGzpd800T__Data),
   5,
-  data__field_descriptors,
-  data__field_indices_by_name,
-  1,  data__number_ranges,
-  (ProtobufCMessageInit) data__init,
+  mt_gzpd800_t__data__field_descriptors,
+  mt_gzpd800_t__data__field_indices_by_name,
+  1,  mt_gzpd800_t__data__number_ranges,
+  (ProtobufCMessageInit) mt_gzpd800_t__data__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor data_res__field_descriptors[2] =
+static const ProtobufCFieldDescriptor mt_gzpd800_t__data_res__field_descriptors[2] =
 {
   {
     "resCode",
@@ -195,7 +195,7 @@ static const ProtobufCFieldDescriptor data_res__field_descriptors[2] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_INT32,
     0,   /* quantifier_offset */
-    offsetof(DataRes, rescode),
+    offsetof(MtGzpd800T__DataRes, rescode),
     NULL,
     NULL,
     0,             /* flags */
@@ -206,68 +206,68 @@ static const ProtobufCFieldDescriptor data_res__field_descriptors[2] =
     2,
     PROTOBUF_C_LABEL_REPEATED,
     PROTOBUF_C_TYPE_MESSAGE,
-    offsetof(DataRes, n_datas),
-    offsetof(DataRes, datas),
-    &data__descriptor,
+    offsetof(MtGzpd800T__DataRes, n_datas),
+    offsetof(MtGzpd800T__DataRes, datas),
+    &mt_gzpd800_t__data__descriptor,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
 };
-static const unsigned data_res__field_indices_by_name[] = {
+static const unsigned mt_gzpd800_t__data_res__field_indices_by_name[] = {
   1,   /* field[1] = datas */
   0,   /* field[0] = resCode */
 };
-static const ProtobufCIntRange data_res__number_ranges[1 + 1] =
+static const ProtobufCIntRange mt_gzpd800_t__data_res__number_ranges[1 + 1] =
 {
   { 1, 0 },
   { 0, 2 }
 };
-const ProtobufCMessageDescriptor data_res__descriptor =
+const ProtobufCMessageDescriptor mt_gzpd800_t__data_res__descriptor =
 {
   PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "mt_gzpd800T.DataRes",
   "DataRes",
-  "DataRes",
-  "DataRes",
-  "",
-  sizeof(DataRes),
+  "MtGzpd800T__DataRes",
+  "mt_gzpd800T",
+  sizeof(MtGzpd800T__DataRes),
   2,
-  data_res__field_descriptors,
-  data_res__field_indices_by_name,
-  1,  data_res__number_ranges,
-  (ProtobufCMessageInit) data_res__init,
+  mt_gzpd800_t__data_res__field_descriptors,
+  mt_gzpd800_t__data_res__field_indices_by_name,
+  1,  mt_gzpd800_t__data_res__number_ranges,
+  (ProtobufCMessageInit) mt_gzpd800_t__data_res__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCMethodDescriptor gzpd800_tservice__method_descriptors[1] =
+static const ProtobufCMethodDescriptor mt_gzpd800_t__gzpd800_tservice__method_descriptors[1] =
 {
-  { "GetData", &google__protobuf__empty__descriptor, &data_res__descriptor },
+  { "GetData", &google__protobuf__empty__descriptor, &mt_gzpd800_t__data_res__descriptor },
 };
-const unsigned gzpd800_tservice__method_indices_by_name[] = {
+const unsigned mt_gzpd800_t__gzpd800_tservice__method_indices_by_name[] = {
   0         /* GetData */
 };
-const ProtobufCServiceDescriptor gzpd800_tservice__descriptor =
+const ProtobufCServiceDescriptor mt_gzpd800_t__gzpd800_tservice__descriptor =
 {
   PROTOBUF_C__SERVICE_DESCRIPTOR_MAGIC,
+  "mt_gzpd800T.Gzpd800TService",
   "Gzpd800TService",
-  "Gzpd800TService",
-  "Gzpd800TService",
-  "",
+  "MtGzpd800T__Gzpd800TService",
+  "mt_gzpd800T",
   1,
-  gzpd800_tservice__method_descriptors,
-  gzpd800_tservice__method_indices_by_name
+  mt_gzpd800_t__gzpd800_tservice__method_descriptors,
+  mt_gzpd800_t__gzpd800_tservice__method_indices_by_name
 };
-void gzpd800_tservice__get_data(ProtobufCService *service,
-                                const Google__Protobuf__Empty *input,
-                                DataRes_Closure closure,
-                                void *closure_data)
+void mt_gzpd800_t__gzpd800_tservice__get_data(ProtobufCService *service,
+                                              const Google__Protobuf__Empty *input,
+                                              MtGzpd800T__DataRes_Closure closure,
+                                              void *closure_data)
 {
-  assert(service->descriptor == &gzpd800_tservice__descriptor);
+  assert(service->descriptor == &mt_gzpd800_t__gzpd800_tservice__descriptor);
   service->invoke(service, 0, (const ProtobufCMessage *) input, (ProtobufCClosure) closure, closure_data);
 }
-void gzpd800_tservice__init (Gzpd800TService_Service *service,
-                             Gzpd800TService_ServiceDestroy destroy)
+void mt_gzpd800_t__gzpd800_tservice__init (MtGzpd800T__Gzpd800TService_Service *service,
+                                           MtGzpd800T__Gzpd800TService_ServiceDestroy destroy)
 {
   protobuf_c_service_generated_init (&service->base,
-                                     &gzpd800_tservice__descriptor,
+                                     &mt_gzpd800_t__gzpd800_tservice__descriptor,
                                      (ProtobufCServiceDestroy) destroy);
 }

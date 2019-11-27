@@ -7,142 +7,142 @@
 #endif
 
 #include "mt_proto_jxyl001.pb-c.h"
-void   temp__init
-                     (Temp         *message)
+void   mt_jxyl001__temp__init
+                     (MtJxyl001__Temp         *message)
 {
-  static const Temp init_value = TEMP__INIT;
+  static const MtJxyl001__Temp init_value = MT_JXYL001__TEMP__INIT;
   *message = init_value;
 }
-size_t temp__get_packed_size
-                     (const Temp *message)
+size_t mt_jxyl001__temp__get_packed_size
+                     (const MtJxyl001__Temp *message)
 {
-  assert(message->base.descriptor == &temp__descriptor);
+  assert(message->base.descriptor == &mt_jxyl001__temp__descriptor);
   return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
 }
-size_t temp__pack
-                     (const Temp *message,
+size_t mt_jxyl001__temp__pack
+                     (const MtJxyl001__Temp *message,
                       uint8_t       *out)
 {
-  assert(message->base.descriptor == &temp__descriptor);
+  assert(message->base.descriptor == &mt_jxyl001__temp__descriptor);
   return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
 }
-size_t temp__pack_to_buffer
-                     (const Temp *message,
+size_t mt_jxyl001__temp__pack_to_buffer
+                     (const MtJxyl001__Temp *message,
                       ProtobufCBuffer *buffer)
 {
-  assert(message->base.descriptor == &temp__descriptor);
+  assert(message->base.descriptor == &mt_jxyl001__temp__descriptor);
   return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
 }
-Temp *
-       temp__unpack
+MtJxyl001__Temp *
+       mt_jxyl001__temp__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data)
 {
-  return (Temp *)
-     protobuf_c_message_unpack (&temp__descriptor,
+  return (MtJxyl001__Temp *)
+     protobuf_c_message_unpack (&mt_jxyl001__temp__descriptor,
                                 allocator, len, data);
 }
-void   temp__free_unpacked
-                     (Temp *message,
+void   mt_jxyl001__temp__free_unpacked
+                     (MtJxyl001__Temp *message,
                       ProtobufCAllocator *allocator)
 {
   if(!message)
     return;
-  assert(message->base.descriptor == &temp__descriptor);
+  assert(message->base.descriptor == &mt_jxyl001__temp__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
-void   fog__init
-                     (Fog         *message)
+void   mt_jxyl001__fog__init
+                     (MtJxyl001__Fog         *message)
 {
-  static const Fog init_value = FOG__INIT;
+  static const MtJxyl001__Fog init_value = MT_JXYL001__FOG__INIT;
   *message = init_value;
 }
-size_t fog__get_packed_size
-                     (const Fog *message)
+size_t mt_jxyl001__fog__get_packed_size
+                     (const MtJxyl001__Fog *message)
 {
-  assert(message->base.descriptor == &fog__descriptor);
+  assert(message->base.descriptor == &mt_jxyl001__fog__descriptor);
   return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
 }
-size_t fog__pack
-                     (const Fog *message,
+size_t mt_jxyl001__fog__pack
+                     (const MtJxyl001__Fog *message,
                       uint8_t       *out)
 {
-  assert(message->base.descriptor == &fog__descriptor);
+  assert(message->base.descriptor == &mt_jxyl001__fog__descriptor);
   return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
 }
-size_t fog__pack_to_buffer
-                     (const Fog *message,
+size_t mt_jxyl001__fog__pack_to_buffer
+                     (const MtJxyl001__Fog *message,
                       ProtobufCBuffer *buffer)
 {
-  assert(message->base.descriptor == &fog__descriptor);
+  assert(message->base.descriptor == &mt_jxyl001__fog__descriptor);
   return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
 }
-Fog *
-       fog__unpack
+MtJxyl001__Fog *
+       mt_jxyl001__fog__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data)
 {
-  return (Fog *)
-     protobuf_c_message_unpack (&fog__descriptor,
+  return (MtJxyl001__Fog *)
+     protobuf_c_message_unpack (&mt_jxyl001__fog__descriptor,
                                 allocator, len, data);
 }
-void   fog__free_unpacked
-                     (Fog *message,
+void   mt_jxyl001__fog__free_unpacked
+                     (MtJxyl001__Fog *message,
                       ProtobufCAllocator *allocator)
 {
   if(!message)
     return;
-  assert(message->base.descriptor == &fog__descriptor);
+  assert(message->base.descriptor == &mt_jxyl001__fog__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
-void   data_res__init
-                     (DataRes         *message)
+void   mt_jxyl001__data_res__init
+                     (MtJxyl001__DataRes         *message)
 {
-  static const DataRes init_value = DATA_RES__INIT;
+  static const MtJxyl001__DataRes init_value = MT_JXYL001__DATA_RES__INIT;
   *message = init_value;
 }
-size_t data_res__get_packed_size
-                     (const DataRes *message)
+size_t mt_jxyl001__data_res__get_packed_size
+                     (const MtJxyl001__DataRes *message)
 {
-  assert(message->base.descriptor == &data_res__descriptor);
+  assert(message->base.descriptor == &mt_jxyl001__data_res__descriptor);
   return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
 }
-size_t data_res__pack
-                     (const DataRes *message,
+size_t mt_jxyl001__data_res__pack
+                     (const MtJxyl001__DataRes *message,
                       uint8_t       *out)
 {
-  assert(message->base.descriptor == &data_res__descriptor);
+  assert(message->base.descriptor == &mt_jxyl001__data_res__descriptor);
   return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
 }
-size_t data_res__pack_to_buffer
-                     (const DataRes *message,
+size_t mt_jxyl001__data_res__pack_to_buffer
+                     (const MtJxyl001__DataRes *message,
                       ProtobufCBuffer *buffer)
 {
-  assert(message->base.descriptor == &data_res__descriptor);
+  assert(message->base.descriptor == &mt_jxyl001__data_res__descriptor);
   return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
 }
-DataRes *
-       data_res__unpack
+MtJxyl001__DataRes *
+       mt_jxyl001__data_res__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data)
 {
-  return (DataRes *)
-     protobuf_c_message_unpack (&data_res__descriptor,
+  return (MtJxyl001__DataRes *)
+     protobuf_c_message_unpack (&mt_jxyl001__data_res__descriptor,
                                 allocator, len, data);
 }
-void   data_res__free_unpacked
-                     (DataRes *message,
+void   mt_jxyl001__data_res__free_unpacked
+                     (MtJxyl001__DataRes *message,
                       ProtobufCAllocator *allocator)
 {
   if(!message)
     return;
-  assert(message->base.descriptor == &data_res__descriptor);
+  assert(message->base.descriptor == &mt_jxyl001__data_res__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
-static const ProtobufCFieldDescriptor temp__field_descriptors[4] =
+static const ProtobufCFieldDescriptor mt_jxyl001__temp__field_descriptors[4] =
 {
   {
     "addr",
@@ -150,7 +150,7 @@ static const ProtobufCFieldDescriptor temp__field_descriptors[4] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_INT32,
     0,   /* quantifier_offset */
-    offsetof(Temp, addr),
+    offsetof(MtJxyl001__Temp, addr),
     NULL,
     NULL,
     0,             /* flags */
@@ -162,7 +162,7 @@ static const ProtobufCFieldDescriptor temp__field_descriptors[4] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_DOUBLE,
     0,   /* quantifier_offset */
-    offsetof(Temp, temp),
+    offsetof(MtJxyl001__Temp, temp),
     NULL,
     NULL,
     0,             /* flags */
@@ -174,52 +174,52 @@ static const ProtobufCFieldDescriptor temp__field_descriptors[4] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_DOUBLE,
     0,   /* quantifier_offset */
-    offsetof(Temp, hum),
+    offsetof(MtJxyl001__Temp, hum),
     NULL,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
   {
-    "votagetemp",
+    "battemp",
     4,
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_DOUBLE,
     0,   /* quantifier_offset */
-    offsetof(Temp, votagetemp),
+    offsetof(MtJxyl001__Temp, battemp),
     NULL,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
 };
-static const unsigned temp__field_indices_by_name[] = {
+static const unsigned mt_jxyl001__temp__field_indices_by_name[] = {
   0,   /* field[0] = addr */
+  3,   /* field[3] = battemp */
   2,   /* field[2] = hum */
   1,   /* field[1] = temp */
-  3,   /* field[3] = votagetemp */
 };
-static const ProtobufCIntRange temp__number_ranges[1 + 1] =
+static const ProtobufCIntRange mt_jxyl001__temp__number_ranges[1 + 1] =
 {
   { 1, 0 },
   { 0, 4 }
 };
-const ProtobufCMessageDescriptor temp__descriptor =
+const ProtobufCMessageDescriptor mt_jxyl001__temp__descriptor =
 {
   PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "mt_jxyl001.Temp",
   "Temp",
-  "Temp",
-  "Temp",
-  "",
-  sizeof(Temp),
+  "MtJxyl001__Temp",
+  "mt_jxyl001",
+  sizeof(MtJxyl001__Temp),
   4,
-  temp__field_descriptors,
-  temp__field_indices_by_name,
-  1,  temp__number_ranges,
-  (ProtobufCMessageInit) temp__init,
+  mt_jxyl001__temp__field_descriptors,
+  mt_jxyl001__temp__field_indices_by_name,
+  1,  mt_jxyl001__temp__number_ranges,
+  (ProtobufCMessageInit) mt_jxyl001__temp__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor fog__field_descriptors[3] =
+static const ProtobufCFieldDescriptor mt_jxyl001__fog__field_descriptors[3] =
 {
   {
     "addr",
@@ -227,7 +227,7 @@ static const ProtobufCFieldDescriptor fog__field_descriptors[3] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_INT32,
     0,   /* quantifier_offset */
-    offsetof(Fog, addr),
+    offsetof(MtJxyl001__Fog, addr),
     NULL,
     NULL,
     0,             /* flags */
@@ -239,51 +239,51 @@ static const ProtobufCFieldDescriptor fog__field_descriptors[3] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_DOUBLE,
     0,   /* quantifier_offset */
-    offsetof(Fog, frog),
+    offsetof(MtJxyl001__Fog, frog),
     NULL,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
   {
-    "votagefog",
+    "batfog",
     3,
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_DOUBLE,
     0,   /* quantifier_offset */
-    offsetof(Fog, votagefog),
+    offsetof(MtJxyl001__Fog, batfog),
     NULL,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
 };
-static const unsigned fog__field_indices_by_name[] = {
+static const unsigned mt_jxyl001__fog__field_indices_by_name[] = {
   0,   /* field[0] = addr */
+  2,   /* field[2] = batfog */
   1,   /* field[1] = frog */
-  2,   /* field[2] = votagefog */
 };
-static const ProtobufCIntRange fog__number_ranges[1 + 1] =
+static const ProtobufCIntRange mt_jxyl001__fog__number_ranges[1 + 1] =
 {
   { 1, 0 },
   { 0, 3 }
 };
-const ProtobufCMessageDescriptor fog__descriptor =
+const ProtobufCMessageDescriptor mt_jxyl001__fog__descriptor =
 {
   PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "mt_jxyl001.Fog",
   "Fog",
-  "Fog",
-  "Fog",
-  "",
-  sizeof(Fog),
+  "MtJxyl001__Fog",
+  "mt_jxyl001",
+  sizeof(MtJxyl001__Fog),
   3,
-  fog__field_descriptors,
-  fog__field_indices_by_name,
-  1,  fog__number_ranges,
-  (ProtobufCMessageInit) fog__init,
+  mt_jxyl001__fog__field_descriptors,
+  mt_jxyl001__fog__field_indices_by_name,
+  1,  mt_jxyl001__fog__number_ranges,
+  (ProtobufCMessageInit) mt_jxyl001__fog__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor data_res__field_descriptors[3] =
+static const ProtobufCFieldDescriptor mt_jxyl001__data_res__field_descriptors[3] =
 {
   {
     "resCode",
@@ -291,7 +291,7 @@ static const ProtobufCFieldDescriptor data_res__field_descriptors[3] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_INT32,
     0,   /* quantifier_offset */
-    offsetof(DataRes, rescode),
+    offsetof(MtJxyl001__DataRes, rescode),
     NULL,
     NULL,
     0,             /* flags */
@@ -302,9 +302,9 @@ static const ProtobufCFieldDescriptor data_res__field_descriptors[3] =
     2,
     PROTOBUF_C_LABEL_REPEATED,
     PROTOBUF_C_TYPE_MESSAGE,
-    offsetof(DataRes, n_temps),
-    offsetof(DataRes, temps),
-    &temp__descriptor,
+    offsetof(MtJxyl001__DataRes, n_temps),
+    offsetof(MtJxyl001__DataRes, temps),
+    &mt_jxyl001__temp__descriptor,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
@@ -314,69 +314,69 @@ static const ProtobufCFieldDescriptor data_res__field_descriptors[3] =
     3,
     PROTOBUF_C_LABEL_REPEATED,
     PROTOBUF_C_TYPE_MESSAGE,
-    offsetof(DataRes, n_fogs),
-    offsetof(DataRes, fogs),
-    &fog__descriptor,
+    offsetof(MtJxyl001__DataRes, n_fogs),
+    offsetof(MtJxyl001__DataRes, fogs),
+    &mt_jxyl001__fog__descriptor,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
 };
-static const unsigned data_res__field_indices_by_name[] = {
+static const unsigned mt_jxyl001__data_res__field_indices_by_name[] = {
   2,   /* field[2] = fogs */
   0,   /* field[0] = resCode */
   1,   /* field[1] = temps */
 };
-static const ProtobufCIntRange data_res__number_ranges[1 + 1] =
+static const ProtobufCIntRange mt_jxyl001__data_res__number_ranges[1 + 1] =
 {
   { 1, 0 },
   { 0, 3 }
 };
-const ProtobufCMessageDescriptor data_res__descriptor =
+const ProtobufCMessageDescriptor mt_jxyl001__data_res__descriptor =
 {
   PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "mt_jxyl001.DataRes",
   "DataRes",
-  "DataRes",
-  "DataRes",
-  "",
-  sizeof(DataRes),
+  "MtJxyl001__DataRes",
+  "mt_jxyl001",
+  sizeof(MtJxyl001__DataRes),
   3,
-  data_res__field_descriptors,
-  data_res__field_indices_by_name,
-  1,  data_res__number_ranges,
-  (ProtobufCMessageInit) data_res__init,
+  mt_jxyl001__data_res__field_descriptors,
+  mt_jxyl001__data_res__field_indices_by_name,
+  1,  mt_jxyl001__data_res__number_ranges,
+  (ProtobufCMessageInit) mt_jxyl001__data_res__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCMethodDescriptor jxyl001_service__method_descriptors[1] =
+static const ProtobufCMethodDescriptor mt_jxyl001__jxyl001_service__method_descriptors[1] =
 {
-  { "GetData", &google__protobuf__empty__descriptor, &data_res__descriptor },
+  { "GetData", &google__protobuf__empty__descriptor, &mt_jxyl001__data_res__descriptor },
 };
-const unsigned jxyl001_service__method_indices_by_name[] = {
+const unsigned mt_jxyl001__jxyl001_service__method_indices_by_name[] = {
   0         /* GetData */
 };
-const ProtobufCServiceDescriptor jxyl001_service__descriptor =
+const ProtobufCServiceDescriptor mt_jxyl001__jxyl001_service__descriptor =
 {
   PROTOBUF_C__SERVICE_DESCRIPTOR_MAGIC,
+  "mt_jxyl001.Jxyl001Service",
   "Jxyl001Service",
-  "Jxyl001Service",
-  "Jxyl001Service",
-  "",
+  "MtJxyl001__Jxyl001Service",
+  "mt_jxyl001",
   1,
-  jxyl001_service__method_descriptors,
-  jxyl001_service__method_indices_by_name
+  mt_jxyl001__jxyl001_service__method_descriptors,
+  mt_jxyl001__jxyl001_service__method_indices_by_name
 };
-void jxyl001_service__get_data(ProtobufCService *service,
-                               const Google__Protobuf__Empty *input,
-                               DataRes_Closure closure,
-                               void *closure_data)
+void mt_jxyl001__jxyl001_service__get_data(ProtobufCService *service,
+                                           const Google__Protobuf__Empty *input,
+                                           MtJxyl001__DataRes_Closure closure,
+                                           void *closure_data)
 {
-  assert(service->descriptor == &jxyl001_service__descriptor);
+  assert(service->descriptor == &mt_jxyl001__jxyl001_service__descriptor);
   service->invoke(service, 0, (const ProtobufCMessage *) input, (ProtobufCClosure) closure, closure_data);
 }
-void jxyl001_service__init (Jxyl001Service_Service *service,
-                            Jxyl001Service_ServiceDestroy destroy)
+void mt_jxyl001__jxyl001_service__init (MtJxyl001__Jxyl001Service_Service *service,
+                                        MtJxyl001__Jxyl001Service_ServiceDestroy destroy)
 {
   protobuf_c_service_generated_init (&service->base,
-                                     &jxyl001_service__descriptor,
+                                     &mt_jxyl001__jxyl001_service__descriptor,
                                      (ProtobufCServiceDestroy) destroy);
 }

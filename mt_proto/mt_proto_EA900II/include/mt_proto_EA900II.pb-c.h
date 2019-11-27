@@ -16,12 +16,12 @@ PROTOBUF_C__BEGIN_DECLS
 
 #include "google/protobuf/empty.pb-c.h"
 
-typedef struct _Data Data;
-typedef struct _Model Model;
-typedef struct _Config Config;
-typedef struct _DataRes DataRes;
-typedef struct _ModelRes ModelRes;
-typedef struct _ConfigRes ConfigRes;
+typedef struct _MtEA900II__Data MtEA900II__Data;
+typedef struct _MtEA900II__Model MtEA900II__Model;
+typedef struct _MtEA900II__Config MtEA900II__Config;
+typedef struct _MtEA900II__DataRes MtEA900II__DataRes;
+typedef struct _MtEA900II__ModelRes MtEA900II__ModelRes;
+typedef struct _MtEA900II__ConfigRes MtEA900II__ConfigRes;
 
 
 /* --- enums --- */
@@ -29,7 +29,7 @@ typedef struct _ConfigRes ConfigRes;
 
 /* --- messages --- */
 
-struct  _Data
+struct  _MtEA900II__Data
 {
   ProtobufCMessage base;
   /*
@@ -89,12 +89,12 @@ struct  _Data
    */
   protobuf_c_boolean w0;
 };
-#define DATA__INIT \
- { PROTOBUF_C_MESSAGE_INIT (&data__descriptor) \
+#define MT__EA900_II__DATA__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&mt__ea900_ii__data__descriptor) \
     , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 
 
-struct  _Model
+struct  _MtEA900II__Model
 {
   ProtobufCMessage base;
   /*
@@ -110,12 +110,12 @@ struct  _Model
    */
   char *version;
 };
-#define MODEL__INIT \
- { PROTOBUF_C_MESSAGE_INIT (&model__descriptor) \
+#define MT__EA900_II__MODEL__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&mt__ea900_ii__model__descriptor) \
     , (char *)protobuf_c_empty_string, (char *)protobuf_c_empty_string, (char *)protobuf_c_empty_string }
 
 
-struct  _Config
+struct  _MtEA900II__Config
 {
   ProtobufCMessage base;
   /*
@@ -135,230 +135,230 @@ struct  _Config
    */
   float freq;
 };
-#define CONFIG__INIT \
- { PROTOBUF_C_MESSAGE_INIT (&config__descriptor) \
+#define MT__EA900_II__CONFIG__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&mt__ea900_ii__config__descriptor) \
     , 0, 0, 0, 0 }
 
 
-struct  _DataRes
+struct  _MtEA900II__DataRes
 {
   ProtobufCMessage base;
   int32_t code;
-  Data *datas;
+  MtEA900II__Data *datas;
 };
-#define DATA_RES__INIT \
- { PROTOBUF_C_MESSAGE_INIT (&data_res__descriptor) \
+#define MT__EA900_II__DATA_RES__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&mt__ea900_ii__data_res__descriptor) \
     , 0, NULL }
 
 
-struct  _ModelRes
+struct  _MtEA900II__ModelRes
 {
   ProtobufCMessage base;
   int32_t code;
-  Model *model;
+  MtEA900II__Model *model;
 };
-#define MODEL_RES__INIT \
- { PROTOBUF_C_MESSAGE_INIT (&model_res__descriptor) \
+#define MT__EA900_II__MODEL_RES__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&mt__ea900_ii__model_res__descriptor) \
     , 0, NULL }
 
 
-struct  _ConfigRes
+struct  _MtEA900II__ConfigRes
 {
   ProtobufCMessage base;
   int32_t code;
-  Config *config;
+  MtEA900II__Config *config;
 };
-#define CONFIG_RES__INIT \
- { PROTOBUF_C_MESSAGE_INIT (&config_res__descriptor) \
+#define MT__EA900_II__CONFIG_RES__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&mt__ea900_ii__config_res__descriptor) \
     , 0, NULL }
 
 
-/* Data methods */
-void   data__init
-                     (Data         *message);
-size_t data__get_packed_size
-                     (const Data   *message);
-size_t data__pack
-                     (const Data   *message,
+/* MtEA900II__Data methods */
+void   mt__ea900_ii__data__init
+                     (MtEA900II__Data         *message);
+size_t mt__ea900_ii__data__get_packed_size
+                     (const MtEA900II__Data   *message);
+size_t mt__ea900_ii__data__pack
+                     (const MtEA900II__Data   *message,
                       uint8_t             *out);
-size_t data__pack_to_buffer
-                     (const Data   *message,
+size_t mt__ea900_ii__data__pack_to_buffer
+                     (const MtEA900II__Data   *message,
                       ProtobufCBuffer     *buffer);
-Data *
-       data__unpack
+MtEA900II__Data *
+       mt__ea900_ii__data__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data);
-void   data__free_unpacked
-                     (Data *message,
+void   mt__ea900_ii__data__free_unpacked
+                     (MtEA900II__Data *message,
                       ProtobufCAllocator *allocator);
-/* Model methods */
-void   model__init
-                     (Model         *message);
-size_t model__get_packed_size
-                     (const Model   *message);
-size_t model__pack
-                     (const Model   *message,
+/* MtEA900II__Model methods */
+void   mt__ea900_ii__model__init
+                     (MtEA900II__Model         *message);
+size_t mt__ea900_ii__model__get_packed_size
+                     (const MtEA900II__Model   *message);
+size_t mt__ea900_ii__model__pack
+                     (const MtEA900II__Model   *message,
                       uint8_t             *out);
-size_t model__pack_to_buffer
-                     (const Model   *message,
+size_t mt__ea900_ii__model__pack_to_buffer
+                     (const MtEA900II__Model   *message,
                       ProtobufCBuffer     *buffer);
-Model *
-       model__unpack
+MtEA900II__Model *
+       mt__ea900_ii__model__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data);
-void   model__free_unpacked
-                     (Model *message,
+void   mt__ea900_ii__model__free_unpacked
+                     (MtEA900II__Model *message,
                       ProtobufCAllocator *allocator);
-/* Config methods */
-void   config__init
-                     (Config         *message);
-size_t config__get_packed_size
-                     (const Config   *message);
-size_t config__pack
-                     (const Config   *message,
+/* MtEA900II__Config methods */
+void   mt__ea900_ii__config__init
+                     (MtEA900II__Config         *message);
+size_t mt__ea900_ii__config__get_packed_size
+                     (const MtEA900II__Config   *message);
+size_t mt__ea900_ii__config__pack
+                     (const MtEA900II__Config   *message,
                       uint8_t             *out);
-size_t config__pack_to_buffer
-                     (const Config   *message,
+size_t mt__ea900_ii__config__pack_to_buffer
+                     (const MtEA900II__Config   *message,
                       ProtobufCBuffer     *buffer);
-Config *
-       config__unpack
+MtEA900II__Config *
+       mt__ea900_ii__config__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data);
-void   config__free_unpacked
-                     (Config *message,
+void   mt__ea900_ii__config__free_unpacked
+                     (MtEA900II__Config *message,
                       ProtobufCAllocator *allocator);
-/* DataRes methods */
-void   data_res__init
-                     (DataRes         *message);
-size_t data_res__get_packed_size
-                     (const DataRes   *message);
-size_t data_res__pack
-                     (const DataRes   *message,
+/* MtEA900II__DataRes methods */
+void   mt__ea900_ii__data_res__init
+                     (MtEA900II__DataRes         *message);
+size_t mt__ea900_ii__data_res__get_packed_size
+                     (const MtEA900II__DataRes   *message);
+size_t mt__ea900_ii__data_res__pack
+                     (const MtEA900II__DataRes   *message,
                       uint8_t             *out);
-size_t data_res__pack_to_buffer
-                     (const DataRes   *message,
+size_t mt__ea900_ii__data_res__pack_to_buffer
+                     (const MtEA900II__DataRes   *message,
                       ProtobufCBuffer     *buffer);
-DataRes *
-       data_res__unpack
+MtEA900II__DataRes *
+       mt__ea900_ii__data_res__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data);
-void   data_res__free_unpacked
-                     (DataRes *message,
+void   mt__ea900_ii__data_res__free_unpacked
+                     (MtEA900II__DataRes *message,
                       ProtobufCAllocator *allocator);
-/* ModelRes methods */
-void   model_res__init
-                     (ModelRes         *message);
-size_t model_res__get_packed_size
-                     (const ModelRes   *message);
-size_t model_res__pack
-                     (const ModelRes   *message,
+/* MtEA900II__ModelRes methods */
+void   mt__ea900_ii__model_res__init
+                     (MtEA900II__ModelRes         *message);
+size_t mt__ea900_ii__model_res__get_packed_size
+                     (const MtEA900II__ModelRes   *message);
+size_t mt__ea900_ii__model_res__pack
+                     (const MtEA900II__ModelRes   *message,
                       uint8_t             *out);
-size_t model_res__pack_to_buffer
-                     (const ModelRes   *message,
+size_t mt__ea900_ii__model_res__pack_to_buffer
+                     (const MtEA900II__ModelRes   *message,
                       ProtobufCBuffer     *buffer);
-ModelRes *
-       model_res__unpack
+MtEA900II__ModelRes *
+       mt__ea900_ii__model_res__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data);
-void   model_res__free_unpacked
-                     (ModelRes *message,
+void   mt__ea900_ii__model_res__free_unpacked
+                     (MtEA900II__ModelRes *message,
                       ProtobufCAllocator *allocator);
-/* ConfigRes methods */
-void   config_res__init
-                     (ConfigRes         *message);
-size_t config_res__get_packed_size
-                     (const ConfigRes   *message);
-size_t config_res__pack
-                     (const ConfigRes   *message,
+/* MtEA900II__ConfigRes methods */
+void   mt__ea900_ii__config_res__init
+                     (MtEA900II__ConfigRes         *message);
+size_t mt__ea900_ii__config_res__get_packed_size
+                     (const MtEA900II__ConfigRes   *message);
+size_t mt__ea900_ii__config_res__pack
+                     (const MtEA900II__ConfigRes   *message,
                       uint8_t             *out);
-size_t config_res__pack_to_buffer
-                     (const ConfigRes   *message,
+size_t mt__ea900_ii__config_res__pack_to_buffer
+                     (const MtEA900II__ConfigRes   *message,
                       ProtobufCBuffer     *buffer);
-ConfigRes *
-       config_res__unpack
+MtEA900II__ConfigRes *
+       mt__ea900_ii__config_res__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data);
-void   config_res__free_unpacked
-                     (ConfigRes *message,
+void   mt__ea900_ii__config_res__free_unpacked
+                     (MtEA900II__ConfigRes *message,
                       ProtobufCAllocator *allocator);
 /* --- per-message closures --- */
 
-typedef void (*Data_Closure)
-                 (const Data *message,
+typedef void (*MtEA900II__Data_Closure)
+                 (const MtEA900II__Data *message,
                   void *closure_data);
-typedef void (*Model_Closure)
-                 (const Model *message,
+typedef void (*MtEA900II__Model_Closure)
+                 (const MtEA900II__Model *message,
                   void *closure_data);
-typedef void (*Config_Closure)
-                 (const Config *message,
+typedef void (*MtEA900II__Config_Closure)
+                 (const MtEA900II__Config *message,
                   void *closure_data);
-typedef void (*DataRes_Closure)
-                 (const DataRes *message,
+typedef void (*MtEA900II__DataRes_Closure)
+                 (const MtEA900II__DataRes *message,
                   void *closure_data);
-typedef void (*ModelRes_Closure)
-                 (const ModelRes *message,
+typedef void (*MtEA900II__ModelRes_Closure)
+                 (const MtEA900II__ModelRes *message,
                   void *closure_data);
-typedef void (*ConfigRes_Closure)
-                 (const ConfigRes *message,
+typedef void (*MtEA900II__ConfigRes_Closure)
+                 (const MtEA900II__ConfigRes *message,
                   void *closure_data);
 
 /* --- services --- */
 
-typedef struct _EA900IIService_Service EA900IIService_Service;
-struct _EA900IIService_Service
+typedef struct _MtEA900II__EA900IIService_Service MtEA900II__EA900IIService_Service;
+struct _MtEA900II__EA900IIService_Service
 {
   ProtobufCService base;
-  void (*get_data)(EA900IIService_Service *service,
+  void (*get_data)(MtEA900II__EA900IIService_Service *service,
                    const Google__Protobuf__Empty *input,
-                   DataRes_Closure closure,
+                   MtEA900II__DataRes_Closure closure,
                    void *closure_data);
-  void (*get_model)(EA900IIService_Service *service,
+  void (*get_model)(MtEA900II__EA900IIService_Service *service,
                     const Google__Protobuf__Empty *input,
-                    ModelRes_Closure closure,
+                    MtEA900II__ModelRes_Closure closure,
                     void *closure_data);
-  void (*get_config)(EA900IIService_Service *service,
+  void (*get_config)(MtEA900II__EA900IIService_Service *service,
                      const Google__Protobuf__Empty *input,
-                     ConfigRes_Closure closure,
+                     MtEA900II__ConfigRes_Closure closure,
                      void *closure_data);
 };
-typedef void (*EA900IIService_ServiceDestroy)(EA900IIService_Service *);
-void ea900_iiservice__init (EA900IIService_Service *service,
-                            EA900IIService_ServiceDestroy destroy);
-#define EA900_IISERVICE__BASE_INIT \
-    { &ea900_iiservice__descriptor, protobuf_c_service_invoke_internal, NULL }
-#define EA900_IISERVICE__INIT(function_prefix__) \
-    { EA900_IISERVICE__BASE_INIT,\
+typedef void (*MtEA900II__EA900IIService_ServiceDestroy)(MtEA900II__EA900IIService_Service *);
+void mt__ea900_ii__ea900_iiservice__init (MtEA900II__EA900IIService_Service *service,
+                                          MtEA900II__EA900IIService_ServiceDestroy destroy);
+#define MT__EA900_II__EA900_IISERVICE__BASE_INIT \
+    { &mt__ea900_ii__ea900_iiservice__descriptor, protobuf_c_service_invoke_internal, NULL }
+#define MT__EA900_II__EA900_IISERVICE__INIT(function_prefix__) \
+    { MT__EA900_II__EA900_IISERVICE__BASE_INIT,\
       function_prefix__ ## get_data,\
       function_prefix__ ## get_model,\
       function_prefix__ ## get_config  }
-void ea900_iiservice__get_data(ProtobufCService *service,
-                               const Google__Protobuf__Empty *input,
-                               DataRes_Closure closure,
-                               void *closure_data);
-void ea900_iiservice__get_model(ProtobufCService *service,
-                                const Google__Protobuf__Empty *input,
-                                ModelRes_Closure closure,
-                                void *closure_data);
-void ea900_iiservice__get_config(ProtobufCService *service,
-                                 const Google__Protobuf__Empty *input,
-                                 ConfigRes_Closure closure,
-                                 void *closure_data);
+void mt__ea900_ii__ea900_iiservice__get_data(ProtobufCService *service,
+                                             const Google__Protobuf__Empty *input,
+                                             MtEA900II__DataRes_Closure closure,
+                                             void *closure_data);
+void mt__ea900_ii__ea900_iiservice__get_model(ProtobufCService *service,
+                                              const Google__Protobuf__Empty *input,
+                                              MtEA900II__ModelRes_Closure closure,
+                                              void *closure_data);
+void mt__ea900_ii__ea900_iiservice__get_config(ProtobufCService *service,
+                                               const Google__Protobuf__Empty *input,
+                                               MtEA900II__ConfigRes_Closure closure,
+                                               void *closure_data);
 
 /* --- descriptors --- */
 
-extern const ProtobufCMessageDescriptor data__descriptor;
-extern const ProtobufCMessageDescriptor model__descriptor;
-extern const ProtobufCMessageDescriptor config__descriptor;
-extern const ProtobufCMessageDescriptor data_res__descriptor;
-extern const ProtobufCMessageDescriptor model_res__descriptor;
-extern const ProtobufCMessageDescriptor config_res__descriptor;
-extern const ProtobufCServiceDescriptor ea900_iiservice__descriptor;
+extern const ProtobufCMessageDescriptor mt__ea900_ii__data__descriptor;
+extern const ProtobufCMessageDescriptor mt__ea900_ii__model__descriptor;
+extern const ProtobufCMessageDescriptor mt__ea900_ii__config__descriptor;
+extern const ProtobufCMessageDescriptor mt__ea900_ii__data_res__descriptor;
+extern const ProtobufCMessageDescriptor mt__ea900_ii__model_res__descriptor;
+extern const ProtobufCMessageDescriptor mt__ea900_ii__config_res__descriptor;
+extern const ProtobufCServiceDescriptor mt__ea900_ii__ea900_iiservice__descriptor;
 
 PROTOBUF_C__END_DECLS
 
