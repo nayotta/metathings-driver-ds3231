@@ -1,4 +1,5 @@
 #include "esp_log.h"
+#include "string.h"
 
 #include "mt_nvs_config.h"
 #include "mt_nvs_storage.h"
@@ -46,6 +47,21 @@ esp_err_t mt_nvs_config_get_host_config(mt_nvs_host_t *host_out) {
     host_out->use_ssl = false;
   else
     host_out->use_ssl = true;
+
+  // get host_out->net_type
+  char *net_type = NULL;
+  size_t net_type_len = 0;
+  net_type = mt_nvs_read_string_config("net_type", &net_type_len);
+  if (net_type == NULL) {
+    ESP_LOGE(TAG, "%4d %s get net_type failed", __LINE__, __func__);
+    use_ssl = 0;
+  }
+  if (strcmp(net_type, "eth") == 0)
+    host_out->net_type = MT_NVS_CONFIG_NET_TYPE_ETH;
+  else if (strcmp(net_type, "wifi") == 0)
+    host_out->net_type = MT_NVS_CONFIG_NET_TYPE_WIFI;
+  else
+    host_out->net_type = MT_NVS_CONFIG_NET_TYPE_WIFI;
 
   return ESP_OK;
 }
