@@ -9,6 +9,8 @@
 
 static const char *TAG = "rs232-PRS3342";
 
+rs232_PRS3342_t *PRS3342 = NULL;
+
 // static func ================================================================
 
 static esp_err_t rs232_PRS3342_parse_yaoxin_grp_single(rs232_PRS3342_t *prs3342,
@@ -291,3 +293,11 @@ esp_err_t rs232_PRS3342_new_guiyi(rs232_PRS3342_data_t *data, int addr,
 
   return ESP_OK;
 }
+
+esp_err_t rs232_PRS3342_set_context(rs232_PRS3342_t *prs3342) {
+  PRS3342 = prs3342;
+
+  return ESP_OK;
+}
+
+rs232_PRS3342_t *rs232_PRS3342_get_context() { return PRS3342; }
