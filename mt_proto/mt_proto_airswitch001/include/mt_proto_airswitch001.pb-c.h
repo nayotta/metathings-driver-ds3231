@@ -16,27 +16,27 @@ PROTOBUF_C__BEGIN_DECLS
 
 #include "google/protobuf/wrappers.pb-c.h"
 
-typedef struct _State State;
-typedef struct _OpState OpState;
-typedef struct _Ctrl Ctrl;
-typedef struct _Warn Warn;
-typedef struct _Data Data;
-typedef struct _Config Config;
-typedef struct _OpConfig OpConfig;
-typedef struct _Quality Quality;
-typedef struct _OpQuality OpQuality;
-typedef struct _GetReq GetReq;
-typedef struct _SetRes SetRes;
-typedef struct _GetStateRes GetStateRes;
-typedef struct _GetCtrlRes GetCtrlRes;
-typedef struct _GetWarnRes GetWarnRes;
-typedef struct _GetDataRes GetDataRes;
-typedef struct _GetConfigRes GetConfigRes;
-typedef struct _GetQualityRes GetQualityRes;
-typedef struct _SetStateReq SetStateReq;
-typedef struct _SetConfigReq SetConfigReq;
-typedef struct _SetQualityReq SetQualityReq;
-typedef struct _SetLeakTestReq SetLeakTestReq;
+typedef struct _MtAirswitch001__State MtAirswitch001__State;
+typedef struct _MtAirswitch001__OpState MtAirswitch001__OpState;
+typedef struct _MtAirswitch001__Ctrl MtAirswitch001__Ctrl;
+typedef struct _MtAirswitch001__Warn MtAirswitch001__Warn;
+typedef struct _MtAirswitch001__Data MtAirswitch001__Data;
+typedef struct _MtAirswitch001__Config MtAirswitch001__Config;
+typedef struct _MtAirswitch001__OpConfig MtAirswitch001__OpConfig;
+typedef struct _MtAirswitch001__Quality MtAirswitch001__Quality;
+typedef struct _MtAirswitch001__OpQuality MtAirswitch001__OpQuality;
+typedef struct _MtAirswitch001__GetReq MtAirswitch001__GetReq;
+typedef struct _MtAirswitch001__SetRes MtAirswitch001__SetRes;
+typedef struct _MtAirswitch001__GetStateRes MtAirswitch001__GetStateRes;
+typedef struct _MtAirswitch001__GetCtrlRes MtAirswitch001__GetCtrlRes;
+typedef struct _MtAirswitch001__GetWarnRes MtAirswitch001__GetWarnRes;
+typedef struct _MtAirswitch001__GetDataRes MtAirswitch001__GetDataRes;
+typedef struct _MtAirswitch001__GetConfigRes MtAirswitch001__GetConfigRes;
+typedef struct _MtAirswitch001__GetQualityRes MtAirswitch001__GetQualityRes;
+typedef struct _MtAirswitch001__SetStateReq MtAirswitch001__SetStateReq;
+typedef struct _MtAirswitch001__SetConfigReq MtAirswitch001__SetConfigReq;
+typedef struct _MtAirswitch001__SetQualityReq MtAirswitch001__SetQualityReq;
+typedef struct _MtAirswitch001__SetLeakTestReq MtAirswitch001__SetLeakTestReq;
 
 
 /* --- enums --- */
@@ -44,7 +44,7 @@ typedef struct _SetLeakTestReq SetLeakTestReq;
 
 /* --- messages --- */
 
-struct  _State
+struct  _MtAirswitch001__State
 {
   ProtobufCMessage base;
   /*
@@ -52,12 +52,12 @@ struct  _State
    */
   protobuf_c_boolean data;
 };
-#define STATE__INIT \
- { PROTOBUF_C_MESSAGE_INIT (&state__descriptor) \
+#define MT_AIRSWITCH001__STATE__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&mt_airswitch001__state__descriptor) \
     , 0 }
 
 
-struct  _OpState
+struct  _MtAirswitch001__OpState
 {
   ProtobufCMessage base;
   /*
@@ -65,12 +65,12 @@ struct  _OpState
    */
   Google__Protobuf__BoolValue *data;
 };
-#define OP_STATE__INIT \
- { PROTOBUF_C_MESSAGE_INIT (&op_state__descriptor) \
+#define MT_AIRSWITCH001__OP_STATE__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&mt_airswitch001__op_state__descriptor) \
     , NULL }
 
 
-struct  _Ctrl
+struct  _MtAirswitch001__Ctrl
 {
   ProtobufCMessage base;
   /*
@@ -78,12 +78,12 @@ struct  _Ctrl
    */
   protobuf_c_boolean data;
 };
-#define CTRL__INIT \
- { PROTOBUF_C_MESSAGE_INIT (&ctrl__descriptor) \
+#define MT_AIRSWITCH001__CTRL__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&mt_airswitch001__ctrl__descriptor) \
     , 0 }
 
 
-struct  _Warn
+struct  _MtAirswitch001__Warn
 {
   ProtobufCMessage base;
   /*
@@ -139,12 +139,12 @@ struct  _Warn
    */
   protobuf_c_boolean warnshort;
 };
-#define WARN__INIT \
- { PROTOBUF_C_MESSAGE_INIT (&warn__descriptor) \
+#define MT_AIRSWITCH001__WARN__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&mt_airswitch001__warn__descriptor) \
     , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 
 
-struct  _Data
+struct  _MtAirswitch001__Data
 {
   ProtobufCMessage base;
   /*
@@ -176,12 +176,12 @@ struct  _Data
    */
   protobuf_c_boolean ctrl;
 };
-#define DATA__INIT \
- { PROTOBUF_C_MESSAGE_INIT (&data__descriptor) \
+#define MT_AIRSWITCH001__DATA__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&mt_airswitch001__data__descriptor) \
     , 0, 0, 0, 0, 0, 0, 0 }
 
 
-struct  _Config
+struct  _MtAirswitch001__Config
 {
   ProtobufCMessage base;
   /*
@@ -209,12 +209,12 @@ struct  _Config
    */
   float currenthigh;
 };
-#define CONFIG__INIT \
- { PROTOBUF_C_MESSAGE_INIT (&config__descriptor) \
+#define MT_AIRSWITCH001__CONFIG__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&mt_airswitch001__config__descriptor) \
     , 0, 0, 0, 0, 0, 0 }
 
 
-struct  _OpConfig
+struct  _MtAirswitch001__OpConfig
 {
   ProtobufCMessage base;
   /*
@@ -242,12 +242,12 @@ struct  _OpConfig
    */
   Google__Protobuf__FloatValue *currenthigh;
 };
-#define OP_CONFIG__INIT \
- { PROTOBUF_C_MESSAGE_INIT (&op_config__descriptor) \
+#define MT_AIRSWITCH001__OP_CONFIG__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&mt_airswitch001__op_config__descriptor) \
     , NULL, NULL, NULL, NULL, NULL, NULL }
 
 
-struct  _Quality
+struct  _MtAirswitch001__Quality
 {
   ProtobufCMessage base;
   /*
@@ -255,12 +255,12 @@ struct  _Quality
    */
   float quality;
 };
-#define QUALITY__INIT \
- { PROTOBUF_C_MESSAGE_INIT (&quality__descriptor) \
+#define MT_AIRSWITCH001__QUALITY__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&mt_airswitch001__quality__descriptor) \
     , 0 }
 
 
-struct  _OpQuality
+struct  _MtAirswitch001__OpQuality
 {
   ProtobufCMessage base;
   /*
@@ -268,666 +268,666 @@ struct  _OpQuality
    */
   Google__Protobuf__FloatValue *quality;
 };
-#define OP_QUALITY__INIT \
- { PROTOBUF_C_MESSAGE_INIT (&op_quality__descriptor) \
+#define MT_AIRSWITCH001__OP_QUALITY__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&mt_airswitch001__op_quality__descriptor) \
     , NULL }
 
 
-struct  _GetReq
+struct  _MtAirswitch001__GetReq
 {
   ProtobufCMessage base;
   int32_t addr;
 };
-#define GET_REQ__INIT \
- { PROTOBUF_C_MESSAGE_INIT (&get_req__descriptor) \
+#define MT_AIRSWITCH001__GET_REQ__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&mt_airswitch001__get_req__descriptor) \
     , 0 }
 
 
-struct  _SetRes
+struct  _MtAirswitch001__SetRes
 {
   ProtobufCMessage base;
   int32_t code;
   int32_t addr;
 };
-#define SET_RES__INIT \
- { PROTOBUF_C_MESSAGE_INIT (&set_res__descriptor) \
+#define MT_AIRSWITCH001__SET_RES__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&mt_airswitch001__set_res__descriptor) \
     , 0, 0 }
 
 
-struct  _GetStateRes
+struct  _MtAirswitch001__GetStateRes
 {
   ProtobufCMessage base;
   int32_t code;
   int32_t addr;
-  State *state;
+  MtAirswitch001__State *state;
 };
-#define GET_STATE_RES__INIT \
- { PROTOBUF_C_MESSAGE_INIT (&get_state_res__descriptor) \
+#define MT_AIRSWITCH001__GET_STATE_RES__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&mt_airswitch001__get_state_res__descriptor) \
     , 0, 0, NULL }
 
 
-struct  _GetCtrlRes
+struct  _MtAirswitch001__GetCtrlRes
 {
   ProtobufCMessage base;
   int32_t code;
   int32_t addr;
-  Ctrl *ctrl;
+  MtAirswitch001__Ctrl *ctrl;
 };
-#define GET_CTRL_RES__INIT \
- { PROTOBUF_C_MESSAGE_INIT (&get_ctrl_res__descriptor) \
+#define MT_AIRSWITCH001__GET_CTRL_RES__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&mt_airswitch001__get_ctrl_res__descriptor) \
     , 0, 0, NULL }
 
 
-struct  _GetWarnRes
+struct  _MtAirswitch001__GetWarnRes
 {
   ProtobufCMessage base;
   int32_t code;
   int32_t addr;
-  Warn *warn;
+  MtAirswitch001__Warn *warn;
 };
-#define GET_WARN_RES__INIT \
- { PROTOBUF_C_MESSAGE_INIT (&get_warn_res__descriptor) \
+#define MT_AIRSWITCH001__GET_WARN_RES__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&mt_airswitch001__get_warn_res__descriptor) \
     , 0, 0, NULL }
 
 
-struct  _GetDataRes
+struct  _MtAirswitch001__GetDataRes
 {
   ProtobufCMessage base;
   int32_t code;
   int32_t addr;
-  Data *data;
+  MtAirswitch001__Data *data;
 };
-#define GET_DATA_RES__INIT \
- { PROTOBUF_C_MESSAGE_INIT (&get_data_res__descriptor) \
+#define MT_AIRSWITCH001__GET_DATA_RES__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&mt_airswitch001__get_data_res__descriptor) \
     , 0, 0, NULL }
 
 
-struct  _GetConfigRes
+struct  _MtAirswitch001__GetConfigRes
 {
   ProtobufCMessage base;
   int32_t code;
   int32_t addr;
-  Config *config;
+  MtAirswitch001__Config *config;
 };
-#define GET_CONFIG_RES__INIT \
- { PROTOBUF_C_MESSAGE_INIT (&get_config_res__descriptor) \
+#define MT_AIRSWITCH001__GET_CONFIG_RES__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&mt_airswitch001__get_config_res__descriptor) \
     , 0, 0, NULL }
 
 
-struct  _GetQualityRes
+struct  _MtAirswitch001__GetQualityRes
 {
   ProtobufCMessage base;
   int32_t code;
   int32_t addr;
-  Quality *quality;
+  MtAirswitch001__Quality *quality;
 };
-#define GET_QUALITY_RES__INIT \
- { PROTOBUF_C_MESSAGE_INIT (&get_quality_res__descriptor) \
+#define MT_AIRSWITCH001__GET_QUALITY_RES__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&mt_airswitch001__get_quality_res__descriptor) \
     , 0, 0, NULL }
 
 
-struct  _SetStateReq
+struct  _MtAirswitch001__SetStateReq
 {
   ProtobufCMessage base;
   int32_t addr;
-  OpState *state;
+  MtAirswitch001__OpState *state;
 };
-#define SET_STATE_REQ__INIT \
- { PROTOBUF_C_MESSAGE_INIT (&set_state_req__descriptor) \
+#define MT_AIRSWITCH001__SET_STATE_REQ__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&mt_airswitch001__set_state_req__descriptor) \
     , 0, NULL }
 
 
-struct  _SetConfigReq
+struct  _MtAirswitch001__SetConfigReq
 {
   ProtobufCMessage base;
   int32_t addr;
-  OpConfig *config;
+  MtAirswitch001__OpConfig *config;
 };
-#define SET_CONFIG_REQ__INIT \
- { PROTOBUF_C_MESSAGE_INIT (&set_config_req__descriptor) \
+#define MT_AIRSWITCH001__SET_CONFIG_REQ__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&mt_airswitch001__set_config_req__descriptor) \
     , 0, NULL }
 
 
-struct  _SetQualityReq
+struct  _MtAirswitch001__SetQualityReq
 {
   ProtobufCMessage base;
   int32_t addr;
-  OpQuality *quality;
+  MtAirswitch001__OpQuality *quality;
 };
-#define SET_QUALITY_REQ__INIT \
- { PROTOBUF_C_MESSAGE_INIT (&set_quality_req__descriptor) \
+#define MT_AIRSWITCH001__SET_QUALITY_REQ__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&mt_airswitch001__set_quality_req__descriptor) \
     , 0, NULL }
 
 
-struct  _SetLeakTestReq
+struct  _MtAirswitch001__SetLeakTestReq
 {
   ProtobufCMessage base;
   int32_t addr;
 };
-#define SET_LEAK_TEST_REQ__INIT \
- { PROTOBUF_C_MESSAGE_INIT (&set_leak_test_req__descriptor) \
+#define MT_AIRSWITCH001__SET_LEAK_TEST_REQ__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&mt_airswitch001__set_leak_test_req__descriptor) \
     , 0 }
 
 
-/* State methods */
-void   state__init
-                     (State         *message);
-size_t state__get_packed_size
-                     (const State   *message);
-size_t state__pack
-                     (const State   *message,
+/* MtAirswitch001__State methods */
+void   mt_airswitch001__state__init
+                     (MtAirswitch001__State         *message);
+size_t mt_airswitch001__state__get_packed_size
+                     (const MtAirswitch001__State   *message);
+size_t mt_airswitch001__state__pack
+                     (const MtAirswitch001__State   *message,
                       uint8_t             *out);
-size_t state__pack_to_buffer
-                     (const State   *message,
+size_t mt_airswitch001__state__pack_to_buffer
+                     (const MtAirswitch001__State   *message,
                       ProtobufCBuffer     *buffer);
-State *
-       state__unpack
+MtAirswitch001__State *
+       mt_airswitch001__state__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data);
-void   state__free_unpacked
-                     (State *message,
+void   mt_airswitch001__state__free_unpacked
+                     (MtAirswitch001__State *message,
                       ProtobufCAllocator *allocator);
-/* OpState methods */
-void   op_state__init
-                     (OpState         *message);
-size_t op_state__get_packed_size
-                     (const OpState   *message);
-size_t op_state__pack
-                     (const OpState   *message,
+/* MtAirswitch001__OpState methods */
+void   mt_airswitch001__op_state__init
+                     (MtAirswitch001__OpState         *message);
+size_t mt_airswitch001__op_state__get_packed_size
+                     (const MtAirswitch001__OpState   *message);
+size_t mt_airswitch001__op_state__pack
+                     (const MtAirswitch001__OpState   *message,
                       uint8_t             *out);
-size_t op_state__pack_to_buffer
-                     (const OpState   *message,
+size_t mt_airswitch001__op_state__pack_to_buffer
+                     (const MtAirswitch001__OpState   *message,
                       ProtobufCBuffer     *buffer);
-OpState *
-       op_state__unpack
+MtAirswitch001__OpState *
+       mt_airswitch001__op_state__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data);
-void   op_state__free_unpacked
-                     (OpState *message,
+void   mt_airswitch001__op_state__free_unpacked
+                     (MtAirswitch001__OpState *message,
                       ProtobufCAllocator *allocator);
-/* Ctrl methods */
-void   ctrl__init
-                     (Ctrl         *message);
-size_t ctrl__get_packed_size
-                     (const Ctrl   *message);
-size_t ctrl__pack
-                     (const Ctrl   *message,
+/* MtAirswitch001__Ctrl methods */
+void   mt_airswitch001__ctrl__init
+                     (MtAirswitch001__Ctrl         *message);
+size_t mt_airswitch001__ctrl__get_packed_size
+                     (const MtAirswitch001__Ctrl   *message);
+size_t mt_airswitch001__ctrl__pack
+                     (const MtAirswitch001__Ctrl   *message,
                       uint8_t             *out);
-size_t ctrl__pack_to_buffer
-                     (const Ctrl   *message,
+size_t mt_airswitch001__ctrl__pack_to_buffer
+                     (const MtAirswitch001__Ctrl   *message,
                       ProtobufCBuffer     *buffer);
-Ctrl *
-       ctrl__unpack
+MtAirswitch001__Ctrl *
+       mt_airswitch001__ctrl__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data);
-void   ctrl__free_unpacked
-                     (Ctrl *message,
+void   mt_airswitch001__ctrl__free_unpacked
+                     (MtAirswitch001__Ctrl *message,
                       ProtobufCAllocator *allocator);
-/* Warn methods */
-void   warn__init
-                     (Warn         *message);
-size_t warn__get_packed_size
-                     (const Warn   *message);
-size_t warn__pack
-                     (const Warn   *message,
+/* MtAirswitch001__Warn methods */
+void   mt_airswitch001__warn__init
+                     (MtAirswitch001__Warn         *message);
+size_t mt_airswitch001__warn__get_packed_size
+                     (const MtAirswitch001__Warn   *message);
+size_t mt_airswitch001__warn__pack
+                     (const MtAirswitch001__Warn   *message,
                       uint8_t             *out);
-size_t warn__pack_to_buffer
-                     (const Warn   *message,
+size_t mt_airswitch001__warn__pack_to_buffer
+                     (const MtAirswitch001__Warn   *message,
                       ProtobufCBuffer     *buffer);
-Warn *
-       warn__unpack
+MtAirswitch001__Warn *
+       mt_airswitch001__warn__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data);
-void   warn__free_unpacked
-                     (Warn *message,
+void   mt_airswitch001__warn__free_unpacked
+                     (MtAirswitch001__Warn *message,
                       ProtobufCAllocator *allocator);
-/* Data methods */
-void   data__init
-                     (Data         *message);
-size_t data__get_packed_size
-                     (const Data   *message);
-size_t data__pack
-                     (const Data   *message,
+/* MtAirswitch001__Data methods */
+void   mt_airswitch001__data__init
+                     (MtAirswitch001__Data         *message);
+size_t mt_airswitch001__data__get_packed_size
+                     (const MtAirswitch001__Data   *message);
+size_t mt_airswitch001__data__pack
+                     (const MtAirswitch001__Data   *message,
                       uint8_t             *out);
-size_t data__pack_to_buffer
-                     (const Data   *message,
+size_t mt_airswitch001__data__pack_to_buffer
+                     (const MtAirswitch001__Data   *message,
                       ProtobufCBuffer     *buffer);
-Data *
-       data__unpack
+MtAirswitch001__Data *
+       mt_airswitch001__data__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data);
-void   data__free_unpacked
-                     (Data *message,
+void   mt_airswitch001__data__free_unpacked
+                     (MtAirswitch001__Data *message,
                       ProtobufCAllocator *allocator);
-/* Config methods */
-void   config__init
-                     (Config         *message);
-size_t config__get_packed_size
-                     (const Config   *message);
-size_t config__pack
-                     (const Config   *message,
+/* MtAirswitch001__Config methods */
+void   mt_airswitch001__config__init
+                     (MtAirswitch001__Config         *message);
+size_t mt_airswitch001__config__get_packed_size
+                     (const MtAirswitch001__Config   *message);
+size_t mt_airswitch001__config__pack
+                     (const MtAirswitch001__Config   *message,
                       uint8_t             *out);
-size_t config__pack_to_buffer
-                     (const Config   *message,
+size_t mt_airswitch001__config__pack_to_buffer
+                     (const MtAirswitch001__Config   *message,
                       ProtobufCBuffer     *buffer);
-Config *
-       config__unpack
+MtAirswitch001__Config *
+       mt_airswitch001__config__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data);
-void   config__free_unpacked
-                     (Config *message,
+void   mt_airswitch001__config__free_unpacked
+                     (MtAirswitch001__Config *message,
                       ProtobufCAllocator *allocator);
-/* OpConfig methods */
-void   op_config__init
-                     (OpConfig         *message);
-size_t op_config__get_packed_size
-                     (const OpConfig   *message);
-size_t op_config__pack
-                     (const OpConfig   *message,
+/* MtAirswitch001__OpConfig methods */
+void   mt_airswitch001__op_config__init
+                     (MtAirswitch001__OpConfig         *message);
+size_t mt_airswitch001__op_config__get_packed_size
+                     (const MtAirswitch001__OpConfig   *message);
+size_t mt_airswitch001__op_config__pack
+                     (const MtAirswitch001__OpConfig   *message,
                       uint8_t             *out);
-size_t op_config__pack_to_buffer
-                     (const OpConfig   *message,
+size_t mt_airswitch001__op_config__pack_to_buffer
+                     (const MtAirswitch001__OpConfig   *message,
                       ProtobufCBuffer     *buffer);
-OpConfig *
-       op_config__unpack
+MtAirswitch001__OpConfig *
+       mt_airswitch001__op_config__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data);
-void   op_config__free_unpacked
-                     (OpConfig *message,
+void   mt_airswitch001__op_config__free_unpacked
+                     (MtAirswitch001__OpConfig *message,
                       ProtobufCAllocator *allocator);
-/* Quality methods */
-void   quality__init
-                     (Quality         *message);
-size_t quality__get_packed_size
-                     (const Quality   *message);
-size_t quality__pack
-                     (const Quality   *message,
+/* MtAirswitch001__Quality methods */
+void   mt_airswitch001__quality__init
+                     (MtAirswitch001__Quality         *message);
+size_t mt_airswitch001__quality__get_packed_size
+                     (const MtAirswitch001__Quality   *message);
+size_t mt_airswitch001__quality__pack
+                     (const MtAirswitch001__Quality   *message,
                       uint8_t             *out);
-size_t quality__pack_to_buffer
-                     (const Quality   *message,
+size_t mt_airswitch001__quality__pack_to_buffer
+                     (const MtAirswitch001__Quality   *message,
                       ProtobufCBuffer     *buffer);
-Quality *
-       quality__unpack
+MtAirswitch001__Quality *
+       mt_airswitch001__quality__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data);
-void   quality__free_unpacked
-                     (Quality *message,
+void   mt_airswitch001__quality__free_unpacked
+                     (MtAirswitch001__Quality *message,
                       ProtobufCAllocator *allocator);
-/* OpQuality methods */
-void   op_quality__init
-                     (OpQuality         *message);
-size_t op_quality__get_packed_size
-                     (const OpQuality   *message);
-size_t op_quality__pack
-                     (const OpQuality   *message,
+/* MtAirswitch001__OpQuality methods */
+void   mt_airswitch001__op_quality__init
+                     (MtAirswitch001__OpQuality         *message);
+size_t mt_airswitch001__op_quality__get_packed_size
+                     (const MtAirswitch001__OpQuality   *message);
+size_t mt_airswitch001__op_quality__pack
+                     (const MtAirswitch001__OpQuality   *message,
                       uint8_t             *out);
-size_t op_quality__pack_to_buffer
-                     (const OpQuality   *message,
+size_t mt_airswitch001__op_quality__pack_to_buffer
+                     (const MtAirswitch001__OpQuality   *message,
                       ProtobufCBuffer     *buffer);
-OpQuality *
-       op_quality__unpack
+MtAirswitch001__OpQuality *
+       mt_airswitch001__op_quality__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data);
-void   op_quality__free_unpacked
-                     (OpQuality *message,
+void   mt_airswitch001__op_quality__free_unpacked
+                     (MtAirswitch001__OpQuality *message,
                       ProtobufCAllocator *allocator);
-/* GetReq methods */
-void   get_req__init
-                     (GetReq         *message);
-size_t get_req__get_packed_size
-                     (const GetReq   *message);
-size_t get_req__pack
-                     (const GetReq   *message,
+/* MtAirswitch001__GetReq methods */
+void   mt_airswitch001__get_req__init
+                     (MtAirswitch001__GetReq         *message);
+size_t mt_airswitch001__get_req__get_packed_size
+                     (const MtAirswitch001__GetReq   *message);
+size_t mt_airswitch001__get_req__pack
+                     (const MtAirswitch001__GetReq   *message,
                       uint8_t             *out);
-size_t get_req__pack_to_buffer
-                     (const GetReq   *message,
+size_t mt_airswitch001__get_req__pack_to_buffer
+                     (const MtAirswitch001__GetReq   *message,
                       ProtobufCBuffer     *buffer);
-GetReq *
-       get_req__unpack
+MtAirswitch001__GetReq *
+       mt_airswitch001__get_req__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data);
-void   get_req__free_unpacked
-                     (GetReq *message,
+void   mt_airswitch001__get_req__free_unpacked
+                     (MtAirswitch001__GetReq *message,
                       ProtobufCAllocator *allocator);
-/* SetRes methods */
-void   set_res__init
-                     (SetRes         *message);
-size_t set_res__get_packed_size
-                     (const SetRes   *message);
-size_t set_res__pack
-                     (const SetRes   *message,
+/* MtAirswitch001__SetRes methods */
+void   mt_airswitch001__set_res__init
+                     (MtAirswitch001__SetRes         *message);
+size_t mt_airswitch001__set_res__get_packed_size
+                     (const MtAirswitch001__SetRes   *message);
+size_t mt_airswitch001__set_res__pack
+                     (const MtAirswitch001__SetRes   *message,
                       uint8_t             *out);
-size_t set_res__pack_to_buffer
-                     (const SetRes   *message,
+size_t mt_airswitch001__set_res__pack_to_buffer
+                     (const MtAirswitch001__SetRes   *message,
                       ProtobufCBuffer     *buffer);
-SetRes *
-       set_res__unpack
+MtAirswitch001__SetRes *
+       mt_airswitch001__set_res__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data);
-void   set_res__free_unpacked
-                     (SetRes *message,
+void   mt_airswitch001__set_res__free_unpacked
+                     (MtAirswitch001__SetRes *message,
                       ProtobufCAllocator *allocator);
-/* GetStateRes methods */
-void   get_state_res__init
-                     (GetStateRes         *message);
-size_t get_state_res__get_packed_size
-                     (const GetStateRes   *message);
-size_t get_state_res__pack
-                     (const GetStateRes   *message,
+/* MtAirswitch001__GetStateRes methods */
+void   mt_airswitch001__get_state_res__init
+                     (MtAirswitch001__GetStateRes         *message);
+size_t mt_airswitch001__get_state_res__get_packed_size
+                     (const MtAirswitch001__GetStateRes   *message);
+size_t mt_airswitch001__get_state_res__pack
+                     (const MtAirswitch001__GetStateRes   *message,
                       uint8_t             *out);
-size_t get_state_res__pack_to_buffer
-                     (const GetStateRes   *message,
+size_t mt_airswitch001__get_state_res__pack_to_buffer
+                     (const MtAirswitch001__GetStateRes   *message,
                       ProtobufCBuffer     *buffer);
-GetStateRes *
-       get_state_res__unpack
+MtAirswitch001__GetStateRes *
+       mt_airswitch001__get_state_res__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data);
-void   get_state_res__free_unpacked
-                     (GetStateRes *message,
+void   mt_airswitch001__get_state_res__free_unpacked
+                     (MtAirswitch001__GetStateRes *message,
                       ProtobufCAllocator *allocator);
-/* GetCtrlRes methods */
-void   get_ctrl_res__init
-                     (GetCtrlRes         *message);
-size_t get_ctrl_res__get_packed_size
-                     (const GetCtrlRes   *message);
-size_t get_ctrl_res__pack
-                     (const GetCtrlRes   *message,
+/* MtAirswitch001__GetCtrlRes methods */
+void   mt_airswitch001__get_ctrl_res__init
+                     (MtAirswitch001__GetCtrlRes         *message);
+size_t mt_airswitch001__get_ctrl_res__get_packed_size
+                     (const MtAirswitch001__GetCtrlRes   *message);
+size_t mt_airswitch001__get_ctrl_res__pack
+                     (const MtAirswitch001__GetCtrlRes   *message,
                       uint8_t             *out);
-size_t get_ctrl_res__pack_to_buffer
-                     (const GetCtrlRes   *message,
+size_t mt_airswitch001__get_ctrl_res__pack_to_buffer
+                     (const MtAirswitch001__GetCtrlRes   *message,
                       ProtobufCBuffer     *buffer);
-GetCtrlRes *
-       get_ctrl_res__unpack
+MtAirswitch001__GetCtrlRes *
+       mt_airswitch001__get_ctrl_res__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data);
-void   get_ctrl_res__free_unpacked
-                     (GetCtrlRes *message,
+void   mt_airswitch001__get_ctrl_res__free_unpacked
+                     (MtAirswitch001__GetCtrlRes *message,
                       ProtobufCAllocator *allocator);
-/* GetWarnRes methods */
-void   get_warn_res__init
-                     (GetWarnRes         *message);
-size_t get_warn_res__get_packed_size
-                     (const GetWarnRes   *message);
-size_t get_warn_res__pack
-                     (const GetWarnRes   *message,
+/* MtAirswitch001__GetWarnRes methods */
+void   mt_airswitch001__get_warn_res__init
+                     (MtAirswitch001__GetWarnRes         *message);
+size_t mt_airswitch001__get_warn_res__get_packed_size
+                     (const MtAirswitch001__GetWarnRes   *message);
+size_t mt_airswitch001__get_warn_res__pack
+                     (const MtAirswitch001__GetWarnRes   *message,
                       uint8_t             *out);
-size_t get_warn_res__pack_to_buffer
-                     (const GetWarnRes   *message,
+size_t mt_airswitch001__get_warn_res__pack_to_buffer
+                     (const MtAirswitch001__GetWarnRes   *message,
                       ProtobufCBuffer     *buffer);
-GetWarnRes *
-       get_warn_res__unpack
+MtAirswitch001__GetWarnRes *
+       mt_airswitch001__get_warn_res__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data);
-void   get_warn_res__free_unpacked
-                     (GetWarnRes *message,
+void   mt_airswitch001__get_warn_res__free_unpacked
+                     (MtAirswitch001__GetWarnRes *message,
                       ProtobufCAllocator *allocator);
-/* GetDataRes methods */
-void   get_data_res__init
-                     (GetDataRes         *message);
-size_t get_data_res__get_packed_size
-                     (const GetDataRes   *message);
-size_t get_data_res__pack
-                     (const GetDataRes   *message,
+/* MtAirswitch001__GetDataRes methods */
+void   mt_airswitch001__get_data_res__init
+                     (MtAirswitch001__GetDataRes         *message);
+size_t mt_airswitch001__get_data_res__get_packed_size
+                     (const MtAirswitch001__GetDataRes   *message);
+size_t mt_airswitch001__get_data_res__pack
+                     (const MtAirswitch001__GetDataRes   *message,
                       uint8_t             *out);
-size_t get_data_res__pack_to_buffer
-                     (const GetDataRes   *message,
+size_t mt_airswitch001__get_data_res__pack_to_buffer
+                     (const MtAirswitch001__GetDataRes   *message,
                       ProtobufCBuffer     *buffer);
-GetDataRes *
-       get_data_res__unpack
+MtAirswitch001__GetDataRes *
+       mt_airswitch001__get_data_res__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data);
-void   get_data_res__free_unpacked
-                     (GetDataRes *message,
+void   mt_airswitch001__get_data_res__free_unpacked
+                     (MtAirswitch001__GetDataRes *message,
                       ProtobufCAllocator *allocator);
-/* GetConfigRes methods */
-void   get_config_res__init
-                     (GetConfigRes         *message);
-size_t get_config_res__get_packed_size
-                     (const GetConfigRes   *message);
-size_t get_config_res__pack
-                     (const GetConfigRes   *message,
+/* MtAirswitch001__GetConfigRes methods */
+void   mt_airswitch001__get_config_res__init
+                     (MtAirswitch001__GetConfigRes         *message);
+size_t mt_airswitch001__get_config_res__get_packed_size
+                     (const MtAirswitch001__GetConfigRes   *message);
+size_t mt_airswitch001__get_config_res__pack
+                     (const MtAirswitch001__GetConfigRes   *message,
                       uint8_t             *out);
-size_t get_config_res__pack_to_buffer
-                     (const GetConfigRes   *message,
+size_t mt_airswitch001__get_config_res__pack_to_buffer
+                     (const MtAirswitch001__GetConfigRes   *message,
                       ProtobufCBuffer     *buffer);
-GetConfigRes *
-       get_config_res__unpack
+MtAirswitch001__GetConfigRes *
+       mt_airswitch001__get_config_res__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data);
-void   get_config_res__free_unpacked
-                     (GetConfigRes *message,
+void   mt_airswitch001__get_config_res__free_unpacked
+                     (MtAirswitch001__GetConfigRes *message,
                       ProtobufCAllocator *allocator);
-/* GetQualityRes methods */
-void   get_quality_res__init
-                     (GetQualityRes         *message);
-size_t get_quality_res__get_packed_size
-                     (const GetQualityRes   *message);
-size_t get_quality_res__pack
-                     (const GetQualityRes   *message,
+/* MtAirswitch001__GetQualityRes methods */
+void   mt_airswitch001__get_quality_res__init
+                     (MtAirswitch001__GetQualityRes         *message);
+size_t mt_airswitch001__get_quality_res__get_packed_size
+                     (const MtAirswitch001__GetQualityRes   *message);
+size_t mt_airswitch001__get_quality_res__pack
+                     (const MtAirswitch001__GetQualityRes   *message,
                       uint8_t             *out);
-size_t get_quality_res__pack_to_buffer
-                     (const GetQualityRes   *message,
+size_t mt_airswitch001__get_quality_res__pack_to_buffer
+                     (const MtAirswitch001__GetQualityRes   *message,
                       ProtobufCBuffer     *buffer);
-GetQualityRes *
-       get_quality_res__unpack
+MtAirswitch001__GetQualityRes *
+       mt_airswitch001__get_quality_res__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data);
-void   get_quality_res__free_unpacked
-                     (GetQualityRes *message,
+void   mt_airswitch001__get_quality_res__free_unpacked
+                     (MtAirswitch001__GetQualityRes *message,
                       ProtobufCAllocator *allocator);
-/* SetStateReq methods */
-void   set_state_req__init
-                     (SetStateReq         *message);
-size_t set_state_req__get_packed_size
-                     (const SetStateReq   *message);
-size_t set_state_req__pack
-                     (const SetStateReq   *message,
+/* MtAirswitch001__SetStateReq methods */
+void   mt_airswitch001__set_state_req__init
+                     (MtAirswitch001__SetStateReq         *message);
+size_t mt_airswitch001__set_state_req__get_packed_size
+                     (const MtAirswitch001__SetStateReq   *message);
+size_t mt_airswitch001__set_state_req__pack
+                     (const MtAirswitch001__SetStateReq   *message,
                       uint8_t             *out);
-size_t set_state_req__pack_to_buffer
-                     (const SetStateReq   *message,
+size_t mt_airswitch001__set_state_req__pack_to_buffer
+                     (const MtAirswitch001__SetStateReq   *message,
                       ProtobufCBuffer     *buffer);
-SetStateReq *
-       set_state_req__unpack
+MtAirswitch001__SetStateReq *
+       mt_airswitch001__set_state_req__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data);
-void   set_state_req__free_unpacked
-                     (SetStateReq *message,
+void   mt_airswitch001__set_state_req__free_unpacked
+                     (MtAirswitch001__SetStateReq *message,
                       ProtobufCAllocator *allocator);
-/* SetConfigReq methods */
-void   set_config_req__init
-                     (SetConfigReq         *message);
-size_t set_config_req__get_packed_size
-                     (const SetConfigReq   *message);
-size_t set_config_req__pack
-                     (const SetConfigReq   *message,
+/* MtAirswitch001__SetConfigReq methods */
+void   mt_airswitch001__set_config_req__init
+                     (MtAirswitch001__SetConfigReq         *message);
+size_t mt_airswitch001__set_config_req__get_packed_size
+                     (const MtAirswitch001__SetConfigReq   *message);
+size_t mt_airswitch001__set_config_req__pack
+                     (const MtAirswitch001__SetConfigReq   *message,
                       uint8_t             *out);
-size_t set_config_req__pack_to_buffer
-                     (const SetConfigReq   *message,
+size_t mt_airswitch001__set_config_req__pack_to_buffer
+                     (const MtAirswitch001__SetConfigReq   *message,
                       ProtobufCBuffer     *buffer);
-SetConfigReq *
-       set_config_req__unpack
+MtAirswitch001__SetConfigReq *
+       mt_airswitch001__set_config_req__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data);
-void   set_config_req__free_unpacked
-                     (SetConfigReq *message,
+void   mt_airswitch001__set_config_req__free_unpacked
+                     (MtAirswitch001__SetConfigReq *message,
                       ProtobufCAllocator *allocator);
-/* SetQualityReq methods */
-void   set_quality_req__init
-                     (SetQualityReq         *message);
-size_t set_quality_req__get_packed_size
-                     (const SetQualityReq   *message);
-size_t set_quality_req__pack
-                     (const SetQualityReq   *message,
+/* MtAirswitch001__SetQualityReq methods */
+void   mt_airswitch001__set_quality_req__init
+                     (MtAirswitch001__SetQualityReq         *message);
+size_t mt_airswitch001__set_quality_req__get_packed_size
+                     (const MtAirswitch001__SetQualityReq   *message);
+size_t mt_airswitch001__set_quality_req__pack
+                     (const MtAirswitch001__SetQualityReq   *message,
                       uint8_t             *out);
-size_t set_quality_req__pack_to_buffer
-                     (const SetQualityReq   *message,
+size_t mt_airswitch001__set_quality_req__pack_to_buffer
+                     (const MtAirswitch001__SetQualityReq   *message,
                       ProtobufCBuffer     *buffer);
-SetQualityReq *
-       set_quality_req__unpack
+MtAirswitch001__SetQualityReq *
+       mt_airswitch001__set_quality_req__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data);
-void   set_quality_req__free_unpacked
-                     (SetQualityReq *message,
+void   mt_airswitch001__set_quality_req__free_unpacked
+                     (MtAirswitch001__SetQualityReq *message,
                       ProtobufCAllocator *allocator);
-/* SetLeakTestReq methods */
-void   set_leak_test_req__init
-                     (SetLeakTestReq         *message);
-size_t set_leak_test_req__get_packed_size
-                     (const SetLeakTestReq   *message);
-size_t set_leak_test_req__pack
-                     (const SetLeakTestReq   *message,
+/* MtAirswitch001__SetLeakTestReq methods */
+void   mt_airswitch001__set_leak_test_req__init
+                     (MtAirswitch001__SetLeakTestReq         *message);
+size_t mt_airswitch001__set_leak_test_req__get_packed_size
+                     (const MtAirswitch001__SetLeakTestReq   *message);
+size_t mt_airswitch001__set_leak_test_req__pack
+                     (const MtAirswitch001__SetLeakTestReq   *message,
                       uint8_t             *out);
-size_t set_leak_test_req__pack_to_buffer
-                     (const SetLeakTestReq   *message,
+size_t mt_airswitch001__set_leak_test_req__pack_to_buffer
+                     (const MtAirswitch001__SetLeakTestReq   *message,
                       ProtobufCBuffer     *buffer);
-SetLeakTestReq *
-       set_leak_test_req__unpack
+MtAirswitch001__SetLeakTestReq *
+       mt_airswitch001__set_leak_test_req__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data);
-void   set_leak_test_req__free_unpacked
-                     (SetLeakTestReq *message,
+void   mt_airswitch001__set_leak_test_req__free_unpacked
+                     (MtAirswitch001__SetLeakTestReq *message,
                       ProtobufCAllocator *allocator);
 /* --- per-message closures --- */
 
-typedef void (*State_Closure)
-                 (const State *message,
+typedef void (*MtAirswitch001__State_Closure)
+                 (const MtAirswitch001__State *message,
                   void *closure_data);
-typedef void (*OpState_Closure)
-                 (const OpState *message,
+typedef void (*MtAirswitch001__OpState_Closure)
+                 (const MtAirswitch001__OpState *message,
                   void *closure_data);
-typedef void (*Ctrl_Closure)
-                 (const Ctrl *message,
+typedef void (*MtAirswitch001__Ctrl_Closure)
+                 (const MtAirswitch001__Ctrl *message,
                   void *closure_data);
-typedef void (*Warn_Closure)
-                 (const Warn *message,
+typedef void (*MtAirswitch001__Warn_Closure)
+                 (const MtAirswitch001__Warn *message,
                   void *closure_data);
-typedef void (*Data_Closure)
-                 (const Data *message,
+typedef void (*MtAirswitch001__Data_Closure)
+                 (const MtAirswitch001__Data *message,
                   void *closure_data);
-typedef void (*Config_Closure)
-                 (const Config *message,
+typedef void (*MtAirswitch001__Config_Closure)
+                 (const MtAirswitch001__Config *message,
                   void *closure_data);
-typedef void (*OpConfig_Closure)
-                 (const OpConfig *message,
+typedef void (*MtAirswitch001__OpConfig_Closure)
+                 (const MtAirswitch001__OpConfig *message,
                   void *closure_data);
-typedef void (*Quality_Closure)
-                 (const Quality *message,
+typedef void (*MtAirswitch001__Quality_Closure)
+                 (const MtAirswitch001__Quality *message,
                   void *closure_data);
-typedef void (*OpQuality_Closure)
-                 (const OpQuality *message,
+typedef void (*MtAirswitch001__OpQuality_Closure)
+                 (const MtAirswitch001__OpQuality *message,
                   void *closure_data);
-typedef void (*GetReq_Closure)
-                 (const GetReq *message,
+typedef void (*MtAirswitch001__GetReq_Closure)
+                 (const MtAirswitch001__GetReq *message,
                   void *closure_data);
-typedef void (*SetRes_Closure)
-                 (const SetRes *message,
+typedef void (*MtAirswitch001__SetRes_Closure)
+                 (const MtAirswitch001__SetRes *message,
                   void *closure_data);
-typedef void (*GetStateRes_Closure)
-                 (const GetStateRes *message,
+typedef void (*MtAirswitch001__GetStateRes_Closure)
+                 (const MtAirswitch001__GetStateRes *message,
                   void *closure_data);
-typedef void (*GetCtrlRes_Closure)
-                 (const GetCtrlRes *message,
+typedef void (*MtAirswitch001__GetCtrlRes_Closure)
+                 (const MtAirswitch001__GetCtrlRes *message,
                   void *closure_data);
-typedef void (*GetWarnRes_Closure)
-                 (const GetWarnRes *message,
+typedef void (*MtAirswitch001__GetWarnRes_Closure)
+                 (const MtAirswitch001__GetWarnRes *message,
                   void *closure_data);
-typedef void (*GetDataRes_Closure)
-                 (const GetDataRes *message,
+typedef void (*MtAirswitch001__GetDataRes_Closure)
+                 (const MtAirswitch001__GetDataRes *message,
                   void *closure_data);
-typedef void (*GetConfigRes_Closure)
-                 (const GetConfigRes *message,
+typedef void (*MtAirswitch001__GetConfigRes_Closure)
+                 (const MtAirswitch001__GetConfigRes *message,
                   void *closure_data);
-typedef void (*GetQualityRes_Closure)
-                 (const GetQualityRes *message,
+typedef void (*MtAirswitch001__GetQualityRes_Closure)
+                 (const MtAirswitch001__GetQualityRes *message,
                   void *closure_data);
-typedef void (*SetStateReq_Closure)
-                 (const SetStateReq *message,
+typedef void (*MtAirswitch001__SetStateReq_Closure)
+                 (const MtAirswitch001__SetStateReq *message,
                   void *closure_data);
-typedef void (*SetConfigReq_Closure)
-                 (const SetConfigReq *message,
+typedef void (*MtAirswitch001__SetConfigReq_Closure)
+                 (const MtAirswitch001__SetConfigReq *message,
                   void *closure_data);
-typedef void (*SetQualityReq_Closure)
-                 (const SetQualityReq *message,
+typedef void (*MtAirswitch001__SetQualityReq_Closure)
+                 (const MtAirswitch001__SetQualityReq *message,
                   void *closure_data);
-typedef void (*SetLeakTestReq_Closure)
-                 (const SetLeakTestReq *message,
+typedef void (*MtAirswitch001__SetLeakTestReq_Closure)
+                 (const MtAirswitch001__SetLeakTestReq *message,
                   void *closure_data);
 
 /* --- services --- */
 
-typedef struct _Service_Service Service_Service;
-struct _Service_Service
+typedef struct _MtAirswitch001__Service_Service MtAirswitch001__Service_Service;
+struct _MtAirswitch001__Service_Service
 {
   ProtobufCService base;
-  void (*get_state)(Service_Service *service,
-                    const GetReq *input,
-                    GetStateRes_Closure closure,
+  void (*get_state)(MtAirswitch001__Service_Service *service,
+                    const MtAirswitch001__GetReq *input,
+                    MtAirswitch001__GetStateRes_Closure closure,
                     void *closure_data);
-  void (*get_ctrl)(Service_Service *service,
-                   const GetReq *input,
-                   GetCtrlRes_Closure closure,
+  void (*get_ctrl)(MtAirswitch001__Service_Service *service,
+                   const MtAirswitch001__GetReq *input,
+                   MtAirswitch001__GetCtrlRes_Closure closure,
                    void *closure_data);
-  void (*get_warn)(Service_Service *service,
-                   const GetReq *input,
-                   GetWarnRes_Closure closure,
+  void (*get_warn)(MtAirswitch001__Service_Service *service,
+                   const MtAirswitch001__GetReq *input,
+                   MtAirswitch001__GetWarnRes_Closure closure,
                    void *closure_data);
-  void (*get_data)(Service_Service *service,
-                   const GetReq *input,
-                   GetDataRes_Closure closure,
+  void (*get_data)(MtAirswitch001__Service_Service *service,
+                   const MtAirswitch001__GetReq *input,
+                   MtAirswitch001__GetDataRes_Closure closure,
                    void *closure_data);
-  void (*get_config)(Service_Service *service,
-                     const GetReq *input,
-                     GetConfigRes_Closure closure,
+  void (*get_config)(MtAirswitch001__Service_Service *service,
+                     const MtAirswitch001__GetReq *input,
+                     MtAirswitch001__GetConfigRes_Closure closure,
                      void *closure_data);
-  void (*get_quality)(Service_Service *service,
-                      const GetReq *input,
-                      GetQualityRes_Closure closure,
+  void (*get_quality)(MtAirswitch001__Service_Service *service,
+                      const MtAirswitch001__GetReq *input,
+                      MtAirswitch001__GetQualityRes_Closure closure,
                       void *closure_data);
-  void (*set_state)(Service_Service *service,
-                    const SetStateReq *input,
-                    SetRes_Closure closure,
+  void (*set_state)(MtAirswitch001__Service_Service *service,
+                    const MtAirswitch001__SetStateReq *input,
+                    MtAirswitch001__SetRes_Closure closure,
                     void *closure_data);
-  void (*set_config)(Service_Service *service,
-                     const SetConfigReq *input,
-                     SetRes_Closure closure,
+  void (*set_config)(MtAirswitch001__Service_Service *service,
+                     const MtAirswitch001__SetConfigReq *input,
+                     MtAirswitch001__SetRes_Closure closure,
                      void *closure_data);
-  void (*set_quality)(Service_Service *service,
-                      const SetQualityReq *input,
-                      SetRes_Closure closure,
+  void (*set_quality)(MtAirswitch001__Service_Service *service,
+                      const MtAirswitch001__SetQualityReq *input,
+                      MtAirswitch001__SetRes_Closure closure,
                       void *closure_data);
-  void (*set_leak_test)(Service_Service *service,
-                        const SetLeakTestReq *input,
-                        SetRes_Closure closure,
+  void (*set_leak_test)(MtAirswitch001__Service_Service *service,
+                        const MtAirswitch001__SetLeakTestReq *input,
+                        MtAirswitch001__SetRes_Closure closure,
                         void *closure_data);
 };
-typedef void (*Service_ServiceDestroy)(Service_Service *);
-void service__init (Service_Service *service,
-                    Service_ServiceDestroy destroy);
-#define SERVICE__BASE_INIT \
-    { &service__descriptor, protobuf_c_service_invoke_internal, NULL }
-#define SERVICE__INIT(function_prefix__) \
-    { SERVICE__BASE_INIT,\
+typedef void (*MtAirswitch001__Service_ServiceDestroy)(MtAirswitch001__Service_Service *);
+void mt_airswitch001__service__init (MtAirswitch001__Service_Service *service,
+                                     MtAirswitch001__Service_ServiceDestroy destroy);
+#define MT_AIRSWITCH001__SERVICE__BASE_INIT \
+    { &mt_airswitch001__service__descriptor, protobuf_c_service_invoke_internal, NULL }
+#define MT_AIRSWITCH001__SERVICE__INIT(function_prefix__) \
+    { MT_AIRSWITCH001__SERVICE__BASE_INIT,\
       function_prefix__ ## get_state,\
       function_prefix__ ## get_ctrl,\
       function_prefix__ ## get_warn,\
@@ -938,71 +938,71 @@ void service__init (Service_Service *service,
       function_prefix__ ## set_config,\
       function_prefix__ ## set_quality,\
       function_prefix__ ## set_leak_test  }
-void service__get_state(ProtobufCService *service,
-                        const GetReq *input,
-                        GetStateRes_Closure closure,
-                        void *closure_data);
-void service__get_ctrl(ProtobufCService *service,
-                       const GetReq *input,
-                       GetCtrlRes_Closure closure,
-                       void *closure_data);
-void service__get_warn(ProtobufCService *service,
-                       const GetReq *input,
-                       GetWarnRes_Closure closure,
-                       void *closure_data);
-void service__get_data(ProtobufCService *service,
-                       const GetReq *input,
-                       GetDataRes_Closure closure,
-                       void *closure_data);
-void service__get_config(ProtobufCService *service,
-                         const GetReq *input,
-                         GetConfigRes_Closure closure,
-                         void *closure_data);
-void service__get_quality(ProtobufCService *service,
-                          const GetReq *input,
-                          GetQualityRes_Closure closure,
-                          void *closure_data);
-void service__set_state(ProtobufCService *service,
-                        const SetStateReq *input,
-                        SetRes_Closure closure,
-                        void *closure_data);
-void service__set_config(ProtobufCService *service,
-                         const SetConfigReq *input,
-                         SetRes_Closure closure,
-                         void *closure_data);
-void service__set_quality(ProtobufCService *service,
-                          const SetQualityReq *input,
-                          SetRes_Closure closure,
-                          void *closure_data);
-void service__set_leak_test(ProtobufCService *service,
-                            const SetLeakTestReq *input,
-                            SetRes_Closure closure,
-                            void *closure_data);
+void mt_airswitch001__service__get_state(ProtobufCService *service,
+                                         const MtAirswitch001__GetReq *input,
+                                         MtAirswitch001__GetStateRes_Closure closure,
+                                         void *closure_data);
+void mt_airswitch001__service__get_ctrl(ProtobufCService *service,
+                                        const MtAirswitch001__GetReq *input,
+                                        MtAirswitch001__GetCtrlRes_Closure closure,
+                                        void *closure_data);
+void mt_airswitch001__service__get_warn(ProtobufCService *service,
+                                        const MtAirswitch001__GetReq *input,
+                                        MtAirswitch001__GetWarnRes_Closure closure,
+                                        void *closure_data);
+void mt_airswitch001__service__get_data(ProtobufCService *service,
+                                        const MtAirswitch001__GetReq *input,
+                                        MtAirswitch001__GetDataRes_Closure closure,
+                                        void *closure_data);
+void mt_airswitch001__service__get_config(ProtobufCService *service,
+                                          const MtAirswitch001__GetReq *input,
+                                          MtAirswitch001__GetConfigRes_Closure closure,
+                                          void *closure_data);
+void mt_airswitch001__service__get_quality(ProtobufCService *service,
+                                           const MtAirswitch001__GetReq *input,
+                                           MtAirswitch001__GetQualityRes_Closure closure,
+                                           void *closure_data);
+void mt_airswitch001__service__set_state(ProtobufCService *service,
+                                         const MtAirswitch001__SetStateReq *input,
+                                         MtAirswitch001__SetRes_Closure closure,
+                                         void *closure_data);
+void mt_airswitch001__service__set_config(ProtobufCService *service,
+                                          const MtAirswitch001__SetConfigReq *input,
+                                          MtAirswitch001__SetRes_Closure closure,
+                                          void *closure_data);
+void mt_airswitch001__service__set_quality(ProtobufCService *service,
+                                           const MtAirswitch001__SetQualityReq *input,
+                                           MtAirswitch001__SetRes_Closure closure,
+                                           void *closure_data);
+void mt_airswitch001__service__set_leak_test(ProtobufCService *service,
+                                             const MtAirswitch001__SetLeakTestReq *input,
+                                             MtAirswitch001__SetRes_Closure closure,
+                                             void *closure_data);
 
 /* --- descriptors --- */
 
-extern const ProtobufCMessageDescriptor state__descriptor;
-extern const ProtobufCMessageDescriptor op_state__descriptor;
-extern const ProtobufCMessageDescriptor ctrl__descriptor;
-extern const ProtobufCMessageDescriptor warn__descriptor;
-extern const ProtobufCMessageDescriptor data__descriptor;
-extern const ProtobufCMessageDescriptor config__descriptor;
-extern const ProtobufCMessageDescriptor op_config__descriptor;
-extern const ProtobufCMessageDescriptor quality__descriptor;
-extern const ProtobufCMessageDescriptor op_quality__descriptor;
-extern const ProtobufCMessageDescriptor get_req__descriptor;
-extern const ProtobufCMessageDescriptor set_res__descriptor;
-extern const ProtobufCMessageDescriptor get_state_res__descriptor;
-extern const ProtobufCMessageDescriptor get_ctrl_res__descriptor;
-extern const ProtobufCMessageDescriptor get_warn_res__descriptor;
-extern const ProtobufCMessageDescriptor get_data_res__descriptor;
-extern const ProtobufCMessageDescriptor get_config_res__descriptor;
-extern const ProtobufCMessageDescriptor get_quality_res__descriptor;
-extern const ProtobufCMessageDescriptor set_state_req__descriptor;
-extern const ProtobufCMessageDescriptor set_config_req__descriptor;
-extern const ProtobufCMessageDescriptor set_quality_req__descriptor;
-extern const ProtobufCMessageDescriptor set_leak_test_req__descriptor;
-extern const ProtobufCServiceDescriptor service__descriptor;
+extern const ProtobufCMessageDescriptor mt_airswitch001__state__descriptor;
+extern const ProtobufCMessageDescriptor mt_airswitch001__op_state__descriptor;
+extern const ProtobufCMessageDescriptor mt_airswitch001__ctrl__descriptor;
+extern const ProtobufCMessageDescriptor mt_airswitch001__warn__descriptor;
+extern const ProtobufCMessageDescriptor mt_airswitch001__data__descriptor;
+extern const ProtobufCMessageDescriptor mt_airswitch001__config__descriptor;
+extern const ProtobufCMessageDescriptor mt_airswitch001__op_config__descriptor;
+extern const ProtobufCMessageDescriptor mt_airswitch001__quality__descriptor;
+extern const ProtobufCMessageDescriptor mt_airswitch001__op_quality__descriptor;
+extern const ProtobufCMessageDescriptor mt_airswitch001__get_req__descriptor;
+extern const ProtobufCMessageDescriptor mt_airswitch001__set_res__descriptor;
+extern const ProtobufCMessageDescriptor mt_airswitch001__get_state_res__descriptor;
+extern const ProtobufCMessageDescriptor mt_airswitch001__get_ctrl_res__descriptor;
+extern const ProtobufCMessageDescriptor mt_airswitch001__get_warn_res__descriptor;
+extern const ProtobufCMessageDescriptor mt_airswitch001__get_data_res__descriptor;
+extern const ProtobufCMessageDescriptor mt_airswitch001__get_config_res__descriptor;
+extern const ProtobufCMessageDescriptor mt_airswitch001__get_quality_res__descriptor;
+extern const ProtobufCMessageDescriptor mt_airswitch001__set_state_req__descriptor;
+extern const ProtobufCMessageDescriptor mt_airswitch001__set_config_req__descriptor;
+extern const ProtobufCMessageDescriptor mt_airswitch001__set_quality_req__descriptor;
+extern const ProtobufCMessageDescriptor mt_airswitch001__set_leak_test_req__descriptor;
+extern const ProtobufCServiceDescriptor mt_airswitch001__service__descriptor;
 
 PROTOBUF_C__END_DECLS
 

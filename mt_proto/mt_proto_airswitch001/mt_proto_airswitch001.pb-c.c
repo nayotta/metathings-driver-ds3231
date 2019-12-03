@@ -7,952 +7,952 @@
 #endif
 
 #include "mt_proto_airswitch001.pb-c.h"
-void   state__init
-                     (State         *message)
+void   mt_airswitch001__state__init
+                     (MtAirswitch001__State         *message)
 {
-  static const State init_value = STATE__INIT;
+  static const MtAirswitch001__State init_value = MT_AIRSWITCH001__STATE__INIT;
   *message = init_value;
 }
-size_t state__get_packed_size
-                     (const State *message)
+size_t mt_airswitch001__state__get_packed_size
+                     (const MtAirswitch001__State *message)
 {
-  assert(message->base.descriptor == &state__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__state__descriptor);
   return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
 }
-size_t state__pack
-                     (const State *message,
+size_t mt_airswitch001__state__pack
+                     (const MtAirswitch001__State *message,
                       uint8_t       *out)
 {
-  assert(message->base.descriptor == &state__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__state__descriptor);
   return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
 }
-size_t state__pack_to_buffer
-                     (const State *message,
+size_t mt_airswitch001__state__pack_to_buffer
+                     (const MtAirswitch001__State *message,
                       ProtobufCBuffer *buffer)
 {
-  assert(message->base.descriptor == &state__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__state__descriptor);
   return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
 }
-State *
-       state__unpack
+MtAirswitch001__State *
+       mt_airswitch001__state__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data)
 {
-  return (State *)
-     protobuf_c_message_unpack (&state__descriptor,
+  return (MtAirswitch001__State *)
+     protobuf_c_message_unpack (&mt_airswitch001__state__descriptor,
                                 allocator, len, data);
 }
-void   state__free_unpacked
-                     (State *message,
+void   mt_airswitch001__state__free_unpacked
+                     (MtAirswitch001__State *message,
                       ProtobufCAllocator *allocator)
 {
   if(!message)
     return;
-  assert(message->base.descriptor == &state__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__state__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
-void   op_state__init
-                     (OpState         *message)
+void   mt_airswitch001__op_state__init
+                     (MtAirswitch001__OpState         *message)
 {
-  static const OpState init_value = OP_STATE__INIT;
+  static const MtAirswitch001__OpState init_value = MT_AIRSWITCH001__OP_STATE__INIT;
   *message = init_value;
 }
-size_t op_state__get_packed_size
-                     (const OpState *message)
+size_t mt_airswitch001__op_state__get_packed_size
+                     (const MtAirswitch001__OpState *message)
 {
-  assert(message->base.descriptor == &op_state__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__op_state__descriptor);
   return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
 }
-size_t op_state__pack
-                     (const OpState *message,
+size_t mt_airswitch001__op_state__pack
+                     (const MtAirswitch001__OpState *message,
                       uint8_t       *out)
 {
-  assert(message->base.descriptor == &op_state__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__op_state__descriptor);
   return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
 }
-size_t op_state__pack_to_buffer
-                     (const OpState *message,
+size_t mt_airswitch001__op_state__pack_to_buffer
+                     (const MtAirswitch001__OpState *message,
                       ProtobufCBuffer *buffer)
 {
-  assert(message->base.descriptor == &op_state__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__op_state__descriptor);
   return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
 }
-OpState *
-       op_state__unpack
+MtAirswitch001__OpState *
+       mt_airswitch001__op_state__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data)
 {
-  return (OpState *)
-     protobuf_c_message_unpack (&op_state__descriptor,
+  return (MtAirswitch001__OpState *)
+     protobuf_c_message_unpack (&mt_airswitch001__op_state__descriptor,
                                 allocator, len, data);
 }
-void   op_state__free_unpacked
-                     (OpState *message,
+void   mt_airswitch001__op_state__free_unpacked
+                     (MtAirswitch001__OpState *message,
                       ProtobufCAllocator *allocator)
 {
   if(!message)
     return;
-  assert(message->base.descriptor == &op_state__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__op_state__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
-void   ctrl__init
-                     (Ctrl         *message)
+void   mt_airswitch001__ctrl__init
+                     (MtAirswitch001__Ctrl         *message)
 {
-  static const Ctrl init_value = CTRL__INIT;
+  static const MtAirswitch001__Ctrl init_value = MT_AIRSWITCH001__CTRL__INIT;
   *message = init_value;
 }
-size_t ctrl__get_packed_size
-                     (const Ctrl *message)
+size_t mt_airswitch001__ctrl__get_packed_size
+                     (const MtAirswitch001__Ctrl *message)
 {
-  assert(message->base.descriptor == &ctrl__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__ctrl__descriptor);
   return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
 }
-size_t ctrl__pack
-                     (const Ctrl *message,
+size_t mt_airswitch001__ctrl__pack
+                     (const MtAirswitch001__Ctrl *message,
                       uint8_t       *out)
 {
-  assert(message->base.descriptor == &ctrl__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__ctrl__descriptor);
   return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
 }
-size_t ctrl__pack_to_buffer
-                     (const Ctrl *message,
+size_t mt_airswitch001__ctrl__pack_to_buffer
+                     (const MtAirswitch001__Ctrl *message,
                       ProtobufCBuffer *buffer)
 {
-  assert(message->base.descriptor == &ctrl__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__ctrl__descriptor);
   return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
 }
-Ctrl *
-       ctrl__unpack
+MtAirswitch001__Ctrl *
+       mt_airswitch001__ctrl__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data)
 {
-  return (Ctrl *)
-     protobuf_c_message_unpack (&ctrl__descriptor,
+  return (MtAirswitch001__Ctrl *)
+     protobuf_c_message_unpack (&mt_airswitch001__ctrl__descriptor,
                                 allocator, len, data);
 }
-void   ctrl__free_unpacked
-                     (Ctrl *message,
+void   mt_airswitch001__ctrl__free_unpacked
+                     (MtAirswitch001__Ctrl *message,
                       ProtobufCAllocator *allocator)
 {
   if(!message)
     return;
-  assert(message->base.descriptor == &ctrl__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__ctrl__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
-void   warn__init
-                     (Warn         *message)
+void   mt_airswitch001__warn__init
+                     (MtAirswitch001__Warn         *message)
 {
-  static const Warn init_value = WARN__INIT;
+  static const MtAirswitch001__Warn init_value = MT_AIRSWITCH001__WARN__INIT;
   *message = init_value;
 }
-size_t warn__get_packed_size
-                     (const Warn *message)
+size_t mt_airswitch001__warn__get_packed_size
+                     (const MtAirswitch001__Warn *message)
 {
-  assert(message->base.descriptor == &warn__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__warn__descriptor);
   return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
 }
-size_t warn__pack
-                     (const Warn *message,
+size_t mt_airswitch001__warn__pack
+                     (const MtAirswitch001__Warn *message,
                       uint8_t       *out)
 {
-  assert(message->base.descriptor == &warn__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__warn__descriptor);
   return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
 }
-size_t warn__pack_to_buffer
-                     (const Warn *message,
+size_t mt_airswitch001__warn__pack_to_buffer
+                     (const MtAirswitch001__Warn *message,
                       ProtobufCBuffer *buffer)
 {
-  assert(message->base.descriptor == &warn__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__warn__descriptor);
   return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
 }
-Warn *
-       warn__unpack
+MtAirswitch001__Warn *
+       mt_airswitch001__warn__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data)
 {
-  return (Warn *)
-     protobuf_c_message_unpack (&warn__descriptor,
+  return (MtAirswitch001__Warn *)
+     protobuf_c_message_unpack (&mt_airswitch001__warn__descriptor,
                                 allocator, len, data);
 }
-void   warn__free_unpacked
-                     (Warn *message,
+void   mt_airswitch001__warn__free_unpacked
+                     (MtAirswitch001__Warn *message,
                       ProtobufCAllocator *allocator)
 {
   if(!message)
     return;
-  assert(message->base.descriptor == &warn__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__warn__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
-void   data__init
-                     (Data         *message)
+void   mt_airswitch001__data__init
+                     (MtAirswitch001__Data         *message)
 {
-  static const Data init_value = DATA__INIT;
+  static const MtAirswitch001__Data init_value = MT_AIRSWITCH001__DATA__INIT;
   *message = init_value;
 }
-size_t data__get_packed_size
-                     (const Data *message)
+size_t mt_airswitch001__data__get_packed_size
+                     (const MtAirswitch001__Data *message)
 {
-  assert(message->base.descriptor == &data__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__data__descriptor);
   return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
 }
-size_t data__pack
-                     (const Data *message,
+size_t mt_airswitch001__data__pack
+                     (const MtAirswitch001__Data *message,
                       uint8_t       *out)
 {
-  assert(message->base.descriptor == &data__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__data__descriptor);
   return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
 }
-size_t data__pack_to_buffer
-                     (const Data *message,
+size_t mt_airswitch001__data__pack_to_buffer
+                     (const MtAirswitch001__Data *message,
                       ProtobufCBuffer *buffer)
 {
-  assert(message->base.descriptor == &data__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__data__descriptor);
   return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
 }
-Data *
-       data__unpack
+MtAirswitch001__Data *
+       mt_airswitch001__data__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data)
 {
-  return (Data *)
-     protobuf_c_message_unpack (&data__descriptor,
+  return (MtAirswitch001__Data *)
+     protobuf_c_message_unpack (&mt_airswitch001__data__descriptor,
                                 allocator, len, data);
 }
-void   data__free_unpacked
-                     (Data *message,
+void   mt_airswitch001__data__free_unpacked
+                     (MtAirswitch001__Data *message,
                       ProtobufCAllocator *allocator)
 {
   if(!message)
     return;
-  assert(message->base.descriptor == &data__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__data__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
-void   config__init
-                     (Config         *message)
+void   mt_airswitch001__config__init
+                     (MtAirswitch001__Config         *message)
 {
-  static const Config init_value = CONFIG__INIT;
+  static const MtAirswitch001__Config init_value = MT_AIRSWITCH001__CONFIG__INIT;
   *message = init_value;
 }
-size_t config__get_packed_size
-                     (const Config *message)
+size_t mt_airswitch001__config__get_packed_size
+                     (const MtAirswitch001__Config *message)
 {
-  assert(message->base.descriptor == &config__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__config__descriptor);
   return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
 }
-size_t config__pack
-                     (const Config *message,
+size_t mt_airswitch001__config__pack
+                     (const MtAirswitch001__Config *message,
                       uint8_t       *out)
 {
-  assert(message->base.descriptor == &config__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__config__descriptor);
   return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
 }
-size_t config__pack_to_buffer
-                     (const Config *message,
+size_t mt_airswitch001__config__pack_to_buffer
+                     (const MtAirswitch001__Config *message,
                       ProtobufCBuffer *buffer)
 {
-  assert(message->base.descriptor == &config__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__config__descriptor);
   return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
 }
-Config *
-       config__unpack
+MtAirswitch001__Config *
+       mt_airswitch001__config__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data)
 {
-  return (Config *)
-     protobuf_c_message_unpack (&config__descriptor,
+  return (MtAirswitch001__Config *)
+     protobuf_c_message_unpack (&mt_airswitch001__config__descriptor,
                                 allocator, len, data);
 }
-void   config__free_unpacked
-                     (Config *message,
+void   mt_airswitch001__config__free_unpacked
+                     (MtAirswitch001__Config *message,
                       ProtobufCAllocator *allocator)
 {
   if(!message)
     return;
-  assert(message->base.descriptor == &config__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__config__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
-void   op_config__init
-                     (OpConfig         *message)
+void   mt_airswitch001__op_config__init
+                     (MtAirswitch001__OpConfig         *message)
 {
-  static const OpConfig init_value = OP_CONFIG__INIT;
+  static const MtAirswitch001__OpConfig init_value = MT_AIRSWITCH001__OP_CONFIG__INIT;
   *message = init_value;
 }
-size_t op_config__get_packed_size
-                     (const OpConfig *message)
+size_t mt_airswitch001__op_config__get_packed_size
+                     (const MtAirswitch001__OpConfig *message)
 {
-  assert(message->base.descriptor == &op_config__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__op_config__descriptor);
   return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
 }
-size_t op_config__pack
-                     (const OpConfig *message,
+size_t mt_airswitch001__op_config__pack
+                     (const MtAirswitch001__OpConfig *message,
                       uint8_t       *out)
 {
-  assert(message->base.descriptor == &op_config__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__op_config__descriptor);
   return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
 }
-size_t op_config__pack_to_buffer
-                     (const OpConfig *message,
+size_t mt_airswitch001__op_config__pack_to_buffer
+                     (const MtAirswitch001__OpConfig *message,
                       ProtobufCBuffer *buffer)
 {
-  assert(message->base.descriptor == &op_config__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__op_config__descriptor);
   return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
 }
-OpConfig *
-       op_config__unpack
+MtAirswitch001__OpConfig *
+       mt_airswitch001__op_config__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data)
 {
-  return (OpConfig *)
-     protobuf_c_message_unpack (&op_config__descriptor,
+  return (MtAirswitch001__OpConfig *)
+     protobuf_c_message_unpack (&mt_airswitch001__op_config__descriptor,
                                 allocator, len, data);
 }
-void   op_config__free_unpacked
-                     (OpConfig *message,
+void   mt_airswitch001__op_config__free_unpacked
+                     (MtAirswitch001__OpConfig *message,
                       ProtobufCAllocator *allocator)
 {
   if(!message)
     return;
-  assert(message->base.descriptor == &op_config__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__op_config__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
-void   quality__init
-                     (Quality         *message)
+void   mt_airswitch001__quality__init
+                     (MtAirswitch001__Quality         *message)
 {
-  static const Quality init_value = QUALITY__INIT;
+  static const MtAirswitch001__Quality init_value = MT_AIRSWITCH001__QUALITY__INIT;
   *message = init_value;
 }
-size_t quality__get_packed_size
-                     (const Quality *message)
+size_t mt_airswitch001__quality__get_packed_size
+                     (const MtAirswitch001__Quality *message)
 {
-  assert(message->base.descriptor == &quality__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__quality__descriptor);
   return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
 }
-size_t quality__pack
-                     (const Quality *message,
+size_t mt_airswitch001__quality__pack
+                     (const MtAirswitch001__Quality *message,
                       uint8_t       *out)
 {
-  assert(message->base.descriptor == &quality__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__quality__descriptor);
   return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
 }
-size_t quality__pack_to_buffer
-                     (const Quality *message,
+size_t mt_airswitch001__quality__pack_to_buffer
+                     (const MtAirswitch001__Quality *message,
                       ProtobufCBuffer *buffer)
 {
-  assert(message->base.descriptor == &quality__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__quality__descriptor);
   return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
 }
-Quality *
-       quality__unpack
+MtAirswitch001__Quality *
+       mt_airswitch001__quality__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data)
 {
-  return (Quality *)
-     protobuf_c_message_unpack (&quality__descriptor,
+  return (MtAirswitch001__Quality *)
+     protobuf_c_message_unpack (&mt_airswitch001__quality__descriptor,
                                 allocator, len, data);
 }
-void   quality__free_unpacked
-                     (Quality *message,
+void   mt_airswitch001__quality__free_unpacked
+                     (MtAirswitch001__Quality *message,
                       ProtobufCAllocator *allocator)
 {
   if(!message)
     return;
-  assert(message->base.descriptor == &quality__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__quality__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
-void   op_quality__init
-                     (OpQuality         *message)
+void   mt_airswitch001__op_quality__init
+                     (MtAirswitch001__OpQuality         *message)
 {
-  static const OpQuality init_value = OP_QUALITY__INIT;
+  static const MtAirswitch001__OpQuality init_value = MT_AIRSWITCH001__OP_QUALITY__INIT;
   *message = init_value;
 }
-size_t op_quality__get_packed_size
-                     (const OpQuality *message)
+size_t mt_airswitch001__op_quality__get_packed_size
+                     (const MtAirswitch001__OpQuality *message)
 {
-  assert(message->base.descriptor == &op_quality__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__op_quality__descriptor);
   return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
 }
-size_t op_quality__pack
-                     (const OpQuality *message,
+size_t mt_airswitch001__op_quality__pack
+                     (const MtAirswitch001__OpQuality *message,
                       uint8_t       *out)
 {
-  assert(message->base.descriptor == &op_quality__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__op_quality__descriptor);
   return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
 }
-size_t op_quality__pack_to_buffer
-                     (const OpQuality *message,
+size_t mt_airswitch001__op_quality__pack_to_buffer
+                     (const MtAirswitch001__OpQuality *message,
                       ProtobufCBuffer *buffer)
 {
-  assert(message->base.descriptor == &op_quality__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__op_quality__descriptor);
   return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
 }
-OpQuality *
-       op_quality__unpack
+MtAirswitch001__OpQuality *
+       mt_airswitch001__op_quality__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data)
 {
-  return (OpQuality *)
-     protobuf_c_message_unpack (&op_quality__descriptor,
+  return (MtAirswitch001__OpQuality *)
+     protobuf_c_message_unpack (&mt_airswitch001__op_quality__descriptor,
                                 allocator, len, data);
 }
-void   op_quality__free_unpacked
-                     (OpQuality *message,
+void   mt_airswitch001__op_quality__free_unpacked
+                     (MtAirswitch001__OpQuality *message,
                       ProtobufCAllocator *allocator)
 {
   if(!message)
     return;
-  assert(message->base.descriptor == &op_quality__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__op_quality__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
-void   get_req__init
-                     (GetReq         *message)
+void   mt_airswitch001__get_req__init
+                     (MtAirswitch001__GetReq         *message)
 {
-  static const GetReq init_value = GET_REQ__INIT;
+  static const MtAirswitch001__GetReq init_value = MT_AIRSWITCH001__GET_REQ__INIT;
   *message = init_value;
 }
-size_t get_req__get_packed_size
-                     (const GetReq *message)
+size_t mt_airswitch001__get_req__get_packed_size
+                     (const MtAirswitch001__GetReq *message)
 {
-  assert(message->base.descriptor == &get_req__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__get_req__descriptor);
   return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
 }
-size_t get_req__pack
-                     (const GetReq *message,
+size_t mt_airswitch001__get_req__pack
+                     (const MtAirswitch001__GetReq *message,
                       uint8_t       *out)
 {
-  assert(message->base.descriptor == &get_req__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__get_req__descriptor);
   return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
 }
-size_t get_req__pack_to_buffer
-                     (const GetReq *message,
+size_t mt_airswitch001__get_req__pack_to_buffer
+                     (const MtAirswitch001__GetReq *message,
                       ProtobufCBuffer *buffer)
 {
-  assert(message->base.descriptor == &get_req__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__get_req__descriptor);
   return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
 }
-GetReq *
-       get_req__unpack
+MtAirswitch001__GetReq *
+       mt_airswitch001__get_req__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data)
 {
-  return (GetReq *)
-     protobuf_c_message_unpack (&get_req__descriptor,
+  return (MtAirswitch001__GetReq *)
+     protobuf_c_message_unpack (&mt_airswitch001__get_req__descriptor,
                                 allocator, len, data);
 }
-void   get_req__free_unpacked
-                     (GetReq *message,
+void   mt_airswitch001__get_req__free_unpacked
+                     (MtAirswitch001__GetReq *message,
                       ProtobufCAllocator *allocator)
 {
   if(!message)
     return;
-  assert(message->base.descriptor == &get_req__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__get_req__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
-void   set_res__init
-                     (SetRes         *message)
+void   mt_airswitch001__set_res__init
+                     (MtAirswitch001__SetRes         *message)
 {
-  static const SetRes init_value = SET_RES__INIT;
+  static const MtAirswitch001__SetRes init_value = MT_AIRSWITCH001__SET_RES__INIT;
   *message = init_value;
 }
-size_t set_res__get_packed_size
-                     (const SetRes *message)
+size_t mt_airswitch001__set_res__get_packed_size
+                     (const MtAirswitch001__SetRes *message)
 {
-  assert(message->base.descriptor == &set_res__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__set_res__descriptor);
   return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
 }
-size_t set_res__pack
-                     (const SetRes *message,
+size_t mt_airswitch001__set_res__pack
+                     (const MtAirswitch001__SetRes *message,
                       uint8_t       *out)
 {
-  assert(message->base.descriptor == &set_res__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__set_res__descriptor);
   return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
 }
-size_t set_res__pack_to_buffer
-                     (const SetRes *message,
+size_t mt_airswitch001__set_res__pack_to_buffer
+                     (const MtAirswitch001__SetRes *message,
                       ProtobufCBuffer *buffer)
 {
-  assert(message->base.descriptor == &set_res__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__set_res__descriptor);
   return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
 }
-SetRes *
-       set_res__unpack
+MtAirswitch001__SetRes *
+       mt_airswitch001__set_res__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data)
 {
-  return (SetRes *)
-     protobuf_c_message_unpack (&set_res__descriptor,
+  return (MtAirswitch001__SetRes *)
+     protobuf_c_message_unpack (&mt_airswitch001__set_res__descriptor,
                                 allocator, len, data);
 }
-void   set_res__free_unpacked
-                     (SetRes *message,
+void   mt_airswitch001__set_res__free_unpacked
+                     (MtAirswitch001__SetRes *message,
                       ProtobufCAllocator *allocator)
 {
   if(!message)
     return;
-  assert(message->base.descriptor == &set_res__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__set_res__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
-void   get_state_res__init
-                     (GetStateRes         *message)
+void   mt_airswitch001__get_state_res__init
+                     (MtAirswitch001__GetStateRes         *message)
 {
-  static const GetStateRes init_value = GET_STATE_RES__INIT;
+  static const MtAirswitch001__GetStateRes init_value = MT_AIRSWITCH001__GET_STATE_RES__INIT;
   *message = init_value;
 }
-size_t get_state_res__get_packed_size
-                     (const GetStateRes *message)
+size_t mt_airswitch001__get_state_res__get_packed_size
+                     (const MtAirswitch001__GetStateRes *message)
 {
-  assert(message->base.descriptor == &get_state_res__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__get_state_res__descriptor);
   return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
 }
-size_t get_state_res__pack
-                     (const GetStateRes *message,
+size_t mt_airswitch001__get_state_res__pack
+                     (const MtAirswitch001__GetStateRes *message,
                       uint8_t       *out)
 {
-  assert(message->base.descriptor == &get_state_res__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__get_state_res__descriptor);
   return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
 }
-size_t get_state_res__pack_to_buffer
-                     (const GetStateRes *message,
+size_t mt_airswitch001__get_state_res__pack_to_buffer
+                     (const MtAirswitch001__GetStateRes *message,
                       ProtobufCBuffer *buffer)
 {
-  assert(message->base.descriptor == &get_state_res__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__get_state_res__descriptor);
   return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
 }
-GetStateRes *
-       get_state_res__unpack
+MtAirswitch001__GetStateRes *
+       mt_airswitch001__get_state_res__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data)
 {
-  return (GetStateRes *)
-     protobuf_c_message_unpack (&get_state_res__descriptor,
+  return (MtAirswitch001__GetStateRes *)
+     protobuf_c_message_unpack (&mt_airswitch001__get_state_res__descriptor,
                                 allocator, len, data);
 }
-void   get_state_res__free_unpacked
-                     (GetStateRes *message,
+void   mt_airswitch001__get_state_res__free_unpacked
+                     (MtAirswitch001__GetStateRes *message,
                       ProtobufCAllocator *allocator)
 {
   if(!message)
     return;
-  assert(message->base.descriptor == &get_state_res__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__get_state_res__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
-void   get_ctrl_res__init
-                     (GetCtrlRes         *message)
+void   mt_airswitch001__get_ctrl_res__init
+                     (MtAirswitch001__GetCtrlRes         *message)
 {
-  static const GetCtrlRes init_value = GET_CTRL_RES__INIT;
+  static const MtAirswitch001__GetCtrlRes init_value = MT_AIRSWITCH001__GET_CTRL_RES__INIT;
   *message = init_value;
 }
-size_t get_ctrl_res__get_packed_size
-                     (const GetCtrlRes *message)
+size_t mt_airswitch001__get_ctrl_res__get_packed_size
+                     (const MtAirswitch001__GetCtrlRes *message)
 {
-  assert(message->base.descriptor == &get_ctrl_res__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__get_ctrl_res__descriptor);
   return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
 }
-size_t get_ctrl_res__pack
-                     (const GetCtrlRes *message,
+size_t mt_airswitch001__get_ctrl_res__pack
+                     (const MtAirswitch001__GetCtrlRes *message,
                       uint8_t       *out)
 {
-  assert(message->base.descriptor == &get_ctrl_res__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__get_ctrl_res__descriptor);
   return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
 }
-size_t get_ctrl_res__pack_to_buffer
-                     (const GetCtrlRes *message,
+size_t mt_airswitch001__get_ctrl_res__pack_to_buffer
+                     (const MtAirswitch001__GetCtrlRes *message,
                       ProtobufCBuffer *buffer)
 {
-  assert(message->base.descriptor == &get_ctrl_res__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__get_ctrl_res__descriptor);
   return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
 }
-GetCtrlRes *
-       get_ctrl_res__unpack
+MtAirswitch001__GetCtrlRes *
+       mt_airswitch001__get_ctrl_res__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data)
 {
-  return (GetCtrlRes *)
-     protobuf_c_message_unpack (&get_ctrl_res__descriptor,
+  return (MtAirswitch001__GetCtrlRes *)
+     protobuf_c_message_unpack (&mt_airswitch001__get_ctrl_res__descriptor,
                                 allocator, len, data);
 }
-void   get_ctrl_res__free_unpacked
-                     (GetCtrlRes *message,
+void   mt_airswitch001__get_ctrl_res__free_unpacked
+                     (MtAirswitch001__GetCtrlRes *message,
                       ProtobufCAllocator *allocator)
 {
   if(!message)
     return;
-  assert(message->base.descriptor == &get_ctrl_res__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__get_ctrl_res__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
-void   get_warn_res__init
-                     (GetWarnRes         *message)
+void   mt_airswitch001__get_warn_res__init
+                     (MtAirswitch001__GetWarnRes         *message)
 {
-  static const GetWarnRes init_value = GET_WARN_RES__INIT;
+  static const MtAirswitch001__GetWarnRes init_value = MT_AIRSWITCH001__GET_WARN_RES__INIT;
   *message = init_value;
 }
-size_t get_warn_res__get_packed_size
-                     (const GetWarnRes *message)
+size_t mt_airswitch001__get_warn_res__get_packed_size
+                     (const MtAirswitch001__GetWarnRes *message)
 {
-  assert(message->base.descriptor == &get_warn_res__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__get_warn_res__descriptor);
   return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
 }
-size_t get_warn_res__pack
-                     (const GetWarnRes *message,
+size_t mt_airswitch001__get_warn_res__pack
+                     (const MtAirswitch001__GetWarnRes *message,
                       uint8_t       *out)
 {
-  assert(message->base.descriptor == &get_warn_res__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__get_warn_res__descriptor);
   return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
 }
-size_t get_warn_res__pack_to_buffer
-                     (const GetWarnRes *message,
+size_t mt_airswitch001__get_warn_res__pack_to_buffer
+                     (const MtAirswitch001__GetWarnRes *message,
                       ProtobufCBuffer *buffer)
 {
-  assert(message->base.descriptor == &get_warn_res__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__get_warn_res__descriptor);
   return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
 }
-GetWarnRes *
-       get_warn_res__unpack
+MtAirswitch001__GetWarnRes *
+       mt_airswitch001__get_warn_res__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data)
 {
-  return (GetWarnRes *)
-     protobuf_c_message_unpack (&get_warn_res__descriptor,
+  return (MtAirswitch001__GetWarnRes *)
+     protobuf_c_message_unpack (&mt_airswitch001__get_warn_res__descriptor,
                                 allocator, len, data);
 }
-void   get_warn_res__free_unpacked
-                     (GetWarnRes *message,
+void   mt_airswitch001__get_warn_res__free_unpacked
+                     (MtAirswitch001__GetWarnRes *message,
                       ProtobufCAllocator *allocator)
 {
   if(!message)
     return;
-  assert(message->base.descriptor == &get_warn_res__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__get_warn_res__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
-void   get_data_res__init
-                     (GetDataRes         *message)
+void   mt_airswitch001__get_data_res__init
+                     (MtAirswitch001__GetDataRes         *message)
 {
-  static const GetDataRes init_value = GET_DATA_RES__INIT;
+  static const MtAirswitch001__GetDataRes init_value = MT_AIRSWITCH001__GET_DATA_RES__INIT;
   *message = init_value;
 }
-size_t get_data_res__get_packed_size
-                     (const GetDataRes *message)
+size_t mt_airswitch001__get_data_res__get_packed_size
+                     (const MtAirswitch001__GetDataRes *message)
 {
-  assert(message->base.descriptor == &get_data_res__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__get_data_res__descriptor);
   return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
 }
-size_t get_data_res__pack
-                     (const GetDataRes *message,
+size_t mt_airswitch001__get_data_res__pack
+                     (const MtAirswitch001__GetDataRes *message,
                       uint8_t       *out)
 {
-  assert(message->base.descriptor == &get_data_res__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__get_data_res__descriptor);
   return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
 }
-size_t get_data_res__pack_to_buffer
-                     (const GetDataRes *message,
+size_t mt_airswitch001__get_data_res__pack_to_buffer
+                     (const MtAirswitch001__GetDataRes *message,
                       ProtobufCBuffer *buffer)
 {
-  assert(message->base.descriptor == &get_data_res__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__get_data_res__descriptor);
   return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
 }
-GetDataRes *
-       get_data_res__unpack
+MtAirswitch001__GetDataRes *
+       mt_airswitch001__get_data_res__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data)
 {
-  return (GetDataRes *)
-     protobuf_c_message_unpack (&get_data_res__descriptor,
+  return (MtAirswitch001__GetDataRes *)
+     protobuf_c_message_unpack (&mt_airswitch001__get_data_res__descriptor,
                                 allocator, len, data);
 }
-void   get_data_res__free_unpacked
-                     (GetDataRes *message,
+void   mt_airswitch001__get_data_res__free_unpacked
+                     (MtAirswitch001__GetDataRes *message,
                       ProtobufCAllocator *allocator)
 {
   if(!message)
     return;
-  assert(message->base.descriptor == &get_data_res__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__get_data_res__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
-void   get_config_res__init
-                     (GetConfigRes         *message)
+void   mt_airswitch001__get_config_res__init
+                     (MtAirswitch001__GetConfigRes         *message)
 {
-  static const GetConfigRes init_value = GET_CONFIG_RES__INIT;
+  static const MtAirswitch001__GetConfigRes init_value = MT_AIRSWITCH001__GET_CONFIG_RES__INIT;
   *message = init_value;
 }
-size_t get_config_res__get_packed_size
-                     (const GetConfigRes *message)
+size_t mt_airswitch001__get_config_res__get_packed_size
+                     (const MtAirswitch001__GetConfigRes *message)
 {
-  assert(message->base.descriptor == &get_config_res__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__get_config_res__descriptor);
   return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
 }
-size_t get_config_res__pack
-                     (const GetConfigRes *message,
+size_t mt_airswitch001__get_config_res__pack
+                     (const MtAirswitch001__GetConfigRes *message,
                       uint8_t       *out)
 {
-  assert(message->base.descriptor == &get_config_res__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__get_config_res__descriptor);
   return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
 }
-size_t get_config_res__pack_to_buffer
-                     (const GetConfigRes *message,
+size_t mt_airswitch001__get_config_res__pack_to_buffer
+                     (const MtAirswitch001__GetConfigRes *message,
                       ProtobufCBuffer *buffer)
 {
-  assert(message->base.descriptor == &get_config_res__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__get_config_res__descriptor);
   return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
 }
-GetConfigRes *
-       get_config_res__unpack
+MtAirswitch001__GetConfigRes *
+       mt_airswitch001__get_config_res__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data)
 {
-  return (GetConfigRes *)
-     protobuf_c_message_unpack (&get_config_res__descriptor,
+  return (MtAirswitch001__GetConfigRes *)
+     protobuf_c_message_unpack (&mt_airswitch001__get_config_res__descriptor,
                                 allocator, len, data);
 }
-void   get_config_res__free_unpacked
-                     (GetConfigRes *message,
+void   mt_airswitch001__get_config_res__free_unpacked
+                     (MtAirswitch001__GetConfigRes *message,
                       ProtobufCAllocator *allocator)
 {
   if(!message)
     return;
-  assert(message->base.descriptor == &get_config_res__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__get_config_res__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
-void   get_quality_res__init
-                     (GetQualityRes         *message)
+void   mt_airswitch001__get_quality_res__init
+                     (MtAirswitch001__GetQualityRes         *message)
 {
-  static const GetQualityRes init_value = GET_QUALITY_RES__INIT;
+  static const MtAirswitch001__GetQualityRes init_value = MT_AIRSWITCH001__GET_QUALITY_RES__INIT;
   *message = init_value;
 }
-size_t get_quality_res__get_packed_size
-                     (const GetQualityRes *message)
+size_t mt_airswitch001__get_quality_res__get_packed_size
+                     (const MtAirswitch001__GetQualityRes *message)
 {
-  assert(message->base.descriptor == &get_quality_res__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__get_quality_res__descriptor);
   return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
 }
-size_t get_quality_res__pack
-                     (const GetQualityRes *message,
+size_t mt_airswitch001__get_quality_res__pack
+                     (const MtAirswitch001__GetQualityRes *message,
                       uint8_t       *out)
 {
-  assert(message->base.descriptor == &get_quality_res__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__get_quality_res__descriptor);
   return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
 }
-size_t get_quality_res__pack_to_buffer
-                     (const GetQualityRes *message,
+size_t mt_airswitch001__get_quality_res__pack_to_buffer
+                     (const MtAirswitch001__GetQualityRes *message,
                       ProtobufCBuffer *buffer)
 {
-  assert(message->base.descriptor == &get_quality_res__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__get_quality_res__descriptor);
   return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
 }
-GetQualityRes *
-       get_quality_res__unpack
+MtAirswitch001__GetQualityRes *
+       mt_airswitch001__get_quality_res__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data)
 {
-  return (GetQualityRes *)
-     protobuf_c_message_unpack (&get_quality_res__descriptor,
+  return (MtAirswitch001__GetQualityRes *)
+     protobuf_c_message_unpack (&mt_airswitch001__get_quality_res__descriptor,
                                 allocator, len, data);
 }
-void   get_quality_res__free_unpacked
-                     (GetQualityRes *message,
+void   mt_airswitch001__get_quality_res__free_unpacked
+                     (MtAirswitch001__GetQualityRes *message,
                       ProtobufCAllocator *allocator)
 {
   if(!message)
     return;
-  assert(message->base.descriptor == &get_quality_res__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__get_quality_res__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
-void   set_state_req__init
-                     (SetStateReq         *message)
+void   mt_airswitch001__set_state_req__init
+                     (MtAirswitch001__SetStateReq         *message)
 {
-  static const SetStateReq init_value = SET_STATE_REQ__INIT;
+  static const MtAirswitch001__SetStateReq init_value = MT_AIRSWITCH001__SET_STATE_REQ__INIT;
   *message = init_value;
 }
-size_t set_state_req__get_packed_size
-                     (const SetStateReq *message)
+size_t mt_airswitch001__set_state_req__get_packed_size
+                     (const MtAirswitch001__SetStateReq *message)
 {
-  assert(message->base.descriptor == &set_state_req__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__set_state_req__descriptor);
   return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
 }
-size_t set_state_req__pack
-                     (const SetStateReq *message,
+size_t mt_airswitch001__set_state_req__pack
+                     (const MtAirswitch001__SetStateReq *message,
                       uint8_t       *out)
 {
-  assert(message->base.descriptor == &set_state_req__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__set_state_req__descriptor);
   return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
 }
-size_t set_state_req__pack_to_buffer
-                     (const SetStateReq *message,
+size_t mt_airswitch001__set_state_req__pack_to_buffer
+                     (const MtAirswitch001__SetStateReq *message,
                       ProtobufCBuffer *buffer)
 {
-  assert(message->base.descriptor == &set_state_req__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__set_state_req__descriptor);
   return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
 }
-SetStateReq *
-       set_state_req__unpack
+MtAirswitch001__SetStateReq *
+       mt_airswitch001__set_state_req__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data)
 {
-  return (SetStateReq *)
-     protobuf_c_message_unpack (&set_state_req__descriptor,
+  return (MtAirswitch001__SetStateReq *)
+     protobuf_c_message_unpack (&mt_airswitch001__set_state_req__descriptor,
                                 allocator, len, data);
 }
-void   set_state_req__free_unpacked
-                     (SetStateReq *message,
+void   mt_airswitch001__set_state_req__free_unpacked
+                     (MtAirswitch001__SetStateReq *message,
                       ProtobufCAllocator *allocator)
 {
   if(!message)
     return;
-  assert(message->base.descriptor == &set_state_req__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__set_state_req__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
-void   set_config_req__init
-                     (SetConfigReq         *message)
+void   mt_airswitch001__set_config_req__init
+                     (MtAirswitch001__SetConfigReq         *message)
 {
-  static const SetConfigReq init_value = SET_CONFIG_REQ__INIT;
+  static const MtAirswitch001__SetConfigReq init_value = MT_AIRSWITCH001__SET_CONFIG_REQ__INIT;
   *message = init_value;
 }
-size_t set_config_req__get_packed_size
-                     (const SetConfigReq *message)
+size_t mt_airswitch001__set_config_req__get_packed_size
+                     (const MtAirswitch001__SetConfigReq *message)
 {
-  assert(message->base.descriptor == &set_config_req__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__set_config_req__descriptor);
   return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
 }
-size_t set_config_req__pack
-                     (const SetConfigReq *message,
+size_t mt_airswitch001__set_config_req__pack
+                     (const MtAirswitch001__SetConfigReq *message,
                       uint8_t       *out)
 {
-  assert(message->base.descriptor == &set_config_req__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__set_config_req__descriptor);
   return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
 }
-size_t set_config_req__pack_to_buffer
-                     (const SetConfigReq *message,
+size_t mt_airswitch001__set_config_req__pack_to_buffer
+                     (const MtAirswitch001__SetConfigReq *message,
                       ProtobufCBuffer *buffer)
 {
-  assert(message->base.descriptor == &set_config_req__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__set_config_req__descriptor);
   return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
 }
-SetConfigReq *
-       set_config_req__unpack
+MtAirswitch001__SetConfigReq *
+       mt_airswitch001__set_config_req__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data)
 {
-  return (SetConfigReq *)
-     protobuf_c_message_unpack (&set_config_req__descriptor,
+  return (MtAirswitch001__SetConfigReq *)
+     protobuf_c_message_unpack (&mt_airswitch001__set_config_req__descriptor,
                                 allocator, len, data);
 }
-void   set_config_req__free_unpacked
-                     (SetConfigReq *message,
+void   mt_airswitch001__set_config_req__free_unpacked
+                     (MtAirswitch001__SetConfigReq *message,
                       ProtobufCAllocator *allocator)
 {
   if(!message)
     return;
-  assert(message->base.descriptor == &set_config_req__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__set_config_req__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
-void   set_quality_req__init
-                     (SetQualityReq         *message)
+void   mt_airswitch001__set_quality_req__init
+                     (MtAirswitch001__SetQualityReq         *message)
 {
-  static const SetQualityReq init_value = SET_QUALITY_REQ__INIT;
+  static const MtAirswitch001__SetQualityReq init_value = MT_AIRSWITCH001__SET_QUALITY_REQ__INIT;
   *message = init_value;
 }
-size_t set_quality_req__get_packed_size
-                     (const SetQualityReq *message)
+size_t mt_airswitch001__set_quality_req__get_packed_size
+                     (const MtAirswitch001__SetQualityReq *message)
 {
-  assert(message->base.descriptor == &set_quality_req__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__set_quality_req__descriptor);
   return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
 }
-size_t set_quality_req__pack
-                     (const SetQualityReq *message,
+size_t mt_airswitch001__set_quality_req__pack
+                     (const MtAirswitch001__SetQualityReq *message,
                       uint8_t       *out)
 {
-  assert(message->base.descriptor == &set_quality_req__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__set_quality_req__descriptor);
   return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
 }
-size_t set_quality_req__pack_to_buffer
-                     (const SetQualityReq *message,
+size_t mt_airswitch001__set_quality_req__pack_to_buffer
+                     (const MtAirswitch001__SetQualityReq *message,
                       ProtobufCBuffer *buffer)
 {
-  assert(message->base.descriptor == &set_quality_req__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__set_quality_req__descriptor);
   return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
 }
-SetQualityReq *
-       set_quality_req__unpack
+MtAirswitch001__SetQualityReq *
+       mt_airswitch001__set_quality_req__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data)
 {
-  return (SetQualityReq *)
-     protobuf_c_message_unpack (&set_quality_req__descriptor,
+  return (MtAirswitch001__SetQualityReq *)
+     protobuf_c_message_unpack (&mt_airswitch001__set_quality_req__descriptor,
                                 allocator, len, data);
 }
-void   set_quality_req__free_unpacked
-                     (SetQualityReq *message,
+void   mt_airswitch001__set_quality_req__free_unpacked
+                     (MtAirswitch001__SetQualityReq *message,
                       ProtobufCAllocator *allocator)
 {
   if(!message)
     return;
-  assert(message->base.descriptor == &set_quality_req__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__set_quality_req__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
-void   set_leak_test_req__init
-                     (SetLeakTestReq         *message)
+void   mt_airswitch001__set_leak_test_req__init
+                     (MtAirswitch001__SetLeakTestReq         *message)
 {
-  static const SetLeakTestReq init_value = SET_LEAK_TEST_REQ__INIT;
+  static const MtAirswitch001__SetLeakTestReq init_value = MT_AIRSWITCH001__SET_LEAK_TEST_REQ__INIT;
   *message = init_value;
 }
-size_t set_leak_test_req__get_packed_size
-                     (const SetLeakTestReq *message)
+size_t mt_airswitch001__set_leak_test_req__get_packed_size
+                     (const MtAirswitch001__SetLeakTestReq *message)
 {
-  assert(message->base.descriptor == &set_leak_test_req__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__set_leak_test_req__descriptor);
   return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
 }
-size_t set_leak_test_req__pack
-                     (const SetLeakTestReq *message,
+size_t mt_airswitch001__set_leak_test_req__pack
+                     (const MtAirswitch001__SetLeakTestReq *message,
                       uint8_t       *out)
 {
-  assert(message->base.descriptor == &set_leak_test_req__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__set_leak_test_req__descriptor);
   return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
 }
-size_t set_leak_test_req__pack_to_buffer
-                     (const SetLeakTestReq *message,
+size_t mt_airswitch001__set_leak_test_req__pack_to_buffer
+                     (const MtAirswitch001__SetLeakTestReq *message,
                       ProtobufCBuffer *buffer)
 {
-  assert(message->base.descriptor == &set_leak_test_req__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__set_leak_test_req__descriptor);
   return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
 }
-SetLeakTestReq *
-       set_leak_test_req__unpack
+MtAirswitch001__SetLeakTestReq *
+       mt_airswitch001__set_leak_test_req__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data)
 {
-  return (SetLeakTestReq *)
-     protobuf_c_message_unpack (&set_leak_test_req__descriptor,
+  return (MtAirswitch001__SetLeakTestReq *)
+     protobuf_c_message_unpack (&mt_airswitch001__set_leak_test_req__descriptor,
                                 allocator, len, data);
 }
-void   set_leak_test_req__free_unpacked
-                     (SetLeakTestReq *message,
+void   mt_airswitch001__set_leak_test_req__free_unpacked
+                     (MtAirswitch001__SetLeakTestReq *message,
                       ProtobufCAllocator *allocator)
 {
   if(!message)
     return;
-  assert(message->base.descriptor == &set_leak_test_req__descriptor);
+  assert(message->base.descriptor == &mt_airswitch001__set_leak_test_req__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
-static const ProtobufCFieldDescriptor state__field_descriptors[1] =
+static const ProtobufCFieldDescriptor mt_airswitch001__state__field_descriptors[1] =
 {
   {
     "data",
@@ -960,37 +960,37 @@ static const ProtobufCFieldDescriptor state__field_descriptors[1] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_BOOL,
     0,   /* quantifier_offset */
-    offsetof(State, data),
+    offsetof(MtAirswitch001__State, data),
     NULL,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
 };
-static const unsigned state__field_indices_by_name[] = {
+static const unsigned mt_airswitch001__state__field_indices_by_name[] = {
   0,   /* field[0] = data */
 };
-static const ProtobufCIntRange state__number_ranges[1 + 1] =
+static const ProtobufCIntRange mt_airswitch001__state__number_ranges[1 + 1] =
 {
   { 1, 0 },
   { 0, 1 }
 };
-const ProtobufCMessageDescriptor state__descriptor =
+const ProtobufCMessageDescriptor mt_airswitch001__state__descriptor =
 {
   PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "mt_airswitch001.State",
   "State",
-  "State",
-  "State",
-  "",
-  sizeof(State),
+  "MtAirswitch001__State",
+  "mt_airswitch001",
+  sizeof(MtAirswitch001__State),
   1,
-  state__field_descriptors,
-  state__field_indices_by_name,
-  1,  state__number_ranges,
-  (ProtobufCMessageInit) state__init,
+  mt_airswitch001__state__field_descriptors,
+  mt_airswitch001__state__field_indices_by_name,
+  1,  mt_airswitch001__state__number_ranges,
+  (ProtobufCMessageInit) mt_airswitch001__state__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor op_state__field_descriptors[1] =
+static const ProtobufCFieldDescriptor mt_airswitch001__op_state__field_descriptors[1] =
 {
   {
     "data",
@@ -998,37 +998,37 @@ static const ProtobufCFieldDescriptor op_state__field_descriptors[1] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_MESSAGE,
     0,   /* quantifier_offset */
-    offsetof(OpState, data),
+    offsetof(MtAirswitch001__OpState, data),
     &google__protobuf__bool_value__descriptor,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
 };
-static const unsigned op_state__field_indices_by_name[] = {
+static const unsigned mt_airswitch001__op_state__field_indices_by_name[] = {
   0,   /* field[0] = data */
 };
-static const ProtobufCIntRange op_state__number_ranges[1 + 1] =
+static const ProtobufCIntRange mt_airswitch001__op_state__number_ranges[1 + 1] =
 {
   { 1, 0 },
   { 0, 1 }
 };
-const ProtobufCMessageDescriptor op_state__descriptor =
+const ProtobufCMessageDescriptor mt_airswitch001__op_state__descriptor =
 {
   PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "mt_airswitch001.OpState",
   "OpState",
-  "OpState",
-  "OpState",
-  "",
-  sizeof(OpState),
+  "MtAirswitch001__OpState",
+  "mt_airswitch001",
+  sizeof(MtAirswitch001__OpState),
   1,
-  op_state__field_descriptors,
-  op_state__field_indices_by_name,
-  1,  op_state__number_ranges,
-  (ProtobufCMessageInit) op_state__init,
+  mt_airswitch001__op_state__field_descriptors,
+  mt_airswitch001__op_state__field_indices_by_name,
+  1,  mt_airswitch001__op_state__number_ranges,
+  (ProtobufCMessageInit) mt_airswitch001__op_state__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor ctrl__field_descriptors[1] =
+static const ProtobufCFieldDescriptor mt_airswitch001__ctrl__field_descriptors[1] =
 {
   {
     "data",
@@ -1036,37 +1036,37 @@ static const ProtobufCFieldDescriptor ctrl__field_descriptors[1] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_BOOL,
     0,   /* quantifier_offset */
-    offsetof(Ctrl, data),
+    offsetof(MtAirswitch001__Ctrl, data),
     NULL,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
 };
-static const unsigned ctrl__field_indices_by_name[] = {
+static const unsigned mt_airswitch001__ctrl__field_indices_by_name[] = {
   0,   /* field[0] = data */
 };
-static const ProtobufCIntRange ctrl__number_ranges[1 + 1] =
+static const ProtobufCIntRange mt_airswitch001__ctrl__number_ranges[1 + 1] =
 {
   { 1, 0 },
   { 0, 1 }
 };
-const ProtobufCMessageDescriptor ctrl__descriptor =
+const ProtobufCMessageDescriptor mt_airswitch001__ctrl__descriptor =
 {
   PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "mt_airswitch001.Ctrl",
   "Ctrl",
-  "Ctrl",
-  "Ctrl",
-  "",
-  sizeof(Ctrl),
+  "MtAirswitch001__Ctrl",
+  "mt_airswitch001",
+  sizeof(MtAirswitch001__Ctrl),
   1,
-  ctrl__field_descriptors,
-  ctrl__field_indices_by_name,
-  1,  ctrl__number_ranges,
-  (ProtobufCMessageInit) ctrl__init,
+  mt_airswitch001__ctrl__field_descriptors,
+  mt_airswitch001__ctrl__field_indices_by_name,
+  1,  mt_airswitch001__ctrl__number_ranges,
+  (ProtobufCMessageInit) mt_airswitch001__ctrl__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor warn__field_descriptors[13] =
+static const ProtobufCFieldDescriptor mt_airswitch001__warn__field_descriptors[13] =
 {
   {
     "warnShort",
@@ -1074,7 +1074,7 @@ static const ProtobufCFieldDescriptor warn__field_descriptors[13] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_BOOL,
     0,   /* quantifier_offset */
-    offsetof(Warn, warnshort),
+    offsetof(MtAirswitch001__Warn, warnshort),
     NULL,
     NULL,
     0,             /* flags */
@@ -1086,7 +1086,7 @@ static const ProtobufCFieldDescriptor warn__field_descriptors[13] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_BOOL,
     0,   /* quantifier_offset */
-    offsetof(Warn, warnwave),
+    offsetof(MtAirswitch001__Warn, warnwave),
     NULL,
     NULL,
     0,             /* flags */
@@ -1098,7 +1098,7 @@ static const ProtobufCFieldDescriptor warn__field_descriptors[13] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_BOOL,
     0,   /* quantifier_offset */
-    offsetof(Warn, warnpowrhigh),
+    offsetof(MtAirswitch001__Warn, warnpowrhigh),
     NULL,
     NULL,
     0,             /* flags */
@@ -1110,7 +1110,7 @@ static const ProtobufCFieldDescriptor warn__field_descriptors[13] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_BOOL,
     0,   /* quantifier_offset */
-    offsetof(Warn, warntemphigh),
+    offsetof(MtAirswitch001__Warn, warntemphigh),
     NULL,
     NULL,
     0,             /* flags */
@@ -1122,7 +1122,7 @@ static const ProtobufCFieldDescriptor warn__field_descriptors[13] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_BOOL,
     0,   /* quantifier_offset */
-    offsetof(Warn, warnleak),
+    offsetof(MtAirswitch001__Warn, warnleak),
     NULL,
     NULL,
     0,             /* flags */
@@ -1134,7 +1134,7 @@ static const ProtobufCFieldDescriptor warn__field_descriptors[13] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_BOOL,
     0,   /* quantifier_offset */
-    offsetof(Warn, warncurrent),
+    offsetof(MtAirswitch001__Warn, warncurrent),
     NULL,
     NULL,
     0,             /* flags */
@@ -1146,7 +1146,7 @@ static const ProtobufCFieldDescriptor warn__field_descriptors[13] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_BOOL,
     0,   /* quantifier_offset */
-    offsetof(Warn, warnvotagehigh),
+    offsetof(MtAirswitch001__Warn, warnvotagehigh),
     NULL,
     NULL,
     0,             /* flags */
@@ -1158,7 +1158,7 @@ static const ProtobufCFieldDescriptor warn__field_descriptors[13] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_BOOL,
     0,   /* quantifier_offset */
-    offsetof(Warn, warnfire),
+    offsetof(MtAirswitch001__Warn, warnfire),
     NULL,
     NULL,
     0,             /* flags */
@@ -1170,7 +1170,7 @@ static const ProtobufCFieldDescriptor warn__field_descriptors[13] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_BOOL,
     0,   /* quantifier_offset */
-    offsetof(Warn, warnvotagelow),
+    offsetof(MtAirswitch001__Warn, warnvotagelow),
     NULL,
     NULL,
     0,             /* flags */
@@ -1182,7 +1182,7 @@ static const ProtobufCFieldDescriptor warn__field_descriptors[13] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_BOOL,
     0,   /* quantifier_offset */
-    offsetof(Warn, notevotagehigh),
+    offsetof(MtAirswitch001__Warn, notevotagehigh),
     NULL,
     NULL,
     0,             /* flags */
@@ -1194,7 +1194,7 @@ static const ProtobufCFieldDescriptor warn__field_descriptors[13] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_BOOL,
     0,   /* quantifier_offset */
-    offsetof(Warn, notevotagelow),
+    offsetof(MtAirswitch001__Warn, notevotagelow),
     NULL,
     NULL,
     0,             /* flags */
@@ -1206,7 +1206,7 @@ static const ProtobufCFieldDescriptor warn__field_descriptors[13] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_BOOL,
     0,   /* quantifier_offset */
-    offsetof(Warn, noteleak),
+    offsetof(MtAirswitch001__Warn, noteleak),
     NULL,
     NULL,
     0,             /* flags */
@@ -1218,14 +1218,14 @@ static const ProtobufCFieldDescriptor warn__field_descriptors[13] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_BOOL,
     0,   /* quantifier_offset */
-    offsetof(Warn, notecurrent),
+    offsetof(MtAirswitch001__Warn, notecurrent),
     NULL,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
 };
-static const unsigned warn__field_indices_by_name[] = {
+static const unsigned mt_airswitch001__warn__field_indices_by_name[] = {
   12,   /* field[12] = noteCurrent */
   11,   /* field[11] = noteLeak */
   9,   /* field[9] = noteVotageHigh */
@@ -1240,28 +1240,28 @@ static const unsigned warn__field_indices_by_name[] = {
   8,   /* field[8] = warnVotageLow */
   1,   /* field[1] = warnWave */
 };
-static const ProtobufCIntRange warn__number_ranges[2 + 1] =
+static const ProtobufCIntRange mt_airswitch001__warn__number_ranges[2 + 1] =
 {
   { 1, 0 },
   { 11, 7 },
   { 0, 13 }
 };
-const ProtobufCMessageDescriptor warn__descriptor =
+const ProtobufCMessageDescriptor mt_airswitch001__warn__descriptor =
 {
   PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "mt_airswitch001.Warn",
   "Warn",
-  "Warn",
-  "Warn",
-  "",
-  sizeof(Warn),
+  "MtAirswitch001__Warn",
+  "mt_airswitch001",
+  sizeof(MtAirswitch001__Warn),
   13,
-  warn__field_descriptors,
-  warn__field_indices_by_name,
-  2,  warn__number_ranges,
-  (ProtobufCMessageInit) warn__init,
+  mt_airswitch001__warn__field_descriptors,
+  mt_airswitch001__warn__field_indices_by_name,
+  2,  mt_airswitch001__warn__number_ranges,
+  (ProtobufCMessageInit) mt_airswitch001__warn__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor data__field_descriptors[7] =
+static const ProtobufCFieldDescriptor mt_airswitch001__data__field_descriptors[7] =
 {
   {
     "votage",
@@ -1269,7 +1269,7 @@ static const ProtobufCFieldDescriptor data__field_descriptors[7] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_FLOAT,
     0,   /* quantifier_offset */
-    offsetof(Data, votage),
+    offsetof(MtAirswitch001__Data, votage),
     NULL,
     NULL,
     0,             /* flags */
@@ -1281,7 +1281,7 @@ static const ProtobufCFieldDescriptor data__field_descriptors[7] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_FLOAT,
     0,   /* quantifier_offset */
-    offsetof(Data, leakcurrent),
+    offsetof(MtAirswitch001__Data, leakcurrent),
     NULL,
     NULL,
     0,             /* flags */
@@ -1293,7 +1293,7 @@ static const ProtobufCFieldDescriptor data__field_descriptors[7] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_FLOAT,
     0,   /* quantifier_offset */
-    offsetof(Data, power),
+    offsetof(MtAirswitch001__Data, power),
     NULL,
     NULL,
     0,             /* flags */
@@ -1305,7 +1305,7 @@ static const ProtobufCFieldDescriptor data__field_descriptors[7] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_FLOAT,
     0,   /* quantifier_offset */
-    offsetof(Data, temp),
+    offsetof(MtAirswitch001__Data, temp),
     NULL,
     NULL,
     0,             /* flags */
@@ -1317,7 +1317,7 @@ static const ProtobufCFieldDescriptor data__field_descriptors[7] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_FLOAT,
     0,   /* quantifier_offset */
-    offsetof(Data, current),
+    offsetof(MtAirswitch001__Data, current),
     NULL,
     NULL,
     0,             /* flags */
@@ -1329,7 +1329,7 @@ static const ProtobufCFieldDescriptor data__field_descriptors[7] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_BOOL,
     0,   /* quantifier_offset */
-    offsetof(Data, state),
+    offsetof(MtAirswitch001__Data, state),
     NULL,
     NULL,
     0,             /* flags */
@@ -1341,14 +1341,14 @@ static const ProtobufCFieldDescriptor data__field_descriptors[7] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_BOOL,
     0,   /* quantifier_offset */
-    offsetof(Data, ctrl),
+    offsetof(MtAirswitch001__Data, ctrl),
     NULL,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
 };
-static const unsigned data__field_indices_by_name[] = {
+static const unsigned mt_airswitch001__data__field_indices_by_name[] = {
   6,   /* field[6] = ctrl */
   4,   /* field[4] = current */
   1,   /* field[1] = leakCurrent */
@@ -1357,27 +1357,27 @@ static const unsigned data__field_indices_by_name[] = {
   3,   /* field[3] = temp */
   0,   /* field[0] = votage */
 };
-static const ProtobufCIntRange data__number_ranges[1 + 1] =
+static const ProtobufCIntRange mt_airswitch001__data__number_ranges[1 + 1] =
 {
   { 1, 0 },
   { 0, 7 }
 };
-const ProtobufCMessageDescriptor data__descriptor =
+const ProtobufCMessageDescriptor mt_airswitch001__data__descriptor =
 {
   PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "mt_airswitch001.Data",
   "Data",
-  "Data",
-  "Data",
-  "",
-  sizeof(Data),
+  "MtAirswitch001__Data",
+  "mt_airswitch001",
+  sizeof(MtAirswitch001__Data),
   7,
-  data__field_descriptors,
-  data__field_indices_by_name,
-  1,  data__number_ranges,
-  (ProtobufCMessageInit) data__init,
+  mt_airswitch001__data__field_descriptors,
+  mt_airswitch001__data__field_indices_by_name,
+  1,  mt_airswitch001__data__number_ranges,
+  (ProtobufCMessageInit) mt_airswitch001__data__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor config__field_descriptors[6] =
+static const ProtobufCFieldDescriptor mt_airswitch001__config__field_descriptors[6] =
 {
   {
     "votageHigh",
@@ -1385,7 +1385,7 @@ static const ProtobufCFieldDescriptor config__field_descriptors[6] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_FLOAT,
     0,   /* quantifier_offset */
-    offsetof(Config, votagehigh),
+    offsetof(MtAirswitch001__Config, votagehigh),
     NULL,
     NULL,
     0,             /* flags */
@@ -1397,7 +1397,7 @@ static const ProtobufCFieldDescriptor config__field_descriptors[6] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_FLOAT,
     0,   /* quantifier_offset */
-    offsetof(Config, votagelow),
+    offsetof(MtAirswitch001__Config, votagelow),
     NULL,
     NULL,
     0,             /* flags */
@@ -1409,7 +1409,7 @@ static const ProtobufCFieldDescriptor config__field_descriptors[6] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_FLOAT,
     0,   /* quantifier_offset */
-    offsetof(Config, leakcurrenthigh),
+    offsetof(MtAirswitch001__Config, leakcurrenthigh),
     NULL,
     NULL,
     0,             /* flags */
@@ -1421,7 +1421,7 @@ static const ProtobufCFieldDescriptor config__field_descriptors[6] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_FLOAT,
     0,   /* quantifier_offset */
-    offsetof(Config, powerhigh),
+    offsetof(MtAirswitch001__Config, powerhigh),
     NULL,
     NULL,
     0,             /* flags */
@@ -1433,7 +1433,7 @@ static const ProtobufCFieldDescriptor config__field_descriptors[6] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_FLOAT,
     0,   /* quantifier_offset */
-    offsetof(Config, temphigh),
+    offsetof(MtAirswitch001__Config, temphigh),
     NULL,
     NULL,
     0,             /* flags */
@@ -1445,14 +1445,14 @@ static const ProtobufCFieldDescriptor config__field_descriptors[6] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_FLOAT,
     0,   /* quantifier_offset */
-    offsetof(Config, currenthigh),
+    offsetof(MtAirswitch001__Config, currenthigh),
     NULL,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
 };
-static const unsigned config__field_indices_by_name[] = {
+static const unsigned mt_airswitch001__config__field_indices_by_name[] = {
   5,   /* field[5] = currentHigh */
   2,   /* field[2] = leakCurrentHigh */
   3,   /* field[3] = powerHigh */
@@ -1460,27 +1460,27 @@ static const unsigned config__field_indices_by_name[] = {
   0,   /* field[0] = votageHigh */
   1,   /* field[1] = votageLow */
 };
-static const ProtobufCIntRange config__number_ranges[1 + 1] =
+static const ProtobufCIntRange mt_airswitch001__config__number_ranges[1 + 1] =
 {
   { 1, 0 },
   { 0, 6 }
 };
-const ProtobufCMessageDescriptor config__descriptor =
+const ProtobufCMessageDescriptor mt_airswitch001__config__descriptor =
 {
   PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "mt_airswitch001.Config",
   "Config",
-  "Config",
-  "Config",
-  "",
-  sizeof(Config),
+  "MtAirswitch001__Config",
+  "mt_airswitch001",
+  sizeof(MtAirswitch001__Config),
   6,
-  config__field_descriptors,
-  config__field_indices_by_name,
-  1,  config__number_ranges,
-  (ProtobufCMessageInit) config__init,
+  mt_airswitch001__config__field_descriptors,
+  mt_airswitch001__config__field_indices_by_name,
+  1,  mt_airswitch001__config__number_ranges,
+  (ProtobufCMessageInit) mt_airswitch001__config__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor op_config__field_descriptors[6] =
+static const ProtobufCFieldDescriptor mt_airswitch001__op_config__field_descriptors[6] =
 {
   {
     "votageHigh",
@@ -1488,7 +1488,7 @@ static const ProtobufCFieldDescriptor op_config__field_descriptors[6] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_MESSAGE,
     0,   /* quantifier_offset */
-    offsetof(OpConfig, votagehigh),
+    offsetof(MtAirswitch001__OpConfig, votagehigh),
     &google__protobuf__float_value__descriptor,
     NULL,
     0,             /* flags */
@@ -1500,7 +1500,7 @@ static const ProtobufCFieldDescriptor op_config__field_descriptors[6] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_MESSAGE,
     0,   /* quantifier_offset */
-    offsetof(OpConfig, votagelow),
+    offsetof(MtAirswitch001__OpConfig, votagelow),
     &google__protobuf__float_value__descriptor,
     NULL,
     0,             /* flags */
@@ -1512,7 +1512,7 @@ static const ProtobufCFieldDescriptor op_config__field_descriptors[6] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_MESSAGE,
     0,   /* quantifier_offset */
-    offsetof(OpConfig, leakcurrenthigh),
+    offsetof(MtAirswitch001__OpConfig, leakcurrenthigh),
     &google__protobuf__float_value__descriptor,
     NULL,
     0,             /* flags */
@@ -1524,7 +1524,7 @@ static const ProtobufCFieldDescriptor op_config__field_descriptors[6] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_MESSAGE,
     0,   /* quantifier_offset */
-    offsetof(OpConfig, powerhigh),
+    offsetof(MtAirswitch001__OpConfig, powerhigh),
     &google__protobuf__float_value__descriptor,
     NULL,
     0,             /* flags */
@@ -1536,7 +1536,7 @@ static const ProtobufCFieldDescriptor op_config__field_descriptors[6] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_MESSAGE,
     0,   /* quantifier_offset */
-    offsetof(OpConfig, temphigh),
+    offsetof(MtAirswitch001__OpConfig, temphigh),
     &google__protobuf__float_value__descriptor,
     NULL,
     0,             /* flags */
@@ -1548,14 +1548,14 @@ static const ProtobufCFieldDescriptor op_config__field_descriptors[6] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_MESSAGE,
     0,   /* quantifier_offset */
-    offsetof(OpConfig, currenthigh),
+    offsetof(MtAirswitch001__OpConfig, currenthigh),
     &google__protobuf__float_value__descriptor,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
 };
-static const unsigned op_config__field_indices_by_name[] = {
+static const unsigned mt_airswitch001__op_config__field_indices_by_name[] = {
   5,   /* field[5] = currentHigh */
   2,   /* field[2] = leakCurrentHigh */
   3,   /* field[3] = powerHigh */
@@ -1563,27 +1563,27 @@ static const unsigned op_config__field_indices_by_name[] = {
   0,   /* field[0] = votageHigh */
   1,   /* field[1] = votageLow */
 };
-static const ProtobufCIntRange op_config__number_ranges[1 + 1] =
+static const ProtobufCIntRange mt_airswitch001__op_config__number_ranges[1 + 1] =
 {
   { 1, 0 },
   { 0, 6 }
 };
-const ProtobufCMessageDescriptor op_config__descriptor =
+const ProtobufCMessageDescriptor mt_airswitch001__op_config__descriptor =
 {
   PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "mt_airswitch001.OpConfig",
   "OpConfig",
-  "OpConfig",
-  "OpConfig",
-  "",
-  sizeof(OpConfig),
+  "MtAirswitch001__OpConfig",
+  "mt_airswitch001",
+  sizeof(MtAirswitch001__OpConfig),
   6,
-  op_config__field_descriptors,
-  op_config__field_indices_by_name,
-  1,  op_config__number_ranges,
-  (ProtobufCMessageInit) op_config__init,
+  mt_airswitch001__op_config__field_descriptors,
+  mt_airswitch001__op_config__field_indices_by_name,
+  1,  mt_airswitch001__op_config__number_ranges,
+  (ProtobufCMessageInit) mt_airswitch001__op_config__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor quality__field_descriptors[1] =
+static const ProtobufCFieldDescriptor mt_airswitch001__quality__field_descriptors[1] =
 {
   {
     "quality",
@@ -1591,37 +1591,37 @@ static const ProtobufCFieldDescriptor quality__field_descriptors[1] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_FLOAT,
     0,   /* quantifier_offset */
-    offsetof(Quality, quality),
+    offsetof(MtAirswitch001__Quality, quality),
     NULL,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
 };
-static const unsigned quality__field_indices_by_name[] = {
+static const unsigned mt_airswitch001__quality__field_indices_by_name[] = {
   0,   /* field[0] = quality */
 };
-static const ProtobufCIntRange quality__number_ranges[1 + 1] =
+static const ProtobufCIntRange mt_airswitch001__quality__number_ranges[1 + 1] =
 {
   { 1, 0 },
   { 0, 1 }
 };
-const ProtobufCMessageDescriptor quality__descriptor =
+const ProtobufCMessageDescriptor mt_airswitch001__quality__descriptor =
 {
   PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "mt_airswitch001.Quality",
   "Quality",
-  "Quality",
-  "Quality",
-  "",
-  sizeof(Quality),
+  "MtAirswitch001__Quality",
+  "mt_airswitch001",
+  sizeof(MtAirswitch001__Quality),
   1,
-  quality__field_descriptors,
-  quality__field_indices_by_name,
-  1,  quality__number_ranges,
-  (ProtobufCMessageInit) quality__init,
+  mt_airswitch001__quality__field_descriptors,
+  mt_airswitch001__quality__field_indices_by_name,
+  1,  mt_airswitch001__quality__number_ranges,
+  (ProtobufCMessageInit) mt_airswitch001__quality__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor op_quality__field_descriptors[1] =
+static const ProtobufCFieldDescriptor mt_airswitch001__op_quality__field_descriptors[1] =
 {
   {
     "quality",
@@ -1629,37 +1629,37 @@ static const ProtobufCFieldDescriptor op_quality__field_descriptors[1] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_MESSAGE,
     0,   /* quantifier_offset */
-    offsetof(OpQuality, quality),
+    offsetof(MtAirswitch001__OpQuality, quality),
     &google__protobuf__float_value__descriptor,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
 };
-static const unsigned op_quality__field_indices_by_name[] = {
+static const unsigned mt_airswitch001__op_quality__field_indices_by_name[] = {
   0,   /* field[0] = quality */
 };
-static const ProtobufCIntRange op_quality__number_ranges[1 + 1] =
+static const ProtobufCIntRange mt_airswitch001__op_quality__number_ranges[1 + 1] =
 {
   { 1, 0 },
   { 0, 1 }
 };
-const ProtobufCMessageDescriptor op_quality__descriptor =
+const ProtobufCMessageDescriptor mt_airswitch001__op_quality__descriptor =
 {
   PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "mt_airswitch001.OpQuality",
   "OpQuality",
-  "OpQuality",
-  "OpQuality",
-  "",
-  sizeof(OpQuality),
+  "MtAirswitch001__OpQuality",
+  "mt_airswitch001",
+  sizeof(MtAirswitch001__OpQuality),
   1,
-  op_quality__field_descriptors,
-  op_quality__field_indices_by_name,
-  1,  op_quality__number_ranges,
-  (ProtobufCMessageInit) op_quality__init,
+  mt_airswitch001__op_quality__field_descriptors,
+  mt_airswitch001__op_quality__field_indices_by_name,
+  1,  mt_airswitch001__op_quality__number_ranges,
+  (ProtobufCMessageInit) mt_airswitch001__op_quality__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor get_req__field_descriptors[1] =
+static const ProtobufCFieldDescriptor mt_airswitch001__get_req__field_descriptors[1] =
 {
   {
     "addr",
@@ -1667,37 +1667,37 @@ static const ProtobufCFieldDescriptor get_req__field_descriptors[1] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_INT32,
     0,   /* quantifier_offset */
-    offsetof(GetReq, addr),
+    offsetof(MtAirswitch001__GetReq, addr),
     NULL,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
 };
-static const unsigned get_req__field_indices_by_name[] = {
+static const unsigned mt_airswitch001__get_req__field_indices_by_name[] = {
   0,   /* field[0] = addr */
 };
-static const ProtobufCIntRange get_req__number_ranges[1 + 1] =
+static const ProtobufCIntRange mt_airswitch001__get_req__number_ranges[1 + 1] =
 {
   { 1, 0 },
   { 0, 1 }
 };
-const ProtobufCMessageDescriptor get_req__descriptor =
+const ProtobufCMessageDescriptor mt_airswitch001__get_req__descriptor =
 {
   PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "mt_airswitch001.GetReq",
   "GetReq",
-  "GetReq",
-  "GetReq",
-  "",
-  sizeof(GetReq),
+  "MtAirswitch001__GetReq",
+  "mt_airswitch001",
+  sizeof(MtAirswitch001__GetReq),
   1,
-  get_req__field_descriptors,
-  get_req__field_indices_by_name,
-  1,  get_req__number_ranges,
-  (ProtobufCMessageInit) get_req__init,
+  mt_airswitch001__get_req__field_descriptors,
+  mt_airswitch001__get_req__field_indices_by_name,
+  1,  mt_airswitch001__get_req__number_ranges,
+  (ProtobufCMessageInit) mt_airswitch001__get_req__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor set_res__field_descriptors[2] =
+static const ProtobufCFieldDescriptor mt_airswitch001__set_res__field_descriptors[2] =
 {
   {
     "code",
@@ -1705,7 +1705,7 @@ static const ProtobufCFieldDescriptor set_res__field_descriptors[2] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_INT32,
     0,   /* quantifier_offset */
-    offsetof(SetRes, code),
+    offsetof(MtAirswitch001__SetRes, code),
     NULL,
     NULL,
     0,             /* flags */
@@ -1717,38 +1717,38 @@ static const ProtobufCFieldDescriptor set_res__field_descriptors[2] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_INT32,
     0,   /* quantifier_offset */
-    offsetof(SetRes, addr),
+    offsetof(MtAirswitch001__SetRes, addr),
     NULL,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
 };
-static const unsigned set_res__field_indices_by_name[] = {
+static const unsigned mt_airswitch001__set_res__field_indices_by_name[] = {
   1,   /* field[1] = addr */
   0,   /* field[0] = code */
 };
-static const ProtobufCIntRange set_res__number_ranges[1 + 1] =
+static const ProtobufCIntRange mt_airswitch001__set_res__number_ranges[1 + 1] =
 {
   { 1, 0 },
   { 0, 2 }
 };
-const ProtobufCMessageDescriptor set_res__descriptor =
+const ProtobufCMessageDescriptor mt_airswitch001__set_res__descriptor =
 {
   PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "mt_airswitch001.SetRes",
   "SetRes",
-  "SetRes",
-  "SetRes",
-  "",
-  sizeof(SetRes),
+  "MtAirswitch001__SetRes",
+  "mt_airswitch001",
+  sizeof(MtAirswitch001__SetRes),
   2,
-  set_res__field_descriptors,
-  set_res__field_indices_by_name,
-  1,  set_res__number_ranges,
-  (ProtobufCMessageInit) set_res__init,
+  mt_airswitch001__set_res__field_descriptors,
+  mt_airswitch001__set_res__field_indices_by_name,
+  1,  mt_airswitch001__set_res__number_ranges,
+  (ProtobufCMessageInit) mt_airswitch001__set_res__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor get_state_res__field_descriptors[3] =
+static const ProtobufCFieldDescriptor mt_airswitch001__get_state_res__field_descriptors[3] =
 {
   {
     "code",
@@ -1756,7 +1756,7 @@ static const ProtobufCFieldDescriptor get_state_res__field_descriptors[3] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_INT32,
     0,   /* quantifier_offset */
-    offsetof(GetStateRes, code),
+    offsetof(MtAirswitch001__GetStateRes, code),
     NULL,
     NULL,
     0,             /* flags */
@@ -1768,7 +1768,7 @@ static const ProtobufCFieldDescriptor get_state_res__field_descriptors[3] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_INT32,
     0,   /* quantifier_offset */
-    offsetof(GetStateRes, addr),
+    offsetof(MtAirswitch001__GetStateRes, addr),
     NULL,
     NULL,
     0,             /* flags */
@@ -1780,39 +1780,39 @@ static const ProtobufCFieldDescriptor get_state_res__field_descriptors[3] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_MESSAGE,
     0,   /* quantifier_offset */
-    offsetof(GetStateRes, state),
-    &state__descriptor,
+    offsetof(MtAirswitch001__GetStateRes, state),
+    &mt_airswitch001__state__descriptor,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
 };
-static const unsigned get_state_res__field_indices_by_name[] = {
+static const unsigned mt_airswitch001__get_state_res__field_indices_by_name[] = {
   1,   /* field[1] = addr */
   0,   /* field[0] = code */
   2,   /* field[2] = state */
 };
-static const ProtobufCIntRange get_state_res__number_ranges[1 + 1] =
+static const ProtobufCIntRange mt_airswitch001__get_state_res__number_ranges[1 + 1] =
 {
   { 1, 0 },
   { 0, 3 }
 };
-const ProtobufCMessageDescriptor get_state_res__descriptor =
+const ProtobufCMessageDescriptor mt_airswitch001__get_state_res__descriptor =
 {
   PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "mt_airswitch001.GetStateRes",
   "GetStateRes",
-  "GetStateRes",
-  "GetStateRes",
-  "",
-  sizeof(GetStateRes),
+  "MtAirswitch001__GetStateRes",
+  "mt_airswitch001",
+  sizeof(MtAirswitch001__GetStateRes),
   3,
-  get_state_res__field_descriptors,
-  get_state_res__field_indices_by_name,
-  1,  get_state_res__number_ranges,
-  (ProtobufCMessageInit) get_state_res__init,
+  mt_airswitch001__get_state_res__field_descriptors,
+  mt_airswitch001__get_state_res__field_indices_by_name,
+  1,  mt_airswitch001__get_state_res__number_ranges,
+  (ProtobufCMessageInit) mt_airswitch001__get_state_res__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor get_ctrl_res__field_descriptors[3] =
+static const ProtobufCFieldDescriptor mt_airswitch001__get_ctrl_res__field_descriptors[3] =
 {
   {
     "code",
@@ -1820,7 +1820,7 @@ static const ProtobufCFieldDescriptor get_ctrl_res__field_descriptors[3] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_INT32,
     0,   /* quantifier_offset */
-    offsetof(GetCtrlRes, code),
+    offsetof(MtAirswitch001__GetCtrlRes, code),
     NULL,
     NULL,
     0,             /* flags */
@@ -1832,7 +1832,7 @@ static const ProtobufCFieldDescriptor get_ctrl_res__field_descriptors[3] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_INT32,
     0,   /* quantifier_offset */
-    offsetof(GetCtrlRes, addr),
+    offsetof(MtAirswitch001__GetCtrlRes, addr),
     NULL,
     NULL,
     0,             /* flags */
@@ -1844,39 +1844,39 @@ static const ProtobufCFieldDescriptor get_ctrl_res__field_descriptors[3] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_MESSAGE,
     0,   /* quantifier_offset */
-    offsetof(GetCtrlRes, ctrl),
-    &ctrl__descriptor,
+    offsetof(MtAirswitch001__GetCtrlRes, ctrl),
+    &mt_airswitch001__ctrl__descriptor,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
 };
-static const unsigned get_ctrl_res__field_indices_by_name[] = {
+static const unsigned mt_airswitch001__get_ctrl_res__field_indices_by_name[] = {
   1,   /* field[1] = addr */
   0,   /* field[0] = code */
   2,   /* field[2] = ctrl */
 };
-static const ProtobufCIntRange get_ctrl_res__number_ranges[1 + 1] =
+static const ProtobufCIntRange mt_airswitch001__get_ctrl_res__number_ranges[1 + 1] =
 {
   { 1, 0 },
   { 0, 3 }
 };
-const ProtobufCMessageDescriptor get_ctrl_res__descriptor =
+const ProtobufCMessageDescriptor mt_airswitch001__get_ctrl_res__descriptor =
 {
   PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "mt_airswitch001.GetCtrlRes",
   "GetCtrlRes",
-  "GetCtrlRes",
-  "GetCtrlRes",
-  "",
-  sizeof(GetCtrlRes),
+  "MtAirswitch001__GetCtrlRes",
+  "mt_airswitch001",
+  sizeof(MtAirswitch001__GetCtrlRes),
   3,
-  get_ctrl_res__field_descriptors,
-  get_ctrl_res__field_indices_by_name,
-  1,  get_ctrl_res__number_ranges,
-  (ProtobufCMessageInit) get_ctrl_res__init,
+  mt_airswitch001__get_ctrl_res__field_descriptors,
+  mt_airswitch001__get_ctrl_res__field_indices_by_name,
+  1,  mt_airswitch001__get_ctrl_res__number_ranges,
+  (ProtobufCMessageInit) mt_airswitch001__get_ctrl_res__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor get_warn_res__field_descriptors[3] =
+static const ProtobufCFieldDescriptor mt_airswitch001__get_warn_res__field_descriptors[3] =
 {
   {
     "code",
@@ -1884,7 +1884,7 @@ static const ProtobufCFieldDescriptor get_warn_res__field_descriptors[3] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_INT32,
     0,   /* quantifier_offset */
-    offsetof(GetWarnRes, code),
+    offsetof(MtAirswitch001__GetWarnRes, code),
     NULL,
     NULL,
     0,             /* flags */
@@ -1896,7 +1896,7 @@ static const ProtobufCFieldDescriptor get_warn_res__field_descriptors[3] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_INT32,
     0,   /* quantifier_offset */
-    offsetof(GetWarnRes, addr),
+    offsetof(MtAirswitch001__GetWarnRes, addr),
     NULL,
     NULL,
     0,             /* flags */
@@ -1908,39 +1908,39 @@ static const ProtobufCFieldDescriptor get_warn_res__field_descriptors[3] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_MESSAGE,
     0,   /* quantifier_offset */
-    offsetof(GetWarnRes, warn),
-    &warn__descriptor,
+    offsetof(MtAirswitch001__GetWarnRes, warn),
+    &mt_airswitch001__warn__descriptor,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
 };
-static const unsigned get_warn_res__field_indices_by_name[] = {
+static const unsigned mt_airswitch001__get_warn_res__field_indices_by_name[] = {
   1,   /* field[1] = addr */
   0,   /* field[0] = code */
   2,   /* field[2] = warn */
 };
-static const ProtobufCIntRange get_warn_res__number_ranges[1 + 1] =
+static const ProtobufCIntRange mt_airswitch001__get_warn_res__number_ranges[1 + 1] =
 {
   { 1, 0 },
   { 0, 3 }
 };
-const ProtobufCMessageDescriptor get_warn_res__descriptor =
+const ProtobufCMessageDescriptor mt_airswitch001__get_warn_res__descriptor =
 {
   PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "mt_airswitch001.GetWarnRes",
   "GetWarnRes",
-  "GetWarnRes",
-  "GetWarnRes",
-  "",
-  sizeof(GetWarnRes),
+  "MtAirswitch001__GetWarnRes",
+  "mt_airswitch001",
+  sizeof(MtAirswitch001__GetWarnRes),
   3,
-  get_warn_res__field_descriptors,
-  get_warn_res__field_indices_by_name,
-  1,  get_warn_res__number_ranges,
-  (ProtobufCMessageInit) get_warn_res__init,
+  mt_airswitch001__get_warn_res__field_descriptors,
+  mt_airswitch001__get_warn_res__field_indices_by_name,
+  1,  mt_airswitch001__get_warn_res__number_ranges,
+  (ProtobufCMessageInit) mt_airswitch001__get_warn_res__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor get_data_res__field_descriptors[3] =
+static const ProtobufCFieldDescriptor mt_airswitch001__get_data_res__field_descriptors[3] =
 {
   {
     "code",
@@ -1948,7 +1948,7 @@ static const ProtobufCFieldDescriptor get_data_res__field_descriptors[3] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_INT32,
     0,   /* quantifier_offset */
-    offsetof(GetDataRes, code),
+    offsetof(MtAirswitch001__GetDataRes, code),
     NULL,
     NULL,
     0,             /* flags */
@@ -1960,7 +1960,7 @@ static const ProtobufCFieldDescriptor get_data_res__field_descriptors[3] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_INT32,
     0,   /* quantifier_offset */
-    offsetof(GetDataRes, addr),
+    offsetof(MtAirswitch001__GetDataRes, addr),
     NULL,
     NULL,
     0,             /* flags */
@@ -1972,39 +1972,39 @@ static const ProtobufCFieldDescriptor get_data_res__field_descriptors[3] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_MESSAGE,
     0,   /* quantifier_offset */
-    offsetof(GetDataRes, data),
-    &data__descriptor,
+    offsetof(MtAirswitch001__GetDataRes, data),
+    &mt_airswitch001__data__descriptor,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
 };
-static const unsigned get_data_res__field_indices_by_name[] = {
+static const unsigned mt_airswitch001__get_data_res__field_indices_by_name[] = {
   1,   /* field[1] = addr */
   0,   /* field[0] = code */
   2,   /* field[2] = data */
 };
-static const ProtobufCIntRange get_data_res__number_ranges[1 + 1] =
+static const ProtobufCIntRange mt_airswitch001__get_data_res__number_ranges[1 + 1] =
 {
   { 1, 0 },
   { 0, 3 }
 };
-const ProtobufCMessageDescriptor get_data_res__descriptor =
+const ProtobufCMessageDescriptor mt_airswitch001__get_data_res__descriptor =
 {
   PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "mt_airswitch001.GetDataRes",
   "GetDataRes",
-  "GetDataRes",
-  "GetDataRes",
-  "",
-  sizeof(GetDataRes),
+  "MtAirswitch001__GetDataRes",
+  "mt_airswitch001",
+  sizeof(MtAirswitch001__GetDataRes),
   3,
-  get_data_res__field_descriptors,
-  get_data_res__field_indices_by_name,
-  1,  get_data_res__number_ranges,
-  (ProtobufCMessageInit) get_data_res__init,
+  mt_airswitch001__get_data_res__field_descriptors,
+  mt_airswitch001__get_data_res__field_indices_by_name,
+  1,  mt_airswitch001__get_data_res__number_ranges,
+  (ProtobufCMessageInit) mt_airswitch001__get_data_res__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor get_config_res__field_descriptors[3] =
+static const ProtobufCFieldDescriptor mt_airswitch001__get_config_res__field_descriptors[3] =
 {
   {
     "code",
@@ -2012,7 +2012,7 @@ static const ProtobufCFieldDescriptor get_config_res__field_descriptors[3] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_INT32,
     0,   /* quantifier_offset */
-    offsetof(GetConfigRes, code),
+    offsetof(MtAirswitch001__GetConfigRes, code),
     NULL,
     NULL,
     0,             /* flags */
@@ -2024,7 +2024,7 @@ static const ProtobufCFieldDescriptor get_config_res__field_descriptors[3] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_INT32,
     0,   /* quantifier_offset */
-    offsetof(GetConfigRes, addr),
+    offsetof(MtAirswitch001__GetConfigRes, addr),
     NULL,
     NULL,
     0,             /* flags */
@@ -2036,39 +2036,39 @@ static const ProtobufCFieldDescriptor get_config_res__field_descriptors[3] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_MESSAGE,
     0,   /* quantifier_offset */
-    offsetof(GetConfigRes, config),
-    &config__descriptor,
+    offsetof(MtAirswitch001__GetConfigRes, config),
+    &mt_airswitch001__config__descriptor,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
 };
-static const unsigned get_config_res__field_indices_by_name[] = {
+static const unsigned mt_airswitch001__get_config_res__field_indices_by_name[] = {
   1,   /* field[1] = addr */
   0,   /* field[0] = code */
   2,   /* field[2] = config */
 };
-static const ProtobufCIntRange get_config_res__number_ranges[1 + 1] =
+static const ProtobufCIntRange mt_airswitch001__get_config_res__number_ranges[1 + 1] =
 {
   { 1, 0 },
   { 0, 3 }
 };
-const ProtobufCMessageDescriptor get_config_res__descriptor =
+const ProtobufCMessageDescriptor mt_airswitch001__get_config_res__descriptor =
 {
   PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "mt_airswitch001.GetConfigRes",
   "GetConfigRes",
-  "GetConfigRes",
-  "GetConfigRes",
-  "",
-  sizeof(GetConfigRes),
+  "MtAirswitch001__GetConfigRes",
+  "mt_airswitch001",
+  sizeof(MtAirswitch001__GetConfigRes),
   3,
-  get_config_res__field_descriptors,
-  get_config_res__field_indices_by_name,
-  1,  get_config_res__number_ranges,
-  (ProtobufCMessageInit) get_config_res__init,
+  mt_airswitch001__get_config_res__field_descriptors,
+  mt_airswitch001__get_config_res__field_indices_by_name,
+  1,  mt_airswitch001__get_config_res__number_ranges,
+  (ProtobufCMessageInit) mt_airswitch001__get_config_res__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor get_quality_res__field_descriptors[3] =
+static const ProtobufCFieldDescriptor mt_airswitch001__get_quality_res__field_descriptors[3] =
 {
   {
     "code",
@@ -2076,7 +2076,7 @@ static const ProtobufCFieldDescriptor get_quality_res__field_descriptors[3] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_INT32,
     0,   /* quantifier_offset */
-    offsetof(GetQualityRes, code),
+    offsetof(MtAirswitch001__GetQualityRes, code),
     NULL,
     NULL,
     0,             /* flags */
@@ -2088,7 +2088,7 @@ static const ProtobufCFieldDescriptor get_quality_res__field_descriptors[3] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_INT32,
     0,   /* quantifier_offset */
-    offsetof(GetQualityRes, addr),
+    offsetof(MtAirswitch001__GetQualityRes, addr),
     NULL,
     NULL,
     0,             /* flags */
@@ -2100,39 +2100,39 @@ static const ProtobufCFieldDescriptor get_quality_res__field_descriptors[3] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_MESSAGE,
     0,   /* quantifier_offset */
-    offsetof(GetQualityRes, quality),
-    &quality__descriptor,
+    offsetof(MtAirswitch001__GetQualityRes, quality),
+    &mt_airswitch001__quality__descriptor,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
 };
-static const unsigned get_quality_res__field_indices_by_name[] = {
+static const unsigned mt_airswitch001__get_quality_res__field_indices_by_name[] = {
   1,   /* field[1] = addr */
   0,   /* field[0] = code */
   2,   /* field[2] = quality */
 };
-static const ProtobufCIntRange get_quality_res__number_ranges[1 + 1] =
+static const ProtobufCIntRange mt_airswitch001__get_quality_res__number_ranges[1 + 1] =
 {
   { 1, 0 },
   { 0, 3 }
 };
-const ProtobufCMessageDescriptor get_quality_res__descriptor =
+const ProtobufCMessageDescriptor mt_airswitch001__get_quality_res__descriptor =
 {
   PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "mt_airswitch001.GetQualityRes",
   "GetQualityRes",
-  "GetQualityRes",
-  "GetQualityRes",
-  "",
-  sizeof(GetQualityRes),
+  "MtAirswitch001__GetQualityRes",
+  "mt_airswitch001",
+  sizeof(MtAirswitch001__GetQualityRes),
   3,
-  get_quality_res__field_descriptors,
-  get_quality_res__field_indices_by_name,
-  1,  get_quality_res__number_ranges,
-  (ProtobufCMessageInit) get_quality_res__init,
+  mt_airswitch001__get_quality_res__field_descriptors,
+  mt_airswitch001__get_quality_res__field_indices_by_name,
+  1,  mt_airswitch001__get_quality_res__number_ranges,
+  (ProtobufCMessageInit) mt_airswitch001__get_quality_res__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor set_state_req__field_descriptors[2] =
+static const ProtobufCFieldDescriptor mt_airswitch001__set_state_req__field_descriptors[2] =
 {
   {
     "addr",
@@ -2140,7 +2140,7 @@ static const ProtobufCFieldDescriptor set_state_req__field_descriptors[2] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_INT32,
     0,   /* quantifier_offset */
-    offsetof(SetStateReq, addr),
+    offsetof(MtAirswitch001__SetStateReq, addr),
     NULL,
     NULL,
     0,             /* flags */
@@ -2152,38 +2152,38 @@ static const ProtobufCFieldDescriptor set_state_req__field_descriptors[2] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_MESSAGE,
     0,   /* quantifier_offset */
-    offsetof(SetStateReq, state),
-    &op_state__descriptor,
+    offsetof(MtAirswitch001__SetStateReq, state),
+    &mt_airswitch001__op_state__descriptor,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
 };
-static const unsigned set_state_req__field_indices_by_name[] = {
+static const unsigned mt_airswitch001__set_state_req__field_indices_by_name[] = {
   0,   /* field[0] = addr */
   1,   /* field[1] = state */
 };
-static const ProtobufCIntRange set_state_req__number_ranges[1 + 1] =
+static const ProtobufCIntRange mt_airswitch001__set_state_req__number_ranges[1 + 1] =
 {
   { 1, 0 },
   { 0, 2 }
 };
-const ProtobufCMessageDescriptor set_state_req__descriptor =
+const ProtobufCMessageDescriptor mt_airswitch001__set_state_req__descriptor =
 {
   PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "mt_airswitch001.SetStateReq",
   "SetStateReq",
-  "SetStateReq",
-  "SetStateReq",
-  "",
-  sizeof(SetStateReq),
+  "MtAirswitch001__SetStateReq",
+  "mt_airswitch001",
+  sizeof(MtAirswitch001__SetStateReq),
   2,
-  set_state_req__field_descriptors,
-  set_state_req__field_indices_by_name,
-  1,  set_state_req__number_ranges,
-  (ProtobufCMessageInit) set_state_req__init,
+  mt_airswitch001__set_state_req__field_descriptors,
+  mt_airswitch001__set_state_req__field_indices_by_name,
+  1,  mt_airswitch001__set_state_req__number_ranges,
+  (ProtobufCMessageInit) mt_airswitch001__set_state_req__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor set_config_req__field_descriptors[2] =
+static const ProtobufCFieldDescriptor mt_airswitch001__set_config_req__field_descriptors[2] =
 {
   {
     "addr",
@@ -2191,7 +2191,7 @@ static const ProtobufCFieldDescriptor set_config_req__field_descriptors[2] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_INT32,
     0,   /* quantifier_offset */
-    offsetof(SetConfigReq, addr),
+    offsetof(MtAirswitch001__SetConfigReq, addr),
     NULL,
     NULL,
     0,             /* flags */
@@ -2203,38 +2203,38 @@ static const ProtobufCFieldDescriptor set_config_req__field_descriptors[2] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_MESSAGE,
     0,   /* quantifier_offset */
-    offsetof(SetConfigReq, config),
-    &op_config__descriptor,
+    offsetof(MtAirswitch001__SetConfigReq, config),
+    &mt_airswitch001__op_config__descriptor,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
 };
-static const unsigned set_config_req__field_indices_by_name[] = {
+static const unsigned mt_airswitch001__set_config_req__field_indices_by_name[] = {
   0,   /* field[0] = addr */
   1,   /* field[1] = config */
 };
-static const ProtobufCIntRange set_config_req__number_ranges[1 + 1] =
+static const ProtobufCIntRange mt_airswitch001__set_config_req__number_ranges[1 + 1] =
 {
   { 1, 0 },
   { 0, 2 }
 };
-const ProtobufCMessageDescriptor set_config_req__descriptor =
+const ProtobufCMessageDescriptor mt_airswitch001__set_config_req__descriptor =
 {
   PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "mt_airswitch001.SetConfigReq",
   "SetConfigReq",
-  "SetConfigReq",
-  "SetConfigReq",
-  "",
-  sizeof(SetConfigReq),
+  "MtAirswitch001__SetConfigReq",
+  "mt_airswitch001",
+  sizeof(MtAirswitch001__SetConfigReq),
   2,
-  set_config_req__field_descriptors,
-  set_config_req__field_indices_by_name,
-  1,  set_config_req__number_ranges,
-  (ProtobufCMessageInit) set_config_req__init,
+  mt_airswitch001__set_config_req__field_descriptors,
+  mt_airswitch001__set_config_req__field_indices_by_name,
+  1,  mt_airswitch001__set_config_req__number_ranges,
+  (ProtobufCMessageInit) mt_airswitch001__set_config_req__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor set_quality_req__field_descriptors[2] =
+static const ProtobufCFieldDescriptor mt_airswitch001__set_quality_req__field_descriptors[2] =
 {
   {
     "addr",
@@ -2242,7 +2242,7 @@ static const ProtobufCFieldDescriptor set_quality_req__field_descriptors[2] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_INT32,
     0,   /* quantifier_offset */
-    offsetof(SetQualityReq, addr),
+    offsetof(MtAirswitch001__SetQualityReq, addr),
     NULL,
     NULL,
     0,             /* flags */
@@ -2254,38 +2254,38 @@ static const ProtobufCFieldDescriptor set_quality_req__field_descriptors[2] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_MESSAGE,
     0,   /* quantifier_offset */
-    offsetof(SetQualityReq, quality),
-    &op_quality__descriptor,
+    offsetof(MtAirswitch001__SetQualityReq, quality),
+    &mt_airswitch001__op_quality__descriptor,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
 };
-static const unsigned set_quality_req__field_indices_by_name[] = {
+static const unsigned mt_airswitch001__set_quality_req__field_indices_by_name[] = {
   0,   /* field[0] = addr */
   1,   /* field[1] = quality */
 };
-static const ProtobufCIntRange set_quality_req__number_ranges[1 + 1] =
+static const ProtobufCIntRange mt_airswitch001__set_quality_req__number_ranges[1 + 1] =
 {
   { 1, 0 },
   { 0, 2 }
 };
-const ProtobufCMessageDescriptor set_quality_req__descriptor =
+const ProtobufCMessageDescriptor mt_airswitch001__set_quality_req__descriptor =
 {
   PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "mt_airswitch001.SetQualityReq",
   "SetQualityReq",
-  "SetQualityReq",
-  "SetQualityReq",
-  "",
-  sizeof(SetQualityReq),
+  "MtAirswitch001__SetQualityReq",
+  "mt_airswitch001",
+  sizeof(MtAirswitch001__SetQualityReq),
   2,
-  set_quality_req__field_descriptors,
-  set_quality_req__field_indices_by_name,
-  1,  set_quality_req__number_ranges,
-  (ProtobufCMessageInit) set_quality_req__init,
+  mt_airswitch001__set_quality_req__field_descriptors,
+  mt_airswitch001__set_quality_req__field_indices_by_name,
+  1,  mt_airswitch001__set_quality_req__number_ranges,
+  (ProtobufCMessageInit) mt_airswitch001__set_quality_req__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor set_leak_test_req__field_descriptors[1] =
+static const ProtobufCFieldDescriptor mt_airswitch001__set_leak_test_req__field_descriptors[1] =
 {
   {
     "addr",
@@ -2293,50 +2293,50 @@ static const ProtobufCFieldDescriptor set_leak_test_req__field_descriptors[1] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_INT32,
     0,   /* quantifier_offset */
-    offsetof(SetLeakTestReq, addr),
+    offsetof(MtAirswitch001__SetLeakTestReq, addr),
     NULL,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
 };
-static const unsigned set_leak_test_req__field_indices_by_name[] = {
+static const unsigned mt_airswitch001__set_leak_test_req__field_indices_by_name[] = {
   0,   /* field[0] = addr */
 };
-static const ProtobufCIntRange set_leak_test_req__number_ranges[1 + 1] =
+static const ProtobufCIntRange mt_airswitch001__set_leak_test_req__number_ranges[1 + 1] =
 {
   { 1, 0 },
   { 0, 1 }
 };
-const ProtobufCMessageDescriptor set_leak_test_req__descriptor =
+const ProtobufCMessageDescriptor mt_airswitch001__set_leak_test_req__descriptor =
 {
   PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "mt_airswitch001.SetLeakTestReq",
   "SetLeakTestReq",
-  "SetLeakTestReq",
-  "SetLeakTestReq",
-  "",
-  sizeof(SetLeakTestReq),
+  "MtAirswitch001__SetLeakTestReq",
+  "mt_airswitch001",
+  sizeof(MtAirswitch001__SetLeakTestReq),
   1,
-  set_leak_test_req__field_descriptors,
-  set_leak_test_req__field_indices_by_name,
-  1,  set_leak_test_req__number_ranges,
-  (ProtobufCMessageInit) set_leak_test_req__init,
+  mt_airswitch001__set_leak_test_req__field_descriptors,
+  mt_airswitch001__set_leak_test_req__field_indices_by_name,
+  1,  mt_airswitch001__set_leak_test_req__number_ranges,
+  (ProtobufCMessageInit) mt_airswitch001__set_leak_test_req__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCMethodDescriptor service__method_descriptors[10] =
+static const ProtobufCMethodDescriptor mt_airswitch001__service__method_descriptors[10] =
 {
-  { "GetState", &get_req__descriptor, &get_state_res__descriptor },
-  { "GetCtrl", &get_req__descriptor, &get_ctrl_res__descriptor },
-  { "GetWarn", &get_req__descriptor, &get_warn_res__descriptor },
-  { "GetData", &get_req__descriptor, &get_data_res__descriptor },
-  { "GetConfig", &get_req__descriptor, &get_config_res__descriptor },
-  { "GetQuality", &get_req__descriptor, &get_quality_res__descriptor },
-  { "SetState", &set_state_req__descriptor, &set_res__descriptor },
-  { "SetConfig", &set_config_req__descriptor, &set_res__descriptor },
-  { "SetQuality", &set_quality_req__descriptor, &set_res__descriptor },
-  { "SetLeakTest", &set_leak_test_req__descriptor, &set_res__descriptor },
+  { "GetState", &mt_airswitch001__get_req__descriptor, &mt_airswitch001__get_state_res__descriptor },
+  { "GetCtrl", &mt_airswitch001__get_req__descriptor, &mt_airswitch001__get_ctrl_res__descriptor },
+  { "GetWarn", &mt_airswitch001__get_req__descriptor, &mt_airswitch001__get_warn_res__descriptor },
+  { "GetData", &mt_airswitch001__get_req__descriptor, &mt_airswitch001__get_data_res__descriptor },
+  { "GetConfig", &mt_airswitch001__get_req__descriptor, &mt_airswitch001__get_config_res__descriptor },
+  { "GetQuality", &mt_airswitch001__get_req__descriptor, &mt_airswitch001__get_quality_res__descriptor },
+  { "SetState", &mt_airswitch001__set_state_req__descriptor, &mt_airswitch001__set_res__descriptor },
+  { "SetConfig", &mt_airswitch001__set_config_req__descriptor, &mt_airswitch001__set_res__descriptor },
+  { "SetQuality", &mt_airswitch001__set_quality_req__descriptor, &mt_airswitch001__set_res__descriptor },
+  { "SetLeakTest", &mt_airswitch001__set_leak_test_req__descriptor, &mt_airswitch001__set_res__descriptor },
 };
-const unsigned service__method_indices_by_name[] = {
+const unsigned mt_airswitch001__service__method_indices_by_name[] = {
   4,        /* GetConfig */
   1,        /* GetCtrl */
   3,        /* GetData */
@@ -2348,101 +2348,101 @@ const unsigned service__method_indices_by_name[] = {
   8,        /* SetQuality */
   6         /* SetState */
 };
-const ProtobufCServiceDescriptor service__descriptor =
+const ProtobufCServiceDescriptor mt_airswitch001__service__descriptor =
 {
   PROTOBUF_C__SERVICE_DESCRIPTOR_MAGIC,
+  "mt_airswitch001.Service",
   "Service",
-  "Service",
-  "Service",
-  "",
+  "MtAirswitch001__Service",
+  "mt_airswitch001",
   10,
-  service__method_descriptors,
-  service__method_indices_by_name
+  mt_airswitch001__service__method_descriptors,
+  mt_airswitch001__service__method_indices_by_name
 };
-void service__get_state(ProtobufCService *service,
-                        const GetReq *input,
-                        GetStateRes_Closure closure,
-                        void *closure_data)
+void mt_airswitch001__service__get_state(ProtobufCService *service,
+                                         const MtAirswitch001__GetReq *input,
+                                         MtAirswitch001__GetStateRes_Closure closure,
+                                         void *closure_data)
 {
-  assert(service->descriptor == &service__descriptor);
+  assert(service->descriptor == &mt_airswitch001__service__descriptor);
   service->invoke(service, 0, (const ProtobufCMessage *) input, (ProtobufCClosure) closure, closure_data);
 }
-void service__get_ctrl(ProtobufCService *service,
-                       const GetReq *input,
-                       GetCtrlRes_Closure closure,
-                       void *closure_data)
+void mt_airswitch001__service__get_ctrl(ProtobufCService *service,
+                                        const MtAirswitch001__GetReq *input,
+                                        MtAirswitch001__GetCtrlRes_Closure closure,
+                                        void *closure_data)
 {
-  assert(service->descriptor == &service__descriptor);
+  assert(service->descriptor == &mt_airswitch001__service__descriptor);
   service->invoke(service, 1, (const ProtobufCMessage *) input, (ProtobufCClosure) closure, closure_data);
 }
-void service__get_warn(ProtobufCService *service,
-                       const GetReq *input,
-                       GetWarnRes_Closure closure,
-                       void *closure_data)
+void mt_airswitch001__service__get_warn(ProtobufCService *service,
+                                        const MtAirswitch001__GetReq *input,
+                                        MtAirswitch001__GetWarnRes_Closure closure,
+                                        void *closure_data)
 {
-  assert(service->descriptor == &service__descriptor);
+  assert(service->descriptor == &mt_airswitch001__service__descriptor);
   service->invoke(service, 2, (const ProtobufCMessage *) input, (ProtobufCClosure) closure, closure_data);
 }
-void service__get_data(ProtobufCService *service,
-                       const GetReq *input,
-                       GetDataRes_Closure closure,
-                       void *closure_data)
+void mt_airswitch001__service__get_data(ProtobufCService *service,
+                                        const MtAirswitch001__GetReq *input,
+                                        MtAirswitch001__GetDataRes_Closure closure,
+                                        void *closure_data)
 {
-  assert(service->descriptor == &service__descriptor);
+  assert(service->descriptor == &mt_airswitch001__service__descriptor);
   service->invoke(service, 3, (const ProtobufCMessage *) input, (ProtobufCClosure) closure, closure_data);
 }
-void service__get_config(ProtobufCService *service,
-                         const GetReq *input,
-                         GetConfigRes_Closure closure,
-                         void *closure_data)
+void mt_airswitch001__service__get_config(ProtobufCService *service,
+                                          const MtAirswitch001__GetReq *input,
+                                          MtAirswitch001__GetConfigRes_Closure closure,
+                                          void *closure_data)
 {
-  assert(service->descriptor == &service__descriptor);
+  assert(service->descriptor == &mt_airswitch001__service__descriptor);
   service->invoke(service, 4, (const ProtobufCMessage *) input, (ProtobufCClosure) closure, closure_data);
 }
-void service__get_quality(ProtobufCService *service,
-                          const GetReq *input,
-                          GetQualityRes_Closure closure,
-                          void *closure_data)
+void mt_airswitch001__service__get_quality(ProtobufCService *service,
+                                           const MtAirswitch001__GetReq *input,
+                                           MtAirswitch001__GetQualityRes_Closure closure,
+                                           void *closure_data)
 {
-  assert(service->descriptor == &service__descriptor);
+  assert(service->descriptor == &mt_airswitch001__service__descriptor);
   service->invoke(service, 5, (const ProtobufCMessage *) input, (ProtobufCClosure) closure, closure_data);
 }
-void service__set_state(ProtobufCService *service,
-                        const SetStateReq *input,
-                        SetRes_Closure closure,
-                        void *closure_data)
+void mt_airswitch001__service__set_state(ProtobufCService *service,
+                                         const MtAirswitch001__SetStateReq *input,
+                                         MtAirswitch001__SetRes_Closure closure,
+                                         void *closure_data)
 {
-  assert(service->descriptor == &service__descriptor);
+  assert(service->descriptor == &mt_airswitch001__service__descriptor);
   service->invoke(service, 6, (const ProtobufCMessage *) input, (ProtobufCClosure) closure, closure_data);
 }
-void service__set_config(ProtobufCService *service,
-                         const SetConfigReq *input,
-                         SetRes_Closure closure,
-                         void *closure_data)
+void mt_airswitch001__service__set_config(ProtobufCService *service,
+                                          const MtAirswitch001__SetConfigReq *input,
+                                          MtAirswitch001__SetRes_Closure closure,
+                                          void *closure_data)
 {
-  assert(service->descriptor == &service__descriptor);
+  assert(service->descriptor == &mt_airswitch001__service__descriptor);
   service->invoke(service, 7, (const ProtobufCMessage *) input, (ProtobufCClosure) closure, closure_data);
 }
-void service__set_quality(ProtobufCService *service,
-                          const SetQualityReq *input,
-                          SetRes_Closure closure,
-                          void *closure_data)
+void mt_airswitch001__service__set_quality(ProtobufCService *service,
+                                           const MtAirswitch001__SetQualityReq *input,
+                                           MtAirswitch001__SetRes_Closure closure,
+                                           void *closure_data)
 {
-  assert(service->descriptor == &service__descriptor);
+  assert(service->descriptor == &mt_airswitch001__service__descriptor);
   service->invoke(service, 8, (const ProtobufCMessage *) input, (ProtobufCClosure) closure, closure_data);
 }
-void service__set_leak_test(ProtobufCService *service,
-                            const SetLeakTestReq *input,
-                            SetRes_Closure closure,
-                            void *closure_data)
+void mt_airswitch001__service__set_leak_test(ProtobufCService *service,
+                                             const MtAirswitch001__SetLeakTestReq *input,
+                                             MtAirswitch001__SetRes_Closure closure,
+                                             void *closure_data)
 {
-  assert(service->descriptor == &service__descriptor);
+  assert(service->descriptor == &mt_airswitch001__service__descriptor);
   service->invoke(service, 9, (const ProtobufCMessage *) input, (ProtobufCClosure) closure, closure_data);
 }
-void service__init (Service_Service *service,
-                    Service_ServiceDestroy destroy)
+void mt_airswitch001__service__init (MtAirswitch001__Service_Service *service,
+                                     MtAirswitch001__Service_ServiceDestroy destroy)
 {
   protobuf_c_service_generated_init (&service->base,
-                                     &service__descriptor,
+                                     &mt_airswitch001__service__descriptor,
                                      (ProtobufCServiceDestroy) destroy);
 }

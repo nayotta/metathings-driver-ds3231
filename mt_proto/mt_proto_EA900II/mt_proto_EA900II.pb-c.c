@@ -7,277 +7,277 @@
 #endif
 
 #include "mt_proto_EA900II.pb-c.h"
-void   data__init
-                     (Data         *message)
+void   mt__ea900_ii__data__init
+                     (MtEA900II__Data         *message)
 {
-  static const Data init_value = DATA__INIT;
+  static const MtEA900II__Data init_value = MT__EA900_II__DATA__INIT;
   *message = init_value;
 }
-size_t data__get_packed_size
-                     (const Data *message)
+size_t mt__ea900_ii__data__get_packed_size
+                     (const MtEA900II__Data *message)
 {
-  assert(message->base.descriptor == &data__descriptor);
+  assert(message->base.descriptor == &mt__ea900_ii__data__descriptor);
   return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
 }
-size_t data__pack
-                     (const Data *message,
+size_t mt__ea900_ii__data__pack
+                     (const MtEA900II__Data *message,
                       uint8_t       *out)
 {
-  assert(message->base.descriptor == &data__descriptor);
+  assert(message->base.descriptor == &mt__ea900_ii__data__descriptor);
   return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
 }
-size_t data__pack_to_buffer
-                     (const Data *message,
+size_t mt__ea900_ii__data__pack_to_buffer
+                     (const MtEA900II__Data *message,
                       ProtobufCBuffer *buffer)
 {
-  assert(message->base.descriptor == &data__descriptor);
+  assert(message->base.descriptor == &mt__ea900_ii__data__descriptor);
   return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
 }
-Data *
-       data__unpack
+MtEA900II__Data *
+       mt__ea900_ii__data__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data)
 {
-  return (Data *)
-     protobuf_c_message_unpack (&data__descriptor,
+  return (MtEA900II__Data *)
+     protobuf_c_message_unpack (&mt__ea900_ii__data__descriptor,
                                 allocator, len, data);
 }
-void   data__free_unpacked
-                     (Data *message,
+void   mt__ea900_ii__data__free_unpacked
+                     (MtEA900II__Data *message,
                       ProtobufCAllocator *allocator)
 {
   if(!message)
     return;
-  assert(message->base.descriptor == &data__descriptor);
+  assert(message->base.descriptor == &mt__ea900_ii__data__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
-void   model__init
-                     (Model         *message)
+void   mt__ea900_ii__model__init
+                     (MtEA900II__Model         *message)
 {
-  static const Model init_value = MODEL__INIT;
+  static const MtEA900II__Model init_value = MT__EA900_II__MODEL__INIT;
   *message = init_value;
 }
-size_t model__get_packed_size
-                     (const Model *message)
+size_t mt__ea900_ii__model__get_packed_size
+                     (const MtEA900II__Model *message)
 {
-  assert(message->base.descriptor == &model__descriptor);
+  assert(message->base.descriptor == &mt__ea900_ii__model__descriptor);
   return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
 }
-size_t model__pack
-                     (const Model *message,
+size_t mt__ea900_ii__model__pack
+                     (const MtEA900II__Model *message,
                       uint8_t       *out)
 {
-  assert(message->base.descriptor == &model__descriptor);
+  assert(message->base.descriptor == &mt__ea900_ii__model__descriptor);
   return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
 }
-size_t model__pack_to_buffer
-                     (const Model *message,
+size_t mt__ea900_ii__model__pack_to_buffer
+                     (const MtEA900II__Model *message,
                       ProtobufCBuffer *buffer)
 {
-  assert(message->base.descriptor == &model__descriptor);
+  assert(message->base.descriptor == &mt__ea900_ii__model__descriptor);
   return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
 }
-Model *
-       model__unpack
+MtEA900II__Model *
+       mt__ea900_ii__model__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data)
 {
-  return (Model *)
-     protobuf_c_message_unpack (&model__descriptor,
+  return (MtEA900II__Model *)
+     protobuf_c_message_unpack (&mt__ea900_ii__model__descriptor,
                                 allocator, len, data);
 }
-void   model__free_unpacked
-                     (Model *message,
+void   mt__ea900_ii__model__free_unpacked
+                     (MtEA900II__Model *message,
                       ProtobufCAllocator *allocator)
 {
   if(!message)
     return;
-  assert(message->base.descriptor == &model__descriptor);
+  assert(message->base.descriptor == &mt__ea900_ii__model__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
-void   config__init
-                     (Config         *message)
+void   mt__ea900_ii__config__init
+                     (MtEA900II__Config         *message)
 {
-  static const Config init_value = CONFIG__INIT;
+  static const MtEA900II__Config init_value = MT__EA900_II__CONFIG__INIT;
   *message = init_value;
 }
-size_t config__get_packed_size
-                     (const Config *message)
+size_t mt__ea900_ii__config__get_packed_size
+                     (const MtEA900II__Config *message)
 {
-  assert(message->base.descriptor == &config__descriptor);
+  assert(message->base.descriptor == &mt__ea900_ii__config__descriptor);
   return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
 }
-size_t config__pack
-                     (const Config *message,
+size_t mt__ea900_ii__config__pack
+                     (const MtEA900II__Config *message,
                       uint8_t       *out)
 {
-  assert(message->base.descriptor == &config__descriptor);
+  assert(message->base.descriptor == &mt__ea900_ii__config__descriptor);
   return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
 }
-size_t config__pack_to_buffer
-                     (const Config *message,
+size_t mt__ea900_ii__config__pack_to_buffer
+                     (const MtEA900II__Config *message,
                       ProtobufCBuffer *buffer)
 {
-  assert(message->base.descriptor == &config__descriptor);
+  assert(message->base.descriptor == &mt__ea900_ii__config__descriptor);
   return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
 }
-Config *
-       config__unpack
+MtEA900II__Config *
+       mt__ea900_ii__config__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data)
 {
-  return (Config *)
-     protobuf_c_message_unpack (&config__descriptor,
+  return (MtEA900II__Config *)
+     protobuf_c_message_unpack (&mt__ea900_ii__config__descriptor,
                                 allocator, len, data);
 }
-void   config__free_unpacked
-                     (Config *message,
+void   mt__ea900_ii__config__free_unpacked
+                     (MtEA900II__Config *message,
                       ProtobufCAllocator *allocator)
 {
   if(!message)
     return;
-  assert(message->base.descriptor == &config__descriptor);
+  assert(message->base.descriptor == &mt__ea900_ii__config__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
-void   data_res__init
-                     (DataRes         *message)
+void   mt__ea900_ii__data_res__init
+                     (MtEA900II__DataRes         *message)
 {
-  static const DataRes init_value = DATA_RES__INIT;
+  static const MtEA900II__DataRes init_value = MT__EA900_II__DATA_RES__INIT;
   *message = init_value;
 }
-size_t data_res__get_packed_size
-                     (const DataRes *message)
+size_t mt__ea900_ii__data_res__get_packed_size
+                     (const MtEA900II__DataRes *message)
 {
-  assert(message->base.descriptor == &data_res__descriptor);
+  assert(message->base.descriptor == &mt__ea900_ii__data_res__descriptor);
   return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
 }
-size_t data_res__pack
-                     (const DataRes *message,
+size_t mt__ea900_ii__data_res__pack
+                     (const MtEA900II__DataRes *message,
                       uint8_t       *out)
 {
-  assert(message->base.descriptor == &data_res__descriptor);
+  assert(message->base.descriptor == &mt__ea900_ii__data_res__descriptor);
   return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
 }
-size_t data_res__pack_to_buffer
-                     (const DataRes *message,
+size_t mt__ea900_ii__data_res__pack_to_buffer
+                     (const MtEA900II__DataRes *message,
                       ProtobufCBuffer *buffer)
 {
-  assert(message->base.descriptor == &data_res__descriptor);
+  assert(message->base.descriptor == &mt__ea900_ii__data_res__descriptor);
   return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
 }
-DataRes *
-       data_res__unpack
+MtEA900II__DataRes *
+       mt__ea900_ii__data_res__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data)
 {
-  return (DataRes *)
-     protobuf_c_message_unpack (&data_res__descriptor,
+  return (MtEA900II__DataRes *)
+     protobuf_c_message_unpack (&mt__ea900_ii__data_res__descriptor,
                                 allocator, len, data);
 }
-void   data_res__free_unpacked
-                     (DataRes *message,
+void   mt__ea900_ii__data_res__free_unpacked
+                     (MtEA900II__DataRes *message,
                       ProtobufCAllocator *allocator)
 {
   if(!message)
     return;
-  assert(message->base.descriptor == &data_res__descriptor);
+  assert(message->base.descriptor == &mt__ea900_ii__data_res__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
-void   model_res__init
-                     (ModelRes         *message)
+void   mt__ea900_ii__model_res__init
+                     (MtEA900II__ModelRes         *message)
 {
-  static const ModelRes init_value = MODEL_RES__INIT;
+  static const MtEA900II__ModelRes init_value = MT__EA900_II__MODEL_RES__INIT;
   *message = init_value;
 }
-size_t model_res__get_packed_size
-                     (const ModelRes *message)
+size_t mt__ea900_ii__model_res__get_packed_size
+                     (const MtEA900II__ModelRes *message)
 {
-  assert(message->base.descriptor == &model_res__descriptor);
+  assert(message->base.descriptor == &mt__ea900_ii__model_res__descriptor);
   return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
 }
-size_t model_res__pack
-                     (const ModelRes *message,
+size_t mt__ea900_ii__model_res__pack
+                     (const MtEA900II__ModelRes *message,
                       uint8_t       *out)
 {
-  assert(message->base.descriptor == &model_res__descriptor);
+  assert(message->base.descriptor == &mt__ea900_ii__model_res__descriptor);
   return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
 }
-size_t model_res__pack_to_buffer
-                     (const ModelRes *message,
+size_t mt__ea900_ii__model_res__pack_to_buffer
+                     (const MtEA900II__ModelRes *message,
                       ProtobufCBuffer *buffer)
 {
-  assert(message->base.descriptor == &model_res__descriptor);
+  assert(message->base.descriptor == &mt__ea900_ii__model_res__descriptor);
   return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
 }
-ModelRes *
-       model_res__unpack
+MtEA900II__ModelRes *
+       mt__ea900_ii__model_res__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data)
 {
-  return (ModelRes *)
-     protobuf_c_message_unpack (&model_res__descriptor,
+  return (MtEA900II__ModelRes *)
+     protobuf_c_message_unpack (&mt__ea900_ii__model_res__descriptor,
                                 allocator, len, data);
 }
-void   model_res__free_unpacked
-                     (ModelRes *message,
+void   mt__ea900_ii__model_res__free_unpacked
+                     (MtEA900II__ModelRes *message,
                       ProtobufCAllocator *allocator)
 {
   if(!message)
     return;
-  assert(message->base.descriptor == &model_res__descriptor);
+  assert(message->base.descriptor == &mt__ea900_ii__model_res__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
-void   config_res__init
-                     (ConfigRes         *message)
+void   mt__ea900_ii__config_res__init
+                     (MtEA900II__ConfigRes         *message)
 {
-  static const ConfigRes init_value = CONFIG_RES__INIT;
+  static const MtEA900II__ConfigRes init_value = MT__EA900_II__CONFIG_RES__INIT;
   *message = init_value;
 }
-size_t config_res__get_packed_size
-                     (const ConfigRes *message)
+size_t mt__ea900_ii__config_res__get_packed_size
+                     (const MtEA900II__ConfigRes *message)
 {
-  assert(message->base.descriptor == &config_res__descriptor);
+  assert(message->base.descriptor == &mt__ea900_ii__config_res__descriptor);
   return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
 }
-size_t config_res__pack
-                     (const ConfigRes *message,
+size_t mt__ea900_ii__config_res__pack
+                     (const MtEA900II__ConfigRes *message,
                       uint8_t       *out)
 {
-  assert(message->base.descriptor == &config_res__descriptor);
+  assert(message->base.descriptor == &mt__ea900_ii__config_res__descriptor);
   return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
 }
-size_t config_res__pack_to_buffer
-                     (const ConfigRes *message,
+size_t mt__ea900_ii__config_res__pack_to_buffer
+                     (const MtEA900II__ConfigRes *message,
                       ProtobufCBuffer *buffer)
 {
-  assert(message->base.descriptor == &config_res__descriptor);
+  assert(message->base.descriptor == &mt__ea900_ii__config_res__descriptor);
   return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
 }
-ConfigRes *
-       config_res__unpack
+MtEA900II__ConfigRes *
+       mt__ea900_ii__config_res__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data)
 {
-  return (ConfigRes *)
-     protobuf_c_message_unpack (&config_res__descriptor,
+  return (MtEA900II__ConfigRes *)
+     protobuf_c_message_unpack (&mt__ea900_ii__config_res__descriptor,
                                 allocator, len, data);
 }
-void   config_res__free_unpacked
-                     (ConfigRes *message,
+void   mt__ea900_ii__config_res__free_unpacked
+                     (MtEA900II__ConfigRes *message,
                       ProtobufCAllocator *allocator)
 {
   if(!message)
     return;
-  assert(message->base.descriptor == &config_res__descriptor);
+  assert(message->base.descriptor == &mt__ea900_ii__config_res__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
-static const ProtobufCFieldDescriptor data__field_descriptors[14] =
+static const ProtobufCFieldDescriptor mt__ea900_ii__data__field_descriptors[14] =
 {
   {
     "votageIn",
@@ -285,7 +285,7 @@ static const ProtobufCFieldDescriptor data__field_descriptors[14] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_FLOAT,
     0,   /* quantifier_offset */
-    offsetof(Data, votagein),
+    offsetof(MtEA900II__Data, votagein),
     NULL,
     NULL,
     0,             /* flags */
@@ -297,7 +297,7 @@ static const ProtobufCFieldDescriptor data__field_descriptors[14] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_FLOAT,
     0,   /* quantifier_offset */
-    offsetof(Data, votageout),
+    offsetof(MtEA900II__Data, votageout),
     NULL,
     NULL,
     0,             /* flags */
@@ -309,7 +309,7 @@ static const ProtobufCFieldDescriptor data__field_descriptors[14] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_FLOAT,
     0,   /* quantifier_offset */
-    offsetof(Data, loadpercent),
+    offsetof(MtEA900II__Data, loadpercent),
     NULL,
     NULL,
     0,             /* flags */
@@ -321,7 +321,7 @@ static const ProtobufCFieldDescriptor data__field_descriptors[14] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_FLOAT,
     0,   /* quantifier_offset */
-    offsetof(Data, freqin),
+    offsetof(MtEA900II__Data, freqin),
     NULL,
     NULL,
     0,             /* flags */
@@ -333,7 +333,7 @@ static const ProtobufCFieldDescriptor data__field_descriptors[14] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_FLOAT,
     0,   /* quantifier_offset */
-    offsetof(Data, votagebat),
+    offsetof(MtEA900II__Data, votagebat),
     NULL,
     NULL,
     0,             /* flags */
@@ -345,7 +345,7 @@ static const ProtobufCFieldDescriptor data__field_descriptors[14] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_FLOAT,
     0,   /* quantifier_offset */
-    offsetof(Data, temp),
+    offsetof(MtEA900II__Data, temp),
     NULL,
     NULL,
     0,             /* flags */
@@ -357,7 +357,7 @@ static const ProtobufCFieldDescriptor data__field_descriptors[14] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_BOOL,
     0,   /* quantifier_offset */
-    offsetof(Data, w7),
+    offsetof(MtEA900II__Data, w7),
     NULL,
     NULL,
     0,             /* flags */
@@ -369,7 +369,7 @@ static const ProtobufCFieldDescriptor data__field_descriptors[14] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_BOOL,
     0,   /* quantifier_offset */
-    offsetof(Data, w6),
+    offsetof(MtEA900II__Data, w6),
     NULL,
     NULL,
     0,             /* flags */
@@ -381,7 +381,7 @@ static const ProtobufCFieldDescriptor data__field_descriptors[14] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_BOOL,
     0,   /* quantifier_offset */
-    offsetof(Data, w5),
+    offsetof(MtEA900II__Data, w5),
     NULL,
     NULL,
     0,             /* flags */
@@ -393,7 +393,7 @@ static const ProtobufCFieldDescriptor data__field_descriptors[14] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_BOOL,
     0,   /* quantifier_offset */
-    offsetof(Data, w4),
+    offsetof(MtEA900II__Data, w4),
     NULL,
     NULL,
     0,             /* flags */
@@ -405,7 +405,7 @@ static const ProtobufCFieldDescriptor data__field_descriptors[14] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_BOOL,
     0,   /* quantifier_offset */
-    offsetof(Data, w3),
+    offsetof(MtEA900II__Data, w3),
     NULL,
     NULL,
     0,             /* flags */
@@ -417,7 +417,7 @@ static const ProtobufCFieldDescriptor data__field_descriptors[14] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_BOOL,
     0,   /* quantifier_offset */
-    offsetof(Data, w2),
+    offsetof(MtEA900II__Data, w2),
     NULL,
     NULL,
     0,             /* flags */
@@ -429,7 +429,7 @@ static const ProtobufCFieldDescriptor data__field_descriptors[14] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_BOOL,
     0,   /* quantifier_offset */
-    offsetof(Data, w1),
+    offsetof(MtEA900II__Data, w1),
     NULL,
     NULL,
     0,             /* flags */
@@ -441,14 +441,14 @@ static const ProtobufCFieldDescriptor data__field_descriptors[14] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_BOOL,
     0,   /* quantifier_offset */
-    offsetof(Data, w0),
+    offsetof(MtEA900II__Data, w0),
     NULL,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
 };
-static const unsigned data__field_indices_by_name[] = {
+static const unsigned mt__ea900_ii__data__field_indices_by_name[] = {
   3,   /* field[3] = freqIn */
   2,   /* field[2] = loadPercent */
   5,   /* field[5] = temp */
@@ -464,27 +464,27 @@ static const unsigned data__field_indices_by_name[] = {
   7,   /* field[7] = w6 */
   6,   /* field[6] = w7 */
 };
-static const ProtobufCIntRange data__number_ranges[1 + 1] =
+static const ProtobufCIntRange mt__ea900_ii__data__number_ranges[1 + 1] =
 {
   { 1, 0 },
   { 0, 14 }
 };
-const ProtobufCMessageDescriptor data__descriptor =
+const ProtobufCMessageDescriptor mt__ea900_ii__data__descriptor =
 {
   PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "mt_EA900II.Data",
   "Data",
-  "Data",
-  "Data",
-  "",
-  sizeof(Data),
+  "MtEA900II__Data",
+  "mt_EA900II",
+  sizeof(MtEA900II__Data),
   14,
-  data__field_descriptors,
-  data__field_indices_by_name,
-  1,  data__number_ranges,
-  (ProtobufCMessageInit) data__init,
+  mt__ea900_ii__data__field_descriptors,
+  mt__ea900_ii__data__field_indices_by_name,
+  1,  mt__ea900_ii__data__number_ranges,
+  (ProtobufCMessageInit) mt__ea900_ii__data__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor model__field_descriptors[3] =
+static const ProtobufCFieldDescriptor mt__ea900_ii__model__field_descriptors[3] =
 {
   {
     "name",
@@ -492,7 +492,7 @@ static const ProtobufCFieldDescriptor model__field_descriptors[3] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_STRING,
     0,   /* quantifier_offset */
-    offsetof(Model, name),
+    offsetof(MtEA900II__Model, name),
     NULL,
     &protobuf_c_empty_string,
     0,             /* flags */
@@ -504,7 +504,7 @@ static const ProtobufCFieldDescriptor model__field_descriptors[3] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_STRING,
     0,   /* quantifier_offset */
-    offsetof(Model, model),
+    offsetof(MtEA900II__Model, model),
     NULL,
     &protobuf_c_empty_string,
     0,             /* flags */
@@ -516,39 +516,39 @@ static const ProtobufCFieldDescriptor model__field_descriptors[3] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_STRING,
     0,   /* quantifier_offset */
-    offsetof(Model, version),
+    offsetof(MtEA900II__Model, version),
     NULL,
     &protobuf_c_empty_string,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
 };
-static const unsigned model__field_indices_by_name[] = {
+static const unsigned mt__ea900_ii__model__field_indices_by_name[] = {
   1,   /* field[1] = model */
   0,   /* field[0] = name */
   2,   /* field[2] = version */
 };
-static const ProtobufCIntRange model__number_ranges[1 + 1] =
+static const ProtobufCIntRange mt__ea900_ii__model__number_ranges[1 + 1] =
 {
   { 1, 0 },
   { 0, 3 }
 };
-const ProtobufCMessageDescriptor model__descriptor =
+const ProtobufCMessageDescriptor mt__ea900_ii__model__descriptor =
 {
   PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "mt_EA900II.Model",
   "Model",
-  "Model",
-  "Model",
-  "",
-  sizeof(Model),
+  "MtEA900II__Model",
+  "mt_EA900II",
+  sizeof(MtEA900II__Model),
   3,
-  model__field_descriptors,
-  model__field_indices_by_name,
-  1,  model__number_ranges,
-  (ProtobufCMessageInit) model__init,
+  mt__ea900_ii__model__field_descriptors,
+  mt__ea900_ii__model__field_indices_by_name,
+  1,  mt__ea900_ii__model__number_ranges,
+  (ProtobufCMessageInit) mt__ea900_ii__model__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor config__field_descriptors[4] =
+static const ProtobufCFieldDescriptor mt__ea900_ii__config__field_descriptors[4] =
 {
   {
     "votage",
@@ -556,7 +556,7 @@ static const ProtobufCFieldDescriptor config__field_descriptors[4] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_FLOAT,
     0,   /* quantifier_offset */
-    offsetof(Config, votage),
+    offsetof(MtEA900II__Config, votage),
     NULL,
     NULL,
     0,             /* flags */
@@ -568,7 +568,7 @@ static const ProtobufCFieldDescriptor config__field_descriptors[4] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_FLOAT,
     0,   /* quantifier_offset */
-    offsetof(Config, current),
+    offsetof(MtEA900II__Config, current),
     NULL,
     NULL,
     0,             /* flags */
@@ -580,7 +580,7 @@ static const ProtobufCFieldDescriptor config__field_descriptors[4] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_FLOAT,
     0,   /* quantifier_offset */
-    offsetof(Config, batvotage),
+    offsetof(MtEA900II__Config, batvotage),
     NULL,
     NULL,
     0,             /* flags */
@@ -592,40 +592,40 @@ static const ProtobufCFieldDescriptor config__field_descriptors[4] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_FLOAT,
     0,   /* quantifier_offset */
-    offsetof(Config, freq),
+    offsetof(MtEA900II__Config, freq),
     NULL,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
 };
-static const unsigned config__field_indices_by_name[] = {
+static const unsigned mt__ea900_ii__config__field_indices_by_name[] = {
   2,   /* field[2] = batVotage */
   1,   /* field[1] = current */
   3,   /* field[3] = freq */
   0,   /* field[0] = votage */
 };
-static const ProtobufCIntRange config__number_ranges[1 + 1] =
+static const ProtobufCIntRange mt__ea900_ii__config__number_ranges[1 + 1] =
 {
   { 1, 0 },
   { 0, 4 }
 };
-const ProtobufCMessageDescriptor config__descriptor =
+const ProtobufCMessageDescriptor mt__ea900_ii__config__descriptor =
 {
   PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "mt_EA900II.Config",
   "Config",
-  "Config",
-  "Config",
-  "",
-  sizeof(Config),
+  "MtEA900II__Config",
+  "mt_EA900II",
+  sizeof(MtEA900II__Config),
   4,
-  config__field_descriptors,
-  config__field_indices_by_name,
-  1,  config__number_ranges,
-  (ProtobufCMessageInit) config__init,
+  mt__ea900_ii__config__field_descriptors,
+  mt__ea900_ii__config__field_indices_by_name,
+  1,  mt__ea900_ii__config__number_ranges,
+  (ProtobufCMessageInit) mt__ea900_ii__config__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor data_res__field_descriptors[2] =
+static const ProtobufCFieldDescriptor mt__ea900_ii__data_res__field_descriptors[2] =
 {
   {
     "code",
@@ -633,7 +633,7 @@ static const ProtobufCFieldDescriptor data_res__field_descriptors[2] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_INT32,
     0,   /* quantifier_offset */
-    offsetof(DataRes, code),
+    offsetof(MtEA900II__DataRes, code),
     NULL,
     NULL,
     0,             /* flags */
@@ -645,38 +645,38 @@ static const ProtobufCFieldDescriptor data_res__field_descriptors[2] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_MESSAGE,
     0,   /* quantifier_offset */
-    offsetof(DataRes, datas),
-    &data__descriptor,
+    offsetof(MtEA900II__DataRes, datas),
+    &mt__ea900_ii__data__descriptor,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
 };
-static const unsigned data_res__field_indices_by_name[] = {
+static const unsigned mt__ea900_ii__data_res__field_indices_by_name[] = {
   0,   /* field[0] = code */
   1,   /* field[1] = datas */
 };
-static const ProtobufCIntRange data_res__number_ranges[1 + 1] =
+static const ProtobufCIntRange mt__ea900_ii__data_res__number_ranges[1 + 1] =
 {
   { 1, 0 },
   { 0, 2 }
 };
-const ProtobufCMessageDescriptor data_res__descriptor =
+const ProtobufCMessageDescriptor mt__ea900_ii__data_res__descriptor =
 {
   PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "mt_EA900II.DataRes",
   "DataRes",
-  "DataRes",
-  "DataRes",
-  "",
-  sizeof(DataRes),
+  "MtEA900II__DataRes",
+  "mt_EA900II",
+  sizeof(MtEA900II__DataRes),
   2,
-  data_res__field_descriptors,
-  data_res__field_indices_by_name,
-  1,  data_res__number_ranges,
-  (ProtobufCMessageInit) data_res__init,
+  mt__ea900_ii__data_res__field_descriptors,
+  mt__ea900_ii__data_res__field_indices_by_name,
+  1,  mt__ea900_ii__data_res__number_ranges,
+  (ProtobufCMessageInit) mt__ea900_ii__data_res__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor model_res__field_descriptors[2] =
+static const ProtobufCFieldDescriptor mt__ea900_ii__model_res__field_descriptors[2] =
 {
   {
     "code",
@@ -684,7 +684,7 @@ static const ProtobufCFieldDescriptor model_res__field_descriptors[2] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_INT32,
     0,   /* quantifier_offset */
-    offsetof(ModelRes, code),
+    offsetof(MtEA900II__ModelRes, code),
     NULL,
     NULL,
     0,             /* flags */
@@ -696,38 +696,38 @@ static const ProtobufCFieldDescriptor model_res__field_descriptors[2] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_MESSAGE,
     0,   /* quantifier_offset */
-    offsetof(ModelRes, model),
-    &model__descriptor,
+    offsetof(MtEA900II__ModelRes, model),
+    &mt__ea900_ii__model__descriptor,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
 };
-static const unsigned model_res__field_indices_by_name[] = {
+static const unsigned mt__ea900_ii__model_res__field_indices_by_name[] = {
   0,   /* field[0] = code */
   1,   /* field[1] = model */
 };
-static const ProtobufCIntRange model_res__number_ranges[1 + 1] =
+static const ProtobufCIntRange mt__ea900_ii__model_res__number_ranges[1 + 1] =
 {
   { 1, 0 },
   { 0, 2 }
 };
-const ProtobufCMessageDescriptor model_res__descriptor =
+const ProtobufCMessageDescriptor mt__ea900_ii__model_res__descriptor =
 {
   PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "mt_EA900II.ModelRes",
   "ModelRes",
-  "ModelRes",
-  "ModelRes",
-  "",
-  sizeof(ModelRes),
+  "MtEA900II__ModelRes",
+  "mt_EA900II",
+  sizeof(MtEA900II__ModelRes),
   2,
-  model_res__field_descriptors,
-  model_res__field_indices_by_name,
-  1,  model_res__number_ranges,
-  (ProtobufCMessageInit) model_res__init,
+  mt__ea900_ii__model_res__field_descriptors,
+  mt__ea900_ii__model_res__field_indices_by_name,
+  1,  mt__ea900_ii__model_res__number_ranges,
+  (ProtobufCMessageInit) mt__ea900_ii__model_res__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor config_res__field_descriptors[2] =
+static const ProtobufCFieldDescriptor mt__ea900_ii__config_res__field_descriptors[2] =
 {
   {
     "code",
@@ -735,7 +735,7 @@ static const ProtobufCFieldDescriptor config_res__field_descriptors[2] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_INT32,
     0,   /* quantifier_offset */
-    offsetof(ConfigRes, code),
+    offsetof(MtEA900II__ConfigRes, code),
     NULL,
     NULL,
     0,             /* flags */
@@ -747,87 +747,87 @@ static const ProtobufCFieldDescriptor config_res__field_descriptors[2] =
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_MESSAGE,
     0,   /* quantifier_offset */
-    offsetof(ConfigRes, config),
-    &config__descriptor,
+    offsetof(MtEA900II__ConfigRes, config),
+    &mt__ea900_ii__config__descriptor,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
 };
-static const unsigned config_res__field_indices_by_name[] = {
+static const unsigned mt__ea900_ii__config_res__field_indices_by_name[] = {
   0,   /* field[0] = code */
   1,   /* field[1] = config */
 };
-static const ProtobufCIntRange config_res__number_ranges[1 + 1] =
+static const ProtobufCIntRange mt__ea900_ii__config_res__number_ranges[1 + 1] =
 {
   { 1, 0 },
   { 0, 2 }
 };
-const ProtobufCMessageDescriptor config_res__descriptor =
+const ProtobufCMessageDescriptor mt__ea900_ii__config_res__descriptor =
 {
   PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "mt_EA900II.ConfigRes",
   "ConfigRes",
-  "ConfigRes",
-  "ConfigRes",
-  "",
-  sizeof(ConfigRes),
+  "MtEA900II__ConfigRes",
+  "mt_EA900II",
+  sizeof(MtEA900II__ConfigRes),
   2,
-  config_res__field_descriptors,
-  config_res__field_indices_by_name,
-  1,  config_res__number_ranges,
-  (ProtobufCMessageInit) config_res__init,
+  mt__ea900_ii__config_res__field_descriptors,
+  mt__ea900_ii__config_res__field_indices_by_name,
+  1,  mt__ea900_ii__config_res__number_ranges,
+  (ProtobufCMessageInit) mt__ea900_ii__config_res__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCMethodDescriptor ea900_iiservice__method_descriptors[3] =
+static const ProtobufCMethodDescriptor mt__ea900_ii__ea900_iiservice__method_descriptors[3] =
 {
-  { "GetData", &google__protobuf__empty__descriptor, &data_res__descriptor },
-  { "GetModel", &google__protobuf__empty__descriptor, &model_res__descriptor },
-  { "GetConfig", &google__protobuf__empty__descriptor, &config_res__descriptor },
+  { "GetData", &google__protobuf__empty__descriptor, &mt__ea900_ii__data_res__descriptor },
+  { "GetModel", &google__protobuf__empty__descriptor, &mt__ea900_ii__model_res__descriptor },
+  { "GetConfig", &google__protobuf__empty__descriptor, &mt__ea900_ii__config_res__descriptor },
 };
-const unsigned ea900_iiservice__method_indices_by_name[] = {
+const unsigned mt__ea900_ii__ea900_iiservice__method_indices_by_name[] = {
   2,        /* GetConfig */
   0,        /* GetData */
   1         /* GetModel */
 };
-const ProtobufCServiceDescriptor ea900_iiservice__descriptor =
+const ProtobufCServiceDescriptor mt__ea900_ii__ea900_iiservice__descriptor =
 {
   PROTOBUF_C__SERVICE_DESCRIPTOR_MAGIC,
+  "mt_EA900II.EA900IIService",
   "EA900IIService",
-  "EA900IIService",
-  "EA900IIService",
-  "",
+  "MtEA900II__EA900IIService",
+  "mt_EA900II",
   3,
-  ea900_iiservice__method_descriptors,
-  ea900_iiservice__method_indices_by_name
+  mt__ea900_ii__ea900_iiservice__method_descriptors,
+  mt__ea900_ii__ea900_iiservice__method_indices_by_name
 };
-void ea900_iiservice__get_data(ProtobufCService *service,
-                               const Google__Protobuf__Empty *input,
-                               DataRes_Closure closure,
-                               void *closure_data)
+void mt__ea900_ii__ea900_iiservice__get_data(ProtobufCService *service,
+                                             const Google__Protobuf__Empty *input,
+                                             MtEA900II__DataRes_Closure closure,
+                                             void *closure_data)
 {
-  assert(service->descriptor == &ea900_iiservice__descriptor);
+  assert(service->descriptor == &mt__ea900_ii__ea900_iiservice__descriptor);
   service->invoke(service, 0, (const ProtobufCMessage *) input, (ProtobufCClosure) closure, closure_data);
 }
-void ea900_iiservice__get_model(ProtobufCService *service,
-                                const Google__Protobuf__Empty *input,
-                                ModelRes_Closure closure,
-                                void *closure_data)
+void mt__ea900_ii__ea900_iiservice__get_model(ProtobufCService *service,
+                                              const Google__Protobuf__Empty *input,
+                                              MtEA900II__ModelRes_Closure closure,
+                                              void *closure_data)
 {
-  assert(service->descriptor == &ea900_iiservice__descriptor);
+  assert(service->descriptor == &mt__ea900_ii__ea900_iiservice__descriptor);
   service->invoke(service, 1, (const ProtobufCMessage *) input, (ProtobufCClosure) closure, closure_data);
 }
-void ea900_iiservice__get_config(ProtobufCService *service,
-                                 const Google__Protobuf__Empty *input,
-                                 ConfigRes_Closure closure,
-                                 void *closure_data)
+void mt__ea900_ii__ea900_iiservice__get_config(ProtobufCService *service,
+                                               const Google__Protobuf__Empty *input,
+                                               MtEA900II__ConfigRes_Closure closure,
+                                               void *closure_data)
 {
-  assert(service->descriptor == &ea900_iiservice__descriptor);
+  assert(service->descriptor == &mt__ea900_ii__ea900_iiservice__descriptor);
   service->invoke(service, 2, (const ProtobufCMessage *) input, (ProtobufCClosure) closure, closure_data);
 }
-void ea900_iiservice__init (EA900IIService_Service *service,
-                            EA900IIService_ServiceDestroy destroy)
+void mt__ea900_ii__ea900_iiservice__init (MtEA900II__EA900IIService_Service *service,
+                                          MtEA900II__EA900IIService_ServiceDestroy destroy)
 {
   protobuf_c_service_generated_init (&service->base,
-                                     &ea900_iiservice__descriptor,
+                                     &mt__ea900_ii__ea900_iiservice__descriptor,
                                      (ProtobufCServiceDestroy) destroy);
 }

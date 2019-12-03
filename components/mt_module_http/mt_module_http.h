@@ -147,6 +147,7 @@ typedef struct _mt_module_http_t
 {
   char *host;
   int port;
+  esp_http_client_transport_t tran_type;
   credential_t *cred;
   char *token;
   module_t *module;

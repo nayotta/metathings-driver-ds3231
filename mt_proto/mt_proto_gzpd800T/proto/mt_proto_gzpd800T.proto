@@ -1,22 +1,23 @@
 syntax = "proto3";
 
+package mt_gzpd800T;
+
 import "google/protobuf/empty.proto";
 
 service Gzpd800TService {
-	rpc GetData(google.protobuf.Empty) returns (DataRes) {}
+  rpc GetData(google.protobuf.Empty) returns (DataRes) {}
 }
 
 message Data // push frame
 {
-	int32 addr = 1;     	// 局放传感器编号
-	uint32 amp = 2;      	// 幅值
-	uint32 freq = 3;       	// 频率
-	uint32 power = 4;		// 总能量
-	bool warn = 5;			// 报警状态
+  int32 addr = 1;   // 局放传感器编号
+  uint32 amp = 2;   // 幅值
+  uint32 freq = 3;  // 频率
+  uint32 power = 4; // 总能量
+  bool warn = 5;    // 报警状态
 }
 
-message DataRes 
-{
-	int32 resCode = 1;
-	repeated Data datas = 2;
+message DataRes {
+  int32 resCode = 1;
+  repeated Data datas = 2;
 }

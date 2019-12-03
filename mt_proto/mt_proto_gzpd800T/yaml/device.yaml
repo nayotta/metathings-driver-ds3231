@@ -102,29 +102,25 @@ flow:
       max: 100000
     warn1:
       description: 局放传感器1报警 true:报警 false:正常
-      unit: 
+      unit:
       driver: gzpd800T
       type: bool
       period: 60000
     warn2:
       description: 局放传感器2报警 true:报警 false:正常
-      unit: 
+      unit:
       driver: gzpd800T
       type: bool
       period: 60000
     warn3:
       description: 局放传感器3报警 true:报警 false:正常
-      unit: 
+      unit:
       driver: gzpd800T
       type: bool
       period: 60000
     warn4:
       description: 局放传感器4报警 true:报警 false:正常
-      unit: 
+      unit:
       driver: gzpd800T
       type: bool
       period: 60000
-     
-
-
-      

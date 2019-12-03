@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+package mt_EA900II;
+
 import "google/protobuf/empty.proto";
 
 service EA900IIService {

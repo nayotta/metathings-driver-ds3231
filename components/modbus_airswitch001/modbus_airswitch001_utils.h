@@ -14,23 +14,26 @@
 #endif
 
 esp_err_t modbus_airswitch001_util_copy_datas(airswitch_data_t *datas_in,
-                                              Data *datas_out);
+                                              MtAirswitch001__Data *datas_out);
 
-esp_err_t modbus_airswitch001_util_copy_configs(airswitch_config_t *config_in,
-                                                Config *config_out);
+esp_err_t
+modbus_airswitch001_util_copy_configs(airswitch_config_t *config_in,
+                                      MtAirswitch001__Config *config_out);
 
-esp_err_t modbus_airswitch001_util_check_get_req(int32_t *addr, GetReq *req);
+esp_err_t modbus_airswitch001_util_check_get_req(int32_t *addr,
+                                                 MtAirswitch001__GetReq *req);
 
-esp_err_t modbus_airswitch001_util_check_set_state_req(int32_t *addr,
-                                                       SetStateReq *req);
+esp_err_t
+modbus_airswitch001_util_check_set_state_req(int32_t *addr,
+                                             MtAirswitch001__SetStateReq *req);
 
-esp_err_t modbus_airswitch001_util_check_set_config_req(int32_t *addr,
-                                                        SetConfigReq *req);
+esp_err_t modbus_airswitch001_util_check_set_config_req(
+    int32_t *addr, MtAirswitch001__SetConfigReq *req);
 
-esp_err_t modbus_airswitch001_util_check_set_quality_req(int32_t *addr,
-                                                         SetQualityReq *req);
+esp_err_t modbus_airswitch001_util_check_set_quality_req(
+    int32_t *addr, MtAirswitch001__SetQualityReq *req);
 
-esp_err_t modbus_airswitch001_util_check_set_leak_test_req(int32_t *addr,
-                                                           SetLeakTestReq *req);
+esp_err_t modbus_airswitch001_util_check_set_leak_test_req(
+    int32_t *addr, MtAirswitch001__SetLeakTestReq *req);
 
 #endif
