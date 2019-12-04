@@ -1,0 +1,622 @@
+# yaml
+version: v1beta
+description: PRS3342AF
+flow:
+  name: m1
+  fields:
+    DUab1:
+      description: 开关电源侧Uab电压1
+      unit: kv
+      driver: PRS3342AF
+      type: float
+      dtu: 100
+      scale: 100
+      addr: 0x4001
+      period: 60000
+      min: 0
+      max: 100000
+    DUbc1:
+      description: 开关电源侧Ubc电压1
+      unit: kv
+      driver: PRS3342AF
+      type: float
+      dtu: 100
+      scale: 100
+      addr: 0x4002
+      period: 60000
+      min: 0
+      max: 100000
+    DUac1:
+      description: 开关电源侧Uac电压1
+      unit: kv
+      driver: PRS3342AF
+      type: float
+      dtu: 100
+      scale: 100
+      addr: 0x4003
+      period: 60000
+      min: 0
+      max: 100000
+    MUab1:
+      description: 开关母线侧Uab电压1
+      unit: kv
+      driver: PRS3342AF
+      type: float
+      dtu: 100
+      scale: 100
+      addr: 0x4004
+      period: 60000
+      min: 0
+      max: 100000
+    MUbc1:
+      description: 开关母线侧Ubc电压1
+      unit: kv
+      driver: PRS3342AF
+      type: float
+      dtu: 100
+      scale: 100
+      addr: 0x4005
+      period: 60000
+      min: 0
+      max: 100000
+    MUac1:
+      description: 开关母线侧Uac电压1
+      unit: kv
+      driver: PRS3342AF
+      type: float
+      dtu: 100
+      scale: 100
+      addr: 0x4006
+      period: 60000
+      min: 0
+      max: 100000
+    MUz1:
+      description: 开关母线侧U0电压1
+      unit: kv
+      driver: PRS3342AF
+      type: float
+      dtu: 100
+      scale: 100
+      addr: 0x4007
+      period: 60000
+      min: 0
+      max: 100000
+    Ia1:
+      description: 开关电流A相1
+      unit: A
+      driver: PRS3342AF
+      type: float
+      dtu: 1000
+      scale: 120
+      addr: 0x4008
+      period: 60000
+      min: 0
+      max: 100000
+    Ib1:
+      description: 开关电流B相1
+      unit: A
+      driver: PRS3342AF
+      type: float
+      dtu: 1000
+      scale: 120
+      addr: 0x4009
+      period: 60000
+      min: 0
+      max: 100000
+    Ic1:
+      description: 开关电流C相1
+      unit: A
+      driver: PRS3342AF
+      type: float
+      dtu: 1000
+      scale: 120
+      addr: 0x400A
+      period: 60000
+      min: 0
+      max: 100000
+    Iz1:
+      description: 开关电流零相1
+      unit: A
+      driver: PRS3342AF
+      type: float
+      dtu: 1000
+      scale: 20
+      addr: 0x400B
+      period: 60000
+      min: 0
+      max: 100000
+    P1:
+      description: 开关有功功率1
+      unit: kw
+      driver: PRS3342AF
+      type: float
+      dtu: 1
+      scale: 1
+      addr: 0x400C
+      period: 60000
+      min: 0
+      max: 100000
+    Q1:
+      description: 开关无功功率1
+      unit: kvar
+      driver: PRS3342AF
+      type: float
+      dtu: 1
+      scale: 1
+      addr: 0x400D
+      period: 60000
+      min: 0
+      max: 100000
+    COS1:
+      description: 开关功率因素1
+      unit: 百分比
+      driver: PRS3342AF
+      type: float
+      dtu: 100
+      scale: 1
+      addr: 0x400E
+      period: 60000
+      min: 0
+      max: 100000
+    DUab2:
+      description: 开关电源侧Uab电压2
+      unit: kv
+      driver: PRS3342AF
+      type: float
+      dtu: 100
+      scale: 100
+      addr: 0x4015
+      period: 60000
+      min: 0
+      max: 100000
+    DUbc2:
+      description: 开关电源侧Ubc电压2
+      unit: kv
+      driver: PRS3342AF
+      type: float
+      dtu: 100
+      scale: 100
+      addr: 0x4016
+      period: 60000
+      min: 0
+      max: 100000
+    DUac2:
+      description: 开关电源侧Uac电压2
+      unit: kv
+      driver: PRS3342AF
+      type: float
+      dtu: 100
+      scale: 100
+      addr: 0x4017
+      period: 60000
+      min: 0
+      max: 100000
+    MUab2:
+      description: 开关母线侧Uab电压2
+      unit: kv
+      driver: PRS3342AF
+      type: float
+      dtu: 100
+      scale: 100
+      addr: 0x4018
+      period: 60000
+      min: 0
+      max: 100000
+    MUbc2:
+      description: 开关母线侧Ubc电压2
+      unit: kv
+      driver: PRS3342AF
+      type: float
+      dtu: 100
+      scale: 100
+      addr: 0x4019
+      period: 60000
+      min: 0
+      max: 100000
+    MUac2:
+      description: 开关母线侧Uac电压2
+      unit: kv
+      driver: PRS3342AF
+      type: float
+      dtu: 100
+      scale: 100
+      addr: 0x401A
+      period: 60000
+      min: 0
+      max: 100000
+    MUz2:
+      description: 开关母线侧U0电压2
+      unit: kv
+      driver: PRS3342AF
+      type: float
+      dtu: 100
+      scale: 100
+      addr: 0x401B
+      period: 60000
+      min: 0
+      max: 100000
+    Ia2:
+      description: 开关电流A相2
+      unit: A
+      driver: PRS3342AF
+      type: float
+      dtu: 1000
+      scale: 120
+      addr: 0x401C
+      period: 60000
+      min: 0
+      max: 100000
+    Ib2:
+      description: 开关电流B相2
+      unit: A
+      driver: PRS3342AF
+      type: float
+      dtu: 1000
+      scale: 120
+      addr: 0x401D
+      period: 60000
+      min: 0
+      max: 100000
+    Ic2:
+      description: 开关电流C相2
+      unit: A
+      driver: PRS3342AF
+      type: float
+      dtu: 1000
+      scale: 120
+      addr: 0x401E
+      period: 60000
+      min: 0
+      max: 100000
+    Iz2:
+      description: 开关电流零相2
+      unit: A
+      driver: PRS3342AF
+      type: float
+      dtu: 1000
+      scale: 20
+      addr: 0x401F
+      period: 60000
+      min: 0
+      max: 100000
+    P2:
+      description: 开关有功功率2
+      unit: kw
+      driver: PRS3342AF
+      type: float
+      dtu: 1
+      scale: 1
+      addr: 0x4020
+      period: 60000
+      min: 0
+      max: 100000
+    Q2:
+      description: 开关无功功率2
+      unit: kvar
+      driver: PRS3342AF
+      type: float
+      dtu: 1
+      scale: 1
+      addr: 0x4021
+      period: 60000
+      min: 0
+      max: 100000
+    COS2:
+      description: 开关功率因素2
+      unit: 百分比
+      driver: PRS3342AF
+      type: float
+      dtu: 100
+      scale: 1
+      addr: 0x4022
+      period: 60000
+      min: 0
+      max: 100000
+    DUab3:
+      description: 开关电源侧Uab电压3
+      unit: kv
+      driver: PRS3342AF
+      type: float
+      dtu: 100
+      scale: 100
+      addr: 0x4029
+      period: 60000
+      min: 0
+      max: 100000
+    DUbc3:
+      description: 开关电源侧Ubc电压3
+      unit: kv
+      driver: PRS3342AF
+      type: float
+      dtu: 100
+      scale: 100
+      addr: 0x402A
+      period: 60000
+      min: 0
+      max: 100000
+    DUac3:
+      description: 开关电源侧Uac电压3
+      unit: kv
+      driver: PRS3342AF
+      type: float
+      dtu: 100
+      scale: 100
+      addr: 0x402B
+      period: 60000
+      min: 0
+      max: 100000
+    MUab3:
+      description: 开关母线侧Uab电压3
+      unit: kv
+      driver: PRS3342AF
+      type: float
+      dtu: 100
+      scale: 100
+      addr: 0x402C
+      period: 60000
+      min: 0
+      max: 100000
+    MUbc3:
+      description: 开关母线侧Ubc电压3
+      unit: kv
+      driver: PRS3342AF
+      type: float
+      dtu: 100
+      scale: 100
+      addr: 0x402D
+      period: 60000
+      min: 0
+      max: 100000
+    MUac3:
+      description: 开关母线侧Uac电压3
+      unit: kv
+      driver: PRS3342AF
+      type: float
+      dtu: 100
+      scale: 100
+      addr: 0x402E
+      period: 60000
+      min: 0
+      max: 100000
+    MUz3:
+      description: 开关母线侧U0电压3
+      unit: kv
+      driver: PRS3342AF
+      type: float
+      dtu: 100
+      scale: 100
+      addr: 0x402F
+      period: 60000
+      min: 0
+      max: 100000
+    Ia3:
+      description: 开关电流A相3
+      unit: A
+      driver: PRS3342AF
+      type: float
+      dtu: 1000
+      scale: 120
+      addr: 0x4030
+      period: 60000
+      min: 0
+      max: 100000
+    Ib3:
+      description: 开关电流B相3
+      unit: A
+      driver: PRS3342AF
+      type: float
+      dtu: 1000
+      scale: 120
+      addr: 0x4031
+      period: 60000
+      min: 0
+      max: 100000
+    Ic3:
+      description: 开关电流C相3
+      unit: A
+      driver: PRS3342AF
+      type: float
+      dtu: 1000
+      scale: 120
+      addr: 0x4032
+      period: 60000
+      min: 0
+      max: 100000
+    Iz3:
+      description: 开关电流零相3
+      unit: A
+      driver: PRS3342AF
+      type: float
+      dtu: 1000
+      scale: 20
+      addr: 0x4033
+      period: 60000
+      min: 0
+      max: 100000
+    P3:
+      description: 开关有功功率3
+      unit: kw
+      driver: PRS3342AF
+      type: float
+      dtu: 1
+      scale: 1
+      addr: 0x4034
+      period: 60000
+      min: 0
+      max: 100000
+    Q3:
+      description: 开关无功功率3
+      unit: kvar
+      driver: PRS3342AF
+      type: float
+      dtu: 1
+      scale: 1
+      addr: 0x4035
+      period: 60000
+      min: 0
+      max: 100000
+    COS3:
+      description: 开关功率因素3
+      unit: 百分比
+      driver: PRS3342AF
+      type: float
+      dtu: 100
+      scale: 1
+      addr: 0x4036
+      period: 60000
+      min: 0
+      max: 100000
+    DUab4:
+      description: 开关电源侧Uab电压4
+      unit: kv
+      driver: PRS3342AF
+      type: float
+      dtu: 100
+      scale: 100
+      addr: 0x403D
+      period: 60000
+      min: 0
+      max: 100000
+    DUbc4:
+      description: 开关电源侧Ubc电压4
+      unit: kv
+      driver: PRS3342AF
+      type: float
+      dtu: 100
+      scale: 100
+      addr: 0x403E
+      period: 60000
+      min: 0
+      max: 100000
+    DUac4:
+      description: 开关电源侧Uac电压4
+      unit: kv
+      driver: PRS3342AF
+      type: float
+      dtu: 100
+      scale: 100
+      addr: 0x403F
+      period: 60000
+      min: 0
+      max: 100000
+    MUab4:
+      description: 开关母线侧Uab电压4
+      unit: kv
+      driver: PRS3342AF
+      type: float
+      dtu: 100
+      scale: 100
+      addr: 0x4040
+      period: 60000
+      min: 0
+      max: 100000
+    MUbc4:
+      description: 开关母线侧Ubc电压4
+      unit: kv
+      driver: PRS3342AF
+      type: float
+      dtu: 100
+      scale: 100
+      addr: 0x4041
+      period: 60000
+      min: 0
+      max: 100000
+    MUac4:
+      description: 开关母线侧Uac电压4
+      unit: kv
+      driver: PRS3342AF
+      type: float
+      dtu: 100
+      scale: 100
+      addr: 0x4042
+      period: 60000
+      min: 0
+      max: 100000
+    MUz4:
+      description: 开关母线侧U0电压4
+      unit: kv
+      driver: PRS3342AF
+      type: float
+      dtu: 100
+      scale: 100
+      addr: 0x4043
+      period: 60000
+      min: 0
+      max: 100000
+    Ia4:
+      description: 开关电流A相4
+      unit: A
+      driver: PRS3342AF
+      type: float
+      dtu: 1000
+      scale: 120
+      addr: 0x4044
+      period: 60000
+      min: 0
+      max: 100000
+    Ib4:
+      description: 开关电流B相4
+      unit: A
+      driver: PRS3342AF
+      type: float
+      dtu: 1000
+      scale: 120
+      addr: 0x4045
+      period: 60000
+      min: 0
+      max: 100000
+    Ic4:
+      description: 开关电流C相4
+      unit: A
+      driver: PRS3342AF
+      type: float
+      dtu: 1000
+      scale: 120
+      addr: 0x4046
+      period: 60000
+      min: 0
+      max: 100000
+    Iz4:
+      description: 开关电流零相4
+      unit: A
+      driver: PRS3342AF
+      type: float
+      dtu: 1000
+      scale: 20
+      addr: 0x4047
+      period: 60000
+      min: 0
+      max: 100000
+    P4:
+      description: 开关有功功率4
+      unit: kw
+      driver: PRS3342AF
+      type: float
+      dtu: 1
+      scale: 1
+      addr: 0x4048
+      period: 60000
+      min: 0
+      max: 100000
+    Q4:
+      description: 开关无功功率4
+      unit: kvar
+      driver: PRS3342AF
+      type: float
+      dtu: 1
+      scale: 1
+      addr: 0x4049
+      period: 60000
+      min: 0
+      max: 100000
+    COS4:
+      description: 开关功率因素4
+      unit: 百分比
+      driver: PRS3342AF
+      type: float
+      dtu: 100
+      scale: 1
+      addr: 0x404A
+      period: 60000
+      min: 0
+      max: 100000

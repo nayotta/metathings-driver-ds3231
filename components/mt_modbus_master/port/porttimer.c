@@ -45,7 +45,7 @@
 
 // global define ==============================================================
 static const char *TAG = "MT_MODBUS_MASTER_PORTTIMER";
-int MB_MASTER_TIMEOUT_MS_RESPOND = 1000; // ms
+int MB_MASTER_TIMEOUT_MS_RESPOND = 2000; // ms
 int MT_VMBMASTER_T35_INTERVAL = 125;
 
 /* ----------------------- static functions ---------------------------------*/
@@ -85,6 +85,7 @@ static void timer_value_update(USHORT val)
   timer_pause(timer_group, timer_idx);
   timer_set_alarm_value(timer_group, timer_idx,
                         val * TIMER_INTERVAL0_SEC * TIMER_SCALE);
+  timer_set_counter_value(timer_group, timer_idx, 0);
   //printf("timer %lld set %d\n", esp_timer_get_time() / 1000, val / 20);
 }
 
@@ -123,7 +124,12 @@ void vMBMasterPortTimersT35Enable()
 }
 
 INLINE
-void vMBMasterPortTimersDisable() { vMBPortTimersDisable(); }
+void vMBMasterPortTimersDisable()
+{
+  USHORT timer_tick = MT_VMBMASTER_T35_INTERVAL * 20; // 1000;
+  timer_value_update(timer_tick);
+  vMBPortTimersDisable();
+}
 
 INLINE
 void vMBMasterPortTimersConvertDelayEnable()

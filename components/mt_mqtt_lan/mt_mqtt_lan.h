@@ -13,7 +13,7 @@
 
 int mqtt_pub_msg(char *topic, uint8_t *buf, int size);
 
-int mqtt_init(char *host, char *port, char *username, char *password,
+int mqtt_init(int index_in,
               char *module_id, uint64_t session_id,char *device_id,
               void (*handle)(char *topic, void *buf, int size));
 

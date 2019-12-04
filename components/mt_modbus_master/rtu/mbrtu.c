@@ -163,8 +163,8 @@ eMBErrorCode eMBMasterRTUReceive(UCHAR *pucRcvAddress, UCHAR **pucFrame,
 {
   eMBErrorCode eStatus = MB_ENOERR;
 
-  // ESP_LOGI(TAG, "RTU RECV");
-  /*
+  /*ESP_LOGI(TAG, "RTU RECV");
+
   for (int i = 0; i < usMasterSendPDULength + 2; i++)
   {
     printf("%2x ", ucMasterRTURcvBuf[i]);
@@ -294,13 +294,12 @@ BOOL xMBMasterRTUReceiveFSM(void)
     // ESP_LOGI(TAG, "xMBMasterRTUReceiveFSM");
     // ESP_LOGW(TAG, "now state=%d", eRcvState);
     eRcvState = STATE_M_RX_RCV;
-    vMBMasterPortTimersDisable();
     eSndState = STATE_M_TX_IDLE;
 
     usMasterRcvBufferPos = 0;
     ucMasterRTURcvBuf[usMasterRcvBufferPos++] = ucByte;
 
-    printf("begin time:%lld\n", esp_timer_get_time() / 1000);
+    // printf("begin time:%lld\n", esp_timer_get_time() / 1000);
 
     /* Enable t3.5 timers. */
     vMBMasterPortTimersT35Enable();
@@ -323,6 +322,8 @@ BOOL xMBMasterRTUReceiveFSM(void)
     }
     vMBMasterPortTimersT35Enable();
     break;
+  default:
+    ESP_LOGE(TAG, "%4d %s unexcept state:%d", __LINE__, __func__, eRcvState);
   }
   return xTaskNeedSwitch;
 }

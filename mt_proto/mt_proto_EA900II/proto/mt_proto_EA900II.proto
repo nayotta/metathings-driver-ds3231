@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package mt_EA900II;
+
+import "google/protobuf/empty.proto";
+
+service EA900IIService {
+  rpc GetData(google.protobuf.Empty) returns (DataRes) {}
+  rpc GetModel(google.protobuf.Empty) returns (ModelRes) {}
+  rpc GetConfig(google.protobuf.Empty) returns (ConfigRes) {}
+}
+
+message Data {
+  float votageIn = 1;    // 输入电压
+  float votageOut = 2;   // 输出电压
+  float loadPercent = 3; // 输出负载百分比
+  float freqIn = 4;      // 输入电源频率
+  float votageBat = 5;   // 电池电压
+  float temp = 6;        // 电池温度
+  bool w7 = 7;           // 市电故障 true:故障 false:正常
+  bool w6 = 8;           // 电池电压低 true:电压低 false:正常
+  bool w5 = 9;           // 旁路/逆变状态 true:旁路 false:逆变
+  bool w4 = 10;          // UPS故障 true:故障 false:正常
+  bool w3 = 11;          // UPS类型 true:后备机 false:在线机
+  bool w2 = 12;          // 系统测试状态 true:测试中 false:无
+  bool w1 = 13;          // 系统关机状态 true:关机激活 false:无
+  bool w0 = 14;          // 告警音 true:开启 false:关闭
+}
+
+message Model {
+  string name = 1;    // ups公司名称
+  string model = 2;   // UPS型号
+  string version = 3; // UPS版本
+}
+
+message Config {
+  float votage = 1;    // 额定电压
+  float current = 2;   // 额定电流
+  float batVotage = 3; // 电池最大电压
+  float freq = 4;      // 额定频率
+}
+
+message DataRes {
+  int32 code = 1;
+  Data datas = 2;
+}
+
+message ModelRes {
+  int32 code = 1;
+  Model model = 2;
+}
+
+message ConfigRes {
+  int32 code = 1;
+  Config config = 2;
+}

@@ -90,7 +90,11 @@ esp_err_t mt_aew100_get_maxPowerA(UCHAR addr, double *data);
 esp_err_t mt_aew100_get_maxPowerB(UCHAR addr, double *data);
 esp_err_t mt_aew100_get_maxPowerC(UCHAR addr, double *data);
 
+// full data
 esp_err_t mt_aew100_get_data(UCHAR addr, Aew100_data_t *data);
+
+// simple data: current votage temp
+esp_err_t mt_aew100_get_data2(UCHAR addr, Aew100_data_t *data);
 
 void mt_modbus_aew100_task();
 

@@ -3,8 +3,8 @@
 #include <freertos/task.h>
 #include <stdio.h>
 
-#define SDA_GPIO 21
-#define SCL_GPIO 19
+#define SDA_GPIO 32
+#define SCL_GPIO 33
 
 void ds1307_test(void *pvParameters)
 {

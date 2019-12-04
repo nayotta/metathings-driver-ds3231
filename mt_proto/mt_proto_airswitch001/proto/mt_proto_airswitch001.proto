@@ -1,0 +1,147 @@
+syntax = "proto3";
+
+package mt_airswitch001;
+
+import "google/protobuf/wrappers.proto";
+
+service Service {
+  rpc GetState(GetReq) returns (GetStateRes) {}
+  rpc GetCtrl(GetReq) returns (GetCtrlRes) {}
+  rpc GetWarn(GetReq) returns (GetWarnRes) {}
+  rpc GetData(GetReq) returns (GetDataRes) {}
+  rpc GetConfig(GetReq) returns (GetConfigRes) {}
+  rpc GetQuality(GetReq) returns (GetQualityRes) {}
+  rpc SetState(SetStateReq) returns (SetRes) {}
+  rpc SetConfig(SetConfigReq) returns (SetRes) {}
+  rpc SetQuality(SetQualityReq) returns (SetRes) {}
+  rpc SetLeakTest(SetLeakTestReq) returns (SetRes) {}
+}
+
+message State {
+  bool data = 1;            // true:打开 false:关闭
+}
+
+message OpState {
+  google.protobuf.BoolValue data = 1;  // true:打开 false:关闭
+}
+
+message Ctrl {
+  bool data = 1;            // true:可以控制 false:不能控制
+}
+
+message Warn {              // 报警信息
+  bool noteCurrent = 16;    // 电流预警
+  bool noteLeak = 15;       // 漏电预警
+  bool noteVotageLow = 14;  // 欠压预警
+  bool noteVotageHigh = 13; // 过压预警
+  bool warnVotageLow = 12;  // 欠压报警
+  bool warnFire = 11;       // 打火报警
+  bool warnVotageHigh = 7;  // 过压报警
+  bool warnCurrent = 6;     // 过流报警
+  bool warnLeak = 5;        // 漏电报警
+  bool warnTempHigh = 4;    // 温度报警
+  bool warnPowrHigh = 3;    // 过载报警
+  bool warnWave = 2;        // 浪涌报警
+  bool warnShort = 1;       // 短路报警
+  
+}
+
+message Data {              // 实时数据
+  float votage = 1;         // 电压 V
+  float leakCurrent = 2;    // 漏电流 A
+  float power = 3;          // 功率 W
+  float temp = 4;           // 温度 ℃
+  float current = 5;        // 电流 A
+  bool state = 6;           // 开关状态 true:打开 false:关闭
+  bool ctrl = 7;            // 控制状态 true:可以控制 false:不能控制
+}
+
+message Config {            // 报警配置
+  float votageHigh = 1;     // 电压上限 V
+  float votageLow = 2;      // 电压下限 V 
+  float leakCurrentHigh = 3;// 漏电流上限 A
+  float powerHigh = 4;      // 功率上限 W
+  float tempHigh = 5;       // 温度上限 ℃
+  float currentHigh = 6;    // 电流上限 A
+}
+
+message OpConfig {
+  google.protobuf.FloatValue votageHigh = 1;     // 电压上限 V
+  google.protobuf.FloatValue votageLow = 2;      // 电压下限 V 
+  google.protobuf.FloatValue leakCurrentHigh = 3;// 漏电流上限 A
+  google.protobuf.FloatValue powerHigh = 4;      // 功率上限 W
+  google.protobuf.FloatValue tempHigh = 5;       // 温度上限 ℃
+  google.protobuf.FloatValue currentHigh = 6;    // 电流上限 A
+}
+
+message Quality {
+  float quality = 1;        // 电量 kwh
+}
+
+message OpQuality {
+  google.protobuf.FloatValue quality = 1;        // 电量 kwh
+}
+
+message GetReq {
+  int32 addr = 1;
+}
+
+message SetRes {
+  int32 code = 1;
+  int32 addr = 2;
+}
+
+message GetStateRes {
+  int32 code = 1;
+  int32 addr = 2;
+  State state = 3;
+}
+
+message GetCtrlRes {
+  int32 code = 1;
+  int32 addr = 2;
+  Ctrl ctrl = 3;
+}
+
+message GetWarnRes {
+  int32 code = 1;
+  int32 addr = 2;
+  Warn warn = 3;
+}
+
+message GetDataRes {
+  int32 code = 1;
+  int32 addr = 2;
+  Data data = 3;
+} 
+
+message GetConfigRes {
+  int32 code = 1;
+  int32 addr = 2;
+  Config config = 3;
+}
+
+message GetQualityRes {
+  int32 code = 1;
+  int32 addr = 2;
+  Quality quality = 3;
+}
+
+message SetStateReq {
+  int32 addr = 1;
+  OpState state = 2;
+}
+
+message SetConfigReq {
+  int32 addr = 1;
+  OpConfig config = 2;
+}
+
+message SetQualityReq {
+  int32 addr = 1;
+  OpQuality quality = 2;
+}
+
+message SetLeakTestReq {
+  int32 addr = 1;
+}

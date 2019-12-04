@@ -6,11 +6,10 @@
 # lib(subdirectory_name).a in the build directory. This behaviour is entirely configurable,
 # please read the SDK documents if you need to do this.
 #
-COMPONENT_ADD_INCLUDEDIRS := include port
+COMPONENT_ADD_INCLUDEDIRS := include
 #COMPONENT_PRIV_INCLUDEDIRS :=
 
 #EXTRA_CFLAGS := -DICACHE_RODATA_ATTR
 #CFLAGS += -Wno-error=implicit-function-declaration -Wno-error=format= -DHAVE_CONFIG_H
 
-COMPONENT_SRCDIRS := ./ ./rtu ./port ./functions
-COMPONENT_PRIV_INCLUDEDIRS := include ./rtu ./port
+COMPONENT_SRCDIRS := ./ ./rtu ./port ./functions ./task

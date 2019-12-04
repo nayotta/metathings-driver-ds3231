@@ -9,11 +9,14 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/event_groups.h"
 #include "freertos/task.h"
+#include "gpio_button.h"
+#include "gpio_light.h"
 #include "tcpip_adapter.h"
 
 #include "mt_nvs_storage.h"
 #include "mt_smartconfig.h"
 
+// global define ==============================================================
 static const char *TAG = "MT_SMARTCONFIG";
 
 static mt_gpio_light_t *LIGHT_HANDLE = NULL;
@@ -24,6 +27,32 @@ const int ESPTOUCH_DONE_BIT = BIT1;
 const int WIFI_OK_BIT = BIT2;
 
 // static func ================================================================
+void btn_short_press_callback() { printf("btn_short_press\n"); }
+
+void btn_long_press_callback() {
+  bool ret = false;
+
+  printf("btn_long_press\n");
+
+  ret = mt_nvs_write_string_config("ssid", "");
+  if (ret == false) {
+    ESP_LOGE(TAG, "%4d %s mt_nvs_write_string_config failed", __LINE__,
+             __func__);
+    return;
+  }
+
+  ret = mt_nvs_write_string_config("password", "");
+  if (ret == false) {
+    ESP_LOGE(TAG, "%4d %s mt_nvs_write_string_config failed", __LINE__,
+             __func__);
+    return;
+  }
+
+  fflush(stdout);
+  ESP_LOGI(TAG, "%4d %s reset wifi and reboot now", __LINE__, __func__);
+  esp_restart();
+}
+
 static void sc_callback(smartconfig_status_t status, void *pdata) {
   switch (status) {
     case SC_STATUS_WAIT:
@@ -126,18 +155,25 @@ static void mt_smartconfig_loop(void *parm) {
     goto EXIT;
   }
 
-  while (1) {
-    ESP_LOGI(TAG, "WiFi Connecting");
-    uxBits =
-        xEventGroupWaitBits(WIFI_EVENT_GROUP, CONNECTED_BIT | ESPTOUCH_DONE_BIT,
-                            true, false, portMAX_DELAY);
-    if (uxBits & CONNECTED_BIT) {
-      ESP_LOGI(TAG, "WiFi Connected to ap");
-    }
-    if (uxBits & ESPTOUCH_DONE_BIT) {
-      ESP_LOGI(TAG, "smartconfig over");
-      esp_smartconfig_stop();
-      goto EXIT;
+  ESP_LOGI(TAG, "WiFi Connecting");
+  uxBits =
+      xEventGroupWaitBits(WIFI_EVENT_GROUP, CONNECTED_BIT | ESPTOUCH_DONE_BIT,
+                          true, false, 300 * 1000 / portTICK_PERIOD_MS);
+  if (uxBits & CONNECTED_BIT) {
+    ESP_LOGI(TAG, "WiFi Connected to ap");
+  }
+
+  if (uxBits & ESPTOUCH_DONE_BIT) {
+    ESP_LOGI(TAG, "smartconfig over");
+    esp_smartconfig_stop();
+    goto EXIT;
+  }
+
+  // timeout set disconnect
+  if (LIGHT_HANDLE != NULL) {
+    ret = mt_gpio_light_set_blink(LIGHT_HANDLE, 2000);
+    if (ret == false) {
+      ESP_LOGE(TAG, "%d mt_gpio_light_set_blink failed", __LINE__);
     }
   }
 
@@ -313,11 +349,42 @@ static void mt_wifi_loop(void) {
 }
 
 // public func ================================================================
-void mt_smartconfig_set_light_handle(mt_gpio_light_t *light_handle) {
-  LIGHT_HANDLE = light_handle;
-}
+void mt_smartconfig_task(int light_pin, int light_pin_on_level, int btn_pin,
+                         int btn_pin_on_level) {
+  esp_err_t err = ESP_OK;
 
-void mt_smartconfig_task() {
+  if (light_pin != -1) {
+    LIGHT_HANDLE = mt_gpio_light_new(light_pin, light_pin_on_level);
+    err = mt_gpio_light_task(LIGHT_HANDLE);
+    if (err == false) {
+      ESP_LOGE(TAG, "%d mt_gpio_light_task %d create failed", __LINE__,
+               LIGHT_HANDLE->pin);
+    }
+  }
+
+  if (btn_pin != -1) {
+    mt_gpio_btn_t *gpio_btn_handle = NULL;
+    gpio_btn_handle = mt_gpio_btn_default();
+    gpio_btn_handle->pin = btn_pin;
+    gpio_btn_handle->pin_on_level = btn_pin_on_level;
+    gpio_btn_handle->mt_gpio_btn_short_press_callback =
+        btn_short_press_callback;
+    gpio_btn_handle->mt_gpio_btn_long_press_callback = btn_long_press_callback;
+
+    if (mt_gpio_btn_task(gpio_btn_handle) == false) {
+      ESP_LOGE(TAG, "%d %s mt_gpio_btn_task failed", __LINE__, __func__);
+      return;
+    }
+  }
+
   xTaskCreate((TaskFunction_t)mt_wifi_loop, "MT_WIFI_TASK", 1024 * 2, NULL, 10,
               NULL);
+
+  /*
+  while (WIFI_EVENT_GROUP == NULL) {
+    ESP_LOGW(TAG, "%4d %s wait wifi init", __LINE__, __func__);
+    vTaskDelay(2000 / portTICK_RATE_MS);
+  }
+  xEventGroupWaitBits(WIFI_EVENT_GROUP, BIT2, false, false, portMAX_DELAY);
+  */
 }

@@ -16,7 +16,8 @@
 // global define ==============================================================
 static const char *TAG = "MT_MODBUS_AEW100";
 static SemaphoreHandle_t SemaphorMasterHdl = NULL;
-static int Lock_Timeout = 50;
+static SemaphoreHandle_t SemaphorAEW100 = NULL;
+static int Lock_Timeout = 50000;
 
 #define MODBUS_READ 03
 #define MODBUS_WRITE 10
@@ -61,6 +62,33 @@ static bool modbus_lock_take(LONG timeout)
 static void modbus_lock_release()
 {
   xSemaphoreGive(SemaphorMasterHdl);
+  return;
+}
+
+static void aew100_lock_init()
+{
+  SemaphorAEW100 = xSemaphoreCreateMutex();
+  return;
+}
+
+static bool aew100_lock_take(LONG timeout)
+{
+  if (SemaphorAEW100 == NULL)
+    aew100_lock_init();
+
+  if (xSemaphoreTake(SemaphorAEW100, (portTickType)timeout) == pdTRUE)
+  {
+    return true;
+  }
+  return false;
+}
+
+static void aew100_lock_release()
+{
+  if (SemaphorAEW100 == NULL)
+    aew100_lock_init();
+
+  xSemaphoreGive(SemaphorAEW100);
   return;
 }
 
@@ -141,6 +169,8 @@ eMBErrorCode modbus_aew100_init(UCHAR ucPort, ULONG ulBaudRate,
     ESP_LOGE(TAG, "%4d eMBInit failed!!! eStatus: %d", __LINE__, ret);
   }
 
+  mt_vMBMaster_set_T35_interval(250); // T35 set 350ms
+
   return ret;
 }
 
@@ -153,6 +183,9 @@ static void modbus_aew100_loop(void *parameter)
   modbus_lock_init();
 
   RetMsg = malloc(sizeof(struct RetMsg_t)); // global no need free
+  memset(RetMsg->retBuf, 0, BUF_MAXLEN);
+  RetMsg->recvCmd = 0;
+  RetMsg->retLen = 0;
 
   // master enable
   ESP_LOGI(TAG, "%4d eMBInit OK.", __LINE__);
@@ -983,6 +1016,7 @@ esp_err_t mt_aew100_get_data(UCHAR addr, Aew100_data_t *data)
 {
   esp_err_t err = ESP_OK;
 
+  // TODO(ZH) need lock
   err = mt_aew100_get_currentA(addr, &data->currentA);
   if (err != ESP_OK)
   {
@@ -1127,4 +1161,105 @@ esp_err_t mt_aew100_get_data(UCHAR addr, Aew100_data_t *data)
   }
 
   return ESP_OK;
+}
+
+esp_err_t mt_aew100_get_data2(UCHAR addr, Aew100_data_t *data)
+{
+  esp_err_t err = ESP_OK;
+
+  if (aew100_lock_take(Lock_Timeout) == false)
+  {
+    err = ESP_ERR_TIMEOUT;
+    ESP_LOGE(TAG, "%4d aew100_lock_take timeout", __LINE__);
+    return err;
+  }
+
+  err = mt_aew100_get_currentA(addr, &data->currentA);
+  if (err != ESP_OK)
+  {
+    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_currentA failed", __LINE__,
+             __func__, addr);
+    goto EXIT;
+  }
+  else
+  {
+    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_currentA success", __LINE__,
+             __func__, addr);
+  }
+
+  err = mt_aew100_get_currentB(addr, &data->currentB);
+  if (err != ESP_OK)
+  {
+    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_currentB failed", __LINE__,
+             __func__, addr);
+    goto EXIT;
+  }
+
+  err = mt_aew100_get_currentC(addr, &data->currentC);
+  if (err != ESP_OK)
+  {
+    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_currentC failed", __LINE__,
+             __func__, addr);
+    goto EXIT;
+  }
+
+  err = mt_aew100_get_votageA(addr, &data->votageA);
+  if (err != ESP_OK)
+  {
+    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_votageA failed", __LINE__,
+             __func__, addr);
+    goto EXIT;
+  }
+
+  err = mt_aew100_get_votageB(addr, &data->votageB);
+  if (err != ESP_OK)
+  {
+    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_votageB failed", __LINE__,
+             __func__, addr);
+    goto EXIT;
+  }
+
+  err = mt_aew100_get_votageC(addr, &data->votageC);
+  if (err != ESP_OK)
+  {
+    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_votageC failed", __LINE__,
+             __func__, addr);
+    goto EXIT;
+  }
+
+  err = mt_aew100_get_tempA(addr, &data->tempA);
+  if (err != ESP_OK)
+  {
+    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_tempA failed", __LINE__,
+             __func__, addr);
+    goto EXIT;
+  }
+
+  err = mt_aew100_get_tempB(addr, &data->tempB);
+  if (err != ESP_OK)
+  {
+    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_tempB failed", __LINE__,
+             __func__, addr);
+    goto EXIT;
+  }
+
+  err = mt_aew100_get_tempC(addr, &data->tempC);
+  if (err != ESP_OK)
+  {
+    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_tempC failed", __LINE__,
+             __func__, addr);
+    goto EXIT;
+  }
+
+  data->powerFactorA = 100.0;
+  data->powerFactorB = 100.0;
+  data->powerFactorC = 100.0;
+
+  data->activePowerA = data->votageA * data->currentA;
+  data->activePowerB = data->votageB * data->currentC;
+  data->activePowerC = data->votageC * data->currentC;
+
+EXIT:
+  aew100_lock_release();
+  return err;
 }
