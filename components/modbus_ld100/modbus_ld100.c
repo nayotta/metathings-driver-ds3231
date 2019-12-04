@@ -10,6 +10,7 @@
 
 #include "mt_mbfunc.h"
 #include "mt_port.h"
+#include "mt_mbport.h"
 
 #include "modbus_ld100.h"
 
@@ -122,6 +123,8 @@ eMBErrorCode modbus_ld100_init(UCHAR ucPort, ULONG ulBaudRate, eMBParity eParity
   {
     ESP_LOGE(TAG, "%4d eMBInit failed!!! eStatus: %d", __LINE__, ret);
   }
+
+  mt_vMBMaster_set_T35_interval(250); // T35 set 250ms
 
   return ret;
 }
