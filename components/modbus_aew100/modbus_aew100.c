@@ -936,7 +936,7 @@ esp_err_t mt_aew100_get_tempA(UCHAR addr, double *data)
     }
 
     *data = (cmd_ret_payload.retBuf[0] * (1 << 8) + cmd_ret_payload.retBuf[1]) /
-            1000.0;
+            10.0;
   }
 
   return ESP_OK;
@@ -971,7 +971,7 @@ esp_err_t mt_aew100_get_tempB(UCHAR addr, double *data)
     }
 
     *data = (cmd_ret_payload.retBuf[0] * (1 << 8) + cmd_ret_payload.retBuf[1]) /
-            1000.0;
+            10.0;
   }
 
   return ESP_OK;
@@ -1006,7 +1006,7 @@ esp_err_t mt_aew100_get_tempC(UCHAR addr, double *data)
     }
 
     *data = (cmd_ret_payload.retBuf[0] * (1 << 8) + cmd_ret_payload.retBuf[1]) /
-            1000.0;
+            10.0;
   }
 
   return ESP_OK;
@@ -1256,7 +1256,7 @@ esp_err_t mt_aew100_get_data2(UCHAR addr, Aew100_data_t *data)
   data->powerFactorC = 100.0;
 
   data->activePowerA = data->votageA * data->currentA;
-  data->activePowerB = data->votageB * data->currentC;
+  data->activePowerB = data->votageB * data->currentB;
   data->activePowerC = data->votageC * data->currentC;
 
 EXIT:
