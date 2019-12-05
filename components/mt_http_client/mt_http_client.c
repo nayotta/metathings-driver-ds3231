@@ -67,7 +67,7 @@ esp_err_t mt_http_client_post_request(esp_http_client_handle_t client,
     strcpy(token_bearer, "Bearer ");
     strcat(token_bearer, token);
     
-    ESP_LOGW(TAG, "%4d %s get token:%s", __LINE__, __func__, token_bearer);
+    //ESP_LOGW(TAG, "%4d %s get token:%s", __LINE__, __func__, token_bearer);
     
     err = esp_http_client_set_header(client, "Authorization", token_bearer);
     if (err != ESP_OK)

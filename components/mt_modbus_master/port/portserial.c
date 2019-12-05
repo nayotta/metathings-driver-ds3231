@@ -160,7 +160,7 @@ static void uart_event_task(void *pvParameters)
         break;
       // Others
       default:
-        ESP_LOGI(TAG, "uart event type: %d", event.type);
+        ESP_LOGE(TAG, "uart event type: %d", event.type);
         break;
       }
     }
@@ -236,7 +236,7 @@ BOOL xMBPortSerialInit(UCHAR ucPORT, ULONG ulBaudRate, UCHAR ucDataBits,
   // set uart mode rs485
   uart_set_mode(MB_UART, UART_MODE_RS485_HALF_DUPLEX);
   // Create a task to handler UART event from ISR
-  xTaskCreate(uart_event_task, "uart_event_task", 2048, NULL,
+  xTaskCreate(uart_event_task, "uart_event_task", 4096, NULL,
               configMAX_PRIORITIES, NULL);
 
   return TRUE;

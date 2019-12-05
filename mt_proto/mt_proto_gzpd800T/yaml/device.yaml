@@ -1,0 +1,126 @@
+# yaml
+version: v1beta
+description: gzpd800T
+flow:
+  name: m1
+  fields:
+    amp1:
+      description: 局放传感器1幅值
+      unit: pc
+      driver: gzpd800T
+      type: float
+      period: 60000
+      min: 0
+      max: 100000
+    freq1:
+      description: 局放传感器1频率
+      unit: hz
+      driver: gzpd800T
+      type: float
+      period: 60000
+      min: 0
+      max: 100000
+    power1:
+      description: 局放传感器1能量
+      unit: pc
+      driver: gzpd800T
+      type: float
+      period: 60000
+      min: 0
+      max: 100000
+    amp2:
+      description: 局放传感器2幅值
+      unit: pc
+      driver: gzpd800T
+      type: float
+      period: 60000
+      min: 0
+      max: 100000
+    freq2:
+      description: 局放传感器2频率
+      unit: hz
+      driver: gzpd800T
+      type: float
+      period: 60000
+      min: 0
+      max: 100000
+    power2:
+      description: 局放传感器2能量
+      unit: pc
+      driver: gzpd800T
+      type: float
+      period: 60000
+      min: 0
+      max: 100000
+    amp3:
+      description: 局放传感器3幅值
+      unit: pc
+      driver: gzpd800T
+      type: float
+      period: 60000
+      min: 0
+      max: 100000
+    freq3:
+      description: 局放传感器3频率
+      unit: hz
+      driver: gzpd800T
+      type: float
+      period: 60000
+      min: 0
+      max: 100000
+    power3:
+      description: 局放传感器3能量
+      unit: pc
+      driver: gzpd800T
+      type: float
+      period: 60000
+      min: 0
+      max: 100000
+    amp4:
+      description: 局放传感器4幅值
+      unit: pc
+      driver: gzpd800T
+      type: float
+      period: 60000
+      min: 0
+      max: 100000
+    freq4:
+      description: 局放传感器4频率
+      unit: hz
+      driver: gzpd800T
+      type: float
+      period: 60000
+      min: 0
+      max: 100000
+    power4:
+      description: 局放传感器4能量
+      unit: pc
+      driver: gzpd800T
+      type: float
+      period: 60000
+      min: 0
+      max: 100000
+    warn1:
+      description: 局放传感器1报警 true:报警 false:正常
+      unit:
+      driver: gzpd800T
+      type: bool
+      period: 60000
+    warn2:
+      description: 局放传感器2报警 true:报警 false:正常
+      unit:
+      driver: gzpd800T
+      type: bool
+      period: 60000
+    warn3:
+      description: 局放传感器3报警 true:报警 false:正常
+      unit:
+      driver: gzpd800T
+      type: bool
+      period: 60000
+    warn4:
+      description: 局放传感器4报警 true:报警 false:正常
+      unit:
+      driver: gzpd800T
+      type: bool
+      period: 60000

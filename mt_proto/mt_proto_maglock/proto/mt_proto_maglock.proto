@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package mt_maglock;
+
+import "google/protobuf/empty.proto";
+
+service Maglock001Service {
+  rpc GetState(google.protobuf.Empty) returns (GetStateRes) {}
+}
+
+message State {
+  int32 addr = 1; // 地址编码 1开始连续
+  bool state = 2; // true:打开 false:关闭
+}
+
+message GetStateRes {
+  int32 code = 1;
+  repeated State state = 3;
+}

@@ -6,9 +6,12 @@
 #include "freertos/task.h"
 
 #include "mt_module_flow.h"
+#include "mt_module_flow_manage.h"
 #include "mt_module_http.h"
+#include "mt_module_http_utils.h"
 #include "mt_mqtt_lan.h"
 #include "mt_mqtt_utils.h"
+#include "mt_nvs_config.h"
 
 #include "google/protobuf/struct.pb-c.h"
 
@@ -104,9 +107,6 @@ RESTART:
   // http create push_flow session first
   while (true)
   {
-    if (flow_res != NULL)
-      free(flow_res);
-
     if (module_flow->session != NULL)
       free(module_flow->session);
 
@@ -127,7 +127,7 @@ RESTART:
       module_flow->session = malloc(strlen(flow_res->sesssion_id) + 1);
       memcpy(module_flow->session, flow_res->sesssion_id,
              strlen(flow_res->sesssion_id) + 1);
-      free(flow_res);
+      mt_module_http_utils_free_push_frame_res(flow_res);
       break;
     }
 
@@ -269,15 +269,30 @@ void mt_module_flow_task(mt_module_flow_t *module_flow, char *task_name)
               module_flow, 10, NULL);
 }
 
-mt_module_flow_t *mt_module_flow_new()
+mt_module_flow_t *mt_module_flow_new(int module_index, int flow_index,
+                                     mt_module_http_t *module_http)
 {
   mt_module_flow_t *module_flow = malloc(sizeof(mt_module_flow_t));
+  char *flow_name = NULL;
 
-  module_flow->module_http = NULL;
-  module_flow->flow = NULL;
+  mt_module_flow_manage_add(module_flow);
+
+  flow_name = mt_nvs_config_get_flow_name(module_index, flow_index);
+  if (flow_name == NULL)
+  {
+    ESP_LOGE(TAG, "%4d %s mt_nvs_config_get_flow_name module:%d flow:%d failed",
+             __LINE__, __func__, module_index, flow_index);
+    return NULL;
+  }
+
+  module_flow->module_index = module_index;
+  module_flow->flow_index = flow_index;
+  module_flow->module_http = module_http;
+  module_flow->flow = malloc(sizeof(flow_t));
+  module_flow->flow->name = flow_name;
   module_flow->session = NULL;
   module_flow->create_push_frame_interval = 30 * 1000; // 30s
-  module_flow->push_frame_interval = 10 * 1000;        // 10s
+  module_flow->push_frame_interval = 20 * 1000;        // 20s
   module_flow->ping_interval = 30 * 1000;              // 30s
   module_flow->ping_retry_times = 3;                   // retry 3 times, nor to restart
   module_flow->ping_count = 0;
@@ -286,5 +301,88 @@ mt_module_flow_t *mt_module_flow_new()
   module_flow->data_ack = false;
   module_flow->data_id = NULL;
 
+  mt_module_flow_task(module_flow, "MT_MODULE_FLOW");
+
   return module_flow;
+}
+
+uint8_t *mt_module_flow_pack_frame(module_struct_group_t *value_in,
+                                   char *session_id, int *size_out)
+{
+  uint8_t frame_num = value_in->size;
+  uint8_t frame_count = 0;
+
+  if (frame_num <= 0)
+    return NULL;
+
+  PushFrameToFlowRequest frame_req = PUSH_FRAME_TO_FLOW_REQUEST__INIT;
+
+  // frame id
+  Google__Protobuf__StringValue frame_id = GOOGLE__PROTOBUF__STRING_VALUE__INIT;
+  frame_req.id = &frame_id;
+  frame_req.id->value = session_id;
+  frame_req.request_case = PUSH_FRAME_TO_FLOW_REQUEST__REQUEST_FRAME;
+
+  // frame struct
+  OpFrame frame = OP_FRAME__INIT;
+  frame_req.frame = &frame;
+  Google__Protobuf__Struct frame_data = GOOGLE__PROTOBUF__STRUCT__INIT;
+  frame_req.frame->data = &frame_data;
+
+  // struct data fields
+  frame_req.frame->data->n_fields = frame_num;
+  frame_req.frame->data->fields =
+      malloc(frame_num * sizeof(Google__Protobuf__Struct__FieldsEntry *));
+
+  for (int i = 0; i < frame_num; i++)
+  {
+    frame_req.frame->data->fields[frame_count] =
+        malloc(sizeof(Google__Protobuf__Struct__FieldsEntry));
+    google__protobuf__struct__fields_entry__init(
+        frame_req.frame->data->fields[frame_count]);
+    frame_req.frame->data->fields[frame_count]->key = value_in->value[i]->key;
+    Google__Protobuf__Value *value_value =
+        malloc(sizeof(Google__Protobuf__Value));
+    google__protobuf__value__init(value_value);
+    frame_req.frame->data->fields[frame_count]->value = value_value;
+    frame_req.frame->data->fields[frame_count]->value->kind_case =
+        value_in->value[i]->type;
+    switch (value_in->value[i]->type)
+    {
+    case GOOGLE__PROTOBUF__VALUE__KIND_NUMBER_VALUE:
+      frame_req.frame->data->fields[frame_count]->value->number_value =
+          value_in->value[i]->number_value;
+      break;
+    case GOOGLE__PROTOBUF__VALUE__KIND_STRING_VALUE:
+      frame_req.frame->data->fields[frame_count]->value->string_value =
+          value_in->value[i]->string_value;
+      break;
+    case GOOGLE__PROTOBUF__VALUE__KIND_BOOL_VALUE:
+      frame_req.frame->data->fields[frame_count]->value->bool_value =
+          value_in->value[i]->bool_value;
+      break;
+    default:
+      ESP_LOGE(TAG, "%4d %s unexcept type:%d", __LINE__, __func__,
+               value_in->value[i]->type);
+      break;
+    }
+    frame_count++;
+  }
+
+  // pack frame
+  *size_out = push_frame_to_flow_request__get_packed_size(&frame_req);
+  uint8_t *frame_req_buf = malloc(*size_out);
+  push_frame_to_flow_request__pack(&frame_req, frame_req_buf);
+
+  // free buf
+  /*
+  for (int i = 0; i < frame_num; i++)
+  {
+    free(frame_req.frame->data->fields[i]->value);
+    free(frame_req.frame->data->fields[i]);
+  }
+  free(frame_req.frame->data->fields);
+  */
+
+  return frame_req_buf;
 }

@@ -32,4 +32,6 @@ bool mt_gpio_light_set_blink(mt_gpio_light_t *light_handle, int intr);
 
 bool mt_gpio_light_task(mt_gpio_light_t *light_handle);
 
+mt_gpio_light_t *mt_gpio_light_new(int pin, int pin_on_level);
+
 #endif
