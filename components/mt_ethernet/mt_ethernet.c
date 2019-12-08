@@ -1,3 +1,5 @@
+#include "freertos/FreeRTOS.h"
+
 #include "driver/gpio.h"
 #include "driver/periph_ctrl.h"
 #include "esp_err.h"
@@ -6,7 +8,6 @@
 #include "esp_event_loop.h"
 #include "esp_log.h"
 #include "esp_system.h"
-#include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "rom/gpio.h"
 #include "tcpip_adapter.h"

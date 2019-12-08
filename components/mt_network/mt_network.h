@@ -2,6 +2,9 @@
 #define _MT_NETWORK_H
 
 #include "esp_err.h"
+
+#include "freertos/FreeRTOS.h"
+
 #include "mt_ethernet.h"
 #include "mt_smartconfig.h"
 

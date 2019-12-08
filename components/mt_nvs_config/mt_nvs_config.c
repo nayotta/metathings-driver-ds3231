@@ -90,8 +90,8 @@ esp_err_t mt_nvs_config_set_host_config(mt_nvs_host_t *host) {
     return ESP_ERR_INVALID_ARG;
   }
 
-  if (!(strcomp(host->net_type, "wifi") == 0 ||
-        strcomp(host->net_type, "eth") == 0)) {
+  if (!(strcmp(host->net_type, "wifi") == 0 ||
+        strcmp(host->net_type, "eth") == 0)) {
     ESP_LOGE(TAG, "%4d %s host->net_type error:%s", __LINE__, __func__,
              host->net_type);
     return ESP_ERR_INVALID_ARG;

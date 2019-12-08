@@ -1,3 +1,6 @@
+#include "esp_log.h"
+#include "string.h"
+
 #include "mt_network.h"
 #include "mt_nvs_config.h"
 
