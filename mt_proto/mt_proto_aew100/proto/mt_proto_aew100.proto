@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package mt_aew100;
+
+service aew100Service {
+  rpc GetData(GetDataReq) returns (GetDataRes) {}
+  rpc GetCurrent(GetCurrentReq) returns (GetCurrentRes) {}
+}
+
+message Data // flow m1
+{
+  double currentA = 1; // 电流 单位:A
+  double currentB = 2;
+  double currentC = 3;
+  double votageA = 4; // 电压 单位:V
+  double votageB = 5;
+  double votageC = 6;
+  double activePowerA = 7; // 有功功率 单位:W
+  double activePowerB = 8;
+  double activePowerC = 9;
+  double reactivePowerA = 10; // 无功功率 单位:var
+  double reactivePowerB = 11;
+  double reactivePowerC = 12;
+  double powerFactorA = 13; // 功率因素 单位:%
+  double powerFactorB = 14;
+  double powerFactorC = 15;
+  double qualityA = 16; // 电量 单位:kwh
+  double qualityB = 17;
+  double qualityC = 18;
+  double tempA = 19; //温度 单位:℃
+  double tempB = 20;
+  double tempC = 21;
+  double maxPowerA = 22; // 当月最大功率 单位:W
+  double maxPowerB = 23;
+  double maxPowerC = 24;
+}
+
+message GetDataReq { int32 addr = 1; }
+
+message GetDataRes {
+  int32 code = 1;
+  Data data = 2;
+}
+
+message CurrentData {
+  double currentA = 1; // A相电流 单位A
+  double currentB = 2; // B相电流 单位A
+  double currentC = 3; // C相电流 单位A
+}
+
+message GetCurrentReq { int32 addr = 1; }
+
+message GetCurrentRes {
+  int32 resCode = 1;
+  CurrentData currentData = 2;
+}

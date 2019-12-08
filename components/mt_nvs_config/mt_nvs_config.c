@@ -54,14 +54,81 @@ esp_err_t mt_nvs_config_get_host_config(mt_nvs_host_t *host_out) {
   net_type = mt_nvs_read_string_config("net_type", &net_type_len);
   if (net_type == NULL) {
     ESP_LOGE(TAG, "%4d %s get net_type failed", __LINE__, __func__);
-    host_out->net_type = MT_NVS_CONFIG_NET_TYPE_WIFI;
+    host_out->net_type = "wifi";
   } else {
     if (strcmp(net_type, "eth") == 0)
-      host_out->net_type = MT_NVS_CONFIG_NET_TYPE_ETH;
+      host_out->net_type = "eth";
     else if (strcmp(net_type, "wifi") == 0)
-      host_out->net_type = MT_NVS_CONFIG_NET_TYPE_WIFI;
+      host_out->net_type = "wifi";
     else
-      host_out->net_type = MT_NVS_CONFIG_NET_TYPE_WIFI;
+      host_out->net_type = "wifi";
+  }
+
+  return ESP_OK;
+}
+
+esp_err_t mt_nvs_config_set_host_config(mt_nvs_host_t *host) {
+
+  // check arg
+  if (host == NULL) {
+    ESP_LOGE(TAG, "%4d %s host NULL", __LINE__, __func__);
+    return ESP_ERR_INVALID_ARG;
+  }
+
+  if (host->host == NULL) {
+    ESP_LOGE(TAG, "%4d %s host->host NULL", __LINE__, __func__);
+    return ESP_ERR_INVALID_ARG;
+  }
+
+  if (host->mqtt_port == NULL) {
+    ESP_LOGE(TAG, "%4d %s host->mqtt_port NULL", __LINE__, __func__);
+    return ESP_ERR_INVALID_ARG;
+  }
+
+  if (host->net_type == NULL) {
+    ESP_LOGE(TAG, "%4d %s host->net_type NULL", __LINE__, __func__);
+    return ESP_ERR_INVALID_ARG;
+  }
+
+  if (!(strcomp(host->net_type, "wifi") == 0 ||
+        strcomp(host->net_type, "eth") == 0)) {
+    ESP_LOGE(TAG, "%4d %s host->net_type error:%s", __LINE__, __func__,
+             host->net_type);
+    return ESP_ERR_INVALID_ARG;
+  }
+
+  if (mt_nvs_write_string_config("host", host->host) == false) {
+    ESP_LOGE(TAG, "%4d %s mt_nvs_write_string_config host error", __LINE__,
+             __func__);
+    return ESP_ERR_INVALID_RESPONSE;
+  }
+
+  if (mt_nvs_write_string_config("mqtt_port", host->mqtt_port) == false) {
+    ESP_LOGE(TAG, "%4d %s mt_nvs_write_string_config mqtt_port error", __LINE__,
+             __func__);
+    return ESP_ERR_INVALID_RESPONSE;
+  }
+
+  if (mt_nvs_write_int32_config("http_port", host->http_port) == false) {
+    ESP_LOGE(TAG, "%4d %s mt_nvs_write_string_config http_port error", __LINE__,
+             __func__);
+    return ESP_ERR_INVALID_RESPONSE;
+  }
+
+  if (mt_nvs_write_string_config("net_type", host->net_type) == false) {
+    ESP_LOGE(TAG, "%4d %s mt_nvs_write_string_config net_type error", __LINE__,
+             __func__);
+    return ESP_ERR_INVALID_RESPONSE;
+  }
+
+  int32_t use_ssl = 0;
+  if (host->use_ssl == true) {
+    use_ssl = 1;
+  }
+  if (mt_nvs_write_int32_config("use_ssl", use_ssl) == false) {
+    ESP_LOGE(TAG, "%4d %s mt_nvs_write_string_config use_ssl error", __LINE__,
+             __func__);
+    return ESP_ERR_INVALID_RESPONSE;
   }
 
   return ESP_OK;
