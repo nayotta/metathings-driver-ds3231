@@ -132,5 +132,6 @@ void app_main()
   while (1)
   {
     test_ld100_get_state_and_relay();
+    vTaskDelay(2000 / portTICK_RATE_MS);
   }
 }
