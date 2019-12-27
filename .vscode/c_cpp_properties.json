@@ -1,0 +1,57 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "D:/0软件/mingw/mingw64/x86_64-w64-mingw32/include",
+                "${workspaceFolder}/components/**",
+                "${workspaceFolder}/components/mt_protobuf_c/include",
+                "${workspaceFolder}/mt_proto/**",
+                "${workspaceFolder}/mt_proto/mt_proto_device_cloud/include",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/**",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/newlib/platform_include/",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/newlib/include/",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/nvs_flash/include/",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/nvs_flash/test_nvs_host/",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/log/include/",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/heap/include/",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/lwip/lwip/src/include/",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/tcpip_adapter/include/",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/freertos/include/",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/mqtt/esp-mqtt/include/",
+                "D:/7esp32/msys32/opt/xtensa-esp32-elf/lib/gcc/xtensa-esp32-elf/5.2.0/include/",
+                "D:/7esp32/msys32/opt/xtensa-esp32-elf/xtensa-esp32-elf/include/",
+                "D:/7esp32/msys32/opt/xtensa-esp32-elf/xtensa-esp32-elf/include/include/",
+                "D:/7esp32/msys32/opt/xtensa-esp32-elf/xtensa-esp32-elf/sysroot/usr/include/",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/esp32/include/",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/soc/esp32/include/",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/soc/include/",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/driver/include/",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/lwip/port/esp32/include/",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/lwip/include/apps",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/vfs/include/",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/spi_flash/include/",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/esp_event/include/",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/esp_ringbuf/include/",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/driver/include/",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/wpa_supplicant/include/",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/wpa_supplicant/port/include/",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/esp_http_client/include/",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/nghttp/nghttp2/third-party/http-parser/",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/app_update/include/",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/bootloader_support/include/",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/esp_https_ota/include/",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/json/cJSON/"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "intelliSenseMode": "msvc-x64",
+            "compilerPath": "D:\\0软件\\LLVM\\bin\\clang.exe",
+            "cStandard": "c11"
+        }
+    ],
+    "version": 4
+}
