@@ -18,47 +18,37 @@
 #include "push_frame_to_flow.pb-c.h"
 
 // global define ==============================================================
+
 static const char *TAG = "MT_MODULE_FLOW";
 
 // global func ================================================================
-static void ping_once(mt_module_flow_t *module_flow)
-{
+
+static void ping_once(mt_module_flow_t *module_flow) {
   esp_err_t err = ESP_OK;
   char ping_topic[256] = "";
   uint8_t frame_size = 0;
   uint8_t *frame_buf = NULL;
 
-  if (module_flow == NULL)
-  {
+  if (module_flow == NULL) {
     ESP_LOGE(TAG, "%4d %s module_flow NULL", __LINE__, __func__);
     return;
-  }
-  else
-  {
-    if (module_flow->session == NULL)
-    {
+  } else {
+    if (module_flow->session == NULL) {
       ESP_LOGE(TAG, "%4d %s module_flow->session  NULL", __LINE__, __func__);
       return;
     }
 
-    if (module_flow->module_http == NULL)
-    {
+    if (module_flow->module_http == NULL) {
       ESP_LOGE(TAG, "%4d %s module_flow->module_http  NULL", __LINE__,
                __func__);
       return;
-    }
-    else
-    {
-      if (module_flow->module_http->module == NULL)
-      {
+    } else {
+      if (module_flow->module_http->module == NULL) {
         ESP_LOGE(TAG, "%4d %s module_flow->module_http->module NULL", __LINE__,
                  __func__);
         return;
-      }
-      else
-      {
-        if (module_flow->module_http->module->deviceID == NULL)
-        {
+      } else {
+        if (module_flow->module_http->module->deviceID == NULL) {
           ESP_LOGE(TAG,
                    "%4d %s module_flow->module_http->module->deviceID NULL",
                    __LINE__, __func__);
@@ -85,8 +75,7 @@ static void ping_once(mt_module_flow_t *module_flow)
 
   err = mqtt_pub_msg(ping_topic, frame_buf, frame_size);
   free(frame_buf);
-  if (err != ESP_OK)
-  {
+  if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s mqtt_pub_msg failed", __LINE__, __func__);
     return;
   }
@@ -96,8 +85,7 @@ static void ping_once(mt_module_flow_t *module_flow)
   return;
 }
 
-static void module_flow_task_loop(mt_module_flow_t *module_flow)
-{
+static void module_flow_task_loop(mt_module_flow_t *module_flow) {
   push_frame_res_t *flow_res = NULL;
 
 RESTART:
@@ -105,21 +93,17 @@ RESTART:
   module_flow->ping_count = 0;
 
   // http create push_flow session first
-  while (true)
-  {
+  while (true) {
     if (module_flow->session != NULL)
       free(module_flow->session);
 
     flow_res = mt_module_http_actions_push_frame_to_flow(
         module_flow->module_http, module_flow->flow, module_flow->config_ack,
         module_flow->data_ack);
-    if (flow_res == NULL)
-    {
+    if (flow_res == NULL) {
       ESP_LOGE(TAG, "%4d %s mt_module_http_actions_push_frame_to_flow failed",
                __LINE__, __func__);
-    }
-    else
-    {
+    } else {
       ESP_LOGI(TAG,
                "%4d %s mt_module_http_actions_push_frame_to_flow success, "
                "session:%s",
@@ -135,10 +119,8 @@ RESTART:
   }
 
   // ping pong
-  while (true)
-  {
-    if (module_flow->ping_count >= module_flow->ping_retry_times)
-    {
+  while (true) {
+    if (module_flow->ping_count >= module_flow->ping_retry_times) {
       ESP_LOGE(TAG, "%4d %s session:%s ping reach max retry, restart loop",
                __LINE__, __func__, module_flow->session);
       vTaskDelay(2 * 1000 / portTICK_PERIOD_MS);
@@ -151,18 +133,15 @@ RESTART:
   }
 }
 
-static void module_switch_flow_pong_process(mt_module_flow_t *module_flow)
-{
+static void module_switch_flow_pong_process(mt_module_flow_t *module_flow) {
   module_flow->ping_count = 0;
   ESP_LOGI(TAG, "%4d %s session:%s get pong response", __LINE__, __func__,
            module_flow->session);
 }
 
 static void module_switch_flow_ack_process(mt_module_flow_t *module_flow,
-                                           PushFrameToFlowResponse *frame_res)
-{
-  if (frame_res->id == NULL)
-  {
+                                           PushFrameToFlowResponse *frame_res) {
+  if (frame_res->id == NULL) {
     ESP_LOGE(TAG, "%4d %s frame_res->id  NULL", __LINE__, __func__);
     return;
   }
@@ -182,20 +161,17 @@ static void module_switch_flow_ack_process(mt_module_flow_t *module_flow,
 }
 
 void mt_module_flow_process(mt_module_flow_t *module_flow, char *topic,
-                            uint8_t *buf, uint8_t size)
-{
+                            uint8_t *buf, uint8_t size) {
   PushFrameToFlowResponse *frame_res = NULL;
 
   frame_res = push_frame_to_flow_response__unpack(NULL, size, buf);
-  if (frame_res == NULL)
-  {
+  if (frame_res == NULL) {
     ESP_LOGE(TAG, "%4d %s push_frame_to_flow_response__unpack get NULL",
              __LINE__, __func__);
     return;
   }
 
-  switch (frame_res->response_case)
-  {
+  switch (frame_res->response_case) {
   case PUSH_FRAME_TO_FLOW_RESPONSE__RESPONSE_PONG:
     module_switch_flow_pong_process(module_flow);
     break;
@@ -216,33 +192,22 @@ EXIT:
   return;
 }
 
-void mt_module_flow_task(mt_module_flow_t *module_flow, char *task_name)
-{
+void mt_module_flow_task(mt_module_flow_t *module_flow, char *task_name) {
   // arg check
-  if (module_flow == NULL)
-  {
+  if (module_flow == NULL) {
     ESP_LOGE(TAG, "%4d %s flow_name NULL", __LINE__, __func__);
     return;
-  }
-  else
-  {
-    if (module_flow->module_http == NULL)
-    {
+  } else {
+    if (module_flow->module_http == NULL) {
       ESP_LOGE(TAG, "%4d %s module_flow->module_http NULL", __LINE__, __func__);
       return;
-    }
-    else
-    {
-      if (module_flow->module_http->module == NULL)
-      {
+    } else {
+      if (module_flow->module_http->module == NULL) {
         ESP_LOGE(TAG, "%4d %s module_flow->module_http->module NULL", __LINE__,
                  __func__);
         return;
-      }
-      else
-      {
-        if (module_flow->module_http->module->id == NULL)
-        {
+      } else {
+        if (module_flow->module_http->module->id == NULL) {
           ESP_LOGE(TAG, "%4d %s module_flow->module_http->module->id NULL",
                    __LINE__, __func__);
           return;
@@ -251,15 +216,11 @@ void mt_module_flow_task(mt_module_flow_t *module_flow, char *task_name)
     }
   }
 
-  if (module_flow->flow == NULL)
-  {
+  if (module_flow->flow == NULL) {
     ESP_LOGE(TAG, "%4d %s module_flow->flow NULL", __LINE__, __func__);
     return;
-  }
-  else
-  {
-    if (module_flow->flow->name == NULL)
-    {
+  } else {
+    if (module_flow->flow->name == NULL) {
       ESP_LOGE(TAG, "%4d %s module_flow->flow->name NULL", __LINE__, __func__);
       return;
     }
@@ -270,16 +231,14 @@ void mt_module_flow_task(mt_module_flow_t *module_flow, char *task_name)
 }
 
 mt_module_flow_t *mt_module_flow_new(int module_index, int flow_index,
-                                     mt_module_http_t *module_http)
-{
+                                     mt_module_http_t *module_http) {
   mt_module_flow_t *module_flow = malloc(sizeof(mt_module_flow_t));
   char *flow_name = NULL;
 
   mt_module_flow_manage_add(module_flow);
 
   flow_name = mt_nvs_config_get_flow_name(module_index, flow_index);
-  if (flow_name == NULL)
-  {
+  if (flow_name == NULL) {
     ESP_LOGE(TAG, "%4d %s mt_nvs_config_get_flow_name module:%d flow:%d failed",
              __LINE__, __func__, module_index, flow_index);
     return NULL;
@@ -294,7 +253,7 @@ mt_module_flow_t *mt_module_flow_new(int module_index, int flow_index,
   module_flow->create_push_frame_interval = 30 * 1000; // 30s
   module_flow->push_frame_interval = 20 * 1000;        // 20s
   module_flow->ping_interval = 30 * 1000;              // 30s
-  module_flow->ping_retry_times = 3;                   // retry 3 times, nor to restart
+  module_flow->ping_retry_times = 3; // retry 3 times, nor to restart
   module_flow->ping_count = 0;
   module_flow->push_ack = true;
   module_flow->config_ack = true;
@@ -307,8 +266,7 @@ mt_module_flow_t *mt_module_flow_new(int module_index, int flow_index,
 }
 
 uint8_t *mt_module_flow_pack_frame(module_struct_group_t *value_in,
-                                   char *session_id, int *size_out)
-{
+                                   char *session_id, int *size_out) {
   uint8_t frame_num = value_in->size;
   uint8_t frame_count = 0;
 
@@ -334,8 +292,7 @@ uint8_t *mt_module_flow_pack_frame(module_struct_group_t *value_in,
   frame_req.frame->data->fields =
       malloc(frame_num * sizeof(Google__Protobuf__Struct__FieldsEntry *));
 
-  for (int i = 0; i < frame_num; i++)
-  {
+  for (int i = 0; i < frame_num; i++) {
     frame_req.frame->data->fields[frame_count] =
         malloc(sizeof(Google__Protobuf__Struct__FieldsEntry));
     google__protobuf__struct__fields_entry__init(
@@ -347,8 +304,7 @@ uint8_t *mt_module_flow_pack_frame(module_struct_group_t *value_in,
     frame_req.frame->data->fields[frame_count]->value = value_value;
     frame_req.frame->data->fields[frame_count]->value->kind_case =
         value_in->value[i]->type;
-    switch (value_in->value[i]->type)
-    {
+    switch (value_in->value[i]->type) {
     case GOOGLE__PROTOBUF__VALUE__KIND_NUMBER_VALUE:
       frame_req.frame->data->fields[frame_count]->value->number_value =
           value_in->value[i]->number_value;

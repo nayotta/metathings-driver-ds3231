@@ -8,7 +8,7 @@
 #define RS232_LORA_EBYTE_ID_SIZE 2
 #define RS232_LORA_EBYTE_TYPE_SIZE 2
 #define RS232_LORA_EBYTE_CMD_SIZE 2
-#define RS232_LORA_EBYTE_SESSION_SIZE 2
+#define RS232_LORA_EBYTE_SESSION_SIZE 4
 #define RS232_LORA_EBYTE_LEN_SIZE 1
 #define RS232_LORA_EBYTE_CRC_SIZE 1
 #define RS232_LORA_EBYTE_DATA_END_SIZE 1
@@ -25,11 +25,11 @@ enum rs232_lora_ebyte_cmd_type_t {
 };
 
 typedef struct _rs232_lora_ebyte_data_t {
-  int id;
-  int type;
-  int cmd;
-  int session;
-  int len;
+  int16_t id;
+  int16_t type;
+  int16_t cmd;
+  QueueHandle_t handle;
+  int16_t len;
   uint8_t *data;
 } rs232_lora_ebyte_data_t;
 
@@ -45,6 +45,11 @@ esp_err_t rs232_lora_ebyte_init(int uart_num, int rx_pin, int tx_pin,
                                 int baud_rate);
 
 esp_err_t rs232_lora_ebyte_sent(rs232_lora_ebyte_data_t *ebyte_data);
+
+// need task
+rs232_lora_ebyte_data_t *
+rs232_lora_ebyte_sent_and_wait_finish(rs232_lora_ebyte_data_t *ebyte_data,
+                                      uint32_t timeout);
 
 esp_err_t rs232_lora_ebyte_task();
 

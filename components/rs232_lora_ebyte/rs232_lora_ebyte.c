@@ -3,7 +3,13 @@
 #include "esp_err.h"
 #include "esp_log.h"
 
+#include "freertos/FreeRTOS.h"
+#include "freertos/queue.h"
+
 #include "rs232_lora_ebyte.h"
+#include "rs232_lora_ebyte_flow_manage.h"
+
+#include "mt_module_mqtt.h"
 
 // global define ==============================================================
 
@@ -18,13 +24,61 @@ uint8_t RS232_LORA_EBYTE_DATA_END = 0x16;
 static esp_err_t
 rs232_lora_ebyte_parse_flow(rs232_lora_ebyte_data_t *ebyte_data) {
   esp_err_t err = ESP_OK;
+  BaseType_t ret = pdFALSE;
+  rs232_lora_ebyte_flow_manage_t *manage = NULL;
+  int match = 0;
+  char topic[256] = "";
+  int timeout = 100;
+  mt_module_mqtt_msg_t *mqtt_msg = malloc(sizeof(mt_module_mqtt_msg_t));
 
+  manage = rs232_lora_ebyte_flow_manage_get();
+  if (manage == NULL) {
+    ESP_LOGE(TAG, "%4d %s rs232_lora_ebyte_flow_manage_get NULL", __LINE__,
+             __func__);
+    return ESP_ERR_INVALID_ARG;
+  }
+
+  for (int i = 0; i < manage->flows_size; i++) {
+    if (manage->flows_addr[i] == ebyte_data->id) {
+      match++;
+      sprintf(topic, "mt/devices/%s/flow_channel/sessions/%s/upstream",
+              manage->flows[i]->module_http->module->deviceID,
+              manage->flows[i]->session);
+      mqtt_msg->topic = topic;
+      mqtt_msg->buf = ebyte_data->data;
+      mqtt_msg->buf_size = ebyte_data->len;
+
+      ret = xQueueSend(manage->flows_handle[i], &mqtt_msg, timeout);
+      if (ret != pdTRUE) {
+        ESP_LOGE(TAG, "%4d %s xQueueSend failed", __LINE__, __func__);
+        err = ESP_ERR_INVALID_ARG;
+        goto EXIT;
+      }
+    }
+  }
+EXIT:
+  if (mqtt_msg != NULL) {
+    free(mqtt_msg);
+  }
   return err;
 }
 
 static esp_err_t
 rs232_lora_ebyte_parse_unarycall(rs232_lora_ebyte_data_t *ebyte_data) {
   esp_err_t err = ESP_OK;
+  BaseType_t ret = pdFALSE;
+
+  if (ebyte_data->handle == 0) {
+    ESP_LOGE(TAG, "%4d %s ebyte_data->handle zero", __LINE__, __func__);
+    return ESP_ERR_INVALID_ARG;
+  }
+
+  ret = xQueueSend(ebyte_data->handle, &ebyte_data, 0);
+  if (ret != pdTRUE) {
+    ESP_LOGE(TAG, "%4d %s xQueueSend:%p failed", __LINE__, __func__,
+             ebyte_data->handle);
+    return ESP_ERR_INVALID_RESPONSE;
+  }
 
   return err;
 }
@@ -108,11 +162,13 @@ static esp_err_t rs232_lora_ebyte_data_parse(uint8_t *buf, int buf_size) {
   }
   offset += RS232_LORA_EBYTE_CMD_SIZE;
 
-  // parse session
+  // parse handle
+  int handle = 0;
   for (int i = 0; i < RS232_LORA_EBYTE_SESSION_SIZE; i++) {
-    ebyte_data->session += (int)(buf[offset + i])
-                           << (8 * (RS232_LORA_EBYTE_SESSION_SIZE - i - 1));
+    handle += (int)(buf[offset + i])
+              << (8 * (RS232_LORA_EBYTE_SESSION_SIZE - i - 1));
   }
+  ebyte_data->handle = (QueueHandle_t)handle;
   offset += RS232_LORA_EBYTE_SESSION_SIZE;
 
   // parse len
@@ -158,9 +214,9 @@ static esp_err_t rs232_lora_ebyte_data_parse(uint8_t *buf, int buf_size) {
   }
   offset += RS232_LORA_EBYTE_DATA_END_SIZE;
 
-  ESP_LOGW(TAG, "%4d %s id:%d, type:%d, cmd:%d, session:%d, len:%d", __LINE__,
+  ESP_LOGW(TAG, "%4d %s id:%d, type:%d, cmd:%d, handle:%p, len:%d", __LINE__,
            __func__, ebyte_data->id, ebyte_data->type, ebyte_data->cmd,
-           ebyte_data->session, ebyte_data->len);
+           ebyte_data->handle, ebyte_data->len);
 
   // msg dispatch
   rs232_lora_ebyte_data_parse_dispatch(ebyte_data);
@@ -211,10 +267,11 @@ static uint8_t *rs232_lora_ebyte_gen_data(rs232_lora_ebyte_data_t *ebyte_data,
   }
   offset += RS232_LORA_EBYTE_CMD_SIZE;
 
-  // gen session
+  // gen handle
+  int handle = (int)ebyte_data->handle;
   for (int i = 0; i < RS232_LORA_EBYTE_SESSION_SIZE; i++) {
-    buf_out[offset + i] = (uint8_t)(
-        ebyte_data->session >> (8 * (RS232_LORA_EBYTE_SESSION_SIZE - i - 1)));
+    buf_out[offset + i] =
+        (uint8_t)(handle >> (8 * (RS232_LORA_EBYTE_SESSION_SIZE - i - 1)));
   }
   offset += RS232_LORA_EBYTE_SESSION_SIZE;
 
@@ -257,7 +314,10 @@ static void rs232_lora_ebyte_loop() {
     int read_size = 0;
     uint8_t *read_buf = NULL;
 
+    //read_buf = rs232_dev_read_debug(CONFIG, &read_size);
     read_buf = rs232_dev_read(CONFIG, &read_size);
+    // read_size = 0; // debug
+
     if (read_size > 0) {
       ESP_LOGI(TAG, "%4d %s rs232_dev_read, size=%d", __LINE__, __func__,
                read_size);
@@ -265,13 +325,15 @@ static void rs232_lora_ebyte_loop() {
         printf("%2x ", read_buf[i]);
       }
       printf("\n");
-
       rs232_lora_ebyte_data_parse(read_buf, read_size);
     }
+    vTaskDelay(10 / portTICK_RATE_MS);
   }
+  vTaskDelete(NULL);
 }
 
-// global func ================================================================
+// global func
+// ================================================================
 
 rs232_lora_ebyte_data_t *rs232_lora_ebyte_new_data() {
   rs232_lora_ebyte_data_t *ebyte_data = malloc(sizeof(rs232_lora_ebyte_data_t));
@@ -279,7 +341,7 @@ rs232_lora_ebyte_data_t *rs232_lora_ebyte_new_data() {
   ebyte_data->type = 0;
   ebyte_data->cmd = 0;
   ebyte_data->len = 0;
-  ebyte_data->session = 0;
+  ebyte_data->handle = 0;
   ebyte_data->data = NULL;
 
   return ebyte_data;
@@ -347,6 +409,32 @@ EXIT:
   if (buf != NULL)
     free(buf);
   return err;
+}
+
+// need task
+rs232_lora_ebyte_data_t *
+rs232_lora_ebyte_sent_and_wait_finish(rs232_lora_ebyte_data_t *ebyte_data,
+                                      uint32_t timeout) {
+  esp_err_t err = ESP_OK;
+  rs232_lora_ebyte_data_t *ebyte_data_out =
+      malloc(sizeof(rs232_lora_ebyte_data_t));
+
+  ebyte_data->handle = xQueueCreate(1, sizeof(rs232_lora_ebyte_data_t));
+
+  err = rs232_lora_ebyte_sent(ebyte_data);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s rs232_lora_ebyte_sent failed", __LINE__, __func__);
+    goto EXIT;
+  }
+
+  xQueueReceive(ebyte_data->handle, ebyte_data_out, timeout);
+
+EXIT:
+  if (err != ESP_OK) {
+    rs232_lora_ebyte_free_data(ebyte_data_out);
+    ebyte_data_out = NULL;
+  }
+  return ebyte_data_out;
 }
 
 esp_err_t rs232_lora_ebyte_task() {
