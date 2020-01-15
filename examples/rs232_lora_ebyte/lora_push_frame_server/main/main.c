@@ -27,7 +27,7 @@ static int TX_PIN = 10;
 void app_main() {
   esp_err_t err = ESP_OK;
   QueueHandle_t handle = NULL;
-  mt_module_mqtt_msg_t *mqtt_msg = NULL;
+  mt_module_mqtt_msg_t *mqtt_msg = malloc(sizeof(mt_module_mqtt_msg_t));
   mt_module_flow_t *flow = malloc(sizeof(mt_module_flow_t));
 
   ESP_LOGI(TAG, "test begin");
@@ -45,7 +45,7 @@ void app_main() {
     return;
   }
 
-  // handle = xQueueCreate(1, sizeof(rs232_lora_ebyte_data_t *));
+  handle = xQueueCreate(5, sizeof(mt_module_mqtt_msg_t *));
 
   ESP_LOGI(TAG, "%4d %s create flow", __LINE__, __func__);
   // create flow
@@ -63,10 +63,11 @@ void app_main() {
   mt_module_flow_manage_add(flow);
 
   // debug
+  /*
   while (true) {
     ESP_LOGI(TAG, "free=%d", esp_get_free_heap_size());
     vTaskDelay(2000 / portTICK_RATE_MS);
-  }
+  }*/
 
   // create ebyte flow manage
   ESP_LOGI(TAG, "%4d %s rs232_lora_ebyte_flow_manage_add", __LINE__, __func__);
@@ -79,9 +80,10 @@ void app_main() {
 
   ESP_LOGI(TAG, "%4d %s sent loop", __LINE__, __func__);
   while (true) {
-    xQueueReceive(handle, mqtt_msg, 1000 / portTICK_RATE_MS);
-    ESP_LOGW(TAG, "%4d %s get mqtt msg,topic=%s,buf_size=%d,buf=%s", __LINE__,
-             __func__, mqtt_msg->topic, mqtt_msg->buf_size, mqtt_msg->buf);
+    if (xQueueReceive(handle, &mqtt_msg, 1000 / portTICK_RATE_MS)) {
+      ESP_LOGW(TAG, "%4d %s get mqtt msg,buf_size=%d,topic=%s,buf=%s", __LINE__,
+               __func__, mqtt_msg->buf_size, mqtt_msg->topic, mqtt_msg->buf);
+    }
   }
 
   ESP_LOGI(TAG, "test end");

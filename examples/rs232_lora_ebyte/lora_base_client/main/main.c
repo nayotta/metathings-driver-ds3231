@@ -12,8 +12,8 @@ static const char *TAG = "example-rs232-lora-ebyte-client";
 
 static int UART_NUM = 2;
 static int BAUD_RATE = 9600;
-static int RX_PIN = 10;
-static int TX_PIN = 9;
+static int RX_PIN = 9;
+static int TX_PIN = 10;
 
 // gloabal func ===============================================================
 void app_main() {
@@ -39,7 +39,7 @@ void app_main() {
     ebyte_data->id = 10000;
     ebyte_data->type = 20000;
     ebyte_data->cmd = 30000;
-    ebyte_data->session = 40000;
+    ebyte_data->handle = 40000;
     ebyte_data->len = 6;
     ebyte_data->data = malloc(ebyte_data->len);
     sprintf((char *)ebyte_data->data, "%s", "hello");

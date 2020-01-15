@@ -145,7 +145,7 @@ esp_err_t mt_nvs_config_get_module_num(int *num_out) {
 
 esp_err_t mt_nvs_config_get_module(int index_in, mt_nvs_module_t *module_out) {
   size_t size = 0;
-  char key[16] = "";
+  char key[32] = "";
 
   // check index_in
   if (index_in <= 0) {
@@ -222,7 +222,7 @@ esp_err_t mt_nvs_config_get_module(int index_in, mt_nvs_module_t *module_out) {
 
 esp_err_t mt_nvs_config_get_flow(int index_in, mt_nvs_flows_t *flows_out) {
   size_t size = 0;
-  char key[16] = "";
+  char key[32] = "";
 
   // check index_in
   if (index_in <= 0) {
@@ -263,7 +263,7 @@ esp_err_t mt_nvs_config_get_flow(int index_in, mt_nvs_flows_t *flows_out) {
 
 char *mt_nvs_config_get_flow_name(int module_index, int flow_index) {
   char *flow_name = NULL;
-  char key[16] = "";
+  char key[32] = "";
   size_t size = 0;
 
   sprintf(key, "mod_%d_flow_%d", module_index, flow_index);

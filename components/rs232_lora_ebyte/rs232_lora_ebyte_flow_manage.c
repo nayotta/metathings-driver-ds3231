@@ -75,6 +75,7 @@ esp_err_t rs232_lora_ebyte_flow_manage_add(mt_module_flow_t *flow,
     FLOW_MANAGE->flows_addr[0] = flow_addr;
     FLOW_MANAGE->flows_handle = malloc(1 * sizeof(QueueHandle_t *));
     FLOW_MANAGE->flows_handle[0] = flow_handle;
+    return err;
   }
 
   temp_manage = FLOW_MANAGE;

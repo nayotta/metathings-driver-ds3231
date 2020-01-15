@@ -12,8 +12,8 @@ static const char *TAG = "example-rs232-lora-ebyte-client";
 
 static int UART_NUM = 2;
 static int BAUD_RATE = 9600;
-static int RX_PIN = 10;
-static int TX_PIN = 9;
+static int RX_PIN = 9;
+static int TX_PIN = 10;
 
 // gloabal func ===============================================================
 void app_main() {

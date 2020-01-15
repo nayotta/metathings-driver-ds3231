@@ -16,7 +16,7 @@
 
 #include "mt_nvs_storage.h"
 #include "mt_smartconfig.h"
-
+/*
 // global define ==============================================================
 static const char *TAG = "MT_SMARTCONFIG";
 
@@ -380,11 +380,6 @@ void mt_smartconfig_task(int light_pin, int light_pin_on_level, int btn_pin,
   xTaskCreate((TaskFunction_t)mt_wifi_loop, "MT_WIFI_TASK", 1024 * 2, NULL, 10,
               NULL);
 
-  /*
-  while (WIFI_EVENT_GROUP == NULL) {
-    ESP_LOGW(TAG, "%4d %s wait wifi init", __LINE__, __func__);
-    vTaskDelay(2000 / portTICK_RATE_MS);
-  }
-  xEventGroupWaitBits(WIFI_EVENT_GROUP, BIT2, false, false, portMAX_DELAY);
-  */
+
 }
+*/

@@ -27,9 +27,10 @@ rs232_lora_ebyte_parse_flow(rs232_lora_ebyte_data_t *ebyte_data) {
   BaseType_t ret = pdFALSE;
   rs232_lora_ebyte_flow_manage_t *manage = NULL;
   int match = 0;
-  char topic[256] = "";
   int timeout = 100;
   mt_module_mqtt_msg_t *mqtt_msg = malloc(sizeof(mt_module_mqtt_msg_t));
+
+  ESP_LOGI(TAG, "%4d %s id:%d", __LINE__, __func__, ebyte_data->id);
 
   manage = rs232_lora_ebyte_flow_manage_get();
   if (manage == NULL) {
@@ -40,6 +41,7 @@ rs232_lora_ebyte_parse_flow(rs232_lora_ebyte_data_t *ebyte_data) {
 
   for (int i = 0; i < manage->flows_size; i++) {
     if (manage->flows_addr[i] == ebyte_data->id) {
+      char *topic = malloc(120);
       match++;
       sprintf(topic, "mt/devices/%s/flow_channel/sessions/%s/upstream",
               manage->flows[i]->module_http->module->deviceID,
@@ -56,9 +58,18 @@ rs232_lora_ebyte_parse_flow(rs232_lora_ebyte_data_t *ebyte_data) {
       }
     }
   }
+
+  if (match == 0) {
+    ESP_LOGE(TAG, "%4d %s id:%d unmatch id in flows", __LINE__, __func__,
+             ebyte_data->id);
+  } else if (match > 1) {
+    ESP_LOGw(TAG, "%4d %s id:%d match %d times", __LINE__, __func__,
+             ebyte_data->id, match);
+  }
+
 EXIT:
   if (mqtt_msg != NULL) {
-    free(mqtt_msg);
+    // free(mqtt_msg);
   }
   return err;
 }
@@ -222,7 +233,7 @@ static esp_err_t rs232_lora_ebyte_data_parse(uint8_t *buf, int buf_size) {
   rs232_lora_ebyte_data_parse_dispatch(ebyte_data);
 
 EXIT:
-  rs232_lora_ebyte_free_data(ebyte_data);
+  // rs232_lora_ebyte_free_data(ebyte_data);
   return err;
 }
 
@@ -314,7 +325,7 @@ static void rs232_lora_ebyte_loop() {
     int read_size = 0;
     uint8_t *read_buf = NULL;
 
-    //read_buf = rs232_dev_read_debug(CONFIG, &read_size);
+    // read_buf = rs232_dev_read_debug(CONFIG, &read_size);
     read_buf = rs232_dev_read(CONFIG, &read_size);
     // read_size = 0; // debug
 

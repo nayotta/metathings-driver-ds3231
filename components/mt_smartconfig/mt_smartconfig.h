@@ -16,7 +16,8 @@
 #define CONFIG_ESP32_WIFI_TX_BUFFER_TYPE 1
 #endif
 
+/*
 void mt_smartconfig_task(int light_pin, int light_pin_on_level, int btn_pin,
                          int btn_pin_on_level);
-
+*/
 #endif

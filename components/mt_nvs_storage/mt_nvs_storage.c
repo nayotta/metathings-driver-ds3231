@@ -10,7 +10,7 @@
 #include "mt_nvs_storage.h"
 
 int IS_INITED = 0;
-nvs_handle config_handle = NULL;
+nvs_handle config_handle = 0;
 static const char *TAG = "MT_NVS_STOREGE";
 
 // nvs flash init and set a handle
@@ -45,10 +45,10 @@ nvs_handle mt_nvs_get_handle() {
   if (config_handle) {
     return config_handle;
   } else {
-    if (mt_nvs_init() >= 0) {
+    if (mt_nvs_init() == true) {
       return config_handle;
     } else {
-      return NULL;
+      return 0;
     }
   }
 }
