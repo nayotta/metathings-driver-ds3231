@@ -14,8 +14,7 @@
 
 #define BUF_MAXLEN 64
 
-struct _Aew100_data_t
-{
+typedef struct _Aew100_data_t {
   double currentA;
   double currentB;
   double currentC;
@@ -40,23 +39,7 @@ struct _Aew100_data_t
   double maxPowerA;
   double maxPowerB;
   double maxPowerC;
-};
-
-typedef struct _Aew100_data_t Aew100_data_t;
-
-struct RetMsg_t // ret message struct
-{
-  UCHAR retBuf[BUF_MAXLEN]; // ret buffer
-  USHORT recvCmd;           // ret addr
-  USHORT retLen;            // ret len
-} * RetMsg;                 // global save point
-
-eMBErrorCode modbus_aew100_init(UCHAR ucPort, ULONG ulBaudRate,
-                                eMBParity eParity, int tx_pin, int rx_pin,
-                                int en_pin);
-
-eMBMasterReqErrCode modbus_aew100_sync_cmd_03(UCHAR slaveAddr, USHORT target,
-                                              USHORT num, struct RetMsg_t *ret);
+} Aew100_data_t;
 
 esp_err_t mt_aew100_get_currentA(UCHAR addr, double *data);
 esp_err_t mt_aew100_get_currentB(UCHAR addr, double *data);
@@ -96,6 +79,6 @@ esp_err_t mt_aew100_get_data(UCHAR addr, Aew100_data_t *data);
 // simple data: current votage temp
 esp_err_t mt_aew100_get_data2(UCHAR addr, Aew100_data_t *data);
 
-void mt_modbus_aew100_task();
+esp_err_t mt_aew100_init(int tx_pin, int rx_pin, int en_pin);
 
 #endif

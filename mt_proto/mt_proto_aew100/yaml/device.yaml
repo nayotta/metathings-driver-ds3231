@@ -1,0 +1,199 @@
+# yaml
+version: v1beta
+description: 电流传感器aew100
+flow:
+  name: m1
+  fields:
+    currentA:
+      description: A相电流
+      unit: A
+      driver: aew100
+      type: float
+      period: 10000
+      min: 0
+      max: 100000
+    currentB:
+      description: B相电流
+      unit: A
+      driver: aew100
+      type: float
+      period: 10000
+      min: 0
+      max: 100000
+    currentC:
+      description: C相电流
+      unit: A
+      driver: aew100
+      type: float
+      period: 10000
+      min: 0
+      max: 100000
+    votageA:
+      description: A相电压
+      unit: V
+      driver: aew100
+      type: float
+      period: 10000
+      min: 0
+      max: 10000
+    votageB:
+      description: B相电压
+      unit: V
+      driver: aew100
+      type: float
+      period: 10000
+      min: 0
+      max: 10000
+    votageC:
+      description: C相电压
+      unit: V
+      driver: aew100
+      type: float
+      period: 10000
+      min: 0
+      max: 10000
+    activePowerA:
+      description: A相有功功率
+      unit: W
+      driver: aew100
+      type: float
+      period: 10000
+      min: 0
+      max: 1000000
+    activePowerB:
+      description: B相有功功率
+      unit: W
+      driver: aew100
+      type: float
+      period: 10000
+      min: 0
+      max: 1000000
+    activePowerC:
+      description: C相有功功率
+      unit: W
+      driver: aew100
+      type: float
+      period: 10000
+      min: 0
+      max: 1000000
+    reactivePowerA:
+      description: A相无功功率
+      unit: var
+      driver: aew100
+      type: float
+      period: 10000
+      min: 0
+      max: 1000000
+    reactivePowerB:
+      description: B相无功功率
+      unit: var
+      driver: aew100
+      type: float
+      period: 10000
+      min: 0
+      max: 1000000
+    reactivePowerC:
+      description: C相无功功率
+      unit: var
+      driver: aew100
+      type: float
+      period: 10000
+      min: 0
+      max: 1000000
+    powerFactorA:
+      description: A相功率因素
+      unit: percent
+      driver: aew100
+      type: float
+      period: 10000
+      min: 0
+      max: 100
+    powerFactorB:
+      description: B相功率因素
+      unit: percent
+      driver: aew100
+      type: float
+      period: 10000
+      min: 0
+      max: 100
+    powerFactorC:
+      description: C相功率因素
+      unit: percent
+      driver: aew100
+      type: float
+      period: 10000
+      min: 0
+      max: 100
+    qualityA:
+      description: A相总电量
+      unit: kwh
+      driver: aew100
+      type: float
+      period: 10000
+      min: 0
+      max: 1000000
+    qualityB:
+      description: B相总电量
+      unit: kwh
+      driver: aew100
+      type: float
+      period: 10000
+      min: 0
+      max: 1000000
+    qualityC:
+      description: C相总电量
+      unit: kwh
+      driver: aew100
+      type: float
+      period: 10000
+      min: 0
+      max: 1000000
+    tempA:
+      description: A相温度
+      unit: centigrade
+      driver: aew100
+      type: float
+      period: 10000
+      min: -200
+      max: 200
+    tempB:
+      description: B相温度
+      unit: centigrade
+      driver: aew100
+      type: float
+      period: 10000
+      min: -200
+      max: 200
+    tempC:
+      description: C相温度
+      unit: centigrade
+      driver: aew100
+      type: float
+      period: 10000
+      min: -200
+      max: 200
+    maxPowerA:
+      description: A相当月最大功率
+      unit: W
+      driver: aew100
+      type: float
+      period: 10000
+      min: 0
+      max: 100000
+    maxPowerB:
+      description: B相当月最大功率
+      unit: W
+      driver: aew100
+      type: float
+      period: 10000
+      min: 0
+      max: 100000
+    maxPowerC:
+      description: C相当月最大功率
+      unit: W
+      driver: aew100
+      type: float
+      period: 10000
+      min: 0
+      max: 100000
+      

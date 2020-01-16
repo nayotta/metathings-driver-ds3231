@@ -1,0 +1,11 @@
+# yaml
+version: v1beta
+description: 水浸ld100
+flow:
+  name: m1
+  field:
+    state1:
+      description: 水浸状态, true:正常, false:进水
+      driver: ld100
+      type: bool
+      period: 120000

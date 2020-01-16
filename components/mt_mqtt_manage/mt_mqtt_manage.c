@@ -1,10 +1,12 @@
 #include "mt_mqtt_manage.h"
 
 // global config ==============================================================
-static const char *TAG = "MT_MQTT_MANAGE";
+
+// static const char *TAG = "MT_MQTT_MANAGE";
 static mt_mqtt_manage_t *MANAGE = NULL;
 
 // global func ================================================================
+
 esp_err_t mt_mqtt_manage_add(mt_mqtt_manage_client_t *client_in) {
   mt_mqtt_manage_t *temp_manage = NULL;
 
@@ -35,7 +37,8 @@ char *mt_mqtt_manage_get_module_id(esp_mqtt_client_handle_t *client) {
   char *module_id = NULL;
   int module_id_size = 0;
 
-  if (MANAGE == NULL) return NULL;
+  if (MANAGE == NULL)
+    return NULL;
 
   for (int i = 0; i < MANAGE->mqtt_num; i++) {
     if (MANAGE->clients[i]->client == client) {
@@ -52,7 +55,8 @@ char *mt_mqtt_manage_get_module_id(esp_mqtt_client_handle_t *client) {
 
 esp_err_t mt_mqtt_manage_set_module_id(esp_mqtt_client_handle_t *client_in,
                                        char *module_id_in) {
-  if (MANAGE == NULL) return ESP_ERR_INVALID_ARG;
+  if (MANAGE == NULL)
+    return ESP_ERR_INVALID_ARG;
 
   for (int i = 0; i < MANAGE->mqtt_num; i++) {
     if (client_in == MANAGE->clients[i]->client) {
@@ -73,7 +77,8 @@ char *mt_mqtt_manage_get_device_id(esp_mqtt_client_handle_t *client) {
   char *dev_id = NULL;
   int dev_id_size = 0;
 
-  if (MANAGE == NULL) return NULL;
+  if (MANAGE == NULL)
+    return NULL;
 
   for (int i = 0; i < MANAGE->mqtt_num; i++) {
     if (MANAGE->clients[i]->client == client) {
@@ -90,7 +95,8 @@ char *mt_mqtt_manage_get_device_id(esp_mqtt_client_handle_t *client) {
 
 esp_err_t mt_mqtt_manage_set_device_id(esp_mqtt_client_handle_t *client_in,
                                        char *dev_id_in) {
-  if (MANAGE == NULL) return ESP_ERR_INVALID_ARG;
+  if (MANAGE == NULL)
+    return ESP_ERR_INVALID_ARG;
 
   for (int i = 0; i < MANAGE->mqtt_num; i++) {
     if (client_in == MANAGE->clients[i]->client) {
@@ -109,7 +115,8 @@ esp_err_t mt_mqtt_manage_set_device_id(esp_mqtt_client_handle_t *client_in,
 
 esp_err_t mt_mqtt_manage_get_session_id(esp_mqtt_client_handle_t *client_in,
                                         uint64_t *session_id_out) {
-  if (MANAGE == NULL) return ESP_ERR_INVALID_ARG;
+  if (MANAGE == NULL)
+    return ESP_ERR_INVALID_ARG;
 
   for (int i = 0; i < MANAGE->mqtt_num; i++) {
     if (MANAGE->clients[i]->client == client_in) {
@@ -123,7 +130,8 @@ esp_err_t mt_mqtt_manage_get_session_id(esp_mqtt_client_handle_t *client_in,
 
 esp_err_t mt_mqtt_manage_set_session_id(esp_mqtt_client_handle_t *client_in,
                                         uint64_t sess_id_in) {
-  if (MANAGE == NULL) return ESP_ERR_INVALID_ARG;
+  if (MANAGE == NULL)
+    return ESP_ERR_INVALID_ARG;
 
   for (int i = 0; i < MANAGE->mqtt_num; i++) {
     if (client_in == MANAGE->clients[i]->client) {

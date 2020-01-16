@@ -18,6 +18,21 @@ static rs232_EA900II_config_t *CONFIG = NULL;
 
 // static func ================================================================
 
+static esp_err_t rs232_EA900II_parse_bool_string(uint8_t *buf, int offset,
+                                                 bool *out) {
+  *out = false;
+  if (buf[offset] == '0') {
+    *out = false;
+  } else if (buf[offset] == '1') {
+    *out = true;
+  } else {
+    ESP_LOGE(TAG, "%4d %s unxecpet string:%c", __LINE__, __func__, buf[offset]);
+    return ESP_ERR_INVALID_ARG;
+  }
+
+  return ESP_OK;
+}
+
 static esp_err_t rs232_EA900II_parse_float_string(uint8_t *buf, int offset,
                                                   int int_size, int point_size,
                                                   double *float_out) {
@@ -60,7 +75,7 @@ static esp_err_t rs232_EA900II_parse_float_string(uint8_t *buf, int offset,
 
 static esp_err_t rs232_EA900II_sent_status_req(rs232_dev_config_t *config) {
   esp_err_t err = ESP_OK;
-  uint8_t buf[64] = "Q1\r";
+  uint8_t buf[64] = "Q1\n";
 
   err = rs232_dev_write(config, buf, strlen((char *)buf));
   if (err != ESP_OK) {
@@ -73,7 +88,7 @@ static esp_err_t rs232_EA900II_sent_status_req(rs232_dev_config_t *config) {
 
 static esp_err_t rs232_EA900II_sent_model_req(rs232_dev_config_t *config) {
   esp_err_t err = ESP_OK;
-  uint8_t buf[64] = "I\r";
+  uint8_t buf[64] = "I\n";
 
   err = rs232_dev_write(config, buf, strlen((char *)buf));
   if (err != ESP_OK) {
@@ -86,7 +101,7 @@ static esp_err_t rs232_EA900II_sent_model_req(rs232_dev_config_t *config) {
 
 static esp_err_t rs232_EA900II_sent_config_req(rs232_dev_config_t *config) {
   esp_err_t err = ESP_OK;
-  uint8_t buf[64] = "F\r";
+  uint8_t buf[64] = "F\n";
 
   err = rs232_dev_write(config, buf, strlen((char *)buf));
   if (err != ESP_OK) {
@@ -102,7 +117,7 @@ static rs232_EA900II_status_t *rs232_EA900II_parse_status_res(uint8_t *buf,
   esp_err_t err = ESP_OK;
   rs232_EA900II_status_t *status = malloc(sizeof(rs232_EA900II_status_t));
 
-  if (buf_size != 40) {
+  if (buf_size != 47) {
     ESP_LOGE(TAG, "%4d %s get unexcept buf_size:%d", __LINE__, __func__,
              buf_size);
     err = ESP_ERR_INVALID_RESPONSE;
@@ -230,19 +245,19 @@ static rs232_EA900II_status_t *rs232_EA900II_parse_status_res(uint8_t *buf,
     goto EXIT;
   }
 
-  // bit 38
-  status->w7 = buf[38] >> 7 & 0x1;
-  status->w6 = buf[38] >> 6 & 0x1;
-  status->w5 = buf[38] >> 5 & 0x1;
-  status->w4 = buf[38] >> 4 & 0x1;
-  status->w3 = buf[38] >> 3 & 0x1;
-  status->w2 = buf[38] >> 2 & 0x1;
-  status->w1 = buf[38] >> 1 & 0x1;
-  status->w0 = buf[38] >> 0 & 0x1;
+  // bit 38-45
+  rs232_EA900II_parse_bool_string(buf, 38, &status->w7);
+  rs232_EA900II_parse_bool_string(buf, 39, &status->w6);
+  rs232_EA900II_parse_bool_string(buf, 40, &status->w5);
+  rs232_EA900II_parse_bool_string(buf, 41, &status->w4);
+  rs232_EA900II_parse_bool_string(buf, 42, &status->w3);
+  rs232_EA900II_parse_bool_string(buf, 43, &status->w2);
+  rs232_EA900II_parse_bool_string(buf, 44, &status->w1);
+  rs232_EA900II_parse_bool_string(buf, 45, &status->w0);
 
-  // bit 39
-  if (buf[39] != '\r') {
-    ESP_LOGE(TAG, "%4d %s bit 39 not match", __LINE__, __func__);
+  // bit 46
+  if (buf[46] != '\r') {
+    ESP_LOGE(TAG, "%4d %s bit 46 not match", __LINE__, __func__);
     err = ESP_ERR_INVALID_ARG;
     goto EXIT;
   }

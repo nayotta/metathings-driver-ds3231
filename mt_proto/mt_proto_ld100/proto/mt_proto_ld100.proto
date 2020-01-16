@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+package mt_ld100;
+
+service ld100Service {
+  // 验证req的水浸addr是否存在
+  rpc GetAddr(GetAddrReq) returns (GetAddrRes) {}
+
+  // 设置水浸addr
+  rpc SetAddr(SetAddrReq) returns (SetAddrRes) {}
+
+  // 获取当前水浸状态
+  rpc GetState(GetStateReq) returns (GetStateReq) {}
+
+  // 获取水浸继电器状态
+  rpc GetRelay(GetRelayReq) returns (GetRelayRes) {}
+
+  // 设置水浸继电器状态
+  rpc SetRelay(SetRelayReq) returns (SetRelayRes) {}
+}
+
+message GetAddrReq { int32 addr = 1; }
+
+message GetAddrRes {
+  int32 resCode = 1;
+  int32 addr = 2;
+  bool state = 3;
+}
+
+message SetAddrReq { int32 addr = 1; }
+
+message SetAddrRes { int32 resCode = 1; }
+
+// also use in flow f1
+message State {
+  bool state = 1; // 水浸状态, true:正常, false:进水
+}
+
+message GetStateReq { int32 addr = 1; }
+
+message GetStateRes {
+  int32 resCode = 1;
+  int32 addr = 2;
+  State state = 3;
+}
+
+message GetRelayReq { int32 addr = 1; }
+
+message GetRelayRes {
+  int32 resCode = 1;
+  int32 addr = 2;
+  bool state = 3;
+}
+
+message SetRelayReq { int32 addr = 1; }
+
+message SetRelayRes { int32 resCode = 1; }
