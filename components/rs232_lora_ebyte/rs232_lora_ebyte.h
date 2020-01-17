@@ -46,6 +46,8 @@ esp_err_t rs232_lora_ebyte_init(int uart_num, int rx_pin, int tx_pin,
 
 esp_err_t rs232_lora_ebyte_sent(rs232_lora_ebyte_data_t *ebyte_data);
 
+rs232_lora_ebyte_data_t *rs232_lora_ebyte_recv();
+
 // need task
 rs232_lora_ebyte_data_t *
 rs232_lora_ebyte_sent_and_wait_finish(rs232_lora_ebyte_data_t *ebyte_data,

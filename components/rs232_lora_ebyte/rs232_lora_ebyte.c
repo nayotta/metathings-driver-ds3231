@@ -63,7 +63,7 @@ rs232_lora_ebyte_parse_flow(rs232_lora_ebyte_data_t *ebyte_data) {
     ESP_LOGE(TAG, "%4d %s id:%d unmatch id in flows", __LINE__, __func__,
              ebyte_data->id);
   } else if (match > 1) {
-    ESP_LOGw(TAG, "%4d %s id:%d match %d times", __LINE__, __func__,
+    ESP_LOGW(TAG, "%4d %s id:%d match %d times", __LINE__, __func__,
              ebyte_data->id, match);
   }
 
@@ -126,7 +126,8 @@ EXIT:
   return err;
 }
 
-static esp_err_t rs232_lora_ebyte_data_parse(uint8_t *buf, int buf_size) {
+static rs232_lora_ebyte_data_t *rs232_lora_ebyte_data_parse(uint8_t *buf,
+                                                            int buf_size) {
   esp_err_t err = ESP_OK;
   int offset = 0;
   rs232_lora_ebyte_data_t *ebyte_data = NULL;
@@ -229,12 +230,13 @@ static esp_err_t rs232_lora_ebyte_data_parse(uint8_t *buf, int buf_size) {
            __func__, ebyte_data->id, ebyte_data->type, ebyte_data->cmd,
            ebyte_data->handle, ebyte_data->len);
 
-  // msg dispatch
-  rs232_lora_ebyte_data_parse_dispatch(ebyte_data);
-
 EXIT:
-  // rs232_lora_ebyte_free_data(ebyte_data);
-  return err;
+  if (err != ESP_OK) {
+    rs232_lora_ebyte_free_data(ebyte_data);
+    return NULL;
+  }
+
+  return ebyte_data;
 }
 
 static uint8_t *rs232_lora_ebyte_gen_data(rs232_lora_ebyte_data_t *ebyte_data,
@@ -323,7 +325,9 @@ EXIT:
 static void rs232_lora_ebyte_loop() {
   while (1) {
     int read_size = 0;
+    esp_err_t err = ESP_OK;
     uint8_t *read_buf = NULL;
+    rs232_lora_ebyte_data_t *ebyte_data = NULL;
 
     // read_buf = rs232_dev_read_debug(CONFIG, &read_size);
     read_buf = rs232_dev_read(CONFIG, &read_size);
@@ -336,7 +340,23 @@ static void rs232_lora_ebyte_loop() {
         printf("%2x ", read_buf[i]);
       }
       printf("\n");
-      rs232_lora_ebyte_data_parse(read_buf, read_size);
+      ebyte_data = rs232_lora_ebyte_data_parse(read_buf, read_size);
+      if (ebyte_data == NULL) {
+        ESP_LOGE(TAG, "%4d %s rs232_lora_ebyte_data_parse get NULL", __LINE__,
+                 __func__);
+        goto CLEAN;
+      }
+      // msg dispatch
+      err = rs232_lora_ebyte_data_parse_dispatch(ebyte_data);
+      if (err != ESP_OK) {
+        ESP_LOGE(TAG, "%4d %s rs232_lora_ebyte_data_parse_dispatch failed",
+                 __LINE__, __func__);
+      }
+
+    CLEAN:
+      if (read_buf != NULL) {
+        free(read_buf);
+      }
     }
     vTaskDelay(10 / portTICK_RATE_MS);
   }
@@ -420,6 +440,47 @@ EXIT:
   if (buf != NULL)
     free(buf);
   return err;
+}
+
+rs232_lora_ebyte_data_t *rs232_lora_ebyte_recv() {
+  esp_err_t err = ESP_OK;
+  rs232_lora_ebyte_data_t *ebyte_recv = NULL;
+  int read_size = 0;
+  uint8_t *read_buf = NULL;
+
+  read_buf = rs232_dev_read(CONFIG, &read_size);
+
+  if (read_size > 0) {
+    ESP_LOGI(TAG, "%4d %s rs232_dev_read, size=%d", __LINE__, __func__,
+             read_size);
+    for (int i = 0; i < read_size; i++) {
+      printf("%2x ", read_buf[i]);
+    }
+    printf("\n");
+  } else {
+    err = ESP_ERR_INVALID_ARG;
+    goto EXIT;
+  }
+
+  ebyte_recv = rs232_lora_ebyte_data_parse(read_buf, read_size);
+  if (ebyte_recv == NULL) {
+    ESP_LOGE(TAG, "%4d %s rs232_lora_ebyte_data_parse NULL", __LINE__,
+             __func__);
+    err = ESP_ERR_INVALID_RESPONSE;
+    goto EXIT;
+  }
+
+EXIT:
+  if (read_buf != NULL) {
+    free(read_buf);
+  }
+  if (err != ESP_OK) {
+    if (ebyte_recv != NULL) {
+      rs232_lora_ebyte_free_data(ebyte_recv);
+    }
+    return NULL;
+  }
+  return ebyte_recv;
 }
 
 // need task
