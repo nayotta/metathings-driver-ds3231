@@ -16,7 +16,7 @@
 
 #include "mt_nvs_storage.h"
 #include "mt_smartconfig.h"
-/*
+
 // global define ==============================================================
 static const char *TAG = "MT_SMARTCONFIG";
 
@@ -54,79 +54,6 @@ void btn_long_press_callback() {
   esp_restart();
 }
 
-static void sc_callback(smartconfig_status_t status, void *pdata) {
-  switch (status) {
-  case SC_STATUS_WAIT:
-    ESP_LOGI(TAG, "MT_SC_STATUS_WAIT");
-    break;
-
-  case SC_STATUS_FIND_CHANNEL:
-    ESP_LOGI(TAG, "MT_SC_STATUS_FINDING_CHANNEL");
-    break;
-
-  case SC_STATUS_GETTING_SSID_PSWD:
-    ESP_LOGI(TAG, "MT_SC_STATUS_GETTING_SSID_PSWD");
-    break;
-
-  case SC_STATUS_LINK: {
-    bool ret = 0;
-    int status = 0;
-
-    ESP_LOGI(TAG, "MT_SC_STATUS_LINK");
-    wifi_config_t *wifi_config = pdata;
-    ESP_LOGI(TAG, "SSID:%s", wifi_config->sta.ssid);
-    ESP_LOGI(TAG, "PASSWORD:%s", wifi_config->sta.password);
-
-    // store config in nvs_storage
-    ret = mt_nvs_write_string_config("password",
-                                     (char *)wifi_config->sta.password);
-    if (ret == false) {
-      ESP_LOGE(TAG, "%d mt_nvs_write_string_config password failed", __LINE__);
-    }
-
-    ret = mt_nvs_write_string_config("ssid", (char *)wifi_config->sta.ssid);
-    if (ret == false) {
-      ESP_LOGE(TAG, "%d mt_nvs_write_string_config ssid failed", __LINE__);
-    }
-
-    // config wifi
-    status = esp_wifi_disconnect();
-    if (status != ESP_OK) {
-      ESP_LOGE(TAG, "%d esp_wifi_disconnect failed", __LINE__);
-    }
-
-    status = esp_wifi_set_config(ESP_IF_WIFI_STA, wifi_config);
-    if (status != ESP_OK) {
-      ESP_LOGE(TAG, "%d esp_wifi_set_config failed", __LINE__);
-    }
-
-    status = esp_wifi_connect();
-    if (status != ESP_OK) {
-      ESP_LOGE(TAG, "%d esp_wifi_connect failed", __LINE__);
-    }
-
-    break;
-  }
-
-  case SC_STATUS_LINK_OVER:
-    ESP_LOGI(TAG, "MT_SC_STATUS_LINK_OVER");
-    if (pdata != NULL) {
-      uint8_t phone_ip[4] = {0};
-      memcpy(phone_ip, (uint8_t *)pdata, 4);
-      ESP_LOGI(TAG, "phone ip: %d.%d.%d.%d", phone_ip[0], phone_ip[1],
-               phone_ip[2], phone_ip[3]);
-    }
-
-    xEventGroupSetBits(WIFI_EVENT_GROUP, ESPTOUCH_DONE_BIT);
-    xEventGroupSetBits(WIFI_EVENT_GROUP, WIFI_OK_BIT);
-    break;
-
-  default:
-    ESP_LOGI(TAG, "smartconfig get unkown msg %d", status);
-    break;
-  }
-}
-
 static void mt_smartconfig_loop(void *parm) {
   int ret = 0;
   EventBits_t uxBits;
@@ -143,37 +70,33 @@ static void mt_smartconfig_loop(void *parm) {
     goto EXIT;
   }
 
-  ret = esp_esptouch_set_timeout(240);
+  ret = esp_esptouch_set_timeout(60);
   if (ret != ESP_OK) {
     ESP_LOGE(TAG, "%d esp_esptouch_set_timeout failed", __LINE__);
     goto EXIT;
   }
 
-  ret = esp_smartconfig_start(sc_callback);
+  smartconfig_start_config_t cfg = SMARTCONFIG_START_CONFIG_DEFAULT();
+
+  ret = esp_smartconfig_start(&cfg);
   if (ret != ESP_OK) {
     ESP_LOGE(TAG, "%d esp_smartconfig_start failed", __LINE__);
     goto EXIT;
   }
 
   ESP_LOGI(TAG, "WiFi Connecting");
-  uxBits =
-      xEventGroupWaitBits(WIFI_EVENT_GROUP, CONNECTED_BIT | ESPTOUCH_DONE_BIT,
-                          true, false, 300 * 1000 / portTICK_PERIOD_MS);
-  if (uxBits & CONNECTED_BIT) {
-    ESP_LOGI(TAG, "WiFi Connected to ap");
-  }
+  while (1) {
+    uxBits =
+        xEventGroupWaitBits(WIFI_EVENT_GROUP, CONNECTED_BIT | ESPTOUCH_DONE_BIT,
+                            true, false, portMAX_DELAY);
+    if (uxBits & CONNECTED_BIT) {
+      ESP_LOGI(TAG, "WiFi Connected to ap");
+    }
 
-  if (uxBits & ESPTOUCH_DONE_BIT) {
-    ESP_LOGI(TAG, "smartconfig over");
-    esp_smartconfig_stop();
-    goto EXIT;
-  }
-
-  // timeout set disconnect
-  if (LIGHT_HANDLE != NULL) {
-    ret = mt_gpio_light_set_blink(LIGHT_HANDLE, 2000);
-    if (ret == false) {
-      ESP_LOGE(TAG, "%d mt_gpio_light_set_blink failed", __LINE__);
+    if (uxBits & ESPTOUCH_DONE_BIT) {
+      ESP_LOGI(TAG, "smartconfig over");
+      esp_smartconfig_stop();
+      goto EXIT;
     }
   }
 
@@ -181,9 +104,9 @@ EXIT:
   vTaskDelete(NULL);
 }
 
-static esp_err_t event_handler(void *ctx, system_event_t *event) {
-  switch (event->event_id) {
-  case SYSTEM_EVENT_STA_START: {
+static esp_err_t event_handler(void *arg, esp_event_base_t event_base,
+                               int32_t event_id, void *event_data) {
+  if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_START) {
     int ret = 0;
     char *ssid_str = NULL;
     size_t ssid_str_len = 0;
@@ -245,13 +168,19 @@ static esp_err_t event_handler(void *ctx, system_event_t *event) {
       xTaskCreate(mt_smartconfig_loop, "MT_SMARTCONFIG_TASK", 4096, NULL, 0,
                   NULL);
     }
-    break;
   }
 
-  case SYSTEM_EVENT_STA_LOST_IP: {
+  if (event_base == IP_EVENT && event_id == IP_EVENT_STA_LOST_IP) {
     int ret = 0;
 
     ESP_LOGI(TAG, "[MT] sta ip lost");
+
+    if (LIGHT_HANDLE != NULL) {
+      ret = mt_gpio_light_set_blink(LIGHT_HANDLE, 2000);
+      if (ret == false) {
+        ESP_LOGE(TAG, "%d mt_gpio_light_set_blink failed", __LINE__);
+      }
+    }
 
     ret = esp_wifi_disconnect();
     if (ret != ESP_OK) {
@@ -264,10 +193,9 @@ static esp_err_t event_handler(void *ctx, system_event_t *event) {
     }
 
     ESP_LOGI(TAG, "[MT] sta restart");
-    break;
   }
 
-  case SYSTEM_EVENT_STA_GOT_IP: {
+  if (event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP) {
     bool ret = false;
 
     xEventGroupSetBits(WIFI_EVENT_GROUP, CONNECTED_BIT);
@@ -278,10 +206,9 @@ static esp_err_t event_handler(void *ctx, system_event_t *event) {
         ESP_LOGE(TAG, "%d mt_gpio_light_set_on failed", __LINE__);
       }
     }
-    break;
   }
 
-  case SYSTEM_EVENT_STA_DISCONNECTED: {
+  if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_DISCONNECTED) {
     bool ret = false;
     int ret1 = 0;
 
@@ -300,18 +227,78 @@ static esp_err_t event_handler(void *ctx, system_event_t *event) {
     }
 
     xEventGroupClearBits(WIFI_EVENT_GROUP, CONNECTED_BIT);
-    break;
   }
 
-  default:
-    ESP_LOGI(TAG, "STA get unkown id %d", event->event_id);
-    break;
+  if (event_base == SC_EVENT && event_id == SC_EVENT_SCAN_DONE) {
+    ESP_LOGI(TAG, "Scan done");
   }
+
+  if (event_base == SC_EVENT && event_id == SC_EVENT_FOUND_CHANNEL) {
+    ESP_LOGI(TAG, "Found channel");
+  }
+
+  if (event_base == SC_EVENT && event_id == SC_EVENT_GOT_SSID_PSWD) {
+    bool ret = 0;
+    int status = 0;
+    smartconfig_event_got_ssid_pswd_t *evt =
+        (smartconfig_event_got_ssid_pswd_t *)event_data;
+    wifi_config_t wifi_config;
+    uint8_t ssid[33] = {0};
+    uint8_t password[65] = {0};
+
+    ESP_LOGI(TAG, "MT_SC_STATUS_LINK");
+    bzero(&wifi_config, sizeof(wifi_config_t));
+    memcpy(wifi_config.sta.ssid, evt->ssid, sizeof(wifi_config.sta.ssid));
+    memcpy(wifi_config.sta.password, evt->password,
+           sizeof(wifi_config.sta.password));
+    wifi_config.sta.bssid_set = evt->bssid_set;
+    if (wifi_config.sta.bssid_set == true) {
+      memcpy(wifi_config.sta.bssid, evt->bssid, sizeof(wifi_config.sta.bssid));
+    }
+
+    memcpy(ssid, evt->ssid, sizeof(evt->ssid));
+    memcpy(password, evt->password, sizeof(evt->password));
+    ESP_LOGI(TAG, "SSID:%s", ssid);
+
+    // store config in nvs_storage
+    ret = mt_nvs_write_string_config("password", (char *)password);
+    if (ret == false) {
+      ESP_LOGE(TAG, "%d mt_nvs_write_string_config password failed", __LINE__);
+    }
+
+    ret = mt_nvs_write_string_config("ssid", (char *)ssid);
+    if (ret == false) {
+      ESP_LOGE(TAG, "%d mt_nvs_write_string_config ssid failed", __LINE__);
+    }
+
+    // config wifi
+    status = esp_wifi_disconnect();
+    if (status != ESP_OK) {
+      ESP_LOGE(TAG, "%d esp_wifi_disconnect failed", __LINE__);
+    }
+
+    status = esp_wifi_set_config(ESP_IF_WIFI_STA, &wifi_config);
+    if (status != ESP_OK) {
+      ESP_LOGE(TAG, "%d esp_wifi_set_config failed", __LINE__);
+    }
+
+    status = esp_wifi_connect();
+    if (status != ESP_OK) {
+      ESP_LOGE(TAG, "%d esp_wifi_connect failed", __LINE__);
+    }
+  }
+
+  if (event_base == SC_EVENT && event_id == SC_EVENT_SEND_ACK_DONE) {
+    ESP_LOGI(TAG, "SC_EVENT_SEND_ACK_DONE");
+    xEventGroupSetBits(WIFI_EVENT_GROUP, ESPTOUCH_DONE_BIT);
+    xEventGroupSetBits(WIFI_EVENT_GROUP, WIFI_OK_BIT);
+  }
+
   return ESP_OK;
 }
 
 static void mt_wifi_loop(void) {
-  int ret = 0;
+  esp_err_t err = ESP_OK;
 
   ESP_LOGI(TAG, "mt_smartconfig_task created");
 
@@ -319,25 +306,43 @@ static void mt_wifi_loop(void) {
 
   WIFI_EVENT_GROUP = xEventGroupCreate();
 
-  ret = esp_event_loop_init(event_handler, NULL);
-  if (ret != ESP_OK) {
-    ESP_LOGE(TAG, "%d esp_event_loop_init failed", __LINE__);
+  err = esp_event_loop_create_default();
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%d esp_event_loop_create_default failed", __LINE__);
+  }
+
+  err = esp_event_handler_register(WIFI_EVENT, ESP_EVENT_ANY_ID, &event_handler,
+                                   NULL);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%d esp_event_handler_register failed", __LINE__);
+  }
+
+  err = esp_event_handler_register(IP_EVENT, IP_EVENT_STA_GOT_IP,
+                                   &event_handler, NULL);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%d esp_event_handler_register failed", __LINE__);
+  }
+
+  err = esp_event_handler_register(SC_EVENT, ESP_EVENT_ANY_ID, &event_handler,
+                                   NULL);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%d esp_event_handler_register failed", __LINE__);
   }
 
   wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
 
-  ret = esp_wifi_init(&cfg);
-  if (ret != ESP_OK) {
+  err = esp_wifi_init(&cfg);
+  if (err != ESP_OK) {
     ESP_LOGE(TAG, "%d esp_wifi_init failed", __LINE__);
   }
 
-  ret = esp_wifi_set_mode(WIFI_MODE_STA);
-  if (ret != ESP_OK) {
+  err = esp_wifi_set_mode(WIFI_MODE_STA);
+  if (err != ESP_OK) {
     ESP_LOGE(TAG, "%d esp_wifi_set_mode failed", __LINE__);
   }
 
-  ret = esp_wifi_start();
-  if (ret != ESP_OK) {
+  err = esp_wifi_start();
+  if (err != ESP_OK) {
     ESP_LOGE(TAG, "%d esp_wifi_start failed", __LINE__);
   }
 
@@ -379,7 +384,4 @@ void mt_smartconfig_task(int light_pin, int light_pin_on_level, int btn_pin,
 
   xTaskCreate((TaskFunction_t)mt_wifi_loop, "MT_WIFI_TASK", 1024 * 2, NULL, 10,
               NULL);
-
-
 }
-*/

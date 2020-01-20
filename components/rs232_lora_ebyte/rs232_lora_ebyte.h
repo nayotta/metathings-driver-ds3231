@@ -18,6 +18,8 @@
    RS232_LORA_EBYTE_SESSION_SIZE + RS232_LORA_EBYTE_LEN_SIZE +                 \
    RS232_LORA_EBYTE_CRC_SIZE + RS232_LORA_EBYTE_DATA_END_SIZE)
 
+#define RS232_LORA_EBYTE_UNARYCALL_TIMEOUT_DEFAULT (5000 / portTICK_RATE_MS)
+
 enum rs232_lora_ebyte_cmd_type_t {
   RS232_LORA_EBYTE_CMD_TYPE_FLOW = 0,
   RS232_LORA_EBYTE_CMD_TYPE_UNARYCALL,
@@ -31,6 +33,7 @@ typedef struct _rs232_lora_ebyte_data_t {
   QueueHandle_t handle;
   int16_t len;
   uint8_t *data;
+  uint32_t timeout;
 } rs232_lora_ebyte_data_t;
 
 typedef struct _rs232_lora_ebyte_t {
@@ -50,8 +53,7 @@ rs232_lora_ebyte_data_t *rs232_lora_ebyte_recv();
 
 // need task
 rs232_lora_ebyte_data_t *
-rs232_lora_ebyte_sent_and_wait_finish(rs232_lora_ebyte_data_t *ebyte_data,
-                                      uint32_t timeout);
+rs232_lora_ebyte_sent_and_wait_finish(rs232_lora_ebyte_data_t *ebyte_data);
 
 esp_err_t rs232_lora_ebyte_task();
 

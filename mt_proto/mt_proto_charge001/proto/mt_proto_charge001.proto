@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package mt_charge001;
+
+service Service {
+  rpc SetCharge(SetChargeReq) returns (SetRes) {}
+}
+
+message Charge {
+  int32 port = 1; // 充电端口
+  int32 time = 2; // 充电时间
+}
+
+message SetRes {
+  int32 code = 1;
+  string content = 2;
+}
+
+message SetChargeReq {
+  int32 code = 1;
+  Charge charge = 2;
+}

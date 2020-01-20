@@ -11,10 +11,13 @@
 #define CONFIG_FREERTOS_HZ 100
 #endif
 
-esp_err_t mt_mqtt_utils_get_session_id_from_topic(char *topic, uint64_t *session_id);
+esp_err_t mt_mqtt_utils_get_session_id_from_topic(char *topic,
+                                                  uint64_t *session_id);
 
 char *mt_mqtt_utils_get_session_string_from_topic(char *topic);
 
 char *mt_mqtt_utils_get_path_from_topic(char *topic);
+
+char *mt_mqtt_utils_get_module_id_from_topic(char *topic);
 
 #endif

@@ -1,5 +1,7 @@
-#include "rs232_lora_ebyte_flow_manage.h"
+#include "esp_log.h"
+
 #include "rs232_lora_ebyte.h"
+#include "rs232_lora_ebyte_flow_manage.h"
 
 #include "mt_mqtt_lan.h"
 
@@ -8,7 +10,7 @@
 static const char *TAG = "RS232_LORA_EBYTE_FLOW_MANAGE";
 static rs232_lora_ebyte_flow_manage_t *FLOW_MANAGE = NULL;
 
-// global define ==============================================================
+// static define ==============================================================
 
 esp_err_t
 rs232_lora_ebyte_flow_manage_mqtt_process(rs232_lora_ebyte_data_t *ebyte_data) {
@@ -58,6 +60,8 @@ EXIT:
   }
   return err;
 }
+
+// global define ==============================================================
 
 esp_err_t rs232_lora_ebyte_flow_manage_add(mt_module_flow_t *flow,
                                            int flow_addr,

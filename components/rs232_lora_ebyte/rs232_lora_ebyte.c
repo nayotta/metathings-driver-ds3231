@@ -8,6 +8,7 @@
 
 #include "rs232_lora_ebyte.h"
 #include "rs232_lora_ebyte_flow_manage.h"
+#include "rs232_lora_ebyte_unarycall_manage.h"
 
 #include "mt_module_mqtt.h"
 
@@ -374,6 +375,7 @@ rs232_lora_ebyte_data_t *rs232_lora_ebyte_new_data() {
   ebyte_data->len = 0;
   ebyte_data->handle = 0;
   ebyte_data->data = NULL;
+  ebyte_data->timeout = RS232_LORA_EBYTE_UNARYCALL_TIMEOUT_DEFAULT;
 
   return ebyte_data;
 }
@@ -485,13 +487,19 @@ EXIT:
 
 // need task
 rs232_lora_ebyte_data_t *
-rs232_lora_ebyte_sent_and_wait_finish(rs232_lora_ebyte_data_t *ebyte_data,
-                                      uint32_t timeout) {
+rs232_lora_ebyte_sent_and_wait_finish(rs232_lora_ebyte_data_t *ebyte_data) {
   esp_err_t err = ESP_OK;
   rs232_lora_ebyte_data_t *ebyte_data_out =
       malloc(sizeof(rs232_lora_ebyte_data_t));
 
   ebyte_data->handle = xQueueCreate(1, sizeof(rs232_lora_ebyte_data_t));
+
+  err = rs232_lora_ebyte_unarycall_manage_add(ebyte_data->handle);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s rs232_lora_ebyte_unarycall_manage_add failed",
+             __LINE__, __func__);
+    goto EXIT;
+  }
 
   err = rs232_lora_ebyte_sent(ebyte_data);
   if (err != ESP_OK) {
@@ -499,9 +507,19 @@ rs232_lora_ebyte_sent_and_wait_finish(rs232_lora_ebyte_data_t *ebyte_data,
     goto EXIT;
   }
 
-  xQueueReceive(ebyte_data->handle, ebyte_data_out, timeout);
+  xQueueReceive(ebyte_data->handle, ebyte_data_out, ebyte_data->timeout);
+
+  err = rs232_lora_ebyte_unarycall_manage_del(ebyte_data->handle);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s rs232_lora_ebyte_unarycall_manage_del failed",
+             __LINE__, __func__);
+    goto EXIT;
+  }
 
 EXIT:
+  if (ebyte_data->handle != NULL) {
+    free(ebyte_data->handle);
+  }
   if (err != ESP_OK) {
     rs232_lora_ebyte_free_data(ebyte_data_out);
     ebyte_data_out = NULL;

@@ -169,7 +169,7 @@ esp_err_t mt_module_flow_manage_add(mt_module_flow_t *flow) {
   FLOW_MANAGE->flows_handle[FLOW_MANAGE->flows_size - 1] =
       xQueueCreate(1, sizeof(mt_module_mqtt_msg_t));
 
-  //return ESP_OK; // debug
+  // return ESP_OK; // debug
 
   ESP_LOGI(TAG, "%4d %s create flow push task,flow_size=%d,handle=%p", __LINE__,
            __func__, FLOW_MANAGE->flows_size,
@@ -180,5 +180,46 @@ esp_err_t mt_module_flow_manage_add(mt_module_flow_t *flow) {
 
   if (temp_manage != NULL)
     free(temp_manage);
+  return ESP_OK;
+}
+
+esp_err_t mt_module_flow_manage_get_index_by_module_id(char *module_id,
+                                                       int *module_index) {
+  int match = 0;
+
+  if (module_id == NULL) {
+    ESP_LOGE(TAG, "%4d %s module_id NULL", __LINE__, __func__);
+    return ESP_ERR_INVALID_ARG;
+  }
+
+  if (FLOW_MANAGE == NULL) {
+    ESP_LOGE(TAG, "%4d %s FLOW_MANAGE NULL", __LINE__, __func__);
+    return ESP_ERR_INVALID_ARG;
+  }
+
+  for (int i = 0; i < FLOW_MANAGE->flows_size; i++) {
+    if (FLOW_MANAGE->flows[i] == NULL) {
+      continue;
+    } else {
+      if (FLOW_MANAGE->flows[i]->flow == NULL) {
+        continue;
+      } else {
+        if (FLOW_MANAGE->flows[i]->flow->id == NULL) {
+          continue;
+        } else {
+          if (strcmp(FLOW_MANAGE->flows[i]->flow->id, module_id) == 0) {
+            *module_index = FLOW_MANAGE->flows[i]->module_index;
+            match++;
+          }
+        }
+      }
+    }
+  }
+
+  if (match == 0) {
+    ESP_LOGE(TAG, "%4d %s module_id no match", __LINE__, __func__);
+    return ESP_ERR_INVALID_RESPONSE;
+  }
+
   return ESP_OK;
 }

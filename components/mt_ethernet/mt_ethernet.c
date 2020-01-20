@@ -106,6 +106,7 @@ void mt_ethernet_task(int light_pin, int light_pin_on_level) {
 
   eth_mac_config_t mac_config = ETH_MAC_DEFAULT_CONFIG();
   eth_phy_config_t phy_config = ETH_PHY_DEFAULT_CONFIG();
+  phy_config.phy_addr = 0;
 
   esp_eth_mac_t *mac = esp_eth_mac_new_esp32(&mac_config);
 
