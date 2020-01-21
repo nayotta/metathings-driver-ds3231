@@ -8,6 +8,7 @@
 
 #include "rs232_lora_ebyte.h"
 #include "rs232_lora_ebyte_flow_manage.h"
+#include "rs232_lora_ebyte_module_manage.h"
 #include "rs232_lora_ebyte_unarycall_manage.h"
 
 #include "mt_module_mqtt.h"
@@ -389,9 +390,7 @@ void rs232_lora_ebyte_free_data(rs232_lora_ebyte_data_t *ebyte_data) {
     free(ebyte_data->data);
   }
 
-  if (ebyte_data != NULL) {
-    free(ebyte_data);
-  }
+  free(ebyte_data);
 }
 
 esp_err_t rs232_lora_ebyte_init(int uart_num, int rx_pin, int tx_pin,
@@ -485,12 +484,11 @@ EXIT:
   return ebyte_recv;
 }
 
-// need task
+// need task, this func will block
 rs232_lora_ebyte_data_t *
 rs232_lora_ebyte_sent_and_wait_finish(rs232_lora_ebyte_data_t *ebyte_data) {
   esp_err_t err = ESP_OK;
-  rs232_lora_ebyte_data_t *ebyte_data_out =
-      malloc(sizeof(rs232_lora_ebyte_data_t));
+  rs232_lora_ebyte_data_t *ebyte_data_out = rs232_lora_ebyte_new_data();
 
   ebyte_data->handle = xQueueCreate(1, sizeof(rs232_lora_ebyte_data_t));
 
@@ -507,27 +505,44 @@ rs232_lora_ebyte_sent_and_wait_finish(rs232_lora_ebyte_data_t *ebyte_data) {
     goto EXIT;
   }
 
-  xQueueReceive(ebyte_data->handle, ebyte_data_out, ebyte_data->timeout);
+  if (xQueueReceive(ebyte_data->handle, ebyte_data_out, ebyte_data->timeout) !=
+      pdTRUE) {
+    ESP_LOGE(TAG, "%4d %s xQueueReceive failed", __LINE__, __func__);
+    err = ESP_ERR_TIMEOUT;
+    goto EXIT;
+  }
 
+  ESP_LOGI(TAG, "%4d %s lora_ebyte request success", __LINE__, __func__);
+
+EXIT:
+  if (err != ESP_OK) {
+    if (err == ESP_ERR_TIMEOUT) {
+      ESP_LOGW(TAG, "%4d %s lora ebyte request timeout", __LINE__, __func__);
+    } else {
+      ESP_LOGE(TAG, "%4d %s lora ebyte request error", __LINE__, __func__);
+    }
+    rs232_lora_ebyte_free_data(ebyte_data_out);
+    ebyte_data_out = NULL;
+  }
   err = rs232_lora_ebyte_unarycall_manage_del(ebyte_data->handle);
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s rs232_lora_ebyte_unarycall_manage_del failed",
              __LINE__, __func__);
-    goto EXIT;
-  }
-
-EXIT:
-  if (ebyte_data->handle != NULL) {
-    free(ebyte_data->handle);
-  }
-  if (err != ESP_OK) {
-    rs232_lora_ebyte_free_data(ebyte_data_out);
-    ebyte_data_out = NULL;
   }
   return ebyte_data_out;
 }
 
 esp_err_t rs232_lora_ebyte_task() {
+  esp_err_t err = ESP_OK;
+
+  ESP_LOGI(TAG, "%4d %s task begin", __LINE__, __func__);
+
+  err = rs232_lora_ebyte_module_manage_init();
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s rs232_lora_ebyte_module_manage_init failed", __LINE__,
+             __func__);
+    return err;
+  }
 
   xTaskCreate(rs232_lora_ebyte_loop, "EBYTE_TASK", 8 * 1024, NULL, 10, NULL);
 

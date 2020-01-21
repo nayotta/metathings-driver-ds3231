@@ -19,4 +19,6 @@ esp_err_t
 rs232_lora_ebyte_module_manage_get_id_by_module_index(int module_index,
                                                       int16_t *id_out);
 
+esp_err_t rs232_lora_ebyte_module_manage_init();
+
 #endif

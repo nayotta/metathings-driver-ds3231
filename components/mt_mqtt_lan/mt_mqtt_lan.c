@@ -107,6 +107,8 @@ static esp_err_t message_arrived_callback(esp_mqtt_event_handle_t event) {
 esp_err_t mqtt_pub_msg(char *topic, uint8_t *buf, int size) {
   esp_err_t err;
 
+  ESP_LOGI(TAG, "%4d %s mqtt pub msg,topic=%s,size=%d", __LINE__, __func__,
+           topic, size);
   err = esp_mqtt_client_publish(Mqtt_Client, topic, (const char *)buf, size, 0,
                                 0);
   if (err != ESP_OK) {

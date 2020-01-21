@@ -10,6 +10,7 @@
 
 #include "mt_http_client.h"
 #include "mt_module_http.h"
+#include "mt_module_http_manage.h"
 #include "mt_module_http_utils.h"
 #include "mt_nvs_config.h"
 #include "mt_utils.h"
@@ -1297,9 +1298,8 @@ RESTART:
       ESP_LOGI(TAG, "%4d %s mt_module_http_actions_show_module success",
                __LINE__, __func__);
       if (module_http->module != NULL) {
+        // TODO(zh) free error
         // mt_module_http_utils_free_module(module_http->module);
-        ESP_LOGW(TAG, "%4d %s mt_module_http_utils_free_module success",
-                 __LINE__, __func__);
       }
 
       module_http->module = module;
@@ -1425,6 +1425,7 @@ mt_module_http_t *mt_module_http_new(int mod_index_in) {
            mod->name, mod->id);
 
   MODULE_HTTP = module_http;
+  mt_module_http_manage_add(module_http, mod_index_in);
   mt_module_http_task(module_http, module_http->module->name);
 
   return module_http;

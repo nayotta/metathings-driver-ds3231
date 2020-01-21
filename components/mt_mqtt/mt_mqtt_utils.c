@@ -198,7 +198,7 @@ char *mt_mqtt_utils_get_session_string_from_topic(char *topic) {
     start++;
     offset++;
   }
-  s3[start] = '\0';
+  s4[start] = '\0';
   if (strcmp(s4, "") == 0) {
     ESP_LOGE(TAG, "%4d %s unexcept string location 4:%s", __LINE__, __func__,
              s4);
@@ -391,7 +391,7 @@ char *mt_mqtt_utils_get_module_id_from_topic(char *topic) {
     start++;
     offset++;
   }
-  s3[start] = '\0';
+  s4[start] = '\0';
   if (strcmp(s4, "") == 0) {
     ESP_LOGE(TAG, "%4d %s unexcept string location 4:%s", __LINE__, __func__,
              s4);
@@ -421,9 +421,29 @@ char *mt_mqtt_utils_get_module_id_from_topic(char *topic) {
   }
   s6[start] = '\0';
 
-  module_string = malloc(strlen(s2) + 1);
-  module_string[strlen(s2)] = '\0';
-  memcpy(module_string, s2, strlen(s2));
+  module_string = malloc(strlen(s3) + 1);
+  module_string[strlen(s3)] = '\0';
+  memcpy(module_string, s3, strlen(s3));
 
   return module_string;
+}
+
+char *mt_mqtt_utils_set_path_downstream_to_upstream(char *topic) {
+  char topic_up[9] = "upstream";
+  char *topic_out = NULL;
+  int topic_out_size = 0;
+
+  topic_out_size = strlen(topic) + 1 - 2;
+  if (topic_out_size <= strlen(topic_up) + 1) {
+    ESP_LOGE(TAG, "%4d %s topic too short", __LINE__, __func__);
+    return NULL;
+  }
+
+  topic_out = malloc(topic_out_size);
+  memcpy(topic_out, topic, topic_out_size - (strlen(topic_up) + 1));
+  memcpy((void *)(topic_out + (topic_out_size - (strlen(topic_up) + 1))),
+         topic_up, strlen(topic_up));
+
+  topic_out[topic_out_size - 1] = '\0';
+  return topic_out;
 }

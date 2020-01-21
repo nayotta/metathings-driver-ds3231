@@ -5,9 +5,11 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
-#include "mt_module_flow_manage.h"
+#include "mt_module_http_manage.h"
+#include "mt_module_lora.h"
 #include "mt_module_mqtt.h"
 #include "mt_module_unarycall_ota.h"
+#include "mt_mqtt_lan.h"
 #include "mt_mqtt_utils.h"
 
 #include "google/protobuf/any.pb-c.h"
@@ -55,22 +57,24 @@ EXIT:
   return;
 }
 
-static void mt_module_lora_handle_unarycall_app(char *topic, uint8_t *buf,
-                                                int size) {
+static void
+mt_module_lora_handle_unarycall_app_task(mt_module_lora_t *lora_msg) {
   esp_err_t err = ESP_OK;
   char *module_id = NULL;
   int module_index = 0;
   int16_t lora_addr = 0;
-  rs232_lora_ebyte_data_t *ebyte_data =
+  rs232_lora_ebyte_data_t *ebyte_data = NULL;
+  rs232_lora_ebyte_data_t *ebyte_out = NULL;
+  char *up_topic = NULL;
 
-      module_id = mt_mqtt_utils_get_module_id_from_topic(topic);
+  module_id = mt_mqtt_utils_get_module_id_from_topic(lora_msg->topic);
   if (module_id == NULL) {
     ESP_LOGE(TAG, "%4d %s module_id NULL", __LINE__, __func__);
     err = ESP_ERR_INVALID_ARG;
     goto EXIT;
   }
 
-  err = mt_module_flow_manage_get_index_by_module_id(module_id, &module_index);
+  err = mt_module_http_manage_get_index_by_module_id(module_id, &module_index);
   if (err != ESP_OK) {
     ESP_LOGE(TAG,
              "%4d %s mt_module_flow_manage_get_index_by_module_id module_id:%s "
@@ -96,17 +100,66 @@ static void mt_module_lora_handle_unarycall_app(char *topic, uint8_t *buf,
   ebyte_data->id = lora_addr;
   ebyte_data->cmd = RS232_LORA_EBYTE_CMD_TYPE_UNARYCALL;
   ebyte_data->type = 1;
-  ebyte_data->data = buf;
-  ebyte_data->len = size;
+  ebyte_data->data = lora_msg->buf;
+  ebyte_data->len = lora_msg->size;
 
-  xTaskCreate(rs232_lora_ebyte_sent_and_wait_finish, "UNARYCALL_TASK", 4 * 1024,
-              ebyte_data, 10, NULL);
+  ebyte_out = rs232_lora_ebyte_sent_and_wait_finish(ebyte_data);
+  // TODO(zh) need response timeout and error
+  if (ebyte_out == NULL) {
+    ESP_LOGE(TAG, "%4d %s rs232_lora_ebyte_sent_and_wait_finish return NULL",
+             __LINE__, __func__);
+    goto EXIT;
+  }
+
+  up_topic = mt_mqtt_utils_set_path_downstream_to_upstream(lora_msg->topic);
+  if (up_topic == NULL) {
+    ESP_LOGE(TAG, "%4d %s mt_mqtt_utils_set_path_downstream_to_upstream null",
+             __LINE__, __func__);
+    goto EXIT;
+  }
+
+  err = mqtt_pub_msg(up_topic, ebyte_data->data, ebyte_data->len);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s mqtt_pub_msg failed", __LINE__, __func__);
+    goto EXIT;
+  }
 
 EXIT:
+  if (lora_msg != NULL) {
+    if (lora_msg->topic != NULL) {
+      free(lora_msg->topic);
+    }
+    if (lora_msg->buf != NULL) {
+      free(lora_msg->buf);
+    }
+    free(lora_msg);
+  }
+  if (up_topic != NULL) {
+    free(up_topic);
+  }
   if (module_id != NULL) {
     free(module_id);
   }
+  vTaskDelete(NULL);
 };
+
+mt_module_lora_t *mt_module_lora_copy_msg_to_lora(char *topic, uint8_t *buf,
+                                                  int size) {
+  mt_module_lora_t *lora_msg = malloc(sizeof(mt_module_lora_t));
+  lora_msg->topic = NULL;
+  lora_msg->buf = NULL;
+  lora_msg->size = 0;
+
+  lora_msg->topic = malloc(strlen(topic) + 1);
+  memcpy(lora_msg->topic, topic, strlen(topic) + 1);
+  if (size > 0) {
+    lora_msg->buf = malloc(size);
+    memcpy(lora_msg->buf, buf, size);
+    lora_msg->size = size;
+  }
+
+  return lora_msg;
+}
 
 static void mt_module_lora_handle_unarycall(char *topic, uint8_t *buf,
                                             int size) {
@@ -117,25 +170,6 @@ static void mt_module_lora_handle_unarycall(char *topic, uint8_t *buf,
   if (msg == NULL) {
     ESP_LOGE(TAG, "%4d %s get null msg or unknown msg", __LINE__, __func__);
     return;
-  }
-
-  if (msg->kind !=
-      AI__METATHINGS__COMPONENT__STREAM_FRAME_KIND__STREAM_FRAME_KIND_USER) {
-    ESP_LOGE(TAG, "%4d %s get unexcept steam frame type", __LINE__, __func__);
-    goto EXIT;
-  }
-
-  switch (msg->union_case) {
-  case AI__METATHINGS__COMPONENT__UP_STREAM_FRAME__UNION_UNARY_CALL:
-    mt_module_lora_handle_unarycall(topic, buf, size);
-    break;
-  case AI__METATHINGS__COMPONENT__UP_STREAM_FRAME__UNION_STREAM_CALL:
-    mt_module_lora_handle_streamcall(topic, buf, size);
-    break;
-  default:
-    ESP_LOGE(TAG, "%4d %s get unexcepted stream frame type", __LINE__,
-             __func__);
-    goto EXIT;
   }
 
   if (mt_mqtt_utils_get_session_id_from_topic(topic, &session_id) != ESP_OK) {
@@ -166,7 +200,10 @@ static void mt_module_lora_handle_unarycall(char *topic, uint8_t *buf,
   }
 
   // app api
-  mt_module_lora_handle_unarycall_app(topic, buf, size);
+  mt_module_lora_t *lora_msg = NULL;
+  lora_msg = mt_module_lora_copy_msg_to_lora(topic, buf, size);
+  xTaskCreate(mt_module_lora_handle_unarycall_app_task, "UNARYCALL_TASK",
+              8 * 1024, lora_msg, 10, NULL);
 
 EXIT:
   ai__metathings__component__down_stream_frame__free_unpacked(msg, NULL);
@@ -191,9 +228,11 @@ static void mt_module_lora_proxy_process(char *topic, uint8_t *buf, int size) {
 
   switch (msg_mqtt->union_case) {
   case AI__METATHINGS__COMPONENT__UP_STREAM_FRAME__UNION_UNARY_CALL:
+    ESP_LOGI(TAG, "%4d %s handle unarycall", __LINE__, __func__);
     mt_module_lora_handle_unarycall(topic, buf, size);
     break;
   case AI__METATHINGS__COMPONENT__UP_STREAM_FRAME__UNION_STREAM_CALL:
+    ESP_LOGI(TAG, "%4d %s handle streamcall", __LINE__, __func__);
     mt_module_lora_handle_streamcall(topic, buf, size);
     break;
   default:

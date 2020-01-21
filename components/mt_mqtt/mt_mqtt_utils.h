@@ -20,4 +20,6 @@ char *mt_mqtt_utils_get_path_from_topic(char *topic);
 
 char *mt_mqtt_utils_get_module_id_from_topic(char *topic);
 
+char *mt_mqtt_utils_set_path_downstream_to_upstream(char *topic);
+
 #endif
