@@ -2,13 +2,24 @@ syntax = "proto3";
 
 package mt_charge001;
 
+import "google/protobuf/empty.proto";
+
 service Service {
   rpc SetCharge(SetChargeReq) returns (SetRes) {}
+  rpc GetState(google.protobuf.Empty) returns (GetStateRes) {}
 }
 
 message Charge {
-  int32 port = 1; // 充电端口
-  int32 time = 2; // 充电时间
+  int32 port = 1;  // 充电端口
+  int32 time = 2;  // 充电时间
+  int32 money = 3; // 充电金额 (?设备自己统计用?)
+}
+
+message State {
+  int32 port = 1;     // 端口编号
+  int32 state = 2;    // 端口状态
+  int32 lefttime = 3; // 剩余充电时间
+  int32 power = 4;    // 充电功率
 }
 
 message SetRes {
@@ -17,6 +28,10 @@ message SetRes {
 }
 
 message SetChargeReq {
-  int32 code = 1;
-  Charge charge = 2;
+  Charge charge = 1;
+}
+
+message GetStateRes {
+  int32 portnum = 1;        //端口总数
+  repeated State state = 2; // 端口状态
 }

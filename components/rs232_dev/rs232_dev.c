@@ -90,8 +90,10 @@ void rs232_dev_config_free(rs232_dev_config_t *dev_config) {
   if (dev_config->uart_config != NULL)
     free(dev_config->uart_config);
 
-  if (dev_config != NULL)
+  if (dev_config != NULL) {
     free(dev_config);
+    dev_config = NULL;
+  }
 }
 
 esp_err_t rs232_dev_init(rs232_dev_config_t *dev_config) {

@@ -50,6 +50,49 @@ void   mt_charge001__charge__free_unpacked
   assert(message->base.descriptor == &mt_charge001__charge__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
+void   mt_charge001__state__init
+                     (MtCharge001__State         *message)
+{
+  static MtCharge001__State init_value = MT_CHARGE001__STATE__INIT;
+  *message = init_value;
+}
+size_t mt_charge001__state__get_packed_size
+                     (const MtCharge001__State *message)
+{
+  assert(message->base.descriptor == &mt_charge001__state__descriptor);
+  return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
+}
+size_t mt_charge001__state__pack
+                     (const MtCharge001__State *message,
+                      uint8_t       *out)
+{
+  assert(message->base.descriptor == &mt_charge001__state__descriptor);
+  return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
+}
+size_t mt_charge001__state__pack_to_buffer
+                     (const MtCharge001__State *message,
+                      ProtobufCBuffer *buffer)
+{
+  assert(message->base.descriptor == &mt_charge001__state__descriptor);
+  return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
+}
+MtCharge001__State *
+       mt_charge001__state__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data)
+{
+  return (MtCharge001__State *)
+     protobuf_c_message_unpack (&mt_charge001__state__descriptor,
+                                allocator, len, data);
+}
+void   mt_charge001__state__free_unpacked
+                     (MtCharge001__State *message,
+                      ProtobufCAllocator *allocator)
+{
+  assert(message->base.descriptor == &mt_charge001__state__descriptor);
+  protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
+}
 void   mt_charge001__set_res__init
                      (MtCharge001__SetRes         *message)
 {
@@ -136,7 +179,50 @@ void   mt_charge001__set_charge_req__free_unpacked
   assert(message->base.descriptor == &mt_charge001__set_charge_req__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
-static const ProtobufCFieldDescriptor mt_charge001__charge__field_descriptors[2] =
+void   mt_charge001__get_state_res__init
+                     (MtCharge001__GetStateRes         *message)
+{
+  static MtCharge001__GetStateRes init_value = MT_CHARGE001__GET_STATE_RES__INIT;
+  *message = init_value;
+}
+size_t mt_charge001__get_state_res__get_packed_size
+                     (const MtCharge001__GetStateRes *message)
+{
+  assert(message->base.descriptor == &mt_charge001__get_state_res__descriptor);
+  return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
+}
+size_t mt_charge001__get_state_res__pack
+                     (const MtCharge001__GetStateRes *message,
+                      uint8_t       *out)
+{
+  assert(message->base.descriptor == &mt_charge001__get_state_res__descriptor);
+  return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
+}
+size_t mt_charge001__get_state_res__pack_to_buffer
+                     (const MtCharge001__GetStateRes *message,
+                      ProtobufCBuffer *buffer)
+{
+  assert(message->base.descriptor == &mt_charge001__get_state_res__descriptor);
+  return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
+}
+MtCharge001__GetStateRes *
+       mt_charge001__get_state_res__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data)
+{
+  return (MtCharge001__GetStateRes *)
+     protobuf_c_message_unpack (&mt_charge001__get_state_res__descriptor,
+                                allocator, len, data);
+}
+void   mt_charge001__get_state_res__free_unpacked
+                     (MtCharge001__GetStateRes *message,
+                      ProtobufCAllocator *allocator)
+{
+  assert(message->base.descriptor == &mt_charge001__get_state_res__descriptor);
+  protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
+}
+static const ProtobufCFieldDescriptor mt_charge001__charge__field_descriptors[3] =
 {
   {
     "port",
@@ -162,15 +248,28 @@ static const ProtobufCFieldDescriptor mt_charge001__charge__field_descriptors[2]
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
+  {
+    "money",
+    3,
+    PROTOBUF_C_LABEL_OPTIONAL,
+    PROTOBUF_C_TYPE_INT32,
+    offsetof(MtCharge001__Charge, has_money),
+    offsetof(MtCharge001__Charge, money),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
 };
 static const unsigned mt_charge001__charge__field_indices_by_name[] = {
+  2,   /* field[2] = money */
   0,   /* field[0] = port */
   1,   /* field[1] = time */
 };
 static const ProtobufCIntRange mt_charge001__charge__number_ranges[1 + 1] =
 {
   { 1, 0 },
-  { 0, 2 }
+  { 0, 3 }
 };
 const ProtobufCMessageDescriptor mt_charge001__charge__descriptor =
 {
@@ -180,11 +279,88 @@ const ProtobufCMessageDescriptor mt_charge001__charge__descriptor =
   "MtCharge001__Charge",
   "mt_charge001",
   sizeof(MtCharge001__Charge),
-  2,
+  3,
   mt_charge001__charge__field_descriptors,
   mt_charge001__charge__field_indices_by_name,
   1,  mt_charge001__charge__number_ranges,
   (ProtobufCMessageInit) mt_charge001__charge__init,
+  NULL,NULL,NULL    /* reserved[123] */
+};
+static const ProtobufCFieldDescriptor mt_charge001__state__field_descriptors[4] =
+{
+  {
+    "port",
+    1,
+    PROTOBUF_C_LABEL_OPTIONAL,
+    PROTOBUF_C_TYPE_INT32,
+    offsetof(MtCharge001__State, has_port),
+    offsetof(MtCharge001__State, port),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "state",
+    2,
+    PROTOBUF_C_LABEL_OPTIONAL,
+    PROTOBUF_C_TYPE_INT32,
+    offsetof(MtCharge001__State, has_state),
+    offsetof(MtCharge001__State, state),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "lefttime",
+    3,
+    PROTOBUF_C_LABEL_OPTIONAL,
+    PROTOBUF_C_TYPE_INT32,
+    offsetof(MtCharge001__State, has_lefttime),
+    offsetof(MtCharge001__State, lefttime),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "power",
+    4,
+    PROTOBUF_C_LABEL_OPTIONAL,
+    PROTOBUF_C_TYPE_INT32,
+    offsetof(MtCharge001__State, has_power),
+    offsetof(MtCharge001__State, power),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+};
+static const unsigned mt_charge001__state__field_indices_by_name[] = {
+  2,   /* field[2] = lefttime */
+  0,   /* field[0] = port */
+  3,   /* field[3] = power */
+  1,   /* field[1] = state */
+};
+static const ProtobufCIntRange mt_charge001__state__number_ranges[1 + 1] =
+{
+  { 1, 0 },
+  { 0, 4 }
+};
+const ProtobufCMessageDescriptor mt_charge001__state__descriptor =
+{
+  PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "mt_charge001.State",
+  "State",
+  "MtCharge001__State",
+  "mt_charge001",
+  sizeof(MtCharge001__State),
+  4,
+  mt_charge001__state__field_descriptors,
+  mt_charge001__state__field_indices_by_name,
+  1,  mt_charge001__state__number_ranges,
+  (ProtobufCMessageInit) mt_charge001__state__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
 static const ProtobufCFieldDescriptor mt_charge001__set_res__field_descriptors[2] =
@@ -238,23 +414,11 @@ const ProtobufCMessageDescriptor mt_charge001__set_res__descriptor =
   (ProtobufCMessageInit) mt_charge001__set_res__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor mt_charge001__set_charge_req__field_descriptors[2] =
+static const ProtobufCFieldDescriptor mt_charge001__set_charge_req__field_descriptors[1] =
 {
   {
-    "code",
-    1,
-    PROTOBUF_C_LABEL_OPTIONAL,
-    PROTOBUF_C_TYPE_INT32,
-    offsetof(MtCharge001__SetChargeReq, has_code),
-    offsetof(MtCharge001__SetChargeReq, code),
-    NULL,
-    NULL,
-    0,             /* flags */
-    0,NULL,NULL    /* reserved1,reserved2, etc */
-  },
-  {
     "charge",
-    2,
+    1,
     PROTOBUF_C_LABEL_OPTIONAL,
     PROTOBUF_C_TYPE_MESSAGE,
     0,   /* quantifier_offset */
@@ -266,13 +430,12 @@ static const ProtobufCFieldDescriptor mt_charge001__set_charge_req__field_descri
   },
 };
 static const unsigned mt_charge001__set_charge_req__field_indices_by_name[] = {
-  1,   /* field[1] = charge */
-  0,   /* field[0] = code */
+  0,   /* field[0] = charge */
 };
 static const ProtobufCIntRange mt_charge001__set_charge_req__number_ranges[1 + 1] =
 {
   { 1, 0 },
-  { 0, 2 }
+  { 0, 1 }
 };
 const ProtobufCMessageDescriptor mt_charge001__set_charge_req__descriptor =
 {
@@ -282,18 +445,71 @@ const ProtobufCMessageDescriptor mt_charge001__set_charge_req__descriptor =
   "MtCharge001__SetChargeReq",
   "mt_charge001",
   sizeof(MtCharge001__SetChargeReq),
-  2,
+  1,
   mt_charge001__set_charge_req__field_descriptors,
   mt_charge001__set_charge_req__field_indices_by_name,
   1,  mt_charge001__set_charge_req__number_ranges,
   (ProtobufCMessageInit) mt_charge001__set_charge_req__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCMethodDescriptor mt_charge001__service__method_descriptors[1] =
+static const ProtobufCFieldDescriptor mt_charge001__get_state_res__field_descriptors[2] =
+{
+  {
+    "portnum",
+    1,
+    PROTOBUF_C_LABEL_OPTIONAL,
+    PROTOBUF_C_TYPE_INT32,
+    offsetof(MtCharge001__GetStateRes, has_portnum),
+    offsetof(MtCharge001__GetStateRes, portnum),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "state",
+    2,
+    PROTOBUF_C_LABEL_REPEATED,
+    PROTOBUF_C_TYPE_MESSAGE,
+    offsetof(MtCharge001__GetStateRes, n_state),
+    offsetof(MtCharge001__GetStateRes, state),
+    &mt_charge001__state__descriptor,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+};
+static const unsigned mt_charge001__get_state_res__field_indices_by_name[] = {
+  0,   /* field[0] = portnum */
+  1,   /* field[1] = state */
+};
+static const ProtobufCIntRange mt_charge001__get_state_res__number_ranges[1 + 1] =
+{
+  { 1, 0 },
+  { 0, 2 }
+};
+const ProtobufCMessageDescriptor mt_charge001__get_state_res__descriptor =
+{
+  PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "mt_charge001.GetStateRes",
+  "GetStateRes",
+  "MtCharge001__GetStateRes",
+  "mt_charge001",
+  sizeof(MtCharge001__GetStateRes),
+  2,
+  mt_charge001__get_state_res__field_descriptors,
+  mt_charge001__get_state_res__field_indices_by_name,
+  1,  mt_charge001__get_state_res__number_ranges,
+  (ProtobufCMessageInit) mt_charge001__get_state_res__init,
+  NULL,NULL,NULL    /* reserved[123] */
+};
+static const ProtobufCMethodDescriptor mt_charge001__service__method_descriptors[2] =
 {
   { "SetCharge", &mt_charge001__set_charge_req__descriptor, &mt_charge001__set_res__descriptor },
+  { "GetState", &google__protobuf__empty__descriptor, &mt_charge001__get_state_res__descriptor },
 };
 const unsigned mt_charge001__service__method_indices_by_name[] = {
+  1,        /* GetState */
   0         /* SetCharge */
 };
 const ProtobufCServiceDescriptor mt_charge001__service__descriptor =
@@ -303,7 +519,7 @@ const ProtobufCServiceDescriptor mt_charge001__service__descriptor =
   "Service",
   "MtCharge001__Service",
   "mt_charge001",
-  1,
+  2,
   mt_charge001__service__method_descriptors,
   mt_charge001__service__method_indices_by_name
 };
@@ -314,6 +530,14 @@ void mt_charge001__service__set_charge(ProtobufCService *service,
 {
   assert(service->descriptor == &mt_charge001__service__descriptor);
   service->invoke(service, 0, (const ProtobufCMessage *) input, (ProtobufCClosure) closure, closure_data);
+}
+void mt_charge001__service__get_state(ProtobufCService *service,
+                                      const Google__Protobuf__Empty *input,
+                                      MtCharge001__GetStateRes_Closure closure,
+                                      void *closure_data)
+{
+  assert(service->descriptor == &mt_charge001__service__descriptor);
+  service->invoke(service, 1, (const ProtobufCMessage *) input, (ProtobufCClosure) closure, closure_data);
 }
 void mt_charge001__service__init (MtCharge001__Service_Service *service,
                                   MtCharge001__Service_ServiceDestroy destroy)
