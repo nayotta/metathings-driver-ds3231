@@ -377,8 +377,9 @@ void mt_smartconfig_task(int light_pin, int light_pin_on_level, int btn_pin,
     }
   }
 
-  xTaskCreate((TaskFunction_t)mt_wifi_loop, "MT_WIFI_TASK", 1024 * 2, NULL, 10,
+  xTaskCreate((TaskFunction_t)mt_wifi_loop, "MT_WIFI_TASK", 1024 * 8, NULL, 10,
               NULL);
+  vTaskDelay(5000 / portTICK_RATE_MS);
 
   /*
   while (WIFI_EVENT_GROUP == NULL) {

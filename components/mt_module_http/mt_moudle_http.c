@@ -11,6 +11,7 @@
 #include "mt_http_client.h"
 #include "mt_module_http.h"
 #include "mt_module_http_utils.h"
+#include "mt_mqtt_lan.h"
 #include "mt_nvs_config.h"
 #include "mt_utils.h"
 #include "mt_utils_login.h"
@@ -21,6 +22,7 @@ static const char *TAG = "MT_MODULE_HTTP";
 
 #define MAX_HTTP_RECV_BUFFER 512
 mt_module_http_t *MODULE_HTTP = NULL;
+extern uint64_t Session_id;
 
 // static func ================================================================
 static esp_err_t mt_module_save_content(char *content, int size) {
@@ -388,6 +390,8 @@ esp_err_t mt_module_http_actions_heartbeat(mt_module_http_t *module_http,
   }
 
   // request post_data
+  // debug here
+
   root = cJSON_CreateObject();
   post_data = cJSON_Print(root);
   cJSON_Delete(root);
@@ -1315,7 +1319,9 @@ RESTART:
                                    mt_utils_session_gen_major_session());
 
   // debug here
-  module_http->session_id = 12345678;
+  // module_http->session_id = 12345678;
+  Session_id = module_http->session_id;
+
   while (true) {
     if (heartbeat_count <= 0) {
       ESP_LOGE(TAG, "%4d %s heartbeat_count get limit, restart loop", __LINE__,
