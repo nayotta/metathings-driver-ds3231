@@ -80,14 +80,12 @@ static const UCHAR aucCRCLo[] = {
     0x41, 0x81, 0x80, 0x40};
 
 USHORT
-usMBCRC16(UCHAR *pucFrame, USHORT usLen)
-{
+usMBCRC16(UCHAR *pucFrame, USHORT usLen) {
   UCHAR ucCRCHi = 0xFF;
   UCHAR ucCRCLo = 0xFF;
   int iIndex;
 
-  while (usLen--)
-  {
+  while (usLen--) {
     iIndex = ucCRCLo ^ *(pucFrame++);
     ucCRCLo = (UCHAR)(ucCRCHi ^ aucCRCHi[iIndex]);
     ucCRCHi = aucCRCLo[iIndex];

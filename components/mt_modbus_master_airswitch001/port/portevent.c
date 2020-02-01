@@ -39,136 +39,110 @@ static xQueueHandle xQueueMasterResHdl; // for response match
 static SemaphoreHandle_t SemaphorMasterHdl = NULL;
 ;
 
-BOOL xMBMasterPortEventInit(void)
-{
+BOOL xMBMasterPortEventInit(void) {
   BOOL bStatus = FALSE;
-  if (0 != (xQueueMasterHdl = xQueueCreate(1, sizeof(eMBMasterEventType))))
-  {
+  if (0 != (xQueueMasterHdl = xQueueCreate(1, sizeof(eMBMasterEventType)))) {
     bStatus = TRUE;
   }
   return bStatus;
 }
 
-BOOL xMBMasterPortEventPost(eMBMasterEventType eEvent)
-{
+BOOL xMBMasterPortEventPost(eMBMasterEventType eEvent) {
   BOOL bStatus = TRUE;
-  if (bMBPortIsWithinException())
-  {
+  if (bMBPortIsWithinException()) {
     (void)xQueueSendFromISR(xQueueMasterHdl, (const void *)&eEvent, pdFALSE);
-  }
-  else
-  {
+  } else {
     (void)xQueueSend(xQueueMasterHdl, (const void *)&eEvent, pdFALSE);
   }
 
   return bStatus;
 }
 
-BOOL xMBMasterPortEventGet(eMBMasterEventType *eEvent)
-{
+BOOL xMBMasterPortEventGet(eMBMasterEventType *eEvent) {
   BOOL xEventHappened = FALSE;
-  if (pdTRUE == xQueueReceive(xQueueMasterHdl, eEvent, portTICK_RATE_MS * 10))
-  {
+  if (pdTRUE == xQueueReceive(xQueueMasterHdl, eEvent, portTICK_RATE_MS * 10)) {
     xEventHappened = TRUE;
   }
   return xEventHappened;
 }
 
-BOOL xMBMasterResEventInit(void)
-{
+BOOL xMBMasterResEventInit(void) {
   BOOL bStatus = FALSE;
   if (0 !=
-      (xQueueMasterResHdl = xQueueCreate(1, sizeof(eMBMasterResEventType))))
-  {
+      (xQueueMasterResHdl = xQueueCreate(1, sizeof(eMBMasterResEventType)))) {
     bStatus = TRUE;
   }
   return bStatus;
 }
 
-BOOL xMBMasterResEventClean(void)
-{
+BOOL xMBMasterResEventClean(void) {
   xQueueReset(xQueueMasterResHdl);
 
   return TRUE;
 }
 
-BOOL xMBMasterResEventPost(eMBMasterResEventType eEvent)
-{
+BOOL xMBMasterResEventPost(eMBMasterResEventType eEvent) {
   BOOL bStatus = TRUE;
-  if (bMBPortIsWithinException())
-  {
+  if (bMBPortIsWithinException()) {
     (void)xQueueSendFromISR(xQueueMasterResHdl, (const void *)&eEvent, pdFALSE);
-  }
-  else
-  {
+  } else {
     (void)xQueueSend(xQueueMasterResHdl, (const void *)&eEvent, pdFALSE);
   }
 
   return bStatus;
 }
 
-BOOL xMBMasterResEventGet(eMBMasterResEventType *eEvent)
-{
+BOOL xMBMasterResEventGet(eMBMasterResEventType *eEvent) {
   BOOL xEventHappened = FALSE;
   if (pdTRUE ==
-      xQueueReceive(xQueueMasterResHdl, eEvent, portTICK_RATE_MS * 10))
-  {
+      xQueueReceive(xQueueMasterResHdl, eEvent, portTICK_RATE_MS * 10)) {
     xEventHappened = TRUE;
   }
   return xEventHappened;
 }
 
-void vMBMasterResErrorCBRespondTimeout()
-{
+void vMBMasterResErrorCBRespondTimeout() {
   BOOL ret = xMBMasterResEventPost(EV_RES_ERROR_RESPOND_TIMEOUT);
   if (!ret)
     ESP_LOGE(TAG, "%4d EV_RES_ERROR_RESPOND_TIMEOUT", __LINE__);
 }
 
-void vMBMasterResCBRequestScuuess(void)
-{
+void vMBMasterResCBRequestScuuess(void) {
   BOOL ret = xMBMasterResEventPost(EV_RES_PROCESS_SUCESS);
   if (!ret)
     ESP_LOGI(TAG, "%4d EV_RES_PROCESS_SUCESS", __LINE__);
 }
 
-void vMBMasterResErrorCBReceiveData()
-{
+void vMBMasterResErrorCBReceiveData() {
   BOOL ret = xMBMasterResEventPost(EV_RES_ERROR_RECEIVE_DATA);
   if (!ret)
     ESP_LOGE(TAG, "%4d EV_RES_ERROR_RECEIVE_DATA", __LINE__);
 }
 
-void vMBMasterResErrorCBExecuteFunction()
-{
+void vMBMasterResErrorCBExecuteFunction() {
   BOOL ret = xMBMasterResEventPost(EV_RES_ERROR_EXECUTE_FUNCTION);
   if (!ret)
     ESP_LOGE(TAG, "%4d EV_RES_ERROR_EXECUTE_FUNCTION", __LINE__);
 }
 
-eMBMasterReqErrCode eMBMasterWaitRequestFinish(void)
-{
+eMBMasterReqErrCode eMBMasterWaitRequestFinish(void) {
   eMBMasterReqErrCode eErrStatus = MB_MRE_NO_ERR;
   eMBMasterResEventType recvedEvent;
   xMBMasterResEventGet(&recvedEvent);
-  switch (recvedEvent)
-  {
+  switch (recvedEvent) {
   case EV_RES_PROCESS_SUCESS:
     break;
-  case EV_RES_ERROR_RESPOND_TIMEOUT:
-  {
+  case EV_RES_ERROR_RESPOND_TIMEOUT: {
     eErrStatus = MB_MRE_TIMEDOUT;
     ESP_LOGE(TAG, "%4d EV_RES_ERROR_RESPOND_TIMEOUT", __LINE__);
     break;
   }
-  case EV_RES_ERROR_RECEIVE_DATA:
-  {
+  case EV_RES_ERROR_RECEIVE_DATA: {
     eErrStatus = MB_MRE_REV_DATA;
     ESP_LOGE(TAG, "%4d EV_RES_ERROR_RECEIVE_DATA", __LINE__);
     break;
   }
-  case EV_RES_ERROR_EXECUTE_FUNCTION:
-  {
+  case EV_RES_ERROR_EXECUTE_FUNCTION: {
     eErrStatus = MB_MRE_EXE_FUN;
     ESP_LOGE(TAG, "%4d EV_RES_ERROR_EXECUTE_FUNCTION", __LINE__);
     break;
@@ -179,8 +153,7 @@ eMBMasterReqErrCode eMBMasterWaitRequestFinish(void)
   return eErrStatus;
 }
 
-BOOL xMBMasterRunResTake(LONG lTimeOut)
-{
+BOOL xMBMasterRunResTake(LONG lTimeOut) {
   /*If waiting time is -1 .It will wait forever */
   if (xSemaphoreTake(SemaphorMasterHdl, (portTickType)lTimeOut) ==
       pdTRUE) // portMAX_DELAY
@@ -191,8 +164,7 @@ BOOL xMBMasterRunResTake(LONG lTimeOut)
   return FALSE;
 }
 
-void vMBMasterRunResRelease(void)
-{
+void vMBMasterRunResRelease(void) {
   xSemaphoreGive(SemaphorMasterHdl);
   return;
 }

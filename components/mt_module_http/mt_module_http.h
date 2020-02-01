@@ -13,8 +13,7 @@
 #define CONFIG_FREERTOS_HZ 100
 #endif
 
-typedef struct _module_t
-{
+typedef struct _module_t {
   char *id;
   char *state;
   char *deviceID;
@@ -25,16 +24,14 @@ typedef struct _module_t
   int *heartbeat_at;
 } module_t;
 
-typedef struct _flow_t
-{
+typedef struct _flow_t {
   char *id;
   char *device_id;
   char *name;
   char *alias;
 } flow_t;
 
-typedef struct _device_t
-{
+typedef struct _device_t {
   char *id;
   char *kind;
   char *state;
@@ -47,8 +44,7 @@ typedef struct _device_t
   int flow_num;
 } device_t;
 
-typedef struct _object_t
-{
+typedef struct _object_t {
   device_t *device;
   char *prefix;
   char *name;
@@ -57,23 +53,20 @@ typedef struct _object_t
   int last_modified;
 } object_t;
 
-typedef struct _domain_t
-{
+typedef struct _domain_t {
   char *id;
   char *name;
   char *alias;
 } domain_t;
 
-typedef struct _action_t
-{
+typedef struct _action_t {
   char *id;
   char *name;
   char *alias;
   char *description;
 } action_t;
 
-typedef struct _role_t
-{
+typedef struct _role_t {
   char *id;
   char *name;
   char *alias;
@@ -81,8 +74,7 @@ typedef struct _role_t
   int actions_num;
 } role_t;
 
-typedef struct _group_t
-{
+typedef struct _group_t {
   char *id;
   uint8_t *domains;
   int domains_num;
@@ -93,8 +85,7 @@ typedef struct _group_t
   char *description;
 } group_t;
 
-typedef struct _entity_t
-{
+typedef struct _entity_t {
   char *id;
   uint8_t *entities;
   int entities_num;
@@ -107,8 +98,7 @@ typedef struct _entity_t
   char *extra;
 } entity_t;
 
-typedef struct _credential_t
-{
+typedef struct _credential_t {
   char *id;
   uint8_t *domains;
   int domains_num;
@@ -123,8 +113,7 @@ typedef struct _credential_t
   char *expores_at;
 } credential_t;
 
-typedef struct _token_t
-{
+typedef struct _token_t {
   char *id;
   int *issued_at;
   entity_t *entity;
@@ -137,14 +126,12 @@ typedef struct _token_t
   int groups_num;
 } token_t;
 
-typedef struct _push_frame_res_t
-{
+typedef struct _push_frame_res_t {
   char *id;
   char *sesssion_id;
 } push_frame_res_t;
 
-typedef struct _mt_module_http_t
-{
+typedef struct _mt_module_http_t {
   char *host;
   int port;
   esp_http_client_transport_t tran_type;
@@ -157,8 +144,8 @@ typedef struct _mt_module_http_t
   int response_content_size;
 } mt_module_http_t;
 
-esp_err_t mt_module_http_actions_issue_module_token(
-    mt_module_http_t *module_http);
+esp_err_t
+mt_module_http_actions_issue_module_token(mt_module_http_t *module_http);
 
 module_t *mt_module_http_actions_show_module(mt_module_http_t *module_http);
 
@@ -184,9 +171,10 @@ char *mt_module_http_actions_get_object_content(mt_module_http_t *module_http,
 uint8_t *mt_module_http_actions_list_objects(mt_module_http_t *module_http,
                                              object_t *obj_in, int *obj_num);
 
-push_frame_res_t *mt_module_http_actions_push_frame_to_flow(
-    mt_module_http_t *module_http, flow_t *flow_in, bool config_ack_in,
-    bool push_ack_in);
+push_frame_res_t *
+mt_module_http_actions_push_frame_to_flow(mt_module_http_t *module_http,
+                                          flow_t *flow_in, bool config_ack_in,
+                                          bool push_ack_in);
 
 void mt_module_http_task(mt_module_http_t *module_http, char *task_name);
 

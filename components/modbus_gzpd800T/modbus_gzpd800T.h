@@ -12,8 +12,7 @@
 #define CONFIG_FREERTOS_HZ 100
 #endif
 
-typedef struct _gzpd800T_4ch_data_t
-{
+typedef struct _gzpd800T_4ch_data_t {
   uint32_t amp1;
   uint32_t freq1;
   uint32_t power1;

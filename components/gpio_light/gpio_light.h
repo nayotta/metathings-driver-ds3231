@@ -1,8 +1,8 @@
 #ifndef _GPIO_LIGH_H
 #define _GPIO_LIGH_H
 
-#include "stdio.h"
 #include "stdbool.h"
+#include "stdio.h"
 
 #ifndef CONFIG_LOG_DEFAULT_LEVEL
 #define CONFIG_LOG_DEFAULT_LEVEL ESP_LOG_DEBUG
@@ -15,12 +15,12 @@
 #define DEFAULT_GPIO_LIGHT_PIN 27
 #define DEFAULT_GPIO_LIGHT_PIN_ON_LEVEL 0
 
-typedef struct{
-    int pin;
-    int pin_on_level;
-    int blink_interval; // ms
-    bool blink_en;
-}mt_gpio_light_t;
+typedef struct {
+  int pin;
+  int pin_on_level;
+  int blink_interval; // ms
+  bool blink_en;
+} mt_gpio_light_t;
 
 mt_gpio_light_t *mt_gpio_light_default();
 

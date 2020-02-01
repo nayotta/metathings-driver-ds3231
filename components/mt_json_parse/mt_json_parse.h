@@ -18,5 +18,4 @@ typedef struct _mt_json_t {
 
 uint8_t *mt_json_parse(char *buf_in);
 
-
 #endif

@@ -2,6 +2,7 @@
 #include "string.h"
 
 #include "cJSON.h"
+#include "esp_err.h"
 #include "esp_http_client.h"
 #include "esp_log.h"
 #include "esp_system.h"

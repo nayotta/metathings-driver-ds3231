@@ -52,11 +52,11 @@ static bool mt_gpio_light_init(mt_gpio_light_t *light_handle) {
     ESP_LOGE(TAG, "light %d gpio_config error", light_handle->pin);
     return false;
   }
-  
-  if(light_handle->pin_on_level == 1){
-      target_level = 0;
-  }else{
-      target_level = 1;
+
+  if (light_handle->pin_on_level == 1) {
+    target_level = 0;
+  } else {
+    target_level = 1;
   }
   gpio_set_level(light_handle->pin, target_level);
 
@@ -154,8 +154,7 @@ bool mt_gpio_light_task(mt_gpio_light_t *light_handle) {
   return true;
 }
 
-mt_gpio_light_t *mt_gpio_light_new(int pin, int pin_on_level)
-{
+mt_gpio_light_t *mt_gpio_light_new(int pin, int pin_on_level) {
   mt_gpio_light_t *gpio_light_handle = NULL;
   gpio_light_handle = mt_gpio_light_default();
   gpio_light_handle->pin = pin;

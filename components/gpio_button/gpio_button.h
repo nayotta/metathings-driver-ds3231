@@ -18,8 +18,7 @@
 #define DEFAULT_LONG_PRESS_INTERVAL 5000
 #define DEFAULT_DOUBLE_PRESS_INTERVAL 500
 
-typedef struct
-{
+typedef struct {
   int pin;
   int pin_on_level;
   int short_press_interval;

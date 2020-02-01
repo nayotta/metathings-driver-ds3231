@@ -12,10 +12,8 @@ static const char *TAG = "MT_OTA";
 static bool mt_ota_state = false; // use to make one ota task
 
 // static func ================================================================
-static esp_err_t _mt_ota_event_handler(esp_http_client_event_t *evt)
-{
-  switch (evt->event_id)
-  {
+static esp_err_t _mt_ota_event_handler(esp_http_client_event_t *evt) {
+  switch (evt->event_id) {
   case HTTP_EVENT_ERROR:
     ESP_LOGD(TAG, "%4d %s HTTP_EVENT_ERROR", __LINE__, __func__);
     break;
@@ -44,8 +42,7 @@ static esp_err_t _mt_ota_event_handler(esp_http_client_event_t *evt)
 }
 
 // global func ================================================================
-static void mt_ota_loop(mt_ota_t *ota)
-{
+static void mt_ota_loop(mt_ota_t *ota) {
   esp_http_client_config_t config = {
       .url = ota->url,
       .event_handler = _mt_ota_event_handler,
@@ -53,15 +50,11 @@ static void mt_ota_loop(mt_ota_t *ota)
 
   ESP_LOGI(TAG, "%4d %s OTA begin, url=%s", __LINE__, __func__, ota->url);
 
-  for (int i = 0; i < 3; i++)
-  {
+  for (int i = 0; i < 3; i++) {
     esp_err_t ret = esp_https_ota(&config);
-    if (ret != ESP_OK)
-    {
+    if (ret != ESP_OK) {
       ESP_LOGE(TAG, "%4d %s OTA %d failed", __LINE__, __func__, i + 1);
-    }
-    else
-    {
+    } else {
       ESP_LOGI(TAG, "%4d %s OTA success, reboot now", __LINE__, __func__);
       esp_restart();
       goto EXIT;
@@ -75,8 +68,7 @@ EXIT:
   vTaskDelete(NULL);
 }
 
-mt_ota_t *mt_ota_default_new(char *url)
-{
+mt_ota_t *mt_ota_default_new(char *url) {
   mt_ota_t *ota = malloc(sizeof(mt_ota_t));
 
   ota->url = url;
@@ -84,10 +76,8 @@ mt_ota_t *mt_ota_default_new(char *url)
   return ota;
 }
 
-esp_err_t mt_ota_task(mt_ota_t *ota)
-{
-  if (mt_ota_state == true)
-  {
+esp_err_t mt_ota_task(mt_ota_t *ota) {
+  if (mt_ota_state == true) {
     return ESP_ERR_INVALID_RESPONSE;
   }
 

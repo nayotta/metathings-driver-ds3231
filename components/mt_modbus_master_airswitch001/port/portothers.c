@@ -17,8 +17,7 @@ static portMUX_TYPE mb_mux = portMUX_INITIALIZER_UNLOCKED;
 
 /* ----------------------- Start implementation -----------------------------*/
 
-void vMBPortSetWithinException(BOOL bInException)
-{
+void vMBPortSetWithinException(BOOL bInException) {
   bIsWithinException = bInException;
 }
 
@@ -28,8 +27,7 @@ void vMBPortEnterCritical(void) { portENTER_CRITICAL(&mb_mux); }
 
 void vMBPortExitCritical(void) { portEXIT_CRITICAL(&mb_mux); }
 
-void vMBPortClose(void)
-{
+void vMBPortClose(void) {
   extern void vMBPortSerialClose(void);
   extern void vMBPortTimerClose(void);
   extern void vMBPortEventClose(void);

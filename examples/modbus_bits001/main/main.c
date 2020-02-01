@@ -20,14 +20,12 @@ int EN_PIN = 18;
 UCHAR ADDR = 1;
 
 // test func =================================================================
-void test_bits001_get_temp()
-{
+void test_bits001_get_temp() {
   esp_err_t err = ESP_OK;
   double temp = 0;
 
   err = mt_bits001_get_temp(ADDR, &temp);
-  if (err != ESP_OK)
-  {
+  if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s failed code:%d", __LINE__, __func__, err);
     return;
   }
@@ -35,14 +33,12 @@ void test_bits001_get_temp()
   return;
 }
 
-void test_bits001_get_hum()
-{
+void test_bits001_get_hum() {
   esp_err_t err = ESP_OK;
   double hum = 0;
 
   err = mt_bits001_get_hum(ADDR, &hum);
-  if (err != ESP_OK)
-  {
+  if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s failed code:%d", __LINE__, __func__, err);
     return;
   }
@@ -50,14 +46,12 @@ void test_bits001_get_hum()
   return;
 }
 
-void test_bits001_get_frog()
-{
+void test_bits001_get_frog() {
   esp_err_t err = ESP_OK;
   double frog = 0;
 
   err = mt_bits001_get_frog(ADDR, &frog);
-  if (err != ESP_OK)
-  {
+  if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s failed code:%d", __LINE__, __func__, err);
     return;
   }
@@ -66,16 +60,14 @@ void test_bits001_get_frog()
 }
 
 // main func ==================================================================
-void app_main()
-{
+void app_main() {
   eMBErrorCode emb_ret = 0;
 
   ESP_LOGI(TAG, "test begin");
 
-  emb_ret =
-      modbus_bits001_init(RS485_PORT, RS485_BAUD, RS485_PARITY, TX_PIN, RX_PIN, EN_PIN);
-  if (emb_ret != 0)
-  {
+  emb_ret = modbus_bits001_init(RS485_PORT, RS485_BAUD, RS485_PARITY, TX_PIN,
+                                RX_PIN, EN_PIN);
+  if (emb_ret != 0) {
     ESP_LOGE(TAG, "%4d modbus_init failed", __LINE__);
     return;
   }
@@ -84,8 +76,7 @@ void app_main()
 
   ESP_LOGI(TAG, "test end");
 
-  while (1)
-  {
+  while (1) {
     vTaskDelay(2000 / portTICK_RATE_MS);
     test_bits001_get_temp();
     test_bits001_get_hum();
