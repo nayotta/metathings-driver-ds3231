@@ -19,8 +19,7 @@ static const char *TAG = "MT_MODULE_UNARYCALL_OTA";
 
 // global func ================================================================
 void mt_module_unarycall_version_handle(
-    Ai__Metathings__Component__DownStreamFrame *msg, char module_id[128])
-{
+    Ai__Metathings__Component__DownStreamFrame *msg, char module_id[128]) {
   esp_err_t err = ESP_OK;
   GetVersionRes res = GET_VERSION_RES__INIT;
   res.code = 0;
@@ -36,14 +35,11 @@ void mt_module_unarycall_version_handle(
   const esp_partition_t *running = esp_ota_get_running_partition();
 
   err = esp_ota_get_partition_description(running, &running_app_info);
-  if (err != ESP_OK)
-  {
+  if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s esp_ota_get_partition_description failed", __LINE__,
              __func__);
     res.code = 1;
-  }
-  else
-  {
+  } else {
     res.version->version = running_app_info.version;
   }
 
@@ -59,8 +55,7 @@ void mt_module_unarycall_version_handle(
   sprintf(topic, "mt/modules/%s/proxy/sessions/%lld/upstream", module_id,
           msg->unary_call->session->value);
   err = mqtt_pub_msg(topic, frame_buf, frame_size);
-  if (err != ESP_OK)
-  {
+  if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s mqtt_pub_msg failed", __LINE__, __func__);
     goto EXIT;
   }
@@ -76,8 +71,7 @@ EXIT:
 }
 
 void mt_module_unarycall_ota_handle(
-    Ai__Metathings__Component__DownStreamFrame *msg, char module_id[128])
-{
+    Ai__Metathings__Component__DownStreamFrame *msg, char module_id[128]) {
   esp_err_t err = ESP_OK;
   OtaUpdateReq *req = NULL;
   OtaUpdateRes res = OTA_UPDATE_RES__INIT;
@@ -90,27 +84,23 @@ void mt_module_unarycall_ota_handle(
   // get req
   req = ota_update_req__unpack(NULL, msg->unary_call->value->value.len,
                                msg->unary_call->value->value.data);
-  if (req == NULL)
-  {
+  if (req == NULL) {
     ESP_LOGE(TAG, "%4d %s ota_update_req__unpack NULL", __LINE__, __func__);
     return;
   }
 
   // check req
-  if (req->ota == NULL)
-  {
+  if (req->ota == NULL) {
     ESP_LOGE(TAG, "%4d %s req->ota NULL", __LINE__, __func__);
     return;
   }
 
-  if (req->ota->url == NULL)
-  {
+  if (req->ota->url == NULL) {
     ESP_LOGE(TAG, "%4d %s req->ota->url NULL", __LINE__, __func__);
     return;
   }
 
-  if (req->ota->url->value == NULL)
-  {
+  if (req->ota->url->value == NULL) {
     ESP_LOGE(TAG, "%4d %s req->ota->url->value NULL", __LINE__, __func__);
     return;
   }
@@ -118,8 +108,7 @@ void mt_module_unarycall_ota_handle(
   // cmd process
   mt_ota_t *ota = mt_ota_default_new(req->ota->url->value);
   err = mt_ota_task(ota);
-  if (err != ESP_OK)
-  {
+  if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s esp_ota_get_partition_description failed", __LINE__,
              __func__);
     res.code = 1;
@@ -137,8 +126,7 @@ void mt_module_unarycall_ota_handle(
   sprintf(topic, "mt/modules/%s/proxy/sessions/%lld/upstream", module_id,
           msg->unary_call->session->value);
   err = mqtt_pub_msg(topic, frame_buf, frame_size);
-  if (err != ESP_OK)
-  {
+  if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s mqtt_pub_msg failed", __LINE__, __func__);
     goto EXIT;
   }

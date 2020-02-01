@@ -15,7 +15,7 @@
 esp_err_t mqtt_pub_msg(char *topic, uint8_t *buf, int size);
 
 esp_err_t mqtt_init(int index_in, char *module_id, uint64_t session_id,
-              char *device_id,
-              void (*handle)(char *topic, void *buf, int size));
+                    char *device_id,
+                    void (*handle)(char *topic, void *buf, int size));
 
 #endif

@@ -78,16 +78,14 @@ static const char *TAG = "MT_MODBUS_MASTER_airswitch001";
     06 num low
 */
 
-eMBMasterReqErrCode eMBMasterAirswitchReq01(UCHAR slaveAddr, USHORT target, USHORT num,
-                                   LONG lTimeOut)
-{
+eMBMasterReqErrCode eMBMasterAirswitchReq01(UCHAR slaveAddr, USHORT target,
+                                            USHORT num, LONG lTimeOut) {
   UCHAR *frame = NULL;
   eMBMasterReqErrCode err = MB_MRE_NO_ERR;
 
   if (xMBMasterRunResTake(lTimeOut) == FALSE)
     err = MB_MRE_MASTER_BUSY;
-  else
-  {
+  else {
     vMBMasterGetPDUSndBuf(&frame);
     vMBMasterSetDestAddress(slaveAddr);
     frame[MB_PDU_FUNC_OFF] = 1;
@@ -103,8 +101,7 @@ eMBMasterReqErrCode eMBMasterAirswitchReq01(UCHAR slaveAddr, USHORT target, USHO
   return err;
 }
 
-eMBException eMBMasterAirswitchFunc01(UCHAR *recvFrame, USHORT *recvBit)
-{
+eMBException eMBMasterAirswitchFunc01(UCHAR *recvFrame, USHORT *recvBit) {
   UCHAR *sendFrame = NULL;
   UCHAR recvCmd;
   USHORT recvNum;
@@ -113,49 +110,36 @@ eMBException eMBMasterAirswitchFunc01(UCHAR *recvFrame, USHORT *recvBit)
   eMBException eStatus = MB_EX_NONE;
   eMBErrorCode eRetStatus;
 
-  if (xMBMasterRequestIsBroadcast())
-  {
+  if (xMBMasterRequestIsBroadcast()) {
     eStatus = MB_EX_NONE;
-  }
-  else if (*recvBit >= 2)
-  {
+  } else if (*recvBit >= 2) {
     vMBMasterGetPDUSndBuf(&sendFrame);
     recvCmd = (USHORT)(sendFrame[MB_PDU_FUNC_OFF]);
 
     recvNum = (USHORT)(sendFrame[MB_PDU_REQ_NUM_OFF] << 8);
     recvNum |= (USHORT)(sendFrame[MB_PDU_REQ_NUM_OFF + 1]);
 
-    if ((recvNum & 0x0007) != 0)
-    {
+    if ((recvNum & 0x0007) != 0) {
       recvLen = (UCHAR)(recvNum / 8 + 1);
-    }
-    else
-    {
+    } else {
       recvLen = (UCHAR)(recvNum / 8);
     }
 
     // special command
-    if (recvNum == 0xFF)
-    {
+    if (recvNum == 0xFF) {
       recvLen = recvFrame[MB_PDU_FUNC_01_NUM_OFF];
     }
 
-    if ((recvNum >= 1) && recvFrame[MB_PDU_FUNC_01_NUM_OFF] == recvLen)
-    {
+    if ((recvNum >= 1) && recvFrame[MB_PDU_FUNC_01_NUM_OFF] == recvLen) {
       eRetStatus = eMBMasterCB01(&recvFrame[MB_PDU_FUNC_01_VALUES_OFF], recvCmd,
                                  recvLen);
-      if (eRetStatus != MB_ENOERR)
-      {
+      if (eRetStatus != MB_ENOERR) {
         eStatus = MB_EX_ILLEGAL_DATA_VALUE;
       }
-    }
-    else
-    {
+    } else {
       eStatus = MB_EX_ILLEGAL_DATA_VALUE;
     }
-  }
-  else
-  {
+  } else {
     eStatus = MB_EX_ILLEGAL_DATA_VALUE;
   }
   return eStatus;
@@ -170,16 +154,14 @@ eMBException eMBMasterAirswitchFunc01(UCHAR *recvFrame, USHORT *recvBit)
     05 num high
     06 num low
 */
-eMBMasterReqErrCode eMBMasterAirswitchReq02(UCHAR slaveAddr, USHORT target, USHORT num,
-                                   LONG lTimeOut)
-{
+eMBMasterReqErrCode eMBMasterAirswitchReq02(UCHAR slaveAddr, USHORT target,
+                                            USHORT num, LONG lTimeOut) {
   UCHAR *frame = NULL;
   eMBMasterReqErrCode err = MB_MRE_NO_ERR;
 
   if (xMBMasterRunResTake(lTimeOut) == FALSE)
     err = MB_MRE_MASTER_BUSY;
-  else
-  {
+  else {
     vMBMasterGetPDUSndBuf(&frame);
     vMBMasterSetDestAddress(slaveAddr);
     frame[MB_PDU_FUNC_OFF] = 2;
@@ -195,8 +177,7 @@ eMBMasterReqErrCode eMBMasterAirswitchReq02(UCHAR slaveAddr, USHORT target, USHO
   return err;
 }
 
-eMBException eMBMasterAirswitchFunc02(UCHAR *recvFrame, USHORT *recvBit)
-{
+eMBException eMBMasterAirswitchFunc02(UCHAR *recvFrame, USHORT *recvBit) {
   UCHAR *sendFrame = NULL;
   UCHAR recvCmd;
   USHORT recvNum;
@@ -205,49 +186,36 @@ eMBException eMBMasterAirswitchFunc02(UCHAR *recvFrame, USHORT *recvBit)
   eMBException eStatus = MB_EX_NONE;
   eMBErrorCode eRetStatus;
 
-  if (xMBMasterRequestIsBroadcast())
-  {
+  if (xMBMasterRequestIsBroadcast()) {
     eStatus = MB_EX_NONE;
-  }
-  else if (*recvBit >= 2)
-  {
+  } else if (*recvBit >= 2) {
     vMBMasterGetPDUSndBuf(&sendFrame);
     recvCmd = (USHORT)(sendFrame[MB_PDU_FUNC_OFF]);
 
     recvNum = (USHORT)(sendFrame[MB_PDU_REQ_NUM_OFF] << 8);
     recvNum |= (USHORT)(sendFrame[MB_PDU_REQ_NUM_OFF + 1]);
 
-    if ((recvNum & 0x0007) != 0)
-    {
+    if ((recvNum & 0x0007) != 0) {
       recvLen = (UCHAR)(recvNum / 8 + 1);
-    }
-    else
-    {
+    } else {
       recvLen = (UCHAR)(recvNum / 8);
     }
 
     // special command
-    if (recvNum == 0xFF)
-    {
+    if (recvNum == 0xFF) {
       recvLen = recvFrame[MB_PDU_FUNC_01_NUM_OFF];
     }
 
-    if ((recvNum >= 1) && recvFrame[MB_PDU_FUNC_02_NUM_OFF] == recvLen)
-    {
+    if ((recvNum >= 1) && recvFrame[MB_PDU_FUNC_02_NUM_OFF] == recvLen) {
       eRetStatus = eMBMasterCB02(&recvFrame[MB_PDU_FUNC_02_VALUES_OFF], recvCmd,
                                  recvLen);
-      if (eRetStatus != MB_ENOERR)
-      {
+      if (eRetStatus != MB_ENOERR) {
         eStatus = MB_EX_ILLEGAL_DATA_VALUE;
       }
-    }
-    else
-    {
+    } else {
       eStatus = MB_EX_ILLEGAL_DATA_VALUE;
     }
-  }
-  else
-  {
+  } else {
     eStatus = MB_EX_ILLEGAL_DATA_VALUE;
   }
   return eStatus;
@@ -262,16 +230,15 @@ eMBException eMBMasterAirswitchFunc02(UCHAR *recvFrame, USHORT *recvBit)
     05 num high
     06 num low
 */
-eMBMasterReqErrCode eMBMasterAirswitchReq03(UCHAR slaveAddr, UCHAR subCmd, UCHAR target,
-                                   USHORT num, LONG lTimeOut)
-{
+eMBMasterReqErrCode eMBMasterAirswitchReq03(UCHAR slaveAddr, UCHAR subCmd,
+                                            UCHAR target, USHORT num,
+                                            LONG lTimeOut) {
   UCHAR *frame = NULL;
   eMBMasterReqErrCode err = MB_MRE_NO_ERR;
 
   if (xMBMasterRunResTake(lTimeOut) == FALSE)
     err = MB_MRE_MASTER_BUSY;
-  else
-  {
+  else {
     vMBMasterGetPDUSndBuf(&frame);
     vMBMasterSetDestAddress(slaveAddr);
     frame[MB_PDU_FUNC_OFF] = 3;
@@ -287,8 +254,7 @@ eMBMasterReqErrCode eMBMasterAirswitchReq03(UCHAR slaveAddr, UCHAR subCmd, UCHAR
   return err;
 }
 
-eMBException eMBMasterAirswitchFunc03(UCHAR *recvFrame, USHORT *recvBit)
-{
+eMBException eMBMasterAirswitchFunc03(UCHAR *recvFrame, USHORT *recvBit) {
   UCHAR *sendFrame = NULL;
   UCHAR recvCmd;
   USHORT recvNum;
@@ -296,34 +262,25 @@ eMBException eMBMasterAirswitchFunc03(UCHAR *recvFrame, USHORT *recvBit)
   eMBException eStatus = MB_EX_NONE;
   eMBErrorCode eRetStatus;
 
-  if (xMBMasterRequestIsBroadcast())
-  {
+  if (xMBMasterRequestIsBroadcast()) {
     eStatus = MB_EX_NONE;
-  }
-  else if (*recvBit >= 2)
-  {
+  } else if (*recvBit >= 2) {
     vMBMasterGetPDUSndBuf(&sendFrame);
     recvCmd = (USHORT)(sendFrame[MB_PDU_FUNC_OFF]);
 
     recvNum = (USHORT)(sendFrame[MB_PDU_REQ_NUM_OFF] << 8);
     recvNum |= (USHORT)(sendFrame[MB_PDU_REQ_NUM_OFF + 1]);
 
-    if ((recvNum >= 1) && recvFrame[MB_PDU_FUNC_03_NUM_OFF] == recvNum * 2)
-    {
+    if ((recvNum >= 1) && recvFrame[MB_PDU_FUNC_03_NUM_OFF] == recvNum * 2) {
       eRetStatus = eMBMasterCB03(&recvFrame[MB_PDU_FUNC_03_VALUES_OFF], recvCmd,
                                  recvNum * 2);
-      if (eRetStatus != MB_ENOERR)
-      {
+      if (eRetStatus != MB_ENOERR) {
         eStatus = MB_EX_ILLEGAL_DATA_VALUE;
       }
-    }
-    else
-    {
+    } else {
       eStatus = MB_EX_ILLEGAL_DATA_VALUE;
     }
-  }
-  else
-  {
+  } else {
     eStatus = MB_EX_ILLEGAL_DATA_VALUE;
   }
   return eStatus;
@@ -338,18 +295,15 @@ eMBException eMBMasterAirswitchFunc03(UCHAR *recvFrame, USHORT *recvBit)
     05 num high
     06 num low
 */
-eMBMasterReqErrCode eMBMasterAirswitchReq04(UCHAR slaveAddr, UCHAR subCmd, UCHAR target,
-                                   USHORT num, LONG lTimeOut)
-{
+eMBMasterReqErrCode eMBMasterAirswitchReq04(UCHAR slaveAddr, UCHAR subCmd,
+                                            UCHAR target, USHORT num,
+                                            LONG lTimeOut) {
   UCHAR *frame = NULL;
   eMBMasterReqErrCode err = MB_MRE_NO_ERR;
 
-  if (xMBMasterRunResTake(lTimeOut) == FALSE)
-  {
+  if (xMBMasterRunResTake(lTimeOut) == FALSE) {
     err = MB_MRE_MASTER_BUSY;
-  }
-  else
-  {
+  } else {
     vMBMasterGetPDUSndBuf(&frame);
     vMBMasterSetDestAddress(slaveAddr);
     frame[MB_PDU_FUNC_OFF] = 4;
@@ -365,8 +319,7 @@ eMBMasterReqErrCode eMBMasterAirswitchReq04(UCHAR slaveAddr, UCHAR subCmd, UCHAR
   return err;
 }
 
-eMBException eMBMasterAirswitchFunc04(UCHAR *recvFrame, USHORT *recvBit)
-{
+eMBException eMBMasterAirswitchFunc04(UCHAR *recvFrame, USHORT *recvBit) {
   UCHAR *sendFrame = NULL;
   UCHAR recvCmd;
   USHORT recvNum;
@@ -374,34 +327,25 @@ eMBException eMBMasterAirswitchFunc04(UCHAR *recvFrame, USHORT *recvBit)
   eMBException eStatus = MB_EX_NONE;
   eMBErrorCode eRetStatus;
 
-  if (xMBMasterRequestIsBroadcast())
-  {
+  if (xMBMasterRequestIsBroadcast()) {
     eStatus = MB_EX_NONE;
-  }
-  else if (*recvBit >= 2)
-  {
+  } else if (*recvBit >= 2) {
     vMBMasterGetPDUSndBuf(&sendFrame);
     recvCmd = (USHORT)(sendFrame[MB_PDU_FUNC_OFF]);
 
     recvNum = (USHORT)(sendFrame[MB_PDU_REQ_NUM_OFF] << 8);
     recvNum |= (USHORT)(sendFrame[MB_PDU_REQ_NUM_OFF + 1]);
 
-    if ((recvNum >= 1) && recvFrame[MB_PDU_FUNC_04_NUM_OFF] == recvNum * 2)
-    {
+    if ((recvNum >= 1) && recvFrame[MB_PDU_FUNC_04_NUM_OFF] == recvNum * 2) {
       eRetStatus = eMBMasterCB04(&recvFrame[MB_PDU_FUNC_04_VALUES_OFF], recvCmd,
                                  recvNum * 2);
-      if (eRetStatus != MB_ENOERR)
-      {
+      if (eRetStatus != MB_ENOERR) {
         eStatus = MB_EX_ILLEGAL_DATA_VALUE;
       }
-    }
-    else
-    {
+    } else {
       eStatus = MB_EX_ILLEGAL_DATA_VALUE;
     }
-  }
-  else
-  {
+  } else {
     eStatus = MB_EX_ILLEGAL_DATA_VALUE;
   }
   return eStatus;
@@ -416,16 +360,14 @@ eMBException eMBMasterAirswitchFunc04(UCHAR *recvFrame, USHORT *recvBit)
     05 num high
     06 num low
 */
-eMBMasterReqErrCode eMBMasterAirswitchReq05(UCHAR slaveAddr, USHORT target, USHORT num,
-                                   LONG lTimeOut)
-{
+eMBMasterReqErrCode eMBMasterAirswitchReq05(UCHAR slaveAddr, USHORT target,
+                                            USHORT num, LONG lTimeOut) {
   UCHAR *frame = NULL;
   eMBMasterReqErrCode err = MB_MRE_NO_ERR;
 
   if (xMBMasterRunResTake(lTimeOut) == FALSE)
     err = MB_MRE_MASTER_BUSY;
-  else
-  {
+  else {
     vMBMasterGetPDUSndBuf(&frame);
     vMBMasterSetDestAddress(slaveAddr);
     frame[MB_PDU_FUNC_OFF] = 5;
@@ -441,8 +383,7 @@ eMBMasterReqErrCode eMBMasterAirswitchReq05(UCHAR slaveAddr, USHORT target, USHO
   return err;
 }
 
-eMBException eMBMasterAirswitchFunc05(UCHAR *recvFrame, USHORT *recvBit)
-{
+eMBException eMBMasterAirswitchFunc05(UCHAR *recvFrame, USHORT *recvBit) {
   UCHAR *sendFrame = NULL;
   UCHAR recvCmd;
   USHORT recvNum;
@@ -450,12 +391,9 @@ eMBException eMBMasterAirswitchFunc05(UCHAR *recvFrame, USHORT *recvBit)
   eMBException eStatus = MB_EX_NONE;
   eMBErrorCode eRetStatus;
 
-  if (xMBMasterRequestIsBroadcast())
-  {
+  if (xMBMasterRequestIsBroadcast()) {
     eStatus = MB_EX_NONE;
-  }
-  else if (*recvBit >= 2)
-  {
+  } else if (*recvBit >= 2) {
     vMBMasterGetPDUSndBuf(&sendFrame);
     recvCmd = (USHORT)(sendFrame[MB_PDU_FUNC_OFF]);
 
@@ -463,13 +401,10 @@ eMBException eMBMasterAirswitchFunc05(UCHAR *recvFrame, USHORT *recvBit)
 
     eRetStatus =
         eMBMasterCB05(&recvFrame[MB_PDU_FUNC_05_VALUES_OFF], recvCmd, recvNum);
-    if (eRetStatus != MB_ENOERR)
-    {
+    if (eRetStatus != MB_ENOERR) {
       eStatus = MB_EX_ILLEGAL_DATA_VALUE;
     }
-  }
-  else
-  {
+  } else {
     eStatus = MB_EX_ILLEGAL_DATA_VALUE;
   }
   return eStatus;
@@ -484,16 +419,15 @@ eMBException eMBMasterAirswitchFunc05(UCHAR *recvFrame, USHORT *recvBit)
     05 num high
     06 num low
 */
-eMBMasterReqErrCode eMBMasterAirswitchReq06(UCHAR slaveAddr, UCHAR subCmd, UCHAR target,
-                                   USHORT num, LONG lTimeOut)
-{
+eMBMasterReqErrCode eMBMasterAirswitchReq06(UCHAR slaveAddr, UCHAR subCmd,
+                                            UCHAR target, USHORT num,
+                                            LONG lTimeOut) {
   UCHAR *frame = NULL;
   eMBMasterReqErrCode err = MB_MRE_NO_ERR;
 
   if (xMBMasterRunResTake(lTimeOut) == FALSE)
     err = MB_MRE_MASTER_BUSY;
-  else
-  {
+  else {
     vMBMasterGetPDUSndBuf(&frame);
     vMBMasterSetDestAddress(slaveAddr);
     frame[MB_PDU_FUNC_OFF] = 6;
@@ -509,8 +443,7 @@ eMBMasterReqErrCode eMBMasterAirswitchReq06(UCHAR slaveAddr, UCHAR subCmd, UCHAR
   return err;
 }
 
-eMBException eMBMasterAirswitchFunc06(UCHAR *recvFrame, USHORT *recvBit)
-{
+eMBException eMBMasterAirswitchFunc06(UCHAR *recvFrame, USHORT *recvBit) {
   UCHAR *sendFrame = NULL;
   UCHAR recvCmd;
   USHORT recvNum;
@@ -518,12 +451,9 @@ eMBException eMBMasterAirswitchFunc06(UCHAR *recvFrame, USHORT *recvBit)
   eMBException eStatus = MB_EX_NONE;
   eMBErrorCode eRetStatus;
 
-  if (xMBMasterRequestIsBroadcast())
-  {
+  if (xMBMasterRequestIsBroadcast()) {
     eStatus = MB_EX_NONE;
-  }
-  else if (*recvBit >= 2)
-  {
+  } else if (*recvBit >= 2) {
     vMBMasterGetPDUSndBuf(&sendFrame);
     recvCmd = (USHORT)(sendFrame[MB_PDU_FUNC_OFF]);
 
@@ -531,13 +461,10 @@ eMBException eMBMasterAirswitchFunc06(UCHAR *recvFrame, USHORT *recvBit)
 
     eRetStatus =
         eMBMasterCB06(&recvFrame[MB_PDU_FUNC_06_VALUES_OFF], recvCmd, recvNum);
-    if (eRetStatus != MB_ENOERR)
-    {
+    if (eRetStatus != MB_ENOERR) {
       eStatus = MB_EX_ILLEGAL_DATA_VALUE;
     }
-  }
-  else
-  {
+  } else {
     eStatus = MB_EX_ILLEGAL_DATA_VALUE;
   }
   return eStatus;

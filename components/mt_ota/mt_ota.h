@@ -11,8 +11,7 @@
 #define CONFIG_FREERTOS_HZ 100
 #endif
 
-typedef struct _mt_ota_t
-{
+typedef struct _mt_ota_t {
   char *url;
 } mt_ota_t;
 

@@ -32,6 +32,6 @@ esp_err_t mt_mqtt_manage_get_session_id(esp_mqtt_client_handle_t *client_in,
                                         uint64_t *session_id_out);
 
 esp_err_t mt_mqtt_manage_set_session_id(esp_mqtt_client_handle_t *client_in,
-                                       uint64_t session_id_in);
+                                        uint64_t session_id_in);
 
 #endif

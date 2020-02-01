@@ -46,7 +46,7 @@
                 "UNICODE",
                 "_UNICODE"
             ],
-            "intelliSenseMode": "msvc-x64",
+            "intelliSenseMode": "${default}",
             "compilerPath": "D:\\0软件\\LLVM\\bin\\clang.exe",
             "cStandard": "c11"
         }

@@ -25,9 +25,9 @@ eMBErrorCode modbus_xycwa6a_init(UCHAR ucPort, ULONG ulBaudRate,
                                  eMBParity eParity, int tx_pin, int rx_pin,
                                  int en_pin);
 
-esp_err_t mt_xycwa6a_get_temps(int addr, double *temp1,
-                               double *temp2, double *temp3, double *temp4,
-                               double *temp5, double *temp6);
+esp_err_t mt_xycwa6a_get_temps(int addr, double *temp1, double *temp2,
+                               double *temp3, double *temp4, double *temp5,
+                               double *temp6);
 
 void mt_modbus_xycwa6a_task();
 

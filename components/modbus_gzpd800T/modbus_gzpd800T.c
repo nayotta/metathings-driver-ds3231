@@ -26,28 +26,24 @@ static const char *TAG = "MT_MODBUS_gzpd800T";
 #define GZPD800T_WARN_SIZE 1
 
 // global func ================================================================
-esp_err_t mt_gzpd800T_get_4ch_data(gzpd800T_4ch_data_t *data)
-{
+esp_err_t mt_gzpd800T_get_4ch_data(gzpd800T_4ch_data_t *data) {
   esp_err_t err = ESP_OK;
   struct RetMsg_t cmd_ret_payload;
 
   err = modbus_sync_Cmd_03(GZPD800T_DEAULT_ADDR, GZPD800T_DATA_ADDR,
                            GZPD800T_DATA_SIZE, &cmd_ret_payload);
-  if (err != ESP_OK)
-  {
+  if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s failed", __LINE__, __func__);
     return err;
   }
 
-  if (cmd_ret_payload.recvCmd != GZPD800T_READ_DATA)
-  {
+  if (cmd_ret_payload.recvCmd != GZPD800T_READ_DATA) {
     ESP_LOGE(TAG, "%4d %s  get error ret cmd:%d", __LINE__, __func__,
              cmd_ret_payload.recvCmd);
     return ESP_ERR_INVALID_RESPONSE;
   }
 
-  if (cmd_ret_payload.retLen != 2 * GZPD800T_DATA_SIZE)
-  {
+  if (cmd_ret_payload.retLen != 2 * GZPD800T_DATA_SIZE) {
     ESP_LOGE(TAG, "%4d %s get error ret size:%d", __LINE__, __func__,
              cmd_ret_payload.retLen);
     return ESP_ERR_INVALID_RESPONSE;
@@ -130,50 +126,42 @@ esp_err_t mt_gzpd800T_get_4ch_data(gzpd800T_4ch_data_t *data)
   return ESP_OK;
 }
 
-esp_err_t mt_gzpd800T_get_warn(int addr, bool *warn)
-{
+esp_err_t mt_gzpd800T_get_warn(int addr, bool *warn) {
   esp_err_t err = ESP_OK;
   struct RetMsg_t cmd_ret_payload;
   USHORT addr_ushort = addr;
 
   err = modbus_sync_Cmd_01(GZPD800T_DEAULT_ADDR, addr_ushort,
                            GZPD800T_WARN_SIZE, &cmd_ret_payload);
-  if (err != ESP_OK)
-  {
+  if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s failed", __LINE__, __func__);
     return err;
   }
 
-  if (cmd_ret_payload.recvCmd != GZPD800T_READ_WARN)
-  {
+  if (cmd_ret_payload.recvCmd != GZPD800T_READ_WARN) {
     ESP_LOGE(TAG, "%4d %s  get error ret cmd:%d", __LINE__, __func__,
              cmd_ret_payload.recvCmd);
     return ESP_ERR_INVALID_RESPONSE;
   }
 
-  if (cmd_ret_payload.retLen != GZPD800T_WARN_SIZE)
-  {
+  if (cmd_ret_payload.retLen != GZPD800T_WARN_SIZE) {
     ESP_LOGE(TAG, "%4d %s get error ret size:%d", __LINE__, __func__,
              cmd_ret_payload.retLen);
     return ESP_ERR_INVALID_RESPONSE;
   }
 
-  if (cmd_ret_payload.retBuf[0] == 0)
-  {
+  if (cmd_ret_payload.retBuf[0] == 0) {
     *warn = false;
-  }
-  else
-  {
+  } else {
     *warn = true;
   }
 
-  //ESP_LOGW(TAG, "%4d %s get warn:%d", __LINE__, __func__, *warn);
+  // ESP_LOGW(TAG, "%4d %s get warn:%d", __LINE__, __func__, *warn);
 
   return ESP_OK;
 }
 
-esp_err_t mt_gzpd800T_init(int tx_pin, int rx_pin, int en_pin)
-{
+esp_err_t mt_gzpd800T_init(int tx_pin, int rx_pin, int en_pin) {
   eMBErrorCode emb_ret = 0;
   UCHAR RS485_PORT = 2;
   ULONG RS485_BAUD = 9600;
@@ -181,8 +169,7 @@ esp_err_t mt_gzpd800T_init(int tx_pin, int rx_pin, int en_pin)
 
   emb_ret =
       modbus_init(RS485_PORT, RS485_BAUD, RS485_PARITY, tx_pin, rx_pin, en_pin);
-  if (emb_ret != 0)
-  {
+  if (emb_ret != 0) {
     ESP_LOGE(TAG, "%4d %s modbus_init failed", __LINE__, __func__);
     return emb_ret;
   }

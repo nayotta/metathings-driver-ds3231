@@ -16,15 +16,16 @@
 
 #define BUF_MAXLEN 64
 
-struct RetMsg_t  // ret message struct
+struct RetMsg_t // ret message struct
 {
-  UCHAR retBuf[BUF_MAXLEN];  // ret buffer
-  USHORT recvCmd;            // ret addr
-  USHORT retLen;             // ret len
-} * RetMsg;                  // global save point
+  UCHAR retBuf[BUF_MAXLEN]; // ret buffer
+  USHORT recvCmd;           // ret addr
+  USHORT retLen;            // ret len
+} * RetMsg;                 // global save point
 
-eMBErrorCode modbus_bits001_init(UCHAR ucPort, ULONG ulBaudRate, eMBParity eParity,
-                         int tx_pin, int rx_pin, int en_pin);
+eMBErrorCode modbus_bits001_init(UCHAR ucPort, ULONG ulBaudRate,
+                                 eMBParity eParity, int tx_pin, int rx_pin,
+                                 int en_pin);
 
 esp_err_t mt_bits001_get_temp(int addr, double *temp);
 
@@ -32,7 +33,8 @@ esp_err_t mt_bits001_get_hum(int addr, double *hum);
 
 esp_err_t mt_bits001_get_frog(int addr, double *frog);
 
-esp_err_t mt_bits001_get_data(int addr, double *temp, double *hum, double *frog);
+esp_err_t mt_bits001_get_data(int addr, double *temp, double *hum,
+                              double *frog);
 
 void mt_modbus_bits001_task();
 

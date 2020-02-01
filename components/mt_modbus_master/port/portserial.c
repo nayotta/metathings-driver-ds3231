@@ -26,12 +26,12 @@
 #include "mt_mbport.h"
 #include "mt_mbrtu.h"
 
-#include <string.h>
 #include "driver/uart.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/queue.h"
 #include "freertos/task.h"
 #include "soc/dport_access.h"
+#include <string.h>
 
 #include "esp_log.h"
 #include "esp_timer.h"
@@ -55,54 +55,45 @@ static uint8_t *mbDataP = NULL;
 static void prvvUARTTxReadyISR(void);
 static void prvvUARTRxISR(void);
 
-static uint8_t mb_serial_read(uint8_t *data, uint8_t size)
-{
+static uint8_t mb_serial_read(uint8_t *data, uint8_t size) {
   mbDataP = data;
   uint8_t remaindBytes = size;
-  //printf("get %d byte %lld\n", size, esp_timer_get_time()/1000);
-  while (remaindBytes--)
-  {
+  // printf("get %d byte %lld\n", size, esp_timer_get_time()/1000);
+  while (remaindBytes--) {
     prvvUARTRxISR();
   };
   mbDataP = NULL;
   return 0;
 }
 
-static void uart_event_task(void *pvParameters)
-{
+static void uart_event_task(void *pvParameters) {
   uart_event_t event;
   size_t buffered_size;
   uint8_t *dtmp = (uint8_t *)malloc(MB_UART_BUF_SIZE);
   uint8_t *ptr = NULL;
   uint8_t size = 0;
-  for (;;)
-  {
+  for (;;) {
     // Waiting for UART event.
     if (xQueueReceive(mb_uart_queue, (void *)&event,
                       (portTickType)portMAX_DELAY)) //
     {
       bzero(dtmp, MB_UART_BUF_SIZE);
-      switch (event.type)
-      {
+      switch (event.type) {
       // Event of UART receving data
       /*We'd better handler data event fast, there would be much more data
                events than other types of events. If we take too much time on
            data event, the queue might be full.*/
-      case UART_DATA:
-      {
+      case UART_DATA: {
         uart_read_bytes(MB_UART, dtmp, event.size,
                         portMAX_DELAY); // portMAX_DELAY
         // ESP_LOGI(TAG, "[DATA EVT]: size:%d", event.size);
 
         if (event.size > 1) // ignore char 0x00
         {
-          if (0 == dtmp[0])
-          {
+          if (0 == dtmp[0]) {
             ptr = dtmp + 1;
             size = event.size - 1;
-          }
-          else
-          {
+          } else {
             ptr = dtmp;
             size = event.size;
           }
@@ -110,8 +101,7 @@ static void uart_event_task(void *pvParameters)
         }
 
         uart_flush_input(MB_UART);
-      }
-      break;
+      } break;
       // Event of HW FIFO overflow detected
       case UART_FIFO_OVF:
         ESP_LOGI(TAG, "hw fifo overflow");
@@ -147,10 +137,9 @@ static void uart_event_task(void *pvParameters)
       case UART_PATTERN_DET:
         uart_get_buffered_data_len(MB_UART, &buffered_size);
         int pos = uart_pattern_pop_pos(MB_UART);
-        ESP_LOGI(TAG, "[UART PATTERN DETECTED] pos: %d, buffered size: %d",
-                 pos, buffered_size);
-        if (pos == -1)
-        {
+        ESP_LOGI(TAG, "[UART PATTERN DETECTED] pos: %d, buffered size: %d", pos,
+                 buffered_size);
+        if (pos == -1) {
           // There used to be a UART_PATTERN_DET event, but the pattern
           // position queue is full so that it can not record the position. We
           // should set a larger queue size. As an example, we directly flush
@@ -171,13 +160,11 @@ static void uart_event_task(void *pvParameters)
 }
 
 BOOL xMBPortSerialInit(UCHAR ucPORT, ULONG ulBaudRate, UCHAR ucDataBits,
-                       eMBParity eParity, int tx_pin, int rx_pin, int en_pin)
-{
+                       eMBParity eParity, int tx_pin, int rx_pin, int en_pin) {
   esp_log_level_set(TAG, ESP_LOG_INFO);
   int lDataBit = UART_DATA_8_BITS;
   int lParity = UART_PARITY_DISABLE;
-  switch (ucDataBits)
-  {
+  switch (ucDataBits) {
   case 5:
     lDataBit = UART_DATA_5_BITS;
     break;
@@ -193,8 +180,7 @@ BOOL xMBPortSerialInit(UCHAR ucPORT, ULONG ulBaudRate, UCHAR ucDataBits,
   default:
     break;
   }
-  switch (eParity)
-  {
+  switch (eParity) {
   case MB_PAR_NONE:
     lParity = UART_PARITY_DISABLE;
     break;
@@ -251,8 +237,7 @@ static INLINE BOOL xMBPortSerialPutByte(CHAR ucByte) // const
   return TRUE;
 }
 
-static INLINE BOOL xMBPortSerialGetByte(CHAR *pucByte)
-{
+static INLINE BOOL xMBPortSerialGetByte(CHAR *pucByte) {
   /* Return the byte in the UARTs receive buffer. This function is called
    * by the protocol stack after pxMBFrameCBByteReceived( ) has been called.
    */
@@ -277,31 +262,26 @@ static void prvvUARTRxISR(void) { pxMBMasterFrameCBByteReceived(); }
 
 BOOL xMBMasterPortSerialInit(UCHAR ucPORT, ULONG ulBaudRate, UCHAR ucDataBits,
                              eMBParity eParity, int tx_pin, int rx_pin,
-                             int en_pin)
-{
+                             int en_pin) {
   return xMBPortSerialInit(ucPORT, ulBaudRate, ucDataBits, eParity, tx_pin,
                            rx_pin, en_pin);
 }
 
-void vMBMasterPortSerialEnable(BOOL xRxEnable, BOOL xTxEnable)
-{
+void vMBMasterPortSerialEnable(BOOL xRxEnable, BOOL xTxEnable) {
   vMBPortEnterCritical();
   UCHAR len = get_s_usLength() + 1;
 
-  if (xTxEnable && !xRxEnable)
-  {
+  if (xTxEnable && !xRxEnable) {
     for (int i = 0; i < len; i++)
       prvvUARTTxReadyISR();
   }
   vMBPortExitCritical();
 }
 
-BOOL xMBMasterPortSerialGetByte(CHAR *pucByte)
-{
+BOOL xMBMasterPortSerialGetByte(CHAR *pucByte) {
   return xMBPortSerialGetByte(pucByte);
 }
 
-BOOL xMBMasterPortSerialPutByte(const CHAR ucByte)
-{
+BOOL xMBMasterPortSerialPutByte(const CHAR ucByte) {
   return xMBPortSerialPutByte(ucByte);
 }

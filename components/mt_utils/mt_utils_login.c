@@ -16,16 +16,14 @@ static const char *TAG = "MT_UTILS_LOGIN";
 #define MT_UTILS_LOGIN_MAX_NONCE_STR_SIZE 32
 
 // global func ================================================================
-time_t mt_utils_login_get_time_now()
-{
+time_t mt_utils_login_get_time_now() {
   time_t now = 0;
   time(&now);
 
   return now;
 }
 
-char *mt_utils_login_time_to_ms_string(time_t time_in)
-{
+char *mt_utils_login_time_to_ms_string(time_t time_in) {
   char temp_str[MT_UTILS_LOGIN_MAX_TIME_STR_SIZE] = "";
   char *time_str = NULL;
 
@@ -37,8 +35,8 @@ char *mt_utils_login_time_to_ms_string(time_t time_in)
   return time_str;
 }
 
-uint8_t *mt_utils_login_get_time_rfc3339nano_string(time_t time_in, uint8_t *time_str_size)
-{
+uint8_t *mt_utils_login_get_time_rfc3339nano_string(time_t time_in,
+                                                    uint8_t *time_str_size) {
   struct tm timeinfo = {0};
   uint8_t *time_str = NULL;
   char temp_str[MT_UTILS_LOGIN_MAX_TIME_STR_SIZE] = "";
@@ -49,8 +47,7 @@ uint8_t *mt_utils_login_get_time_rfc3339nano_string(time_t time_in, uint8_t *tim
           timeinfo.tm_year + 1900, timeinfo.tm_mon + 1, timeinfo.tm_mday,
           timeinfo.tm_hour, timeinfo.tm_min, timeinfo.tm_sec);
   *time_str_size = strlen(temp_str);
-  if (*time_str_size > MT_UTILS_LOGIN_MAX_TIME_STR_SIZE)
-  {
+  if (*time_str_size > MT_UTILS_LOGIN_MAX_TIME_STR_SIZE) {
     ESP_LOGE(TAG, "%3d %s time_str_size too long", __LINE__, __func__);
     goto EXIT;
   }

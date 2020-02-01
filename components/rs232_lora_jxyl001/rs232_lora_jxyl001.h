@@ -5,16 +5,14 @@
 #include "rs232_dev.h"
 #include "stdio.h"
 
-typedef struct _rs232_lora_jxyl001_fog
-{
+typedef struct _rs232_lora_jxyl001_fog {
   int32_t addr;
   int64_t update_time;
   double votage;
   bool fog;
 } rs232_lora_jxyl001_fog;
 
-typedef struct _rs232_lora_jxyl001_temp
-{
+typedef struct _rs232_lora_jxyl001_temp {
   int32_t addr;
   int64_t update_time;
   double votage;
@@ -22,8 +20,7 @@ typedef struct _rs232_lora_jxyl001_temp
   double hum;
 } rs232_lora_jxyl001_temp;
 
-typedef struct _rs232_lora_jxyl001_devs
-{
+typedef struct _rs232_lora_jxyl001_devs {
   rs232_dev_config_t *rs232_config;
   int32_t fog_num;
   rs232_lora_jxyl001_fog **fogs;

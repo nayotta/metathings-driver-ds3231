@@ -8,9 +8,8 @@ static const char *TAG = "modbus_aew100_utils";
 
 // global func ================================================================
 
-esp_err_t
-modbus_aew100_util_check_get_data_req(int32_t *addr,
-                                            MtAew100__GetDataReq *req) {
+esp_err_t modbus_aew100_util_check_get_data_req(int32_t *addr,
+                                                MtAew100__GetDataReq *req) {
   if (req == NULL) {
     ESP_LOGE(TAG, "%4d %s req NULL", __LINE__, __func__);
     return ESP_ERR_INVALID_ARG;
@@ -29,7 +28,7 @@ modbus_aew100_util_check_get_data_req(int32_t *addr,
 
 esp_err_t
 modbus_aew100_util_check_get_current_req(int32_t *addr,
-                                               MtAew100__GetCurrentReq *req) {
+                                         MtAew100__GetCurrentReq *req) {
   if (req == NULL) {
     ESP_LOGE(TAG, "%4d %s req NULL", __LINE__, __func__);
     return ESP_ERR_INVALID_ARG;

@@ -18,24 +18,20 @@
 
 #define BUF_MAXLEN 64
 
-typedef enum
-{
+typedef enum {
   NO_LOG = 0,
   WITH_LOG = 1,
 } Airswitch_Log_Type;
 
-typedef enum
-{
+typedef enum {
   ADDRS_READ = 0x01,
 } Airswitch_Addrs_Read_Type; // cmd 01
 
-typedef enum
-{
+typedef enum {
   CTRL_READ = 0x01,
 } Airswitch_Ctrl_Read_Type; // cmd 02
 
-typedef enum
-{
+typedef enum {
   DATA_VOTAGE = 0x00,
   DATA_LEAK_CURRENT = 0x01,
   DATA_POWER = 0x02,
@@ -46,8 +42,7 @@ typedef enum
   DATA_QUALITY_H = 0x07,
 } Airswitch_Data_Read_Type; // cmd 03
 
-typedef enum
-{
+typedef enum {
   CFG_READ_VOTAGE_HIGH = 0x00,
   CFG_READ_VOTAGE_LOW = 0x01,
   CFG_READ_LEAK_CURRENT = 0x02,
@@ -57,13 +52,11 @@ typedef enum
   CFG_READ_MODEL = 0x06,
 } Airswitch_Cfg_Read_Type; // cmd 04
 
-typedef enum
-{
+typedef enum {
   SET_STATE = 0x05,
 } Airswitch_Set_State_Type; // cmd 05
 
-typedef enum
-{
+typedef enum {
   CFG_WRITE_VOTAGE_HIGH = 0x00,
   CFG_WRITE_VOTAGE_LOW = 0x01,
   CFG_WRITE_LEAK_CURRENT_HIGH = 0x02,
@@ -86,8 +79,7 @@ struct RetMsg_t // ret message struct
   USHORT retLen;            // ret len
 } * RetMsg;                 // global save point
 
-typedef struct _airswitch_warn_t
-{
+typedef struct _airswitch_warn_t {
   bool note_current;
   bool note_leak;
   bool note_votage_low;
@@ -103,8 +95,7 @@ typedef struct _airswitch_warn_t
   bool warn_short;
 } airswitch_warn_t;
 
-typedef struct _airswitch_data_t
-{
+typedef struct _airswitch_data_t {
   bool state;
   bool ctrl;
   double votage;
@@ -114,8 +105,7 @@ typedef struct _airswitch_data_t
   double current;
 } airswitch_data_t;
 
-typedef struct _airswitch_config_t
-{
+typedef struct _airswitch_config_t {
   double votage_high;
   double votage_low;
   double leak_current_high;

@@ -70,41 +70,41 @@ uint8_t *mt_nvs_read_byte_config(char *config_name, int *len) {
   // get byte size first
   err = nvs_get_blob(config_handle, config_name, NULL, (size_t *)len);
   switch (err) {
-    case ESP_OK:
-      if (*len <= 1) {
-        ESP_LOGE(TAG, "%s read size %s NULL", __func__, config_name);
-        return NULL;
-      }
-      break;
-    case ESP_ERR_NVS_NOT_FOUND:
-      ESP_LOGE(TAG, "%s read size %s not initialized!", __func__, config_name);
+  case ESP_OK:
+    if (*len <= 1) {
+      ESP_LOGE(TAG, "%s read size %s NULL", __func__, config_name);
       return NULL;
-      break;
-    default:
-      ESP_LOGE(TAG, "%s read size %s error", __func__, config_name);
-      return NULL;
+    }
+    break;
+  case ESP_ERR_NVS_NOT_FOUND:
+    ESP_LOGE(TAG, "%s read size %s not initialized!", __func__, config_name);
+    return NULL;
+    break;
+  default:
+    ESP_LOGE(TAG, "%s read size %s error", __func__, config_name);
+    return NULL;
   }
 
   // get byte
-  buf = malloc(*len);  // free in func
+  buf = malloc(*len); // free in func
   err = nvs_get_blob(config_handle, config_name, buf, (size_t *)len);
   switch (err) {
-    case ESP_OK:
-      if (*len <= 1) {
-        ESP_LOGE(TAG, "%s read %s NULL", __func__, config_name);
-        goto EXIT;
-      } else {
-        // ESP_LOGI(TAG, "%s read %s,len=%d", __func__, config_name, (int)*len);
-        return buf;
-      }
-      break;
-    case ESP_ERR_NVS_NOT_FOUND:
-      ESP_LOGE(TAG, "%s read %s not initialized!", __func__, config_name);
+  case ESP_OK:
+    if (*len <= 1) {
+      ESP_LOGE(TAG, "%s read %s NULL", __func__, config_name);
       goto EXIT;
-      break;
-    default:
-      ESP_LOGE(TAG, "%s read %s error", __func__, config_name);
-      goto EXIT;
+    } else {
+      // ESP_LOGI(TAG, "%s read %s,len=%d", __func__, config_name, (int)*len);
+      return buf;
+    }
+    break;
+  case ESP_ERR_NVS_NOT_FOUND:
+    ESP_LOGE(TAG, "%s read %s not initialized!", __func__, config_name);
+    goto EXIT;
+    break;
+  default:
+    ESP_LOGE(TAG, "%s read %s error", __func__, config_name);
+    goto EXIT;
   }
   return buf;
 
@@ -120,38 +120,38 @@ char *mt_nvs_read_string_config(char *config_name, size_t *len) {
 
   err = nvs_get_str(config_handle, config_name, NULL, len);
   switch (err) {
-    case ESP_OK:
-      if (*len > 0) {
-        ret_buf = malloc(*len);
-        // ESP_LOGI(TAG, "mt_nvs_read_string_config len=%d", *len);
-      } else {
-        return NULL;
-      }
-      break;
-    case ESP_ERR_NVS_NOT_FOUND:
-      ESP_LOGI(TAG, "READ config [%s] not initialized!", config_name);
+  case ESP_OK:
+    if (*len > 0) {
+      ret_buf = malloc(*len);
+      // ESP_LOGI(TAG, "mt_nvs_read_string_config len=%d", *len);
+    } else {
       return NULL;
-      break;
-    default:
-      ESP_LOGI(TAG, "READ config error () reading!\n");
-      return NULL;
+    }
+    break;
+  case ESP_ERR_NVS_NOT_FOUND:
+    ESP_LOGI(TAG, "READ config [%s] not initialized!", config_name);
+    return NULL;
+    break;
+  default:
+    ESP_LOGI(TAG, "READ config error () reading!\n");
+    return NULL;
   }
 
   err = nvs_get_str(config_handle, config_name, ret_buf, len);
   switch (err) {
-    case ESP_OK:
-      // ESP_LOGI(TAG, "READ config [%s]=[%s],len=%d", config_name,
-      // config_value,
-      //         (int)len);
-      return ret_buf;
-      break;
-    case ESP_ERR_NVS_NOT_FOUND:
-      ESP_LOGI(TAG, "READ config [%s] not initialized!", config_name);
-      return NULL;
-      break;
-    default:
-      ESP_LOGI(TAG, "READ config error () reading!\n");
-      return NULL;
+  case ESP_OK:
+    // ESP_LOGI(TAG, "READ config [%s]=[%s],len=%d", config_name,
+    // config_value,
+    //         (int)len);
+    return ret_buf;
+    break;
+  case ESP_ERR_NVS_NOT_FOUND:
+    ESP_LOGI(TAG, "READ config [%s] not initialized!", config_name);
+    return NULL;
+    break;
+  default:
+    ESP_LOGI(TAG, "READ config error () reading!\n");
+    return NULL;
   }
   return NULL;
 }
@@ -162,18 +162,18 @@ bool mt_nvs_read_int32_config(char *config_name, int32_t *config_value) {
 
   err = nvs_get_i32(config_handle, config_name, config_value);
   switch (err) {
-    case ESP_OK:
-      // ESP_LOGI(TAG, "READ config [%s]=[%d]", config_name,
-      // (int)*config_value);
-      return true;
-      break;
-    case ESP_ERR_NVS_NOT_FOUND:
-      ESP_LOGI(TAG, "READ config [%s] not initialized!", config_name);
-      return false;
-      break;
-    default:
-      ESP_LOGE(TAG, "READ config error () reading!\n");
-      return false;
+  case ESP_OK:
+    // ESP_LOGI(TAG, "READ config [%s]=[%d]", config_name,
+    // (int)*config_value);
+    return true;
+    break;
+  case ESP_ERR_NVS_NOT_FOUND:
+    ESP_LOGI(TAG, "READ config [%s] not initialized!", config_name);
+    return false;
+    break;
+  default:
+    ESP_LOGE(TAG, "READ config error () reading!\n");
+    return false;
   }
   return true;
 }
@@ -229,22 +229,22 @@ bool mt_nvs_write_byte_config(char *config_name, int len, uint8_t *buf) {
 
   err = nvs_set_blob(config_handle, config_name, buf, len);
   switch (err) {
-    case ESP_OK:
-      if (len <= 1) {
-        ESP_LOGE(TAG, "%s read %s NULL", __func__, config_name);
-        return false;
-      } else {
-        // ESP_LOGI(TAG, "%s read %s,len=%d", __func__, config_name, (int)len);
-        return true;
-      }
-      break;
-    case ESP_ERR_NVS_NOT_FOUND:
-      ESP_LOGE(TAG, "%s read %s not initialized!", __func__, config_name);
+  case ESP_OK:
+    if (len <= 1) {
+      ESP_LOGE(TAG, "%s read %s NULL", __func__, config_name);
       return false;
-      break;
-    default:
-      ESP_LOGE(TAG, "%s read %s error", __func__, config_name);
-      return false;
+    } else {
+      // ESP_LOGI(TAG, "%s read %s,len=%d", __func__, config_name, (int)len);
+      return true;
+    }
+    break;
+  case ESP_ERR_NVS_NOT_FOUND:
+    ESP_LOGE(TAG, "%s read %s not initialized!", __func__, config_name);
+    return false;
+    break;
+  default:
+    ESP_LOGE(TAG, "%s read %s error", __func__, config_name);
+    return false;
   }
 
   return true;

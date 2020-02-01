@@ -105,15 +105,15 @@ static bool mt_gpio_btn_init(mt_gpio_btn_t *btn_handle) {
 
 static void mt_gpio_btn_task_loop(mt_gpio_btn_t *btn_handle) {
   int level = 0;
-  uint32_t sum = 0;             // press count
-  uint32_t none_press_sum = 0;  // none press count for double press
-  int interval = 10;            // task interval do not less than 10
+  uint32_t sum = 0;            // press count
+  uint32_t none_press_sum = 0; // none press count for double press
+  int interval = 10;           // task interval do not less than 10
   int short_press_count =
-      (int)(btn_handle->short_press_interval / interval);  // short press count
+      (int)(btn_handle->short_press_interval / interval); // short press count
   int long_press_count =
-      (int)(btn_handle->long_press_interval / interval);  // long press count
-  int double_press_count = (int)(btn_handle->double_press_interval /
-                                 interval);  // double press count
+      (int)(btn_handle->long_press_interval / interval); // long press count
+  int double_press_count =
+      (int)(btn_handle->double_press_interval / interval); // double press count
 
   while (1) {
     // if (none_press_sum % 100 == 0) {

@@ -15,8 +15,7 @@ int ADDR2 = 2;
 Rs232_Lora_Jxyl001_Type TYPE2 = RS232_LORA_JXYL001_TYPE_YL103;
 
 // gloabal func ===============================================================
-void app_main()
-{
+void app_main() {
   esp_err_t err = ESP_OK;
   Rs232_Lora_Jxyl001_Devs *devs = NULL;
 
@@ -27,8 +26,7 @@ void app_main()
   devs->devs[1] = rs232_lora_jxyl001_default_new(ADDR2, TYPE2);
 
   err = rs232_lora_jxyl001_task(devs);
-  if (err != ESP_OK)
-  {
+  if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s rs232_lora_jxyl001_task failed", __LINE__, __func__);
     return;
   }

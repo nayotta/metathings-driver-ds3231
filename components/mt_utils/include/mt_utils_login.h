@@ -15,7 +15,8 @@ time_t mt_utils_login_get_time_now();
 
 char *mt_utils_login_time_to_ms_string(time_t time_in);
 
-uint8_t *mt_utils_login_get_time_rfc3339nano_string(time_t time_in, uint8_t *time_str_size);
+uint8_t *mt_utils_login_get_time_rfc3339nano_string(time_t time_in,
+                                                    uint8_t *time_str_size);
 
 uint32_t mt_utils_login_get_nonce();
 

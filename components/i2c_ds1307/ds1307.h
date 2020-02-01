@@ -10,9 +10,9 @@
 #ifndef __DS1307_H__
 #define __DS1307_H__
 
+#include <i2cdev.h>
 #include <stdbool.h>
 #include <time.h>
-#include <i2cdev.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -23,12 +23,11 @@ extern "C" {
 /**
  * Squarewave frequency
  */
-typedef enum
-{
-    DS1307_1HZ = 0, //!< 1 Hz
-    DS1307_4096HZ,  //!< 4096 Hz
-    DS1307_8192HZ,  //!< 8192 Hz
-    DS1307_32768HZ  //!< 32768 Hz
+typedef enum {
+  DS1307_1HZ = 0, //!< 1 Hz
+  DS1307_4096HZ,  //!< 4096 Hz
+  DS1307_8192HZ,  //!< 8192 Hz
+  DS1307_32768HZ  //!< 32768 Hz
 } ds1307_squarewave_freq_t;
 
 /**
@@ -39,7 +38,8 @@ typedef enum
  * @param scl_gpio SCL GPIO
  * @return `ESP_OK` on success
  */
-esp_err_t ds1307_init_desc(i2c_dev_t *dev, i2c_port_t port, gpio_num_t sda_gpio, gpio_num_t scl_gpio);
+esp_err_t ds1307_init_desc(i2c_dev_t *dev, i2c_port_t port, gpio_num_t sda_gpio,
+                           gpio_num_t scl_gpio);
 
 /**
  * Free device descriptor
@@ -102,7 +102,8 @@ esp_err_t ds1307_is_squarewave_enabled(i2c_dev_t *dev, bool *sqw_en);
  * @param freq Frequency
  * @return `ESP_OK` on success
  */
-esp_err_t ds1307_set_squarewave_freq(i2c_dev_t *dev, ds1307_squarewave_freq_t freq);
+esp_err_t ds1307_set_squarewave_freq(i2c_dev_t *dev,
+                                     ds1307_squarewave_freq_t freq);
 
 /**
  * @brief Get current square-wave oscillator frequency
@@ -110,7 +111,8 @@ esp_err_t ds1307_set_squarewave_freq(i2c_dev_t *dev, ds1307_squarewave_freq_t fr
  * @param[out] sqw_freq Frequency
  * @return `ESP_OK` on success
  */
-esp_err_t ds1307_get_squarewave_freq(i2c_dev_t *dev, ds1307_squarewave_freq_t *sqw_freq);
+esp_err_t ds1307_get_squarewave_freq(i2c_dev_t *dev,
+                                     ds1307_squarewave_freq_t *sqw_freq);
 
 /**
  * @brief Get current output level of the SQW/OUT pin
@@ -137,7 +139,8 @@ esp_err_t ds1307_set_output(i2c_dev_t *dev, bool value);
  * @param len Bytes to read, 1..56
  * @return `ESP_OK` on success
  */
-esp_err_t ds1307_read_ram(i2c_dev_t *dev, uint8_t offset, uint8_t *buf, uint8_t len);
+esp_err_t ds1307_read_ram(i2c_dev_t *dev, uint8_t offset, uint8_t *buf,
+                          uint8_t len);
 
 /**
  * @brief Write buffer to RTC RAM
@@ -147,8 +150,8 @@ esp_err_t ds1307_read_ram(i2c_dev_t *dev, uint8_t offset, uint8_t *buf, uint8_t 
  * @param len Bytes to write, 1..56
  * @return `ESP_OK` on success
  */
-esp_err_t ds1307_write_ram(i2c_dev_t *dev, uint8_t offset, uint8_t *buf, uint8_t len);
-
+esp_err_t ds1307_write_ram(i2c_dev_t *dev, uint8_t offset, uint8_t *buf,
+                           uint8_t len);
 
 #ifdef __cplusplus
 }
