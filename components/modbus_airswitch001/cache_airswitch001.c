@@ -105,7 +105,9 @@ static void cache_print(Cache_t *cache) {
   }
 }
 
-esp_err_t cache_get(Cache_t *cache) {
+Cache_t *cache_get() {
+  esp_err_t err = ESP_OK;
+  Cache_t *cache = cache_new();
   bool bool_ret = false;
   char key[128];
   int i;
@@ -113,13 +115,15 @@ esp_err_t cache_get(Cache_t *cache) {
   bool_ret = mt_nvs_read_int32_config("num_master", &cache->num_master);
   if (bool_ret == false) {
     ESP_LOGE(TAG, "%4d %s get num_master failed", __LINE__, __func__);
-    return ESP_ERR_INVALID_RESPONSE;
+    err = ESP_ERR_INVALID_RESPONSE;
+    goto EXIT;
   }
 
   if (cache->num_master <= 0) {
     ESP_LOGE(TAG, "%4d %s num_master:%d error", __LINE__, __func__,
              cache->num_master);
-    return ESP_ERR_INVALID_RESPONSE;
+    err = ESP_ERR_INVALID_RESPONSE;
+    goto EXIT;
   }
 
   cache->masters = malloc(cache->num_master * sizeof(int));
@@ -129,20 +133,23 @@ esp_err_t cache_get(Cache_t *cache) {
     bool_ret = mt_nvs_read_int32_config(key, &cache->masters[i]);
     if (bool_ret == false) {
       ESP_LOGE(TAG, "%4d %s get master[%d] failed", __LINE__, __func__, i);
-      return ESP_ERR_INVALID_RESPONSE;
+      err = ESP_ERR_INVALID_RESPONSE;
+      goto EXIT;
     }
   }
 
   bool_ret = mt_nvs_read_int32_config("num_slaver", &cache->num_slaver);
   if (bool_ret == false) {
     ESP_LOGE(TAG, "%4d %s get num_slaver failed", __LINE__, __func__);
-    return ESP_ERR_INVALID_RESPONSE;
+    err = ESP_ERR_INVALID_RESPONSE;
+    goto EXIT;
   }
 
   if (cache->num_slaver <= 0) {
     ESP_LOGE(TAG, "%4d %s num_slaver:%d error", __LINE__, __func__,
              cache->num_slaver);
-    return ESP_ERR_INVALID_RESPONSE;
+    err = ESP_ERR_INVALID_RESPONSE;
+    goto EXIT;
   }
 
   cache->slavers = malloc(cache->num_slaver * sizeof(int));
@@ -152,11 +159,18 @@ esp_err_t cache_get(Cache_t *cache) {
     bool_ret = mt_nvs_read_int32_config(key, &cache->slavers[i]);
     if (bool_ret == false) {
       ESP_LOGE(TAG, "%4d %s get slaver[%d] failed", __LINE__, __func__, i);
-      return ESP_ERR_INVALID_RESPONSE;
+      err = ESP_ERR_INVALID_RESPONSE;
+      goto EXIT;
     }
   }
 
-  return ESP_OK;
+EXIT:
+  if (err != ESP_OK) {
+    cache_free(cache);
+    cache = NULL;
+  }
+
+  return cache;
 }
 
 esp_err_t cache_set(Cache_t *cache) {
@@ -225,13 +239,39 @@ esp_err_t cache_set(Cache_t *cache) {
   return ESP_OK;
 }
 
-esp_err_t cache_get_and_check(Cache_t *cache, int num_master, int num_slaver) {
-  esp_err_t err = ESP_OK;
+Cache_t *cache_new() {
+  Cache_t *cache = malloc(sizeof(Cache_t));
+  cache->num_master = 0;
+  cache->num_slaver = 0;
+  cache->masters = NULL;
+  cache->slavers = NULL;
 
-  err = cache_get(cache);
-  if (err != ESP_OK) {
+  return cache;
+}
+
+void cache_free(Cache_t *cache) {
+  if (cache != NULL) {
+    if (cache->masters != NULL) {
+      free(cache->masters);
+    }
+
+    if (cache->slavers != NULL) {
+      free(cache->slavers);
+    }
+
+    free(cache);
+    cache = NULL;
+  }
+}
+
+Cache_t *cache_get_and_check(int num_master, int num_slaver) {
+  esp_err_t err = ESP_OK;
+  Cache_t *cache = NULL;
+
+  cache = cache_get();
+  if (cache == NULL) {
     ESP_LOGE(TAG, "%4d %s get cache failed", __LINE__, __func__);
-    return err;
+    return NULL;
   }
 
   if (cache->num_master >= num_master) {
@@ -242,7 +282,7 @@ esp_err_t cache_get_and_check(Cache_t *cache, int num_master, int num_slaver) {
     cache->num_slaver = num_slaver;
   }
 
-  return ESP_OK;
+  return cache;
 }
 
 bool cahce_diff(Cache_t *cache1, Cache_t *cache2) {
@@ -376,7 +416,7 @@ int *cache_convert(Cache_t *cache, int *num) {
 
 static void cache_loop() {
   esp_err_t err = ESP_OK;
-  Cache_t *cache = malloc(sizeof(Cache_t));
+  Cache_t *cache = cache_new();
 
 RESTART:
   cache_from_modbus(1, cache);
@@ -419,36 +459,34 @@ esp_err_t cache_task() {
 
 esp_err_t cache_get_target(int addr_in, UCHAR *target) {
   esp_err_t err = ESP_OK;
-  Cache_t cache;
-  cache.masters = NULL;
-  cache.slavers = NULL;
+  Cache_t *cache = NULL;
 
-  err = cache_get(&cache);
-  if (err != ESP_OK) {
+  cache = cache_get();
+  if (cache == NULL) {
     ESP_LOGE(TAG, "%4d %s cache_get failed", __LINE__, __func__);
     err = ESP_ERR_INVALID_ARG;
     goto EXIT;
   }
 
   if (addr_in <= NUM_MASTER) {
-    if (addr_in <= cache.num_master) {
-      *target = cache.masters[addr_in - 1];
+    if (addr_in <= cache->num_master) {
+      *target = cache->masters[addr_in - 1];
     } else {
       ESP_LOGE(TAG,
                "%4d %s addr error, addr_in:%d, NUM_MASTER:%d, cache_master:%d",
-               __LINE__, __func__, addr_in, NUM_MASTER, cache.num_master);
+               __LINE__, __func__, addr_in, NUM_MASTER, cache->num_master);
       err = ESP_ERR_INVALID_ARG;
       goto EXIT;
     }
   } else if (addr_in <= NUM_MASTER + NUM_SLAVER) {
-    if (addr_in <= NUM_MASTER + cache.num_slaver) {
-      *target = cache.slavers[addr_in - NUM_MASTER - 1];
+    if (addr_in <= NUM_MASTER + cache->num_slaver) {
+      *target = cache->slavers[addr_in - NUM_MASTER - 1];
     } else {
       ESP_LOGE(TAG,
                "%4d %s addr error, addr_in:%d, NUM_MASTER:%d, NUM_SLAVER:%d, "
                "cache_slaver:%d",
                __LINE__, __func__, addr_in, NUM_MASTER, NUM_MASTER,
-               cache.num_slaver);
+               cache->num_slaver);
       err = ESP_ERR_INVALID_ARG;
       goto EXIT;
     }
@@ -460,11 +498,7 @@ esp_err_t cache_get_target(int addr_in, UCHAR *target) {
   }
 
 EXIT:
-  if (cache.masters != NULL)
-    free(cache.masters);
-  if (cache.slavers != NULL)
-    free(cache.slavers);
-
+  cache_free(cache);
   return err;
 }
 

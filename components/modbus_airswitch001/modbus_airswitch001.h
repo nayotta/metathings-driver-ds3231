@@ -121,6 +121,7 @@ eMBErrorCode modbus_airswitch001_init(UCHAR ucPort, ULONG ulBaudRate,
 esp_err_t mt_modbus_airswitch001_task(int tx_pin, int rx_pin, int en_pin);
 
 // single api =================================================================
+
 // cmd 01 read addrs
 esp_err_t mt_airswitch001_get_addrs(UCHAR slaveAddr, USHORT *addrs);
 
@@ -154,6 +155,7 @@ esp_err_t mt_airswitch001_set_config(UCHAR slaveAddr,
                                      USHORT target, USHORT value);
 
 // complex api ================================================================
+
 esp_err_t mt_airswitch001_get_datas(UCHAR slaveAddr, UCHAR target, bool *state,
                                     bool *ctrl, double *votage,
                                     double *leak_current, double *power,

@@ -407,18 +407,16 @@ esp_err_t mt_airswitch001_get_state(UCHAR slaveAddr, USHORT target,
   struct RetMsg_t cmd_ret_payload;
   UCHAR real_target = 0;
 
-  printf("debug2-1 free=%d", esp_get_free_heap_size());
   err = cache_get_target(target, &real_target);
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s cache_get_target failed", __LINE__, __func__);
     return ESP_ERR_INVALID_ARG;
   }
-  printf("debug2-2 free=%d", esp_get_free_heap_size());
 
   // cmd process
   err = modbus_airswitch001_sync_cmd_01(slaveAddr, real_target, 1,
                                         &cmd_ret_payload);
-  printf("debug2-3 free=%d", esp_get_free_heap_size());
+
   // ret check
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s addr:%d target:%d real_target:%d failed", __LINE__,
@@ -801,7 +799,6 @@ esp_err_t mt_airswitch001_get_datas(UCHAR slaveAddr, UCHAR target, bool *state,
   bool bool_value = false;
 
   // state
-  printf("debug1-1 free=%d", esp_get_free_heap_size());
   err = mt_airswitch001_get_state(slaveAddr, target, &bool_value);
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s addr:%d target:%d state failed code:%d", __LINE__,
@@ -809,7 +806,6 @@ esp_err_t mt_airswitch001_get_datas(UCHAR slaveAddr, UCHAR target, bool *state,
     return ESP_ERR_INVALID_RESPONSE;
   }
   *state = bool_value;
-  printf("debug1-2 free=%d", esp_get_free_heap_size());
 
   // ctrl
   err = mt_airswitch001_get_ctrl(slaveAddr, target, &bool_value);
@@ -993,7 +989,7 @@ esp_err_t mt_airswitch001_set_configs(UCHAR slaveAddr, UCHAR target,
   if (temp_high != NULL) {
     err = mt_airswitch001_set_config(slaveAddr, CFG_WRITE_TEMP_HIGH, target,
                                      (int)(*temp_high * 10));
-    printf("debug origin:%f new:%d", *temp_high, (int)(*temp_high * 10));
+    printf("debug origin:%f new:%d\n", *temp_high, (int)(*temp_high * 10));
     if (err != ESP_OK) {
       ESP_LOGE(TAG, "%4d %s set CFG_WRITE_TEMP_HIGH failed", __LINE__,
                __func__);

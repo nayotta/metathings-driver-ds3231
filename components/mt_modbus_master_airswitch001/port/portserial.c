@@ -19,7 +19,7 @@
  * File: $Id: portserial.c,v 1.1 2006/08/22 21:35:13 wolti Exp $
  */
 
-#include "mt_port.h"
+#include "mt_port_airswitch001.h"
 
 /* ----------------------- Modbus includes ----------------------------------*/
 #include "mt_mb_airswitch001.h"

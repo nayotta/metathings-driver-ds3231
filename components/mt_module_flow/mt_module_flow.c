@@ -232,10 +232,9 @@ void mt_module_flow_task(mt_module_flow_t *module_flow, char *task_name) {
 
 mt_module_flow_t *mt_module_flow_new(int module_index, int flow_index,
                                      mt_module_http_t *module_http) {
+  esp_err_t err = ESP_OK;
   mt_module_flow_t *module_flow = malloc(sizeof(mt_module_flow_t));
   char *flow_name = NULL;
-
-  mt_module_flow_manage_add(module_flow);
 
   flow_name = mt_nvs_config_get_flow_name(module_index, flow_index);
   if (flow_name == NULL) {
@@ -259,6 +258,13 @@ mt_module_flow_t *mt_module_flow_new(int module_index, int flow_index,
   module_flow->config_ack = true;
   module_flow->data_ack = false;
   module_flow->data_id = NULL;
+
+  err = mt_module_flow_manage_add(module_flow);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s mt_module_flow_manage_add module:%d flow:%d failed",
+             __LINE__, __func__, module_index, flow_index);
+    return NULL;
+  }
 
   mt_module_flow_task(module_flow, "MT_MODULE_FLOW");
 
@@ -331,14 +337,44 @@ uint8_t *mt_module_flow_pack_frame(module_struct_group_t *value_in,
   push_frame_to_flow_request__pack(&frame_req, frame_req_buf);
 
   // free buf
-  /*
-  for (int i = 0; i < frame_num; i++)
-  {
-    free(frame_req.frame->data->fields[i]->value);
+  for (int i = 0; i < frame_num; i++) {
+    google__protobuf__value__free_unpacked(
+        frame_req.frame->data->fields[i]->value, NULL);
     free(frame_req.frame->data->fields[i]);
   }
   free(frame_req.frame->data->fields);
-  */
 
   return frame_req_buf;
+}
+
+module_struct_t *mt_module_flow_struct_new() {
+  module_struct_t *value = malloc(sizeof(module_struct_t));
+
+  value->key = NULL;
+  value->type = GOOGLE__PROTOBUF__VALUE__KIND_NUMBER_VALUE;
+  value->number_value = 0;
+
+  return value;
+}
+
+void mt_module_flow_struct_free(module_struct_group_t *value) {
+  if (value == NULL) {
+    ESP_LOGE(TAG, "%4d %s struct is null", __LINE__, __func__);
+    return;
+  }
+
+  for (int i = 0; i < value->size; i++) {
+    if (value->value[i] != NULL) {
+      if (value->value[i]->key != NULL) {
+        free(value->value[i]->key);
+      }
+      if (value->value[i]->type == GOOGLE__PROTOBUF__VALUE__KIND_STRING_VALUE) {
+        if (value->value[i]->string_value != NULL) {
+          free(value->value[i]->string_value);
+        }
+      }
+      free(value->value[i]);
+    }
+  }
+  free(value->value);
 }

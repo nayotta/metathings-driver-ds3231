@@ -37,7 +37,6 @@ static const char *TAG = "MT_MODBUS_MASTER_PORTEVENT";
 static xQueueHandle xQueueMasterHdl;    // for mb.c
 static xQueueHandle xQueueMasterResHdl; // for response match
 static SemaphoreHandle_t SemaphorMasterHdl = NULL;
-;
 
 BOOL xMBMasterPortEventInit(void) {
   BOOL bStatus = FALSE;
@@ -169,4 +168,9 @@ void vMBMasterRunResRelease(void) {
   return;
 }
 
-void vMBMasterOsResInit(void) { SemaphorMasterHdl = xSemaphoreCreateMutex(); }
+void vMBMasterOsResInit(void) {
+  SemaphorMasterHdl = xSemaphoreCreateMutex();
+  if (SemaphorMasterHdl == NULL) {
+    ESP_LOGE(TAG, "%4d %s xSemaphoreCreateMutex failed", __LINE__, __func__);
+  }
+}

@@ -52,4 +52,8 @@ mt_module_flow_t *mt_module_flow_new(int module_index, int flow_index,
 uint8_t *mt_module_flow_pack_frame(module_struct_group_t *value_in,
                                    char *session_id, int *size_out);
 
+module_struct_t *mt_module_flow_struct_new();
+
+void mt_module_flow_struct_free(module_struct_group_t *value);
+
 #endif

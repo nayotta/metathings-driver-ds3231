@@ -15,15 +15,19 @@ struct cache_t {
 
 typedef struct cache_t Cache_t;
 
-esp_err_t cache_get(Cache_t *cache);
+Cache_t *cache_get();
 
 esp_err_t cache_set(Cache_t *cache);
+
+Cache_t *cache_new();
+
+void cache_free(Cache_t *cache);
 
 bool cahce_diff(Cache_t *cache1, Cache_t *cache2);
 
 void cache_from_modbus(UCHAR slaveAddr, Cache_t *cache);
 
-esp_err_t cache_get_and_check(Cache_t *cache, int num_master, int num_slaver);
+Cache_t *cache_get_and_check(int num_master, int num_slaver);
 
 int *cache_convert(Cache_t *cache, int *num);
 
