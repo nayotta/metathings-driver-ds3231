@@ -1334,7 +1334,7 @@ RESTART:
                                    mt_utils_session_gen_major_session());
 
   // debug here
-  module_http->session_id = 12345678;
+  // module_http->session_id = 12345678;
   while (true) {
     if (heartbeat_count <= 0) {
       ESP_LOGE(TAG, "%4d %s heartbeat_count get limit, restart loop", __LINE__,
