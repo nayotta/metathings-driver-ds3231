@@ -38,6 +38,7 @@ module_t *mt_module_http_utils_motule_t_init() {
   module = malloc(sizeof(module_t));
   module->id = NULL;
   module->state = NULL;
+  module->deviceID = NULL;
   module->endpoint = NULL;
   module->component = NULL;
   module->name = NULL;
@@ -69,6 +70,9 @@ esp_err_t mt_module_http_utils_free_module(module_t *module) {
   if (module->state != NULL)
     free(module->state);
 
+  if (module->deviceID != NULL)
+    free(module->deviceID);
+
   if (module->endpoint != NULL)
     free(module->endpoint);
 
@@ -80,6 +84,9 @@ esp_err_t mt_module_http_utils_free_module(module_t *module) {
 
   if (module->alias != NULL)
     free(module->alias);
+
+  if (module->heartbeat_at != NULL)
+    free(module->heartbeat_at);
 
   free(module);
 
@@ -356,6 +363,9 @@ esp_err_t mt_module_http_utils_free_token(token_t *token) {
   if (token->id != NULL)
     free(token->id);
 
+  if (token->issued_at != NULL)
+    free(token->issued_at);
+
   if (token->entity != NULL)
     mt_module_http_utils_free_entity(token->entity);
 
@@ -373,6 +383,9 @@ esp_err_t mt_module_http_utils_free_token(token_t *token) {
 
   if (token->groups != NULL)
     free(token->groups);
+
+  free(token);
+  token = NULL;
 
   return ESP_OK;
 }
@@ -422,20 +435,15 @@ token_t *mt_module_http_utils_parse_token_res(char *content_in) {
   }
 
 ERROR:
-  item = NULL;
-  tkn_item = NULL;
-  // free(root);
-  // cJSON_Delete(root);
+  cJSON_Delete(root);
 
   if (err != ESP_OK) {
     if (tkn_out != NULL) {
       mt_module_http_utils_free_token(tkn_out);
     }
-
     return NULL;
-  } else {
-    return tkn_out;
   }
+  return tkn_out;
 }
 
 module_t *mt_module_http_uitls_parse_module_res(char *content_in) {
@@ -489,17 +497,15 @@ module_t *mt_module_http_uitls_parse_module_res(char *content_in) {
   }
 
 ERROR:
-  // cJSON_Delete(root);
+  cJSON_Delete(root);
 
   if (err != ESP_OK) {
     if (mdl_out != NULL) {
       mt_module_http_utils_free_module(mdl_out);
     }
-
     return NULL;
-  } else {
-    return mdl_out;
   }
+  return mdl_out;
 }
 
 push_frame_res_t *mt_module_http_utils_parse_push_frame_res(char *content_in) {
@@ -537,17 +543,15 @@ push_frame_res_t *mt_module_http_utils_parse_push_frame_res(char *content_in) {
   }
 
 ERROR:
-  // cJSON_Delete(root);
+  cJSON_Delete(root);
 
   if (err != ESP_OK) {
     if (res_out != NULL) {
       mt_module_http_utils_free_push_frame_res(res_out);
     }
-
     return NULL;
-  } else {
-    return res_out;
   }
+  return res_out;
 }
 
 object_t *mt_module_http_utils_parse_object_res(char *content_in) {

@@ -94,8 +94,10 @@ RESTART:
 
   // http create push_flow session first
   while (true) {
-    if (module_flow->session != NULL)
+    if (module_flow->session != NULL) {
       free(module_flow->session);
+      module_flow->session = NULL;
+    }
 
     flow_res = mt_module_http_actions_push_frame_to_flow(
         module_flow->module_http, module_flow->flow, module_flow->config_ack,
@@ -115,7 +117,7 @@ RESTART:
       break;
     }
 
-    vTaskDelay(module_flow->push_frame_interval / portTICK_PERIOD_MS);
+    vTaskDelay(module_flow->create_push_frame_interval / portTICK_PERIOD_MS);
   }
 
   // ping pong

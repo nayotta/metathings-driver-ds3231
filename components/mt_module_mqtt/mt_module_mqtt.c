@@ -12,6 +12,7 @@
 #include "stream_frame.pb-c.h"
 
 // global define ==============================================================
+
 static const char *TAG = "MT_MODULE_MQTT";
 
 extern char Module_id[128];
@@ -20,6 +21,7 @@ extern uint64_t Session_id;
 mt_module_mqtt_t *app_handle = NULL;
 
 // static func ================================================================
+
 static void mt_module_mqtt_handle_unarycall(
     char *topic, Ai__Metathings__Component__DownStreamFrame *msg) {
   uint64_t session_id = 0;
@@ -177,21 +179,26 @@ void mt_module_mqtt_handle(char *topic, void *buf, int size) {
   path = mt_mqtt_utils_get_path_from_topic(topic);
   if (path == NULL) {
     ESP_LOGE(TAG, "%4d %s get unexcept topic:%s", __LINE__, __func__, topic);
-    return;
+    goto EXIT;
   }
 
   if (strcmp(path, "proxy") == 0) {
     ESP_LOGI(TAG, "%4d %s get proxy message", __LINE__, __func__);
     mt_module_mqtt_proxy_process(topic, buf, size);
-    return;
+    goto EXIT;
   }
 
   if (strcmp(path, "flow_channel") == 0) {
     ESP_LOGI(TAG, "%4d %s get flow message", __LINE__, __func__);
     mt_module_flow_manage_mqtt_process(topic, buf, size);
-    return;
+    goto EXIT;
   }
 
   ESP_LOGE(TAG, "%4d %s unexcept path recieve:%s", __LINE__, __func__, path);
+  return;
+
+EXIT:
+  if (path != NULL)
+    free(path);
   return;
 }

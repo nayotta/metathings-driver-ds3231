@@ -4,10 +4,12 @@
 
 #include "mt_mqtt_utils.h"
 
-// global value ===============================================================
+// global define ==============================================================
+
 static const char *TAG = "MT_MQTT_UTILS";
 
 // global func ================================================================
+
 esp_err_t mt_mqtt_utils_get_session_id_from_topic(char *topic,
                                                   uint64_t *session_id) {
   // mt/modules/%s/proxy/sessions/%s/upstream/

@@ -55,6 +55,8 @@ esp_err_t mt_hmac_sha256_byte(const uint8_t *key, int key_size,
   hmac_sha256((uint8_t *)key_byte, 32, buf, buf_size, hmac);
 
   free(buf);
+  if (key_byte != NULL)
+    free(key_byte);
   return ESP_OK;
 }
 
