@@ -1,4 +1,4 @@
-idf_component_register(SRCS "mb.c" 
+idf_component_register(SRCS "mb_airswitch001.c" 
                             "functions/mt_mbfunc_airswitch001.c" 
                             "port/portevent.c"
                             "port/portothers.c"

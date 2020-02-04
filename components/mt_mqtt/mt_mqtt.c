@@ -23,9 +23,9 @@
 #include "nvs_flash.h"
 
 // global define ==============================================================
+
 #define MQTT_USE_LAN
 #ifdef MQTT_USE_LAN
-
 #endif
 
 #ifdef MQTT_USE_AIR720H
@@ -33,18 +33,21 @@
 #endif
 
 // global value ===============================================================
+
 static const char *TAG = "MT_MQTT";
 
 long unsigned int App_Start_Time = 0;  // task start time
 int Restart_Times = -1;                // task start count
 
 // static value ===============================================================
+
 static int Keep_Count = 0;                       // keepalive count
 static int Keep_Count_Limit = 3;                 // keepalive limit
 static int keepalive_Interval = 30;              // keepalive count 90s
 static long unsigned int LastKeepAliveTime = 0;  // keepalive record
 
 // static func ===============================================================
+
 static TaskFunction_t mt_mqtt_loop(void *pvParameters) {
 RESET:
   ESP_LOGI(TAG, "%d %s start", __LINE__, __func__);

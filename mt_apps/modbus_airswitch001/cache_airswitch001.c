@@ -265,7 +265,6 @@ void cache_free(Cache_t *cache) {
 }
 
 Cache_t *cache_get_and_check(int num_master, int num_slaver) {
-  esp_err_t err = ESP_OK;
   Cache_t *cache = NULL;
 
   cache = cache_get();
