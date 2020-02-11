@@ -399,6 +399,7 @@ RESTART:
            slaveAddr);
 }
 
+/*
 int *cache_convert(Cache_t *cache, int *num) {
   *num = cache->num_master + cache->num_slaver;
   int *addr = malloc(*num * sizeof(int));
@@ -411,7 +412,7 @@ int *cache_convert(Cache_t *cache, int *num) {
   }
 
   return addr;
-}
+}*/
 
 static void cache_loop() {
   esp_err_t err = ESP_OK;

@@ -13,6 +13,7 @@
 #include "modbus_airswitch001.h"
 
 // global define ==============================================================
+
 static const char *TAG = "MODBUS_airswitch001";
 static SemaphoreHandle_t SemaphorMasterHdl = NULL;
 static int Lock_Timeout = 50;
@@ -28,6 +29,7 @@ extern int NUM_SLAVER;
 #define CMD_06_PARM_WRITE 0x06
 
 // static func ================================================================
+
 static void modbus_lock_init() {
   SemaphorMasterHdl = xSemaphoreCreateMutex();
   return;
@@ -290,36 +292,6 @@ EXIT:
   return errorCode;
 }
 
-/*
-// sync cmd 05
-static eMBMasterReqErrCode modbus_airswitch001_sync_cmd_05(
-    UCHAR slaveAddr, USHORT target, USHORT num, struct RetMsg_t *ret)
-{
-  eMBMasterReqErrCode errorCode = MB_MRE_NO_ERR;
-
-  if (modbus_lock_take(Lock_Timeout) == false)
-  {
-    errorCode = MB_MRE_MASTER_BUSY;
-    ESP_LOGE(TAG, "%4d eMBsend get lock timeout", __LINE__);
-    return errorCode;
-  }
-
-  errorCode = eMBMasterAirswitchReq05(slaveAddr, target, num, 1);
-  if (errorCode != MB_MRE_NO_ERR)
-  {
-    ESP_LOGE(TAG, "%4d eMBsend error", __LINE__);
-    goto EXIT;
-  }
-
-  ret->recvCmd = RetMsg->recvCmd;
-  ret->retLen = RetMsg->retLen;
-  memcpy(ret->retBuf, RetMsg->retBuf, RetMsg->retLen);
-
-EXIT:
-  modbus_lock_release();
-  return errorCode;
-}*/
-
 // sync cmd 06
 static eMBMasterReqErrCode
 modbus_airswitch001_sync_cmd_06(UCHAR slaveAddr, UCHAR subCmd, UCHAR target,
@@ -347,8 +319,11 @@ EXIT:
   return errorCode;
 }
 
+// global func ================================================================
+
 esp_err_t mt_modbus_airswitch001_task(int tx_pin, int rx_pin, int en_pin) {
   esp_err_t err = ESP_OK;
+  Cache_t *cache = NULL;
 
   err = modbus_airswitch001_init(2, 19200, 0, tx_pin, rx_pin, en_pin);
   if (err != ESP_OK) {
@@ -359,6 +334,7 @@ esp_err_t mt_modbus_airswitch001_task(int tx_pin, int rx_pin, int en_pin) {
   xTaskCreate(modbus_loop, "mt_modbus_task", 1024 * 8, NULL, 12, NULL);
 
   // cache task
+  if(cache_get() != NULL)
   cache_task();
 
 EXIT:

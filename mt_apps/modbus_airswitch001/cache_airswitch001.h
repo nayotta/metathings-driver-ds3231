@@ -29,7 +29,7 @@ void cache_from_modbus(UCHAR slaveAddr, Cache_t *cache);
 
 Cache_t *cache_get_and_check(int num_master, int num_slaver);
 
-int *cache_convert(Cache_t *cache, int *num);
+// int *cache_convert(Cache_t *cache, int *num);
 
 esp_err_t cache_get_target(int addr_in, UCHAR *target);
 
