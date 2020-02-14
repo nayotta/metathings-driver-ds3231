@@ -5,9 +5,11 @@
 #include "mt_nvs_storage.h"
 
 // global config ==============================================================
+
 static const char *TAG = "MT_NVS_CONFIG";
 
 // global func ================================================================
+
 esp_err_t mt_nvs_config_get_host_config(mt_nvs_host_t *host_out) {
   size_t size = 0;
 

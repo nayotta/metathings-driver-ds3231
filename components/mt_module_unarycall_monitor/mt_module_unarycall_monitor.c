@@ -36,15 +36,17 @@ void mt_module_unarycall_monitor_get_state_handle(
   temp_state = mt_sys_monitor_get_state();
   if (temp_state == NULL) {
     ESP_LOGE(TAG, "%4d %s mt_sys_monitor_get_state NULL", __LINE__, __func__);
-    res.code = MT_ERR_INVALID_RESPONSE;
-    goto EXIT;
+    err = MT_ERR_INVALID_RESPONSE;
+    goto ERROR;
   }
   res.state->startup = temp_state->startup;
   res.state->restartcount = temp_state->restart_count;
   res.state->free = temp_state->free;
   res.state->errorcount = temp_state->error_count;
 
+ERROR:
   // marshall res
+  res.code = err;
   res_size = mt_sys_monitor__get_state_res__get_packed_size(&res);
   res_buf = malloc(res_size);
   mt_sys_monitor__get_state_res__pack(&res, res_buf);
@@ -62,12 +64,18 @@ void mt_module_unarycall_monitor_get_state_handle(
     goto EXIT;
   }
 
-  ESP_LOGI(TAG,
-           "%4d %s session:%lld get state code:%d startup:%d restart_count:%d "
-           "free:%.2f error_count:%d",
-           __LINE__, __func__, msg->unary_call->session->value, res.code,
-           res.state->startup, res.state->restartcount, res.state->free,
-           res.state->errorcount);
+  if (res.code != MT_ERR_NO_ERR) {
+    ESP_LOGI(
+        TAG,
+        "%4d %s session:%lld get state code:%d startup:%d restart_count:%d "
+        "free:%.2f error_count:%d",
+        __LINE__, __func__, msg->unary_call->session->value, res.code,
+        res.state->startup, res.state->restartcount, res.state->free,
+        res.state->errorcount);
+  } else {
+    ESP_LOGE(TAG, "%4d %s session:%lld get state code:%d", __LINE__, __func__,
+             msg->unary_call->session->value, res.code);
+  }
 
 EXIT:
   if (temp_state != NULL) {
@@ -93,11 +101,13 @@ void mt_module_unarycall_monitor_set_restart_handle(
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s mt_sys_monitor_set_restart failed", __LINE__,
              __func__);
-    res.code = MT_ERR_INVALID_RESPONSE;
-    goto EXIT;
+    err = MT_ERR_INVALID_RESPONSE;
+    goto ERROR;
   }
 
+ERROR:
   // marshall res
+  res.code = err;
   res_size = mt_sys_monitor__get_state_res__get_packed_size(&res);
   res_buf = malloc(res_size);
   mt_sys_monitor__get_state_res__pack(&res, res_buf);
@@ -115,8 +125,13 @@ void mt_module_unarycall_monitor_set_restart_handle(
     goto EXIT;
   }
 
-  ESP_LOGI(TAG, "%4d %s session:%lld set restart code:%d ", __LINE__, __func__,
-           msg->unary_call->session->value, res.code);
+  if (res.code != MT_ERR_NO_ERR) {
+    ESP_LOGI(TAG, "%4d %s session:%lld set restart code:%d ", __LINE__,
+             __func__, msg->unary_call->session->value, res.code);
+  } else {
+    ESP_LOGE(TAG, "%4d %s session:%lld set restart code:%d", __LINE__, __func__,
+             msg->unary_call->session->value, res.code);
+  }
 
 EXIT:
   free(res_buf);

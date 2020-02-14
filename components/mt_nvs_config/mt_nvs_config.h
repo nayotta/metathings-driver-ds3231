@@ -2,6 +2,7 @@
 #define _MT_NVS_CONFIG_H
 
 #include "esp_err.h"
+#include "esp_system.h"
 
 typedef struct _mt_nvs_host_t {
   char *host;
