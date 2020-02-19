@@ -201,7 +201,9 @@ static void mt_module_lora_handle_unarycall(char *topic, uint8_t *buf,
 
   // app api
   mt_module_lora_t *lora_msg = NULL;
-  lora_msg = mt_module_lora_copy_msg_to_lora(topic, buf, size);
+  lora_msg =
+      mt_module_lora_copy_msg_to_lora(topic, msg->unary_call->value->value.data,
+                                      msg->unary_call->value->value.len);
   xTaskCreate(mt_module_lora_handle_unarycall_app_task, "UNARYCALL_TASK",
               8 * 1024, lora_msg, 10, NULL);
 
