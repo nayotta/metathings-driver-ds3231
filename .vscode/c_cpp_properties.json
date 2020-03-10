@@ -65,7 +65,10 @@
                 "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/lwip/port/esp32/include",
                 "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/vfs/include",
                 "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/newlib/platform_include",
-                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/lwip/include/apps/sntp"
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/lwip/include/apps/sntp",
+                "${workspaceFolder}/components/rs232_dev",
+                "${workspaceFolder}/components/mt_module_http",
+                "${workspaceFolder}/components/mt_utils/include"
             ],
             "defines": [
                 "_DEBUG",
