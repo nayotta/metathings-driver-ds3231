@@ -71,7 +71,7 @@ typedef enum {
 } eMBMasterSndState;
 
 /* ----------------------- Static variables ---------------------------------*/
-static const char *TAG = "MODBUS_MASTER_MBRTU";
+// static const char *TAG = "MODBUS_MASTER_MBRTU";
 int DEBUG_COUNT = 0;
 static volatile eMBMasterSndState eSndState;
 static volatile eMBMasterRcvState eRcvState;

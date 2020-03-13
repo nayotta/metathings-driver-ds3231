@@ -84,10 +84,10 @@ esp_err_t mt_mqtt_utils_get_session_id_from_topic(char *topic,
     start++;
     offset++;
   }
-  s5[start] = '\0';
-  if (strcmp(s2, "") == 0) {
+  s4[start] = '\0';
+  if (strcmp(s4, "") == 0) {
     ESP_LOGE(TAG, "%4d %s unexcept string location5:%s", __LINE__, __func__,
-             s5);
+             s4);
     return NULL;
   }
 
@@ -282,13 +282,11 @@ char *mt_mqtt_utils_get_path_from_topic(char *topic) {
     offset++;
   }
   s2[start] = '\0';
-  /*
-  if (strcmp(s2, "modules") != 0)
-  {
+  if (strcmp(s2, "modules") != 0 || strcmp(s2, "devices") != 0) {
     ESP_LOGE(TAG, "%4d %s unexcept string location 2:%s", __LINE__, __func__,
              s2);
     return NULL;
-  }*/
+  }
 
   start = 0;
   offset++;
@@ -422,6 +420,11 @@ char *mt_mqtt_utils_get_module_id_from_topic(char *topic) {
     offset++;
   }
   s6[start] = '\0';
+  if (strcmp(s6, "") == 0) {
+    ESP_LOGE(TAG, "%4d %s unexcept string location 6:%s", __LINE__, __func__,
+             s6);
+    return NULL;
+  }
 
   module_string = malloc(strlen(s3) + 1);
   module_string[strlen(s3)] = '\0';

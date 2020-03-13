@@ -1,8 +1,13 @@
 #ifndef _MT_UTILS_LOGIN_H
 #define _MT_UTILS_LOGIN_H
 
+#include "crypto/crypto.h"
+#include "crypto/sha256.h"
 #include "esp_err.h"
 #include "mt_module_http.h"
+
+#include "utils/base64.h"
+#include "utils/common.h"
 
 #ifndef CONFIG_LOG_DEFAULT_LEVEL
 #define CONFIG_LOG_DEFAULT_LEVEL ESP_LOG_DEBUG

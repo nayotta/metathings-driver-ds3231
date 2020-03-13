@@ -2,6 +2,8 @@
 
 #include "esp_timer.h"
 
+#include "rs232_sim_air720h_recv_manage.h"
+
 // static define ==============================================================
 
 static const char *TAG = "rs232_sim_air720_recv_manage_http_read";
@@ -12,11 +14,11 @@ static bool STATE = false;
 static int TOTAL_STAGE = 3; // -1 error 1 get size 2 get buf 3 finished
 static int STAGE = 1;
 static int HTTP_READ_SIZE = 0;
-static const int STAGE1_MAX_SIZE = 10;
-static char STAGE1_BUF[STAGE1_MAX_SIZE] = "";
+#define HTTP_READ_STAGE1_MAX_SIZE (10)
+static char STAGE1_BUF[HTTP_READ_STAGE1_MAX_SIZE] = "";
 static int STAGE1_SIZE = 0;
-static const int STAGE2_MAX_SIZE = 1024;
-static char STAGE2_BUF[STAGE2_MAX_SIZE] = "";
+#define HTTP_READ_STAGE2_MAX_SIZE (1024 * 4)
+static char STAGE2_BUF[HTTP_READ_STAGE2_MAX_SIZE] = "";
 static int STAGE2_SIZE = 0;
 
 // static func ===============================================================
@@ -24,7 +26,7 @@ static int STAGE2_SIZE = 0;
 static void rs232_sim_air720h_recv_manage_http_read_save_stage1(uint8_t byte) {
   STAGE1_SIZE++;
 
-  if (STAGE1_SIZE > STAGE1_MAX_SIZE) {
+  if (STAGE1_SIZE > HTTP_READ_STAGE1_MAX_SIZE) {
     ESP_LOGE(TAG, "%4d %s STAGE1 buf reach max size", __LINE__, __func__);
     rs232_sim_air720h_recv_manage_http_read_reset();
     STAGE = -1;
@@ -51,29 +53,25 @@ static void rs232_sim_air720h_recv_manage_http_read_save_stage1(uint8_t byte) {
 static void rs232_sim_air720h_recv_manage_http_read_save_stage2(uint8_t byte) {
   STAGE2_SIZE++;
 
-  if (STAGE2_SIZE > STAGE2_MAX_SIZE) {
+  if (STAGE2_SIZE >= HTTP_READ_STAGE2_MAX_SIZE) {
     ESP_LOGE(TAG, "%4d %s STAGE2 buf reach max size", __LINE__, __func__);
     rs232_sim_air720h_recv_manage_http_read_reset();
     return;
   }
 
-  if (STAGE2_SIZE < HTTP_READ_SIZE) {
-    STAGE2_BUF[STAGE2_SIZE - 1] = byte;
+  STAGE2_BUF[STAGE2_SIZE - 1] = byte;
+  STAGE2_BUF[STAGE2_SIZE] = '\0';
 
-  } else {
-    STAGE2_BUF[STAGE2_SIZE - 1] = byte;
-    STAGE2_BUF[STAGE2_SIZE] = '\0';
+  if (STAGE2_SIZE > HTTP_READ_SIZE) {
     STATE = false;
     STAGE = 3;
-    ESP_LOGI(TAG, "%4d %s http_read success, size:%d", __LINE__, __func__,
-             HTTP_READ_SIZE);
   }
 }
 
 // global func ================================================================
 
 void rs232_sim_air720h_recv_manage_http_read_reset() {
-  STATE = 1;
+  STAGE = 1;
   STATE = false;
   HTTP_READ_SIZE = 0;
   STAGE1_SIZE = 0;
@@ -104,7 +102,7 @@ esp_err_t rs232_sim_air720h_recv_manage_process_http_read(uint8_t byte) {
   esp_err_t err = ESP_OK;
 
   if (STAGE == -1) {
-    ESP_LOGE(TAG, "%4d %s ", __LINE__, __func__);
+    ESP_LOGE(TAG, "%4d %s error stage -1", __LINE__, __func__);
     rs232_sim_air720h_recv_manage_http_read_reset();
     return ESP_ERR_INVALID_RESPONSE;
   }
@@ -118,6 +116,7 @@ esp_err_t rs232_sim_air720h_recv_manage_process_http_read(uint8_t byte) {
   }
 
   if (STAGE == 3) {
+    rs232_sim_air720h_recv_manage_reset_cache();
     STATE = false;
   }
 
@@ -141,7 +140,7 @@ char *rs232_sim_air720h_recv_manage_get_http_read_res() {
     return NULL;
   }
 
-  buf_out = malloc(STAGE2_SIZE);
-  memcpy(buf_out, STAGE2_BUF, STAGE2_SIZE);
+  buf_out = malloc(STAGE2_SIZE + 1);
+  memcpy(buf_out, STAGE2_BUF, STAGE2_SIZE + 1);
   return buf_out;
 }

@@ -2,14 +2,16 @@
 #define _RS232_SIM_AIR720H_RECV_MANAGE_HTTP_ACTION_H
 
 #include "esp_err.h"
+#include "esp_log.h"
 #include "esp_system.h"
 #include "stdlib.h"
+#include "string.h"
 
 // define =====================================================================
-typedef enum rs232_sim_air720h_recv_manage_http_action_method_t {
+typedef enum {
   rs232_sim_air720h_recv_manage_http_action_method_get = 0,
   rs232_sim_air720h_recv_manage_http_action_method_post = 1,
-};
+} rs232_sim_air720h_recv_manage_http_action_method_t;
 
 typedef struct _rs232_sim_air720h_recv_manage_http_action {
   bool state;
@@ -20,13 +22,10 @@ typedef struct _rs232_sim_air720h_recv_manage_http_action {
 
 // func =======================================================================
 
-void rs232_sim_air720h_recv_manage_init_http_action(
-    rs232_sim_air720h_recv_manage_http_action action);
-
 void rs232_sim_air720h_recv_manage_reset_http_action();
 
 void rs232_sim_air720h_recv_manage_get_http_get_action_state(
-    rs232_sim_air720h_recv_manage_http_action action);
+    rs232_sim_air720h_recv_manage_http_action *action);
 
 esp_err_t rs232_sim_air720h_recv_manage_get_http_get_action_finish();
 

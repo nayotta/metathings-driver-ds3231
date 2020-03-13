@@ -9,7 +9,7 @@
 #include "esp_log.h"
 #include "esp_system.h"
 #include "freertos/task.h"
-#include "rom/gpio.h"
+#include "esp32/rom/gpio.h"
 #include "tcpip_adapter.h"
 #include <stdio.h>
 #include <string.h>

@@ -1,3 +1,5 @@
+#include "string.h"
+
 #include "rs232_sim_air720h_recv_manage_mqtt_sub.h"
 
 #include "esp_timer.h"
@@ -17,23 +19,22 @@ static bool STATE = false;
     stage 3  msg buf
     stage 4  finished
 */
-static int TOTOAL_STATGE = 4;
 static int STAGE = 1;
 static int MQTT_SUB_SIZE = 0;
 
-static const int STAGE1_MAX_SIZE = 256;
-static char STAGE1_BUF[STAGE1_MAX_SIZE] = "";
+#define MQTT_SUB_STAGE1_MAX_SIZE 256
+static char STAGE1_BUF[MQTT_SUB_STAGE1_MAX_SIZE] = "";
 static int STAGE1_SIZE = 0;
-static char TOPIC[STAGE1_MAX_SIZE] = "";
+static char TOPIC[MQTT_SUB_STAGE1_MAX_SIZE] = "";
 
-static const int STAGE2_MAX_SIZE = 15;
-static char STAGE2_BUF[STAGE2_MAX_SIZE] = "";
+#define MQTT_SUB_STAGE2_MAX_SIZE 15
+static char STAGE2_BUF[MQTT_SUB_STAGE2_MAX_SIZE] = "";
 static int STAGE2_SIZE = 0;
-static char STRSIZE[STAGE2_MAX_SIZE] = "";
+static char STRSIZE[MQTT_SUB_STAGE2_MAX_SIZE] = "";
 static int SIZE = 0;
 
-static const int STAGE3_MAX_SIZE = 1360;
-static char STAGE3_BUF[STAGE3_MAX_SIZE] = "";
+#define MQTT_SUB_STAGE3_MAX_SIZE 1360
+static char STAGE3_BUF[MQTT_SUB_STAGE3_MAX_SIZE] = "";
 static int STAGE3_SIZE = 0;
 
 // static func ===============================================================
@@ -54,7 +55,7 @@ static void rs232_sim_air720h_recv_manage_mqtt_sub_reset() {
 static void rs232_sim_air720h_recv_manage_mqtt_sub_save_stage1(uint8_t byte) {
   STAGE1_SIZE++;
 
-  if (STAGE1_SIZE > STAGE1_MAX_SIZE) {
+  if (STAGE1_SIZE > MQTT_SUB_STAGE1_MAX_SIZE) {
     ESP_LOGE(TAG, "%4d %s STAGE1 buf reach max size", __LINE__, __func__);
     rs232_sim_air720h_recv_manage_mqtt_sub_reset();
     STAGE = -1;
@@ -105,7 +106,7 @@ static void rs232_sim_air720h_recv_manage_mqtt_sub_save_stage1(uint8_t byte) {
 static void rs232_sim_air720h_recv_manage_mqtt_sub_save_stage2(uint8_t byte) {
   STAGE2_SIZE++;
 
-  if (STAGE2_SIZE > STAGE2_MAX_SIZE) {
+  if (STAGE2_SIZE > MQTT_SUB_STAGE2_MAX_SIZE) {
     ESP_LOGE(TAG, "%4d %s STAGE2 buf reach max size", __LINE__, __func__);
     rs232_sim_air720h_recv_manage_mqtt_sub_reset();
     STAGE = -1;
@@ -156,7 +157,7 @@ static void rs232_sim_air720h_recv_manage_mqtt_sub_save_stage2(uint8_t byte) {
 static void rs232_sim_air720h_recv_manage_mqtt_sub_save_stage3(uint8_t byte) {
   STAGE3_SIZE++;
 
-  if (STAGE3_SIZE > STAGE3_MAX_SIZE) {
+  if (STAGE3_SIZE > MQTT_SUB_STAGE3_MAX_SIZE) {
     ESP_LOGE(TAG, "%4d %s STAGE3 buf reach max size", __LINE__, __func__);
     rs232_sim_air720h_recv_manage_mqtt_sub_reset();
     return;

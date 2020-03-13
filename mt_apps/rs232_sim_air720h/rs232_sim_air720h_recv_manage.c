@@ -1,6 +1,10 @@
-#include "rs232_sim_air720h_recv_manage.h"
-#include "rs232_dev.h"
+#include "string.h"
 
+#include "rs232_dev.h"
+#include "rs232_sim_air720h_recv_manage.h"
+
+#include "rs232_sim_air720h_mqtt.h"
+#include "rs232_sim_air720h_recv_manage_http_action.h"
 #include "rs232_sim_air720h_recv_manage_http_read.h"
 #include "rs232_sim_air720h_recv_manage_mqtt_sub.h"
 
@@ -26,70 +30,62 @@ static char *STR_HTTP_ACTION = "+HTTPACTION:";
 static char *STR_MQTT_SUB = "+MSUB: ";
 
 static rs232_sim_air720h_ack ACK = {false, false, false, false,
-                                    false, false, false};
+                                    false, false, false, false};
 
 // static func ================================================================
 
 static void rs232_sim_air720h_recv_manage_parse_msg() {
-  if (RECV_SIZE == 1) {
-    return;
+  if (RECV_SIZE <= 2) {
+    goto EXIT;
   }
 
+  // ESP_LOGI(TAG, "%4d %s echo back msg %s", __LINE__, __func__, RECV_BUF);
+
   if (strstr((char *)RECV_BUF, "AT+")) {
-    ESP_LOGI(TAG, "%4d %s echo back msg %s", __LINE__, __func__, RECV_BUF);
     goto EXIT;
   }
 
   if (strstr((char *)RECV_BUF, STR_OK)) {
-    ESP_LOGI(TAG, "%4d %s recv %s", __LINE__, __func__, RECV_BUF);
     ACK.ack_ok = true;
     goto EXIT;
   }
 
   if (strstr((char *)RECV_BUF, STR_ERROR)) {
-    ESP_LOGI(TAG, "%4d %s recv %s", __LINE__, __func__, RECV_BUF);
     ACK.ack_error = true;
     goto EXIT;
   }
 
   if (strstr((char *)RECV_BUF, STR_DOWNLOAD)) {
-    ESP_LOGI(TAG, "%4d %s recv %s", __LINE__, __func__, RECV_BUF);
     ACK.ack_download = true;
     goto EXIT;
   }
 
   if (strstr((char *)RECV_BUF, STR_CONNECT_OK)) {
-    ESP_LOGI(TAG, "%4d %s recv %s", __LINE__, __func__, RECV_BUF);
     ACK.ack_connect_ok = true;
     goto EXIT;
   }
 
   if (strstr((char *)RECV_BUF, STR_NET_OK)) {
-    ESP_LOGI(TAG, "%4d %s recv %s", __LINE__, __func__, RECV_BUF);
     ACK.ack_net_ok = true;
     goto EXIT;
   }
 
   if (strstr((char *)RECV_BUF, STR_MQTT_CONN_OK)) {
-    ESP_LOGI(TAG, "%4d %s recv %s", __LINE__, __func__, RECV_BUF);
     ACK.ack_mqtt_connect_ok = true;
     goto EXIT;
   }
 
   if (strstr((char *)RECV_BUF, STR_MQTT_SUB_OK)) {
-    ESP_LOGI(TAG, "%4d %s recv %s", __LINE__, __func__, RECV_BUF);
     ACK.ack_mqtt_sub_ok = true;
     goto EXIT;
   }
 
   if (strstr((char *)RECV_BUF, STR_MQTT_CLOSE_OK)) {
-    ESP_LOGI(TAG, "%4d %s recv %s", __LINE__, __func__, RECV_BUF);
     ACK.ack_mqtt_close_ok = true;
     goto EXIT;
   }
 
   if (strstr((char *)RECV_BUF, STR_HTTP_ACTION)) {
-    ESP_LOGI(TAG, "%4d %s recv %s", __LINE__, __func__, RECV_BUF);
     rs232_sim_air720h_recv_manage_process_action((char *)RECV_BUF);
     goto EXIT;
   }
@@ -102,8 +98,9 @@ EXIT:
 }
 
 static void rs232_sim_air720h_recv_manage_push_byte(uint8_t data) {
-  if (RECV_SIZE <= RS232_SIM_AIR720H_MAX_BUF_SIZE) {
+  if (RECV_SIZE < RS232_SIM_AIR720H_MAX_BUF_SIZE) {
     RECV_BUF[RECV_SIZE] = data;
+    RECV_BUF[RECV_SIZE + 1] = '\0';
     RECV_SIZE++;
   } else {
     ESP_LOGE(TAG, "%4d %s RECV_SIZE reach max:%d", __LINE__, __func__,
@@ -114,6 +111,7 @@ static void rs232_sim_air720h_recv_manage_push_byte(uint8_t data) {
   // http read dispatch
   if (rs232_sim_air720h_recv_manage_get_http_read_state() == true) {
     rs232_sim_air720h_recv_manage_process_http_read(data);
+    return;
   }
 
   if (RECV_SIZE == strlen(STR_HTTP_READ)) {
@@ -125,6 +123,7 @@ static void rs232_sim_air720h_recv_manage_push_byte(uint8_t data) {
   // mqtt sub dispatch
   if (rs232_sim_air720h_recv_manage_get_mqtt_sub_state() == true) {
     rs232_sim_air720h_recv_manage_process_mqtt_sub(data);
+    return;
   }
 
   if (RECV_SIZE == strlen(STR_MQTT_SUB)) {
@@ -149,6 +148,8 @@ static void rs232_sim_air720h_recv_manage_loop(rs232_dev_config_t *dev_config) {
                           20 / portTICK_PERIOD_MS);
     {
       if (len == 1) {
+        // debug here
+        // printf("%c", data);
         rs232_sim_air720h_recv_manage_push_byte(data);
       }
     }
@@ -156,6 +157,15 @@ static void rs232_sim_air720h_recv_manage_loop(rs232_dev_config_t *dev_config) {
 }
 
 // global func ================================================================
+
+esp_err_t rs232_sim_air720h_recv_manage_init(rs232_dev_config_t *dev_config) {
+  esp_err_t err = ESP_OK;
+
+  xTaskCreate((TaskFunction_t)rs232_sim_air720h_recv_manage_loop,
+              "NYT_4G_AIR720H_TASK", 4 * 1024, dev_config, 8, NULL);
+
+  return err;
+}
 
 void rs232_sim_air720h_recv_manage_reset_ack() {
   ACK.ack_ok = false;
@@ -168,16 +178,12 @@ void rs232_sim_air720h_recv_manage_reset_ack() {
   ACK.ack_mqtt_close_ok = false;
 }
 
-rs232_sim_air720h_ack rs232_sim_air720h_recv_manage_get_ack() { return ACK; }
-
-esp_err_t rs232_sim_air720h_recv_manage_init(rs232_dev_config_t *dev_config) {
-  esp_err_t err = ESP_OK;
-
-  xTaskCreate((TaskFunction_t)rs232_sim_air720h_recv_manage_loop,
-              "NYT_4G_AIR720H_TASK", 4 * 1024, dev_config, 8, NULL);
-
-  return err;
+void rs232_sim_air720h_recv_manage_reset_cache() {
+  RECV_BUF[0] = '\0';
+  RECV_SIZE = 0;
 }
+
+rs232_sim_air720h_ack rs232_sim_air720h_recv_manage_get_ack() { return ACK; }
 
 esp_err_t rs232_sim_air720h_recv_manage_get_ok() {
   if (ACK.ack_ok == true) {

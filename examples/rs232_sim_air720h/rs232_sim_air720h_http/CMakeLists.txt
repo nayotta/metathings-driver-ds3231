@@ -4,4 +4,4 @@ set(EXTRA_COMPONENT_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/../../../components ${CMAK
 
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 
-project(lora_unarycall_server)
+project(mt_sim_air720h_http)

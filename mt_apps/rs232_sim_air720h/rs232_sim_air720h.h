@@ -2,9 +2,21 @@
 #define _RS232_SIM_AIR720H_H
 
 #include "esp_err.h"
+#include "esp_log.h"
 #include "mt_module_http.h"
+#include "string.h"
+
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+
+#include "rs232_dev.h"
 
 // func =======================================================================
+
+// serial api
+
+esp_err_t rs232_sim_air720h_serial_init(int uart_num, int rx_pin, int tx_pin,
+                                        int baud_rate);
 
 // http api
 

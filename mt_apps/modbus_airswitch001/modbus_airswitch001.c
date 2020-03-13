@@ -323,7 +323,6 @@ EXIT:
 
 esp_err_t mt_modbus_airswitch001_task(int tx_pin, int rx_pin, int en_pin) {
   esp_err_t err = ESP_OK;
-  Cache_t *cache = NULL;
 
   err = modbus_airswitch001_init(2, 19200, 0, tx_pin, rx_pin, en_pin);
   if (err != ESP_OK) {
@@ -334,8 +333,8 @@ esp_err_t mt_modbus_airswitch001_task(int tx_pin, int rx_pin, int en_pin) {
   xTaskCreate(modbus_loop, "mt_modbus_task", 1024 * 8, NULL, 12, NULL);
 
   // cache task
-  if(cache_get() != NULL)
-  cache_task();
+  if (cache_get() != NULL)
+    cache_task();
 
 EXIT:
   if (err != ESP_OK) {

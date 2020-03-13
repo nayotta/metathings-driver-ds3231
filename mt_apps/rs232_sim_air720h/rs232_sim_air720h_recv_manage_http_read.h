@@ -2,8 +2,10 @@
 #define _RS232_SIM_AIR720H_RECV_MANAGE_HTTP_READ_H
 
 #include "esp_err.h"
+#include "esp_log.h"
 #include "esp_system.h"
 #include "stdlib.h"
+#include "string.h"
 
 // func =======================================================================
 

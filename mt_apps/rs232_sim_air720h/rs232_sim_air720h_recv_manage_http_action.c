@@ -9,24 +9,16 @@ static int ACTION_METHOD = 0;
 static int ACTION_CODE = 0;
 static int ACTION_RES_SIZE = 0;
 
-static const int ACTION_METHOD_MAX_SIZE = 10;
+#define ACTION_METHOD_MAX_SIZE 10
 static char ACTION_METHOD_STR[ACTION_METHOD_MAX_SIZE] = "";
-static const int ACTION_CODE_MAX_SIZE = 10;
+#define ACTION_CODE_MAX_SIZE 10
 static char ACTION_CODE_STR[ACTION_CODE_MAX_SIZE] = "";
-static const int ACTION_RES_SIZE_MAX_SIZE = 10;
+#define ACTION_RES_SIZE_MAX_SIZE 10
 static char ACTION_RES_SIZE_STR[ACTION_RES_SIZE_MAX_SIZE] = "";
 
 // static func ================================================================
 
 // global func================================================================
-
-void rs232_sim_air720h_recv_manage_init_http_action(
-    rs232_sim_air720h_recv_manage_http_action action) {
-  action.code = 0;
-  action.method = 0;
-  action.size = 0;
-  action.state = false;
-}
 
 void rs232_sim_air720h_recv_manage_reset_http_action() {
   ACTION_STATE = false;
@@ -39,11 +31,11 @@ void rs232_sim_air720h_recv_manage_reset_http_action() {
 }
 
 void rs232_sim_air720h_recv_manage_get_http_get_action_state(
-    rs232_sim_air720h_recv_manage_http_action action) {
-  action.code = ACTION_CODE;
-  action.method = ACTION_METHOD;
-  action.state = ACTION_STATE;
-  action.size = ACTION_RES_SIZE;
+    rs232_sim_air720h_recv_manage_http_action *action) {
+  action->code = ACTION_CODE;
+  action->method = ACTION_METHOD;
+  action->state = ACTION_STATE;
+  action->size = ACTION_RES_SIZE;
 }
 
 esp_err_t rs232_sim_air720h_recv_manage_get_http_get_action_finish() {
@@ -55,7 +47,7 @@ esp_err_t rs232_sim_air720h_recv_manage_get_http_get_action_finish() {
 }
 
 void rs232_sim_air720h_recv_manage_process_action(char *buf_in) {
-  int offset = 11;
+  int offset = 12;
   int count = 0;
   int buf_size = 0;
 
@@ -112,9 +104,8 @@ void rs232_sim_air720h_recv_manage_process_action(char *buf_in) {
 esp_err_t rs232_sim_air720h_recv_manage_http_action_check_post(int code) {
   esp_err_t err = ESP_OK;
 
-  rs232_sim_air720h_recv_manage_http_action action;
-  rs232_sim_air720h_recv_manage_init_http_action(action);
-  rs232_sim_air720h_recv_manage_get_http_get_action_state(action);
+  rs232_sim_air720h_recv_manage_http_action action = {false, 0, 0, 0};
+  rs232_sim_air720h_recv_manage_get_http_get_action_state(&action);
 
   // check state
   if (action.state != true) {

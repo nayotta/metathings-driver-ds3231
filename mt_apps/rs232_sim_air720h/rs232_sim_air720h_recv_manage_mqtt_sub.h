@@ -2,7 +2,9 @@
 #define _RS232_SIM_AIR720H_RECV_MANAGE_MQTT_SUB_H
 
 #include "esp_err.h"
+#include "esp_log.h"
 #include "esp_system.h"
+#include "string.h"
 
 // func =======================================================================
 

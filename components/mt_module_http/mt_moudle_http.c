@@ -96,7 +96,6 @@ mt_module_http_actions_issue_module_token(mt_module_http_t *module_http) {
   char *post_data = NULL;
   esp_http_client_handle_t client = NULL;
   token_t *tkn_out = NULL;
-  time_t now = 0;
 
   esp_http_client_config_t config = {
       .host = module_http->host,
@@ -1372,7 +1371,7 @@ mt_module_http_t *mt_module_http_new(int mod_index_in) {
 
   MODULE_HTTP = module_http;
   mt_module_http_manage_add(module_http, mod_index_in);
-  mt_module_http_task(module_http, module_http->module->name);
+  // mt_module_http_task(module_http, module_http->module->name);
 
   return module_http;
 }

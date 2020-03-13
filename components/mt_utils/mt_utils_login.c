@@ -9,6 +9,7 @@
 
 #include "cJSON.h"
 
+#include "mt_utils.h"
 #include "mt_utils_login.h"
 
 // global define ==============================================================
@@ -66,13 +67,13 @@ uint32_t mt_utils_login_get_nonce() { return esp_random(); }
 char *mt_utils_login_get_issue_token_data(mt_module_http_t *module_http) {
   esp_err_t err = ESP_OK;
   char *data_out = NULL;
-  cJSON *root, *cred_in_json;
+  cJSON *root = NULL;
+  cJSON *cred_in_json = NULL;
   uint8_t *time_stamp = NULL;
   uint8_t time_stamp_size = 0;
   char *time_stamp_str = NULL;
   uint32_t nonce = 0;
   unsigned char *hmac = NULL;
-  token_t *tkn_out = NULL;
   time_t now = 0;
 
   // check argument
@@ -137,7 +138,7 @@ char *mt_utils_login_get_issue_token_data(mt_module_http_t *module_http) {
   data_out = cJSON_Print(root);
   cJSON_Delete(root);
 
-  ESP_LOGI(TAG, "%4d %s post_data =%s", __LINE__, __func__, data_out);
+  //  ESP_LOGI(TAG, "%4d %s post_data =%s", __LINE__, __func__, data_out);
 
 EXIT:
   if (time_stamp != NULL)
@@ -149,11 +150,14 @@ EXIT:
   if (hmac != NULL)
     free(hmac);
 
+  if (err != ESP_OK) {
+    data_out = NULL;
+  }
+
   return data_out;
 }
 
 char *mt_utils_login_get_heartbeat_data(mt_module_http_t *module_http) {
-  esp_err_t err = ESP_OK;
   char *post_data = NULL;
   cJSON *root;
 

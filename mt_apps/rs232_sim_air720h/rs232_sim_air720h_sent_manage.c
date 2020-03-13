@@ -6,6 +6,8 @@
 
 #include "rs232_dev.h"
 
+#include "rs232_sim_air720h_recv_manage.h"
+
 // static define ==============================================================
 
 static const char *TAG = "rs232_sim_air720_sent_manage";
@@ -57,6 +59,23 @@ static esp_err_t sent_cmd(const char *buf) {
 
 // global func ================================================================
 
+esp_err_t rs232_sim_air720h_sent_manage_init(rs232_dev_config_t *dev_config) {
+  if (dev_config == NULL) {
+    ESP_LOGE(TAG, "%4d %s dev_config NULL", __LINE__, __func__);
+    return ESP_ERR_INVALID_ARG;
+  } else {
+    if (dev_config->uart_config == NULL) {
+      ESP_LOGE(TAG, "%4d %s dev_config->uart_config NULL", __LINE__, __func__);
+      return ESP_ERR_INVALID_ARG;
+    }
+  }
+
+  DEV_CONFIG = dev_config;
+  ESP_LOGI(TAG, "%4d %s init success", __LINE__, __func__);
+
+  return ESP_OK;
+}
+
 esp_err_t rs232_sim_air720h_sent_manage_sent(uint8_t *buf, int buf_size) {
   esp_err_t err = ESP_OK;
 
@@ -86,11 +105,15 @@ esp_err_t rs232_sim_air720h_sent_manage_sent_and_wait_finish(
   bool msg_finish = false;
   bool ack_finish = false;
 
+  // reset ack cache
+  rs232_sim_air720h_recv_manage_reset_ack();
+
+  // ESP_LOGI(TAG, "%4d %s sent cmd:%s", __LINE__, __func__, buf);
+
   // check arg
   if (msg_handle == NULL && ack_handle == NULL) {
-    ESP_LOGE(TAG, "%4d %s msg_handle and ack_handle both NULL", __LINE__,
-             __func__);
-    return ESP_ERR_INVALID_ARG;
+    // ESP_LOGW(TAG, "%4d %s msg_handle and ack_handle both NULL", __LINE__,
+    //        __func__);
   }
 
   if (msg_handle == NULL) {
@@ -133,13 +156,14 @@ esp_err_t rs232_sim_air720h_sent_manage_sent_and_wait_finish(
 
     // check all finish
     if (msg_finish == true && ack_finish == true) {
-      ESP_LOGI(TAG, "%4d %s cmd wait and finished", __LINE__, __func__);
+      // ESP_LOGI(TAG, "%4d %s cmd wait and finished", __LINE__, __func__);
       goto EXIT;
     }
 
     vTaskDelay(interval / portTICK_PERIOD_MS);
   }
 
+  ESP_LOGW(TAG, "%4d %s cmd timeout", __LINE__, __func__);
   err = ESP_ERR_TIMEOUT;
 
 EXIT:

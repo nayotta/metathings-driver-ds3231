@@ -2,7 +2,9 @@
 #define _RS232_SIM_AIR720H_UTILS_H
 
 #include "esp_err.h"
+#include "esp_log.h"
 #include "mt_module_http.h"
+#include "string.h"
 
 // func =======================================================================
 

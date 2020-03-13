@@ -2,6 +2,8 @@
 #define _RS232_SIM_AIR720H_HTTP_H
 
 #include "esp_err.h"
+#include "esp_log.h"
+#include "string.h"
 
 // func =======================================================================
 
@@ -45,7 +47,7 @@ esp_err_t rs232_sim_air720h_http_set_post_data(uint8_t *data, int size);
 esp_err_t rs232_sim_air720h_http_set_post();
 
 // get response
-char* rs232_sim_air720h_http_get_response();
+char *rs232_sim_air720h_http_get_response();
 
 // set close
 esp_err_t rs232_sim_air720h_http_set_close();
