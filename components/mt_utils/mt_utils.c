@@ -125,3 +125,23 @@ char *mt_utils_string_copy(char *str_in) {
 
   return str_out;
 }
+
+char *mt_utils_get_random_client_id(int id_size) {
+  char range[] =
+      "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  char *buf_out = NULL;
+
+  if (id_size > 0) {
+    buf_out = malloc(id_size + 1);
+    buf_out[id_size] = '\0';
+  } else {
+    ESP_LOGE(TAG, "unsupport id size:%d", id_size);
+    return NULL;
+  }
+
+  for (int i = 0; i < id_size; i++) {
+    buf_out[i] = range[esp_random % (strlen(range))];
+  }
+
+  return buf_out;
+}

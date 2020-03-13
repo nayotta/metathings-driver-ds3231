@@ -37,4 +37,6 @@ esp_err_t mt_nvs_config_get_flow(int mod_index, mt_nvs_flows_t *flows);
 
 char *mt_nvs_config_get_flow_name(int module_index, int flow_index);
 
+char *mt_nvs_config_get_net_type();
+
 #endif

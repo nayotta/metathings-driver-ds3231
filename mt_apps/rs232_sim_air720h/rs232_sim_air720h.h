@@ -41,11 +41,11 @@ esp_err_t rs232_sim_air720h_http_task(mt_module_http_t *module_http);
 
 esp_err_t rs232_sim_air720h_mqtt_init();
 
-esp_err_t rs232_sim_air720h_mqtt_task();
-
 esp_err_t rs232_sim_air720h_mqtt_sub();
 
-esp_err_t rs232_sim_air720h_mqtt_pub();
+esp_err_t rs232_sim_air720h_mqtt_pub(char topic, uint8_t *buf, int size);
+
+esp_err_t rs232_sim_air720h_mqtt_task();
 
 // ntp api
 

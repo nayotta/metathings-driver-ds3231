@@ -14,8 +14,6 @@ static int HTTP_CMD_MAX_SIZE = 200;          // max cmd size 200
 static int HTTP_CMD_DOWNLOAD_TIMEOUT = 2000; // download timeout 2s
 static int HTTP_POST_TIMEOUT = 5000;         // 5s
 
-// static func ================================================================
-
 // global func ================================================================
 
 esp_err_t rs232_sim_air720h_http_conn() {

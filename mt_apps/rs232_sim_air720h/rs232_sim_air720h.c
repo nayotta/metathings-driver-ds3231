@@ -737,3 +737,19 @@ esp_err_t rs232_sim_air720h_http_task(mt_module_http_t *module_http) {
               "rs232_sim_http_task", 8 * 1024, module_http, 10, NULL);
   return ESP_OK;
 };
+
+esp_err_t rs232_sim_air720h_mqtt_init() {
+  esp_err_t err = ESP_OK;
+
+  ESP_LOGI(TAG, "%4d %s begin", __LINE__, __func__);
+
+  // config
+  err = rs322_sim_air720h_mqtt_set_client_config();
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s rs322_sim_air720h_mqtt_set_client_config failed",
+             __LINE__, __func__);
+    goto EXIT;
+  }
+
+  return err;
+}

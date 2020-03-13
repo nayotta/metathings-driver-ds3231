@@ -4,7 +4,7 @@
 #include "stdint.h"
 #include "stdio.h"
 
-#include "mqtt_client.h"
+#include "esp_err.h"
 
 #ifndef CONFIG_LOG_DEFAULT_LEVEL
 #define CONFIG_LOG_DEFAULT_LEVEL ESP_LOG_DEBUG
@@ -17,12 +17,10 @@
 #define URI_MAX_SIZE 128
 #define TOPIC_MAX_SIZE 512
 
-int mt_mqtt_pub_msg(char *topic, uint8_t *buf, int size);
+esp_err_t mt_mqtt_pub_msg(char *topic, uint8_t *buf, int size);
 
-int mt_mqtt_init(int mod_index,
-                 char *module_id, uint64_t session_id, char *device_id,
-                 void (*handle)(char *topic, void *buf, int size));
-
-void mt_mqtt_task();
+esp_err_t mt_mqtt_init(int mod_index, char *module_id, uint64_t session_id,
+                       char *device_id,
+                       void (*handle)(char *topic, void *buf, int size));
 
 #endif
