@@ -53,7 +53,7 @@ push_frame_res_t *mt_module_http_utils_push_frame_res_t_init() {
 
   res = malloc(sizeof(push_frame_res_t));
   res->id = NULL;
-  res->sesssion_id = NULL;
+  res->session_id = NULL;
 
   return res;
 }
@@ -102,8 +102,8 @@ esp_err_t mt_module_http_utils_free_push_frame_res(push_frame_res_t *res) {
   if (res->id != NULL)
     free(res->id);
 
-  if (res->sesssion_id != NULL)
-    free(res->sesssion_id);
+  if (res->session_id != NULL)
+    free(res->session_id);
 
   free(res);
 
@@ -534,7 +534,7 @@ push_frame_res_t *mt_module_http_utils_parse_push_frame_res(char *content_in) {
           config_item = cJSON_GetArrayItem(item, j);
           if (cJSON_String == config_item->type) {
             if (strcmp(config_item->string, "session") == 0)
-              res_out->sesssion_id =
+              res_out->session_id =
                   mt_utils_string_copy(config_item->valuestring);
           }
         }

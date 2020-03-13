@@ -42,7 +42,9 @@
                 "${workspaceFolder}/components/rs232_dev",
                 "${workspaceFolder}/components/mt_module_http",
                 "${workspaceFolder}/components/mt_utils/include",
-                "${workspaceFolder}/mt_apps/rs232_sim_air720h"
+                "${workspaceFolder}/mt_apps/rs232_sim_air720h",
+                "${workspaceFolder}/components/mt_module_flow_manage",
+                "${workspaceFolder}/components/mt_module_flow"
             ],
             "defines": [
                 "_DEBUG",

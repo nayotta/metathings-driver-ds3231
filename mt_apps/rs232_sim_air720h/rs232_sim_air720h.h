@@ -3,11 +3,13 @@
 
 #include "esp_err.h"
 #include "esp_log.h"
-#include "mt_module_http.h"
 #include "string.h"
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
+
+#include "mt_module_flow.h"
+#include "mt_module_http.h"
 
 #include "rs232_dev.h"
 
@@ -28,6 +30,10 @@ rs232_sim_air720h_http_issue_module_token(mt_module_http_t *module_http);
 esp_err_t rs232_sim_air720h_http_show_module(mt_module_http_t *module_http);
 
 esp_err_t rs232_sim_air720h_http_heartbeat(mt_module_http_t *module_http);
+
+push_frame_res_t *
+rs232_sim_air720h_http_push_frame_to_flow(mt_module_http_t *module_http,
+                                          mt_module_flow_t *flow_in);
 
 esp_err_t rs232_sim_air720h_http_task(mt_module_http_t *module_http);
 

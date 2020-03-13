@@ -1,5 +1,6 @@
 #include "rs232_sim_air720h.h"
 
+#include "mt_module_flow.h"
 #include "mt_module_http.h"
 #include "mt_module_http_utils.h"
 #include "mt_utils.h"
@@ -19,6 +20,7 @@ static const char *TAG = "rs232_sim_air720";
 static char *ISSUE_TOKEN_PATH = "/v1/device_cloud/actions/issue_module_token";
 static char *SHOW_MODULE_PATH = "/v1/device_cloud/actions/show_module";
 static char *HEARTBEAT_PATH = "/v1/device_cloud/actions/heartbeat";
+static char *PUSHFRAME_PATH = "/v1/device_cloud/actions/push_frame_to_flow";
 #define AIR720H_URL_MAX_SIZE 100
 
 // static func ================================================================
@@ -430,7 +432,6 @@ esp_err_t rs232_sim_air720h_http_show_module(mt_module_http_t *module_http) {
 
   // parse response
   mdl_out = mt_module_http_uitls_parse_module_res(res_data);
-  printf("debug out:%s", res_data);
   if (mdl_out == NULL) {
     ESP_LOGE(TAG, "%4d %s mdl_out NULL", __LINE__, __func__);
     err = ESP_ERR_INVALID_RESPONSE;
@@ -561,6 +562,136 @@ EXIT:
   if (post_data != NULL)
     free(post_data);
   return err;
+}
+
+push_frame_res_t *
+rs232_sim_air720h_http_push_frame_to_flow(mt_module_http_t *module_http,
+                                          mt_module_flow_t *flow_in) {
+  esp_err_t err = ESP_OK;
+  char url[AIR720H_URL_MAX_SIZE] = "";
+  char *head = NULL;
+  char *res_data = NULL;
+  char *post_data = NULL;
+  push_frame_res_t *res_out = NULL;
+
+  ESP_LOGI(TAG, "%4d %s begin", __LINE__, __func__);
+
+  // check arg
+  if (module_http == NULL) {
+    ESP_LOGE(TAG, "%4d %s module_http NULL", __LINE__, __func__);
+    err = ESP_ERR_INVALID_ARG;
+    goto EXIT;
+  } else {
+    if (module_http->host == NULL) {
+      ESP_LOGE(TAG, "%4d %s host NULL", __LINE__, __func__);
+      err = ESP_ERR_INVALID_ARG;
+      goto EXIT;
+    }
+    if (module_http->token == NULL) {
+      ESP_LOGE(TAG, "%4d %s token NULL", __LINE__, __func__);
+      err = ESP_ERR_INVALID_ARG;
+      goto EXIT;
+    }
+  }
+
+  sprintf(url, "http://%s%s", module_http->host, PUSHFRAME_PATH);
+
+  // set url
+  err = rs232_sim_air720h_http_set_para_url(url);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s rs232_sim_air720h_http_set_para_url failed", __LINE__,
+             __func__);
+    goto EXIT;
+  }
+
+  // set head
+  head = rs232_sim_air720h_utils_get_head_with_token(module_http->token);
+  err = rs232_sim_air720h_http_set_para_head(head);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s rs232_sim_air720h_http_set_para_head failed",
+             __LINE__, __func__);
+    goto EXIT;
+  }
+
+  // set post data size
+  post_data = mt_utils_login_get_push_frame_to_flow_data(module_http, flow_in);
+  if (post_data == NULL) {
+    ESP_LOGE(TAG, "%4d %s mt_utils_login_get_push_frame_to_flow_data failed",
+             __LINE__, __func__);
+    err = ESP_ERR_INVALID_ARG;
+    goto EXIT;
+  }
+  int post_size = strlen(post_data);
+  err = rs232_sim_air720h_http_set_post_data_size(post_size);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s rs232_sim_air720h_http_set_post_data_size failed",
+             __LINE__, __func__);
+    goto EXIT;
+  }
+
+  // set post data
+  err = rs232_sim_air720h_http_set_post_data((uint8_t *)post_data, post_size);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s rs232_sim_air720h_http_set_post_data failed",
+             __LINE__, __func__);
+    goto EXIT;
+  }
+
+  // set post
+  err = rs232_sim_air720h_http_set_post();
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s rs232_sim_air720h_http_set_post failed", __LINE__,
+             __func__);
+    goto EXIT;
+  }
+
+  // check res code
+  err = rs232_sim_air720h_recv_manage_http_action_check_post(200);
+  if (err != ESP_OK) {
+    ESP_LOGE(
+        TAG,
+        "%4d %s rs232_sim_air720h_recv_manage_http_action_check_post failed",
+        __LINE__, __func__);
+    goto EXIT;
+  }
+
+  // get response
+  res_data = rs232_sim_air720h_http_get_response();
+  if (res_data == NULL) {
+    ESP_LOGE(TAG, "%4d %s rs232_sim_air720h_http_get_response failed", __LINE__,
+             __func__);
+    err = ESP_ERR_INVALID_ARG;
+    goto EXIT;
+  }
+
+  // parse response
+  res_out = mt_module_http_utils_parse_push_frame_res(res_data);
+  if (res_out == NULL) {
+    ESP_LOGE(TAG, "%4d %s res_out NULL", __LINE__, __func__);
+    err = ESP_ERR_INVALID_RESPONSE;
+    goto EXIT;
+  } else {
+    if (res_out->session_id == NULL) {
+      ESP_LOGE(TAG, "%4d %s res_out->session_id NULL", __LINE__, __func__);
+      err = ESP_ERR_INVALID_RESPONSE;
+      goto EXIT;
+    }
+  }
+
+EXIT:
+  if (err == ESP_OK)
+    ESP_LOGI(TAG, "%4d %s push_frame_to_flow success, id:%s", __LINE__,
+             __func__, res_out->session_id);
+  else
+    ESP_LOGE(TAG, "%4d %s push_frame_to_flow failed", __LINE__, __func__);
+
+  if (head != NULL)
+    free(head);
+  if (post_data != NULL)
+    free(post_data);
+  if (res_data != NULL)
+    free(res_data);
+  return res_out;
 }
 
 esp_err_t rs232_sim_air720h_http_task(mt_module_http_t *module_http) {

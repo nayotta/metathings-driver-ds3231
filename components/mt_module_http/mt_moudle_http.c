@@ -1164,8 +1164,8 @@ mt_module_http_actions_push_frame_to_flow(mt_module_http_t *module_http,
         err = ESP_ERR_HTTP_BASE;
         goto EXIT;
       } else {
-        if (res_out->sesssion_id == NULL) {
-          ESP_LOGE(TAG, "%4d %s res_out->sesssion_id NULL", __LINE__, __func__);
+        if (res_out->session_id == NULL) {
+          ESP_LOGE(TAG, "%4d %s res_out->session_id NULL", __LINE__, __func__);
           err = ESP_ERR_HTTP_BASE;
           goto EXIT;
         }
