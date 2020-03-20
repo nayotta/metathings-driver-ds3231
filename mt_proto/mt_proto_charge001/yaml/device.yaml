@@ -1,0 +1,33 @@
+# yaml
+version: v1beta
+description: charge001 千纳充电桩
+flow:
+  name: m1
+  fields:
+    notify:
+      description: 通知消息标记(s0+t0通知)(coin通知)
+      driver: charge001
+      type: bool
+      period: 0
+    s0:
+      description: 开关0状态(1 空闲 2使用 3禁用 4故障)(开关地址用尾数标记)
+      unit:
+      driver: charge001
+      type: float
+      period: 0
+      min: 0
+      max: 10
+    t0:
+      description: 开关0剩余时间(开关地址用尾数标记)
+      unit:
+      driver: charge001
+      type: float
+      period: 0
+      min: 0
+      max: 1000
+    coin:
+      description: 投币通知
+      unit:
+      driver: charge001
+      type: bool
+      period: 0

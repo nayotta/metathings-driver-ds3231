@@ -6,6 +6,7 @@ import "google/protobuf/empty.proto";
 
 service Service {
   rpc SetCharge(SetChargeReq) returns (SetRes) {}
+  rpc GetStates(google.protobuf.Empty) returns (GetStatesRes) {}
   rpc GetState(google.protobuf.Empty) returns (GetStateRes) {}
 }
 
@@ -15,7 +16,12 @@ message Charge {
   int32 money = 3; // 充电金额 (?设备自己统计用?)
 }
 
-message State {
+message State1 {
+  int32 port = 1;  // 端口编号
+  int32 state = 2; // 端口状态
+}
+
+message State2 {
   int32 port = 1;     // 端口编号
   int32 state = 2;    // 端口状态
   int32 lefttime = 3; // 剩余充电时间
@@ -27,11 +33,15 @@ message SetRes {
   string content = 2;
 }
 
-message SetChargeReq {
-  Charge charge = 1;
+message SetChargeReq { Charge charge = 1; }
+
+message GetStatesRes {
+  int32 rescode = 1;
+  int32 portnum = 2;          //端口总数
+  repeated State1 states = 3; // 端口状态
 }
 
 message GetStateRes {
-  int32 portnum = 1;        //端口总数
-  repeated State state = 2; // 端口状态
+  int32 rescode = 1;
+  State2 state = 2; // 端口状态
 }
