@@ -278,3 +278,22 @@ char *mt_nvs_config_get_flow_name(int module_index, int flow_index) {
 
   return flow_name;
 }
+
+char *mt_nvs_config_get_net_type() {
+  char *net_type = NULL;
+  char key[32] = "net_type";
+  size_t size = 0;
+
+  net_type = mt_nvs_read_string_config(key, &size);
+  if (net_type == NULL) {
+    if (mt_nvs_write_string_config(key, "lan") == false) {
+      ESP_LOGE(TAG, "%4d %s mt_nvs_write_string_config failed", __LINE__,
+               __func__);
+      return NULL;
+    }
+  }
+
+  net_type = mt_nvs_read_string_config(key, &size);
+
+  return net_type;
+}

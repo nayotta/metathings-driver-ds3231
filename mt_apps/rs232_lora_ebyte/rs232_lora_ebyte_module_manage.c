@@ -69,7 +69,6 @@ rs232_lora_ebyte_module_manage_get_id_by_module_index(int module_index,
 
 esp_err_t rs232_lora_ebyte_module_manage_init() {
   esp_err_t err = ESP_OK;
-  int module_num = 0;
   int lora_num = 0;
   char key[32] = "";
 

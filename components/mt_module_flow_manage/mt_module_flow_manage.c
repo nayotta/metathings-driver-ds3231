@@ -175,8 +175,9 @@ esp_err_t mt_module_flow_manage_add(mt_module_flow_t *flow) {
            __func__, FLOW_MANAGE->flows_size,
            FLOW_MANAGE->flows_handle[FLOW_MANAGE->flows_size - 1]);
 
-  xTaskCreate((TaskFunction_t)mt_module_flow_manage_push_task_loop,
-              "FLOW_MANAGE_PUSH_TASK", 8 * 1024, flow, 10, NULL);
+  // TODO(ZH) seprate task and new
+  // xTaskCreate((TaskFunction_t)mt_module_flow_manage_push_task_loop,
+  //           "FLOW_MANAGE_PUSH_TASK", 8 * 1024, flow, 10, NULL);
 
   if (temp_manage != NULL)
     free(temp_manage);

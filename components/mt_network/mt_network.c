@@ -6,7 +6,7 @@
 
 // global define ==============================================================
 
-static const char *TAG = "MT_NETWORK";
+// static const char *TAG = "MT_NETWORK";
 
 // global func ================================================================
 

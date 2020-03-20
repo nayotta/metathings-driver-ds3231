@@ -22,10 +22,10 @@ esp_err_t mt_hmac_sha256_byte(const uint8_t *key, int key_size,
   // key use 32byte if short pad with oxff, if long drop end
   unsigned char *key_byte = NULL;
   size_t key_byte_size;
-  uint8_t fmt_key[32] = {0x00};
-  uint8_t *buf;
+  uint8_t fmt_key[32] = "";
+  uint8_t *buf = NULL;
   int buf_size;
-  uint8_t nonce_str[32];
+  uint8_t nonce_str[32] = "";
   int nonce_size = 0;
 
   key_byte = base64_decode(key, key_size, &key_byte_size);
@@ -41,10 +41,10 @@ esp_err_t mt_hmac_sha256_byte(const uint8_t *key, int key_size,
 
   sprintf((char *)nonce_str, "%u", nonce);
   nonce_size = strlen((char *)nonce_str);
-  ESP_LOGW(TAG,
-           "id_size:%d, id:%s, time_stamp_size:%d, "
-           "time_stamp:%s, nonce_size=%d, nonce=%s",
-           id_size, id, time_stamp_size, time_stamp, nonce_size, nonce_str);
+  // ESP_LOGW(TAG,
+  //       "%4d %s id_size:%d, id:%s, time_stamp_size:%d, "
+  //     "time_stamp:%s, nonce_size=%d, nonce=%s", __LINE__, __func__,
+  //    id_size, id, time_stamp_size, time_stamp, nonce_size, nonce_str);
 
   buf_size = id_size + time_stamp_size + nonce_size;
   buf = malloc(buf_size);
@@ -124,4 +124,24 @@ char *mt_utils_string_copy(char *str_in) {
   memcpy(str_out, str_in, strlen(str_in));
 
   return str_out;
+}
+
+char *mt_utils_get_random_client_id(int id_size) {
+  char range[] =
+      "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  char *buf_out = NULL;
+
+  if (id_size > 0) {
+    buf_out = malloc(id_size + 1);
+    buf_out[id_size] = '\0';
+  } else {
+    ESP_LOGE(TAG, "unsupport id size:%d", id_size);
+    return NULL;
+  }
+
+  for (int i = 0; i < id_size; i++) {
+    buf_out[i] = range[esp_random % (strlen(range))];
+  }
+
+  return buf_out;
 }

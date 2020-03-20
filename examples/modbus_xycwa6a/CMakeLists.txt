@@ -2,9 +2,7 @@
 # in this exact order for cmake to work correctly
 cmake_minimum_required(VERSION 3.5)
 
-set(MAIN_SRCS main/main.c)
-
-set(EXTRA_COMPONENT_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../../components)
+set(EXTRA_COMPONENT_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/../../../metathings-esp32-lib/components ${CMAKE_CURRENT_SOURCE_DIR}/../../../metathings-esp32-lib/mt_proto ${CMAKE_CURRENT_SOURCE_DIR}/../../../metathings-esp32-lib/mt_apps")
 
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 project(example-modbus-xycwa6a)

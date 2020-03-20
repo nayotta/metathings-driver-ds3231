@@ -12,7 +12,7 @@ static uint32_t MAJOR_SESSION_FLAG = (uint32_t)0x00;
 static uint32_t MINOR_SESSION_FLAG = (uint32_t)0x20 << 24;
 static uint32_t TEMP_SESSION_FLAG = (uint32_t)0x10 << 24;
 static uint64_t STARTUP_SESSION_MASK = 0x7fffffff00000000;
-static uint64_t CONNECTION_SESSION_MASK = 0x000000007fffffff;
+// static uint64_t CONNECTION_SESSION_MASK = 0x000000007fffffff;
 static uint64_t x_CONNECTION_SESSION_DATA_MASK = 0x0000000000ffffff;
 
 // static func ===============================================================

@@ -32,4 +32,6 @@ char *mt_utils_int64_to_string(uint64_t src, uint8_t *size_out);
 
 char *mt_utils_string_copy(char *str_in);
 
+char *mt_utils_get_random_client_id(int id_size);
+
 #endif

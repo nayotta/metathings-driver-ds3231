@@ -128,7 +128,7 @@ typedef struct _token_t {
 
 typedef struct _push_frame_res_t {
   char *id;
-  char *sesssion_id;
+  char *session_id;
 } push_frame_res_t;
 
 typedef struct _mt_module_http_t {

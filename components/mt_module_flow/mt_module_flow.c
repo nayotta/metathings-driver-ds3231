@@ -172,10 +172,10 @@ RESTART:
       ESP_LOGI(TAG,
                "%4d %s mt_module_http_actions_push_frame_to_flow success, "
                "session:%s",
-               __LINE__, __func__, flow_res->sesssion_id);
-      module_flow->session = malloc(strlen(flow_res->sesssion_id) + 1);
-      memcpy(module_flow->session, flow_res->sesssion_id,
-             strlen(flow_res->sesssion_id) + 1);
+               __LINE__, __func__, flow_res->session_id);
+      module_flow->session = malloc(strlen(flow_res->session_id) + 1);
+      memcpy(module_flow->session, flow_res->session_id,
+             strlen(flow_res->session_id) + 1);
       mt_module_http_utils_free_push_frame_res(flow_res);
       break;
     }
@@ -331,7 +331,8 @@ mt_module_flow_t *mt_module_flow_new(int module_index, int flow_index,
     return NULL;
   }
 
-  mt_module_flow_task(module_flow, "MT_MODULE_FLOW");
+  // TODO(ZH) seprate task and new
+  // mt_module_flow_task(module_flow, "MT_MODULE_FLOW");
 
   return module_flow;
 }

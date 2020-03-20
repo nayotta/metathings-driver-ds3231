@@ -311,20 +311,20 @@ static void mt_wifi_loop(void) {
     ESP_LOGE(TAG, "%d esp_event_loop_create_default failed", __LINE__);
   }
 
-  err = esp_event_handler_register(WIFI_EVENT, ESP_EVENT_ANY_ID, &event_handler,
-                                   NULL);
+  err = esp_event_handler_register(WIFI_EVENT, ESP_EVENT_ANY_ID,
+                                   (esp_event_handler_t)&event_handler, NULL);
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%d esp_event_handler_register failed", __LINE__);
   }
 
   err = esp_event_handler_register(IP_EVENT, IP_EVENT_STA_GOT_IP,
-                                   &event_handler, NULL);
+                                   (esp_event_handler_t)&event_handler, NULL);
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%d esp_event_handler_register failed", __LINE__);
   }
 
-  err = esp_event_handler_register(SC_EVENT, ESP_EVENT_ANY_ID, &event_handler,
-                                   NULL);
+  err = esp_event_handler_register(SC_EVENT, ESP_EVENT_ANY_ID,
+                                   (esp_event_handler_t)&event_handler, NULL);
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%d esp_event_handler_register failed", __LINE__);
   }

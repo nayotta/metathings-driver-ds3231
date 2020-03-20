@@ -108,11 +108,11 @@ void mt_module_unarycall_monitor_set_restart_handle(
 ERROR:
   // marshall res
   res.code = err;
-  res_size = mt_sys_monitor__get_state_res__get_packed_size(&res);
+  res_size = mt_sys_monitor__set_restart_res__get_packed_size(&res);
   res_buf = malloc(res_size);
-  mt_sys_monitor__get_state_res__pack(&res, res_buf);
+  mt_sys_monitor__set_restart_res__pack(&res, res_buf);
   frame_buf = mt_module_unarycall_utils_pack(
-      res_buf, res_size, mt_sys_monitor__get_state_res__descriptor.name, msg,
+      res_buf, res_size, mt_sys_monitor__set_restart_res__descriptor.name, msg,
       &frame_size);
 
   // response
