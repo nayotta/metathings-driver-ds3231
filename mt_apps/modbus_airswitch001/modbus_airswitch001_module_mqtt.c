@@ -11,7 +11,10 @@
 
 #include "cache_airswitch001.h"
 #include "modbus_airswitch001.h"
+#include "modbus_airswitch001_module_flow.h"
+#include "modbus_airswitch001_notify.h"
 #include "modbus_airswitch001_utils.h"
+#include "mt_module_flow.h"
 #include "mt_module_flow_manage.h"
 #include "mt_module_mqtt.h"
 #include "mt_module_unarycall_utils.h"
@@ -20,9 +23,11 @@
 #include "mt_proto_airswitch001.pb-c.h"
 
 // global config ==============================================================
+
 static const char *TAG = "MODULE_MQTT";
 
 #define MOD_ADDR 1
+static const int MAX_KEY_SIZE = 20;
 
 // static func ================================================================
 static void
@@ -636,10 +641,33 @@ ERROR:
     goto EXIT;
   }
 
-  if (res.code == 0)
+  if (res.code == 0) {
     ESP_LOGI(TAG, "%4d %s session:%lld addr:%d set state:%d response", __LINE__,
              __func__, msg->unary_call->session->value, switch_addr,
              req->state->data->value);
+
+    // notify
+    mt_module_flow_struct_group_t *group =
+        mt_module_flow_new_struct_group_with_notify(2);
+    group->value[0]->key = malloc(MAX_KEY_SIZE);
+    sprintf(group->value[0]->key, "state%d", switch_addr);
+    group->value[0]->type = GOOGLE__PROTOBUF__VALUE__KIND_BOOL_VALUE;
+    group->value[0]->bool_value = req->state->data->value;
+
+    group->value[1]->key = malloc(MAX_KEY_SIZE);
+    sprintf(group->value[1]->key, "from");
+    group->value[1]->type = GOOGLE__PROTOBUF__VALUE__KIND_STRING_VALUE;
+    group->value[1]->string_value = malloc(strlen("net") + 1);
+    sprintf(group->value[1]->string_value, "net");
+    if (module_notify_process(group) != ESP_OK) {
+      ESP_LOGE(TAG, "%4d %s module_notify_process failed", __LINE__, __func__);
+    }
+    mt_module_flow_free_struct_group(group);
+
+    modbus_airswitch001_notify_update_switch(switch_addr,
+                                             req->state->data->value);
+  }
+
   else
     ESP_LOGE(TAG, "%4d %s failed", __LINE__, __func__);
 

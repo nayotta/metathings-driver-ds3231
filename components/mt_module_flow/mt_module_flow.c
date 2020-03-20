@@ -21,6 +21,69 @@
 
 static const char *TAG = "MT_MODULE_FLOW";
 
+// help func ==================================================================
+
+mt_module_flow_struct_group_t *mt_module_flow_new_struct_group(int size) {
+  if (size <= 0) {
+    ESP_LOGE(TAG, "%4d %s size:%d error", __LINE__, __func__, size);
+    return NULL;
+  }
+
+  mt_module_flow_struct_group_t *group =
+      malloc(sizeof(mt_module_flow_struct_group_t));
+  group->size = size;
+  group->value = malloc(size * sizeof(mt_module_flow_struct_t *));
+  for (int i = 0; i < size; i++) {
+    group->value[i] = malloc(sizeof(mt_module_flow_struct_t));
+    group->value[i]->key = NULL;
+    group->value[i]->type = GOOGLE__PROTOBUF__VALUE__KIND_BOOL_VALUE;
+    group->value[i]->bool_value = false;
+  }
+
+  return group;
+}
+
+mt_module_flow_struct_group_t *
+mt_module_flow_new_struct_group_with_notify(int size) {
+  char notify_str[] = "notify";
+  if (size <= 0) {
+    ESP_LOGE(TAG, "%4d %s size:%d error", __LINE__, __func__, size);
+    return NULL;
+  }
+  mt_module_flow_struct_group_t *group =
+      malloc(sizeof(mt_module_flow_struct_group_t));
+  group = mt_module_flow_new_struct_group(size + 1);
+  int notify_size = strlen(notify_str) + 1;
+  group->value[size]->key = malloc(notify_size);
+  memcpy(group->value[size]->key, notify_str, notify_size);
+  group->value[size]->type = GOOGLE__PROTOBUF__VALUE__KIND_BOOL_VALUE;
+  group->value[size]->bool_value = true;
+
+  return group;
+}
+
+void mt_module_flow_free_struct_group(mt_module_flow_struct_group_t *group) {
+  if (group == NULL)
+    return;
+
+  for (int i = 0; i < group->size; i++) {
+    if (group->value[i] != NULL) {
+      if (group->value[i]->key != NULL)
+        free(group->value[i]->key);
+
+      if (group->value[i]->type == GOOGLE__PROTOBUF__VALUE__KIND_STRING_VALUE) {
+        if (group->value[i]->string_value != NULL)
+          free(group->value[i]->string_value);
+      }
+      free(group->value[i]);
+    }
+  }
+  if (group->value != NULL)
+    free(group->value);
+
+  free(group);
+}
+
 // global func ================================================================
 
 static void ping_once(mt_module_flow_t *module_flow) {
@@ -273,7 +336,7 @@ mt_module_flow_t *mt_module_flow_new(int module_index, int flow_index,
   return module_flow;
 }
 
-uint8_t *mt_module_flow_pack_frame(module_struct_group_t *value_in,
+uint8_t *mt_module_flow_pack_frame(mt_module_flow_struct_group_t *value_in,
                                    char *session_id, int *size_out) {
   uint8_t frame_num = value_in->size;
   uint8_t frame_count = 0;
@@ -317,10 +380,14 @@ uint8_t *mt_module_flow_pack_frame(module_struct_group_t *value_in,
       frame_req.frame->data->fields[frame_count]->value->number_value =
           value_in->value[i]->number_value;
       break;
-    case GOOGLE__PROTOBUF__VALUE__KIND_STRING_VALUE:
+    case GOOGLE__PROTOBUF__VALUE__KIND_STRING_VALUE: {
+      int string_size = strlen(value_in->value[i]->string_value) + 1;
       frame_req.frame->data->fields[frame_count]->value->string_value =
-          value_in->value[i]->string_value;
+          malloc(string_size);
+      memcpy(frame_req.frame->data->fields[frame_count]->value->string_value,
+             value_in->value[i]->string_value, string_size);
       break;
+    }
     case GOOGLE__PROTOBUF__VALUE__KIND_BOOL_VALUE:
       frame_req.frame->data->fields[frame_count]->value->bool_value =
           value_in->value[i]->bool_value;
@@ -349,34 +416,87 @@ uint8_t *mt_module_flow_pack_frame(module_struct_group_t *value_in,
   return frame_req_buf;
 }
 
-module_struct_t *mt_module_flow_struct_new() {
-  module_struct_t *value = malloc(sizeof(module_struct_t));
+esp_err_t mt_module_flow_sent_msg(mt_module_flow_t *module_flow,
+                                  mt_module_flow_struct_group_t *group) {
+  esp_err_t err = ESP_OK;
+  char req_topic[256] = "";
+  int frame_req_size = 0;
+  uint8_t *frame_req_buf = NULL;
 
-  value->key = NULL;
-  value->type = GOOGLE__PROTOBUF__VALUE__KIND_NUMBER_VALUE;
-  value->number_value = 0;
+  // check arg
+  if (module_flow == NULL) {
+    ESP_LOGE(TAG, "%4d %s module_flow NULL", __LINE__, __func__);
+    return ESP_ERR_INVALID_ARG;
+  } else {
+    if (module_flow->session == NULL) {
+      ESP_LOGE(TAG, "%4d %s module_flow->session NULL", __LINE__, __func__);
+      return ESP_ERR_INVALID_ARG;
+    }
 
-  return value;
-}
-
-void mt_module_flow_struct_free(module_struct_group_t *value) {
-  if (value == NULL) {
-    ESP_LOGE(TAG, "%4d %s struct is null", __LINE__, __func__);
-    return;
-  }
-
-  for (int i = 0; i < value->size; i++) {
-    if (value->value[i] != NULL) {
-      if (value->value[i]->key != NULL) {
-        free(value->value[i]->key);
-      }
-      if (value->value[i]->type == GOOGLE__PROTOBUF__VALUE__KIND_STRING_VALUE) {
-        if (value->value[i]->string_value != NULL) {
-          free(value->value[i]->string_value);
+    if (module_flow->module_http == NULL) {
+      ESP_LOGE(TAG, "%4d %s module_flow->module_http NULL", __LINE__, __func__);
+      return ESP_ERR_INVALID_ARG;
+    } else {
+      if (module_flow->module_http->module == NULL) {
+        ESP_LOGE(TAG, "%4d %s module_flow->module_http->module NULL", __LINE__,
+                 __func__);
+        return ESP_ERR_INVALID_ARG;
+      } else {
+        if (module_flow->module_http->module->deviceID == NULL) {
+          ESP_LOGE(TAG,
+                   "%4d %s module_flow->module_http->module->deviceID NULL",
+                   __LINE__, __func__);
+          return ESP_ERR_INVALID_ARG;
         }
       }
-      free(value->value[i]);
     }
   }
-  free(value->value);
+  if (group == NULL) {
+    ESP_LOGE(TAG, "%4d %s group NULL", __LINE__, __func__);
+    return ESP_ERR_INVALID_ARG;
+  } else {
+    if (group->size == 0) {
+      ESP_LOGE(TAG, "%4d %s group->size  zero", __LINE__, __func__);
+      return ESP_ERR_INVALID_ARG;
+    }
+    for (int i = 0; i < group->size; i++) {
+      if (group->value == NULL) {
+        ESP_LOGE(TAG, "%4d %s group->value NULL", __LINE__, __func__);
+        return ESP_ERR_INVALID_ARG;
+      } else {
+        if (group->value[i]->key == NULL) {
+          ESP_LOGE(TAG, "%4d %s group->value[%d]->key NULL", __LINE__, __func__,
+                   i);
+          return ESP_ERR_INVALID_ARG;
+        }
+      }
+    }
+  }
+
+  sprintf(req_topic, "mt/devices/%s/flow_channel/sessions/%s/upstream",
+          module_flow->module_http->module->deviceID, module_flow->session);
+
+  // marshall data
+  frame_req_buf =
+      mt_module_flow_pack_frame(group, module_flow->session, &frame_req_size);
+  if (frame_req_buf == NULL) {
+    ESP_LOGE(TAG, "%4d %s mt_module_flow_pack_frame error", __LINE__, __func__);
+    goto EXIT;
+  }
+
+  // mqtt pub
+  err = mqtt_pub_msg(req_topic, frame_req_buf, frame_req_size);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s mqtt_pub_msg failed", __LINE__, __func__);
+    goto EXIT;
+  }
+
+  // log
+  ESP_LOGI(TAG, "%4d %s sent msg success", __LINE__, __func__);
+
+EXIT:
+  if (frame_req_buf != NULL) {
+    free(frame_req_buf);
+  }
+  return err;
 }

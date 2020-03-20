@@ -1,10 +1,11 @@
 #include "string.h"
 
+#include "esp_err.h"
 #include "esp_log.h"
 
 #include "mt_module_flow_manage.h"
 #include "mt_module_mqtt.h"
-#include "mt_module_unarycall_ota.h"
+#include "mt_module_unarycall.h"
 #include "mt_mqtt_utils.h"
 
 #include "google/protobuf/any.pb-c.h"
@@ -24,6 +25,7 @@ mt_module_mqtt_t *app_handle = NULL;
 
 static void mt_module_mqtt_handle_unarycall(
     char *topic, Ai__Metathings__Component__DownStreamFrame *msg) {
+  esp_err_t err = ESP_OK;
   uint64_t session_id = 0;
 
   if (mt_mqtt_utils_get_session_id_from_topic(topic, &session_id) != ESP_OK) {
@@ -42,14 +44,11 @@ static void mt_module_mqtt_handle_unarycall(
     goto EXIT;
   }
 
-  // ota api
-  if (strcmp(msg->unary_call->method->value, "GetVersion") == 0) {
-    mt_module_unarycall_version_handle(msg, Module_id);
-    goto EXIT;
-  }
-
-  if (strcmp(msg->unary_call->method->value, "OtaUpdate") == 0) {
-    mt_module_unarycall_ota_handle(msg, Module_id);
+  // sys api dispatch
+  err = mt_module_unarycall_sys_dispatch(msg, Module_id);
+  if (err == ESP_OK) {
+    ESP_LOGI(TAG, "%4d %s match sys unarycall:%s", __LINE__, __func__,
+             msg->unary_call->method->value);
     goto EXIT;
   }
 
@@ -135,6 +134,7 @@ EXIT:
 }
 
 // global func ================================================================
+
 void mt_module_mqtt_add_handle(
     void (*handle)(Ai__Metathings__Component__DownStreamFrame *msg,
                    char module_id[128]),

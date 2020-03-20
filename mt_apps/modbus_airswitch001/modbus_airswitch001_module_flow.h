@@ -9,4 +9,6 @@
 
 void module_flow_task(mt_module_flow_t *module_flow, char *task_name);
 
+esp_err_t module_notify_process(mt_module_flow_struct_group_t *group);
+
 #endif
