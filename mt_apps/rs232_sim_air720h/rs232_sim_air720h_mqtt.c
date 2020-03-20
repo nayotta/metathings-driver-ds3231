@@ -155,8 +155,8 @@ esp_err_t rs322_sim_air720h_mqtt_set_pub_msg(char *topic, char *msg) {
     return ESP_ERR_INVALID_ARG;
   }
   if (strlen(msg) > MQTT_PUB_MAX_SIZE) {
-    ESP_LOGE(TAG, "%4d %s msg:%d must small than %d", __LINE__, __func__),
-        strlen(msg), MQTT_PUB_MAX_SIZE);
+    ESP_LOGE(TAG, "%4d %s msg:%d must small than %d", __LINE__, __func__,
+             strlen(msg), MQTT_PUB_MAX_SIZE);
     return ESP_ERR_INVALID_ARG;
   }
 

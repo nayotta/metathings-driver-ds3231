@@ -140,7 +140,7 @@ char *mt_utils_get_random_client_id(int id_size) {
   }
 
   for (int i = 0; i < id_size; i++) {
-    buf_out[i] = range[esp_random % (strlen(range))];
+    buf_out[i] = range[esp_random() % (strlen(range))];
   }
 
   return buf_out;

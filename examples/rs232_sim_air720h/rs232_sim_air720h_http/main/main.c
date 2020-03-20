@@ -25,8 +25,8 @@ static const char *TAG = "rs232_sim_air720h_http";
 
 static int UART_NUM = 2;
 static int BAUD_RATE = 115200;
-static int RX_PIN = 16;
-static int TX_PIN = 17;
+static int RX_PIN = 15;
+static int TX_PIN = 13;
 // new session may cause heartbeat 409, false better for test
 #define NEW_SESSION false
 

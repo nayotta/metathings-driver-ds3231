@@ -4,6 +4,8 @@
 #include "esp_err.h"
 #include "esp_system.h"
 
+// define =====================================================================
+
 typedef struct _mt_nvs_host_t {
   char *host;
   char *mqtt_port;
@@ -24,6 +26,16 @@ typedef struct _mt_nvs_module_t {
   char *name;
   mt_nvs_flows_t *flows;
 } mt_nvs_module_t;
+
+// help func =================================================================
+
+void mt_nvs_config_free_host(mt_nvs_host_t *host);
+
+void mt_nvs_config_free_flows(mt_nvs_flows_t *flows);
+
+void mt_nvs_config_free_module(mt_nvs_module_t *module);
+
+// func =======================================================================
 
 esp_err_t mt_nvs_config_get_host_config(mt_nvs_host_t *host_out);
 

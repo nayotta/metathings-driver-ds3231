@@ -49,7 +49,7 @@ EXIT:
 esp_err_t mt_mqtt_init(int mod_index, char *module_id, uint64_t session_id,
                        char *device_id,
                        void (*handle)(char *topic, void *buf, int size)) {
-  esp_err_t err;
+  esp_err_t err = ESP_OK;
   char *net_type = NULL;
 
   net_type = mt_nvs_config_get_net_type();

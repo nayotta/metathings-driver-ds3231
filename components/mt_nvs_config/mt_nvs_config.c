@@ -8,6 +8,57 @@
 
 static const char *TAG = "MT_NVS_CONFIG";
 
+// help func ==================================================================
+
+void mt_nvs_config_free_host(mt_nvs_host_t *host) {
+  if (host == NULL)
+    return;
+
+  if (host->host != NULL)
+    free(host->host);
+
+  if (host->mqtt_port != NULL)
+    free(host->mqtt_port);
+
+  if (host->net_type != NULL)
+    free(host->net_type);
+
+  free(host);
+}
+
+void mt_nvs_config_free_flows(mt_nvs_flows_t *flows) {
+  if (flows == NULL)
+    return;
+
+  for (int i = 0; i < flows->flow_num; i++) {
+    if (flows->flows[i] != NULL)
+      free(flows->flows[i]);
+  }
+
+  free(flows->flows);
+
+  free(flows);
+}
+
+void mt_nvs_config_free_module(mt_nvs_module_t *module) {
+  if (module == NULL)
+    return;
+
+  if (module->id != NULL)
+    free(module->id);
+
+  if (module->key != NULL)
+    free(module->key);
+
+  if (module->name != NULL)
+    free(module->name);
+
+  if (module->flows != NULL)
+    mt_nvs_config_free_flows(module->flows);
+
+  free(module);
+}
+
 // global func ================================================================
 
 esp_err_t mt_nvs_config_get_host_config(mt_nvs_host_t *host_out) {

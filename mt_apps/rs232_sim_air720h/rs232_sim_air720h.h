@@ -39,11 +39,14 @@ esp_err_t rs232_sim_air720h_http_task(mt_module_http_t *module_http);
 
 // mqtt api
 
-esp_err_t rs232_sim_air720h_mqtt_init();
+esp_err_t rs232_sim_air720h_mqtt_init(int mod_index, char *module_id,
+                                      uint64_t session_id, char *device_id,
+                                      void (*handle)(char *topic, void *buf,
+                                                     int size));
 
 esp_err_t rs232_sim_air720h_mqtt_sub();
 
-esp_err_t rs232_sim_air720h_mqtt_pub(char topic, uint8_t *buf, int size);
+esp_err_t rs232_sim_air720h_mqtt_pub(char *topic, uint8_t *buf, int size);
 
 esp_err_t rs232_sim_air720h_mqtt_task();
 

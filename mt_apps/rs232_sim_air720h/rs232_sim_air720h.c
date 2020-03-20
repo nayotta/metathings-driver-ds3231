@@ -8,6 +8,7 @@
 #include "mt_utils_session.h"
 
 #include "rs232_sim_air720h_http.h"
+#include "rs232_sim_air720h_mqtt.h"
 #include "rs232_sim_air720h_recv_manage.h"
 #include "rs232_sim_air720h_recv_manage_http_action.h"
 #include "rs232_sim_air720h_sent_manage.h"
@@ -22,6 +23,8 @@ static char *SHOW_MODULE_PATH = "/v1/device_cloud/actions/show_module";
 static char *HEARTBEAT_PATH = "/v1/device_cloud/actions/heartbeat";
 static char *PUSHFRAME_PATH = "/v1/device_cloud/actions/push_frame_to_flow";
 #define AIR720H_URL_MAX_SIZE 100
+
+void (*msg_process)(char *topic, void *buf, int size);
 
 // static func ================================================================
 
@@ -738,18 +741,23 @@ esp_err_t rs232_sim_air720h_http_task(mt_module_http_t *module_http) {
   return ESP_OK;
 };
 
-esp_err_t rs232_sim_air720h_mqtt_init() {
+esp_err_t rs232_sim_air720h_mqtt_init(int mod_index, char *module_id,
+                                      uint64_t session_id, char *device_id,
+                                      void (*handle)(char *topic, void *buf,
+                                                     int size)) {
   esp_err_t err = ESP_OK;
+  unsigned char *hmac_str = NULL;
 
   ESP_LOGI(TAG, "%4d %s begin", __LINE__, __func__);
 
   // config
-  err = rs322_sim_air720h_mqtt_set_client_config();
+  err = rs322_sim_air720h_mqtt_set_client_config("test", "test");
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s rs322_sim_air720h_mqtt_set_client_config failed",
              __LINE__, __func__);
     goto EXIT;
   }
 
+EXIT:
   return err;
 }

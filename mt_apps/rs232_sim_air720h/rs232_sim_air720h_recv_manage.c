@@ -39,7 +39,7 @@ static void rs232_sim_air720h_recv_manage_parse_msg() {
     goto EXIT;
   }
 
-  // ESP_LOGI(TAG, "%4d %s echo back msg %s", __LINE__, __func__, RECV_BUF);
+  ESP_LOGI(TAG, "%4d %s recv msg %s", __LINE__, __func__, RECV_BUF);
 
   if (strstr((char *)RECV_BUF, "AT+")) {
     goto EXIT;
