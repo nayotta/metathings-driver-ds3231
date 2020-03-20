@@ -4,6 +4,14 @@ description: 空气开关airswitch001, 总路:0, 分路:1, 2
 flow:
   name: m1
   fields:
+    notify:
+      description: 开关状态通知(目前支持state通知)
+      driver: airswitch001
+      type: bool
+    from:
+      description: 开关变化原因(net:远程操作 local:本地操作)
+      driver: airswitch001
+      type: string
     ctrl0:
       description: 开关0能否控制, true:可以控制 false:不能控制
       unit:
