@@ -333,7 +333,7 @@ esp_err_t mt_modbus_airswitch001_task(int tx_pin, int rx_pin, int en_pin) {
   xTaskCreate(modbus_loop, "mt_modbus_task", 1024 * 8, NULL, 12, NULL);
 
   // cache task
-  if (cache_get() != NULL)
+  if (cache_get() == NULL)
     cache_task();
 
 EXIT:

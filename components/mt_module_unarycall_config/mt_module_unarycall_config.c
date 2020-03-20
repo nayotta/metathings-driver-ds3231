@@ -96,7 +96,7 @@ EXIT:
   return;
 }
 
-void mt_module_unarycall_config_set_int_config_handle(
+void mt_module_unarycall_config_set_int32_config_handle(
     Ai__Metathings__Component__DownStreamFrame *msg, char module_id[128]) {
   esp_err_t err = ESP_OK;
   MtSysConfig__SetIntConfigReq *req = NULL;
