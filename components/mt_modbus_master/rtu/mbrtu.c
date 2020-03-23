@@ -157,8 +157,8 @@ eMBErrorCode eMBMasterRTUReceive(UCHAR *pucRcvAddress, UCHAR **pucFrame,
     printf("%2x ", ucMasterRTURcvBuf[i]);
   }
   printf("\n");*/
-  printf("pos:%d, crc:%d\n", usMasterRcvBufferPos,
-         usMBCRC16((UCHAR *)ucMasterRTURcvBuf, usMasterRcvBufferPos));
+  // printf("pos:%d, crc:%d\n", usMasterRcvBufferPos,
+  //      usMBCRC16((UCHAR *)ucMasterRTURcvBuf, usMasterRcvBufferPos));
 
   ENTER_CRITICAL_SECTION();
   assert(usMasterRcvBufferPos < MB_SER_PDU_SIZE_MAX);
@@ -192,7 +192,7 @@ eMBErrorCode eMBMasterRTUSend(UCHAR ucSlaveAddress, const UCHAR *pucFrame,
   eMBErrorCode eStatus = MB_ENOERR;
   USHORT usCRC16;
 
-  printf("eMBMasterRTUSend recv:%d, sent:%d\n", eRcvState, eSndState);
+  // printf("eMBMasterRTUSend recv:%d, sent:%d\n", eRcvState, eSndState);
 
   ENTER_CRITICAL_SECTION();
 
@@ -240,9 +240,9 @@ BOOL xMBMasterRTUReceiveFSM(void) {
   /* Always read the character. */
   (void)xMBMasterPortSerialGetByte((CHAR *)&ucByte);
 
-  printf("rtu count:%4d recv:%d, sent:%d, pos:%d, byte:%2x time:%lld\n",
+  /*printf("rtu count:%4d recv:%d, sent:%d, pos:%d, byte:%2x time:%lld\n",
          DEBUG_COUNT, eRcvState, eSndState, usMasterRcvBufferPos, ucByte,
-         esp_timer_get_time() / 1000);
+         esp_timer_get_time() / 1000);*/
 
   switch (eRcvState) {
     /* If we have received a character in the init state we have to

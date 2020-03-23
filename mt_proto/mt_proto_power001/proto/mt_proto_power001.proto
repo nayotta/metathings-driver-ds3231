@@ -10,18 +10,18 @@ service Service {
 }
 
 message data {
-  float quility = 1; // 电量
+  float quality = 1; // 电量
   float voltage = 2; // 电压
   float current = 3; // 电流
 }
 
-message GetStatesRes {
+message GetDatasRes {
   int32 rescode = 1;
   int32 portnum = 2;       // 总数
   repeated data datas = 3; // 每路数据
 }
 
-message GetStateRes {
+message GetDataRes {
   int32 rescode = 1;
   data data = 2; // 数据
 }

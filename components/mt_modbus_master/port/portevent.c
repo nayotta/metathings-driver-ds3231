@@ -129,7 +129,9 @@ eMBMasterReqErrCode eMBMasterWaitRequestFinish(void) {
   eMBMasterReqErrCode eErrStatus = MB_MRE_NO_ERR;
   eMBMasterResEventType recvedEvent;
 RESTART:
-  xMBMasterResEventGet(&recvedEvent);
+  if (xMBMasterResEventGet(&recvedEvent) == false) {
+    goto RESTART;
+  }
   switch (recvedEvent) {
   case EV_RES_PROCESS_SUCESS:
     break;
