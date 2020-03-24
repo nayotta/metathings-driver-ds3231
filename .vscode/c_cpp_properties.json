@@ -48,7 +48,19 @@
                 "${workspaceFolder}/components/mt_mqtt_lan",
                 "${workspaceFolder}/components/mt_protobuf_c/include/google/protobuf",
                 "${workspaceFolder}/components/mt_nvs_config",
-                "${workspaceFolder}/components/mt_nvs_storage"
+                "${workspaceFolder}/components/mt_nvs_storage",
+                "${workspaceFolder}/components/mt_modbus_master/include",
+                "${workspaceFolder}/mt_apps/modbus_power001",
+                "${workspaceFolder}/mt_apps/modbus_ld100",
+                "${workspaceFolder}/mt_apps/rs232_lora_ebyte",
+                "${workspaceFolder}/components/mt_module_mqtt",
+                "${workspaceFolder}/mt_proto/mt_proto_device_cloud/include",
+                "${workspaceFolder}/components/mt_protobuf_c/include",
+                "${workspaceFolder}/components/mt_mqtt",
+                "${workspaceFolder}/components/mt_module_unarycall_ota",
+                "${workspaceFolder}/components/mt_module_http_manage",
+                "${workspaceFolder}/components/mt_module_lora",
+                "${workspaceFolder}/mt_proto/mt_device_type"
             ],
             "defines": [
                 "_DEBUG",

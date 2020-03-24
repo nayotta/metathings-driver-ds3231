@@ -1,4 +1,10 @@
-set(COMPONENT_SRCDIRS .)
-set(COMPONENT_ADD_INCLUDEDIRS include)
-
-register_component()
+idf_component_register(SRCS "mb.c" 
+                            "functions/mt_mbfunc.c" 
+                            "port/portevent.c"
+                            "port/portothers.c"
+                            "port/portserial.c"
+                            "port/porttimer.c"
+                            "rtu/mbcrc.c"
+                            "rtu/mbrtu.c"
+                            "task/mbtask.c"
+                      INCLUDE_DIRS include)
