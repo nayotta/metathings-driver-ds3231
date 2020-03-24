@@ -14,9 +14,6 @@ static const char *TAG = "MODBUS_POWER001";
 #define POWER001_CMD_VOLTAGE 0x0300
 #define POWER001_CMD_CURRENT 0x0303
 
-static int PORT_NUM = 3;
-static int PORT_ADDR[3] = {1, 2, 3};
-
 // help func ==================================================================
 
 modbus_power001_data_t *modbus_power001_new_data() {
@@ -199,34 +196,43 @@ EXIT:
   return data;
 }
 
-modbus_power001_datas_t *modbus_power001_get_datas() {
-  modbus_power001_datas_t *datas = modbus_power001_new_datas(PORT_NUM);
+modbus_power001_datas_t *
+modbus_power001_get_datas(modbus_power001_config_t *config) {
+  esp_err_t err = ESP_OK;
 
-  for (int i = 0; i < PORT_NUM; i++) {
-    datas->datas[i] = modbus_power001_get_data(PORT_ADDR[i]);
+  err = modbus_power001_storage_check_config(config);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s modbus_power001_storage_check_config failed",
+             __LINE__, __func__);
+    return NULL;
+  }
+
+  modbus_power001_datas_t *datas = modbus_power001_new_datas(config->power_num);
+
+  for (int i = 0; i < config->power_num; i++) {
+    datas->datas[i] = modbus_power001_get_data(config->power_addr[i]);
     if (datas->datas[i] == NULL) {
       ESP_LOGW(TAG,
                "%4d %s modbus_power001_get_data addr:%d real_addr:%d failed",
-               __LINE__, __func__, i, PORT_ADDR[i]);
+               __LINE__, __func__, i, config->power_addr[i]);
     }
   }
 
   return datas;
 }
 
-esp_err_t modbus_power001_init(int tx_pin, int rx_pin, int en_pin) {
+esp_err_t modbus_power001_init(uint8_t port, int tx_pin, int rx_pin,
+                               int en_pin) {
   eMBErrorCode emb_ret = 0;
-  UCHAR RS485_PORT = 2;
   ULONG RS485_BAUD = 2400;
   eMBParity RS485_PARITY = MB_PAR_EVEN;
 
-  emb_ret =
-      modbus_init(RS485_PORT, RS485_BAUD, RS485_PARITY, tx_pin, rx_pin, en_pin);
+  emb_ret = modbus_init(port, RS485_BAUD, RS485_PARITY, tx_pin, rx_pin, en_pin);
   if (emb_ret != 0) {
     ESP_LOGE(TAG, "%4d %s modbus_init failed", __LINE__, __func__);
     return emb_ret;
   }
-    mt_vMBMaster_set_T35_interval(250);
+  mt_vMBMaster_set_T35_interval(250);
   mt_modbus_task();
 
   ESP_LOGI(TAG, "%4d %s init success", __LINE__, __func__);

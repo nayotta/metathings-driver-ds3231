@@ -18,6 +18,7 @@
 static const char *TAG = "RS232_LORA_EBYTE";
 
 static rs232_dev_config_t *CONFIG = NULL;
+static bool INITED = false;
 uint8_t RS232_LORA_EBYTE_DATA_HEAD = 0x61;
 uint8_t RS232_LORA_EBYTE_DATA_END = 0x16;
 
@@ -413,6 +414,8 @@ esp_err_t rs232_lora_ebyte_init(int uart_num, int rx_pin, int tx_pin,
     goto EXIT;
   }
 
+  INITED = true;
+
 EXIT:
   if (err != ESP_OK) {
     rs232_dev_config_free(CONFIG);
@@ -425,6 +428,11 @@ esp_err_t rs232_lora_ebyte_sent(rs232_lora_ebyte_data_t *ebyte_data) {
   esp_err_t err = ESP_OK;
   uint8_t *buf = NULL;
   int buf_size = 0;
+
+  if (INITED == false) {
+    ESP_LOGE(TAG, "%4d %s not inited", __LINE__, __func__);
+    return ESP_ERR_INVALID_STATE;
+  }
 
   buf = rs232_lora_ebyte_gen_data(ebyte_data, &buf_size);
   if (buf == NULL) {
@@ -448,6 +456,11 @@ rs232_lora_ebyte_data_t *rs232_lora_ebyte_recv() {
   rs232_lora_ebyte_data_t *ebyte_recv = NULL;
   int read_size = 0;
   uint8_t *read_buf = NULL;
+
+  if (INITED == false) {
+    ESP_LOGE(TAG, "%4d %s not inited", __LINE__, __func__);
+    return NULL;
+  }
 
   read_buf = rs232_dev_read(CONFIG, &read_size);
 

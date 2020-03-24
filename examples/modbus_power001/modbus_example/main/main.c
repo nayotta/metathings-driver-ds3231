@@ -10,6 +10,7 @@
 // global define ==============================================================
 static const char *TAG = "modbus_power001_example";
 
+int UART_PORT = 2;
 int TX_PIN = 13;
 int RX_PIN = 15;
 int EN_PIN = 05;
@@ -78,8 +79,16 @@ void test_power001_get_data() {
 
 void test_power001_get_datas() {
   modbus_power001_datas_t *datas = NULL;
+  modbus_power001_config_t *config = NULL;
 
-  datas = modbus_power001_get_datas();
+  config = modbus_power001_storage_get_config();
+  if (config == NULL) {
+    ESP_LOGE(TAG, "%4d %s modbus_power001_storage_get_config failed", __LINE__,
+             __func__);
+    return;
+  }
+
+  datas = modbus_power001_get_datas(config);
   if (datas == NULL) {
     ESP_LOGE(TAG, "%4d %s failed", __LINE__, __func__);
     return;
@@ -102,7 +111,7 @@ void app_main() {
 
   ESP_LOGI(TAG, "test begin");
 
-  err = modbus_power001_init(TX_PIN, RX_PIN, EN_PIN);
+  err = modbus_power001_init(UART_PORT, TX_PIN, RX_PIN, EN_PIN);
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s modbus_init failed", __LINE__, __func__);
     return;

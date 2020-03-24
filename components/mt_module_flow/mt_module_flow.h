@@ -47,7 +47,8 @@ typedef struct _module_flow_t {
 
 mt_module_flow_struct_group_t *mt_module_flow_new_struct_group(int size);
 
-mt_module_flow_struct_group_t *mt_module_flow_new_struct_group_with_notify(int size);
+mt_module_flow_struct_group_t *
+mt_module_flow_new_struct_group_with_notify(int size);
 
 void mt_module_flow_free_struct_group(mt_module_flow_struct_group_t *group);
 

@@ -4,12 +4,14 @@
 #include "esp_err.h"
 #include "rs232_dev.h"
 
+// define =====================================================================
+
 #define RS232_LORA_EBYTE_DATA_HEAD_SIZE 1
 #define RS232_LORA_EBYTE_ID_SIZE 2
 #define RS232_LORA_EBYTE_TYPE_SIZE 2
 #define RS232_LORA_EBYTE_CMD_SIZE 2
 #define RS232_LORA_EBYTE_SESSION_SIZE 4
-#define RS232_LORA_EBYTE_LEN_SIZE 1
+#define RS232_LORA_EBYTE_LEN_SIZE 2
 #define RS232_LORA_EBYTE_CRC_SIZE 1
 #define RS232_LORA_EBYTE_DATA_END_SIZE 1
 #define RS232_LORA_EBYTE_MIN_DATA_SIZE                                         \
@@ -40,9 +42,13 @@ typedef struct _rs232_lora_ebyte_t {
   rs232_dev_config_t config;
 } rs232_lora_ebyte_t;
 
+// help func ==================================================================
+
 rs232_lora_ebyte_data_t *rs232_lora_ebyte_new_data();
 
 void rs232_lora_ebyte_free_data(rs232_lora_ebyte_data_t *ebyte_data);
+
+// func =======================================================================
 
 esp_err_t rs232_lora_ebyte_init(int uart_num, int rx_pin, int tx_pin,
                                 int baud_rate);

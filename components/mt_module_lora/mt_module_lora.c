@@ -11,6 +11,7 @@
 #include "mt_module_unarycall_ota.h"
 #include "mt_mqtt_lan.h"
 #include "mt_mqtt_utils.h"
+#include "mt_nvs_storage.h"
 
 #include "google/protobuf/any.pb-c.h"
 #include "google/protobuf/empty.pb-c.h"
@@ -246,6 +247,17 @@ static void mt_module_lora_proxy_process(char *topic, uint8_t *buf, int size) {
 EXIT:
   ai__metathings__component__down_stream_frame__free_unpacked(msg_mqtt, NULL);
   return;
+}
+
+// help func ==================================================================
+
+esp_err_t mt_module_lora_get_client_id(int32_t *id) {
+  if (mt_nvs_read_int32_config("lora_id", id) == false) {
+    ESP_LOGE(TAG, "%4d %s read lora_id failed", __LINE__, __func__);
+    return ESP_ERR_INVALID_RESPONSE;
+  }
+
+  return ESP_OK;
 }
 
 // global func ================================================================

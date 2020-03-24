@@ -14,5 +14,5 @@ CONFIG_OTA_ALLOW_HTTP=y
 # flash and partitions
 CONFIG_ESPTOOLPY_FLASHSIZE_4MB=y
 CONFIG_PARTITION_TABLE_CUSTOM=y
-CONFIG_PARTITION_TABLE_CUSTOM_FILENAME="../../partitions/partitions.csv"
-CONFIG_PARTITION_TABLE_FILENAME="../../partitions/partitions.csv"
+CONFIG_PARTITION_TABLE_CUSTOM_FILENAME="../../../partitions/partitions.csv"
+CONFIG_PARTITION_TABLE_FILENAME="../../../partitions/partitions.csv"

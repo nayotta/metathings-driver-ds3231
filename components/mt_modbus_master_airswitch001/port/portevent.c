@@ -127,7 +127,10 @@ void vMBMasterResErrorCBExecuteFunction() {
 eMBMasterReqErrCode eMBMasterWaitRequestFinish(void) {
   eMBMasterReqErrCode eErrStatus = MB_MRE_NO_ERR;
   eMBMasterResEventType recvedEvent;
-  xMBMasterResEventGet(&recvedEvent);
+RESTART:
+  if (xMBMasterResEventGet(&recvedEvent) == false) {
+    goto RESTART;
+  }
   switch (recvedEvent) {
   case EV_RES_PROCESS_SUCESS:
     break;

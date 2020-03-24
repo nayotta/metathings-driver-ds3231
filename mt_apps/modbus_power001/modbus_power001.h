@@ -4,6 +4,8 @@
 #include "esp_err.h"
 #include "esp_log.h"
 
+#include "modbus_power001_storage.h"
+
 // define =====================================================================
 
 typedef struct _modbus_power001_data_t {
@@ -29,7 +31,7 @@ void modbus_power001_free_datas(modbus_power001_datas_t *datas);
 
 // func =======================================================================
 
-esp_err_t modbus_power001_init(int tx_pin, int rx_pin, int en_pin);
+esp_err_t modbus_power001_init(uint8_t port,int tx_pin, int rx_pin, int en_pin);
 
 // single api
 
@@ -43,6 +45,7 @@ esp_err_t modbus_power001_get_current(uint8_t port, double *data);
 
 modbus_power001_data_t *modbus_power001_get_data(int port);
 
-modbus_power001_datas_t *modbus_power001_get_datas();
+modbus_power001_datas_t *
+modbus_power001_get_datas(modbus_power001_config_t *config);
 
 #endif
