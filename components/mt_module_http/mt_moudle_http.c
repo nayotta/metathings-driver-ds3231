@@ -1338,10 +1338,11 @@ void mt_module_http_task(mt_module_http_t *module_http, char *task_name) {
 
 mt_module_http_t *mt_module_http_new(int mod_index_in) {
   mt_module_http_t *module_http = malloc(sizeof(mt_module_http_t));
-  mt_nvs_host_t *host = malloc(sizeof(mt_nvs_host_t));
+  mt_nvs_host_t *host = NULL;
   mt_nvs_module_t *mod = malloc(sizeof(mt_nvs_module_t));
 
-  if (mt_nvs_config_get_host_config(host) != ESP_OK) {
+  host = mt_nvs_config_get_host_config();
+  if (host == NULL) {
     ESP_LOGE(TAG, "%4d %s mt_nvs_config_get_host_config failed", __LINE__,
              __func__);
     return NULL;
@@ -1350,7 +1351,8 @@ mt_module_http_t *mt_module_http_new(int mod_index_in) {
   ESP_LOGI(TAG, "%4d %s host:%s http_port:%d mqtt_port:%s", __LINE__, __func__,
            host->host, host->http_port, host->mqtt_port);
 
-  if (mt_nvs_config_get_module(mod_index_in, mod) != ESP_OK) {
+  mod = mt_nvs_config_get_module(mod_index_in);
+  if (mod == NULL) {
     ESP_LOGE(TAG, "%4d %s mt_nvs_config_get_module index:%d failed", __LINE__,
              __func__, mod_index_in);
     return NULL;

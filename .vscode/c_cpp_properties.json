@@ -60,7 +60,8 @@
                 "${workspaceFolder}/components/mt_module_unarycall_ota",
                 "${workspaceFolder}/components/mt_module_http_manage",
                 "${workspaceFolder}/components/mt_module_lora",
-                "${workspaceFolder}/mt_proto/mt_device_type"
+                "${workspaceFolder}/mt_proto/mt_device_type",
+                "${workspaceFolder}/components/mt_module_unarycall"
             ],
             "defines": [
                 "_DEBUG",

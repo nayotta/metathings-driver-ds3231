@@ -19,7 +19,7 @@ static int RECV_SIZE = 0;
 static char *STR_OK = "OK";
 static char *STR_ERROR = "ERROR";
 static char *STR_DOWNLOAD = "DOWNLOAD";
-static char *STR_CONNECT_OK = "CONNECT OK";
+static char *STR_CONNECT_OK = "CONNECT";
 static char *STR_NET_OK = "+CGATT: 1";
 static char *STR_MQTT_CONN_OK = "CONNACK OK";
 static char *STR_MQTT_SUB_OK = "SUBACK";
@@ -39,13 +39,14 @@ static void rs232_sim_air720h_recv_manage_parse_msg() {
     goto EXIT;
   }
 
-  ESP_LOGI(TAG, "%4d %s recv msg %s", __LINE__, __func__, RECV_BUF);
+  ESP_LOGI(TAG, "%4d %s recv msg:%2d---> %s", __LINE__, __func__,
+           strlen((char *)RECV_BUF), RECV_BUF);
 
   if (strstr((char *)RECV_BUF, "AT+")) {
     goto EXIT;
   }
 
-  if (strstr((char *)RECV_BUF, STR_OK)) {
+  if (strstr((char *)RECV_BUF, STR_OK) && strlen((char *)RECV_BUF) == 3) {
     ACK.ack_ok = true;
     goto EXIT;
   }

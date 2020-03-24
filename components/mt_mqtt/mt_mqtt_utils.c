@@ -452,3 +452,43 @@ char *mt_mqtt_utils_set_path_downstream_to_upstream(char *topic) {
   topic_out[topic_out_size - 1] = '\0';
   return topic_out;
 }
+
+char *mt_mqtt_utils_new_module_topic(char *module_id) {
+  esp_err_t err = ESP_OK;
+  char *topic = malloc(256);
+
+  if (module_id == NULL) {
+    ESP_LOGE(TAG, "%4d %s module_id NULL", __LINE__, __func__);
+    err = ESP_ERR_INVALID_ARG;
+    goto EXIT;
+  }
+
+  sprintf(topic, "mt/modules/%s/+/sessions/+/downstream", module_id);
+
+EXIT:
+  if (err != ESP_OK) {
+    free(topic);
+    topic = NULL;
+  }
+  return topic;
+}
+
+char *mt_mqtt_utils_new_device_topic(char *device_id) {
+  esp_err_t err = ESP_OK;
+  char *topic = malloc(256);
+
+  if (device_id == NULL) {
+    ESP_LOGE(TAG, "%4d %s device_id NULL", __LINE__, __func__);
+    err = ESP_ERR_INVALID_ARG;
+    goto EXIT;
+  }
+
+  sprintf(topic, "mt/devices/%s/+/sessions/+/downstream", device_id);
+
+EXIT:
+  if (err != ESP_OK) {
+    free(topic);
+    topic = NULL;
+  }
+  return topic;
+}
