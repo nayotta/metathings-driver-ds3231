@@ -12,8 +12,7 @@
 #define CONFIG_FREERTOS_HZ 100
 #endif
 
-typedef struct _rs232_dev_config_t
-{
+typedef struct _rs232_dev_config_t {
   int uart_num;
   int rx_pin;
   int tx_pin;
@@ -25,6 +24,9 @@ typedef struct _rs232_dev_config_t
 } rs232_dev_config_t;
 
 uint8_t *rs232_dev_read(rs232_dev_config_t *dev_config, int *buf_size_out);
+
+// uint8_t *rs232_dev_read_debug(rs232_dev_config_t *dev_config,
+//                             int *buf_size_out);
 
 esp_err_t rs232_dev_write(rs232_dev_config_t *dev_config, uint8_t *buf_in,
                           int buf_size_in);

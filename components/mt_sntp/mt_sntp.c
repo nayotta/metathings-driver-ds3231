@@ -15,8 +15,8 @@ static const char *TAG = "MT_SNTP";
 #define MT_SNTP_NVS_YEAR "SNTP_YEAR"
 #define MT_SNTP_NVS_MON "SNTP_MON"
 #define MT_SNTP_NVS_DAY "SNTP_DAY"
-#define MT_SNTP_SYNC_RTC_TIME (2 * 60)  // 2分钟
-#define MT_SNTP_FROM_RTC_TIMEOUT (30)   // 30秒
+#define MT_SNTP_SYNC_RTC_TIME (2 * 60) // 2分钟
+#define MT_SNTP_FROM_RTC_TIMEOUT (30)  // 30秒
 
 extern EventGroupHandle_t WIFI_EVENT_GROUP;
 bool MT_SNTP_SYNCED = false;
@@ -221,7 +221,7 @@ static void mt_sntp_loop() {
 
     time(&now);
     localtime_r(&now, &timeinfo);
-    timeinfo.tm_year += 1900;  // must convert!!!
+    timeinfo.tm_year += 1900; // must convert!!!
 
     if (mt_rtc_time_set_time(&timeinfo) != ESP_OK) {
       ESP_LOGE(TAG, "%d mt_rtc_time_set_time failed", __LINE__);

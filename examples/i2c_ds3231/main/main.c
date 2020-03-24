@@ -21,7 +21,7 @@ void ds3231_test(void *pvParameters) {
 
   // setup datetime: 2019-04-09 13:50:10
   struct tm time = {.tm_year = 2019,
-                    .tm_mon = 4 - 1,  // 0-based
+                    .tm_mon = 4 - 1, // 0-based
                     .tm_mday = 9,
                     .tm_hour = 12,
                     .tm_min = 50,

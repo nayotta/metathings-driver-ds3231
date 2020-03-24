@@ -23,8 +23,8 @@
 
 #include "mt_mqtt.h"
 #include "mt_mqtt_lan.h"
-#include "mt_utils.h"
 #include "mt_nvs_config.h"
+#include "mt_utils.h"
 
 // global value ===============================================================
 static const char *TAG = "MT_MQTT_LAN";
@@ -36,35 +36,29 @@ uint64_t Session_id = 0;
 void (*msg_process)(char *topic, void *buf, int size);
 
 // static func ================================================================
-static esp_err_t message_arrived_callback(esp_mqtt_event_handle_t event)
-{
+static esp_err_t message_arrived_callback(esp_mqtt_event_handle_t event) {
   esp_err_t err;
 
   esp_mqtt_client_handle_t client = event->client;
-  switch (event->event_id)
-  {
-  case MQTT_EVENT_CONNECTED:
-  {
+  switch (event->event_id) {
+  case MQTT_EVENT_CONNECTED: {
     ESP_LOGI(TAG, "mqtt connect");
     char topic[TOPIC_MAX_SIZE] = "";
     sprintf(topic, "mt/modules/%s/+/sessions/+/downstream", Module_id);
 
     ESP_LOGI(TAG, "%d sub %s", __LINE__, topic);
     err = esp_mqtt_client_subscribe(client, topic, 0);
-    if (err == -1)
-    {
+    if (err == -1) {
       ESP_LOGE(TAG, "%d esp_mqtt_client_subscribe error", __LINE__);
     }
 
-    if (strcmp(Device_id, "") != 0)
-    {
+    if (strcmp(Device_id, "") != 0) {
       char topic[TOPIC_MAX_SIZE] = "";
       sprintf(topic, "mt/devices/%s/+/sessions/+/downstream", Device_id);
 
       ESP_LOGI(TAG, "%d sub %s", __LINE__, topic);
       err = esp_mqtt_client_subscribe(client, topic, 0);
-      if (err == -1)
-      {
+      if (err == -1) {
         ESP_LOGE(TAG, "%d esp_mqtt_client_subscribe error", __LINE__);
       }
     }
@@ -84,19 +78,15 @@ static esp_err_t message_arrived_callback(esp_mqtt_event_handle_t event)
   case MQTT_EVENT_PUBLISHED:
     ESP_LOGI(TAG, "%d mqtt pub", __LINE__);
     break;
-  case MQTT_EVENT_DATA:
-  {
+  case MQTT_EVENT_DATA: {
     char *topic = malloc(event->topic_len + 1);
     memcpy(topic, event->topic, event->topic_len);
     topic[event->topic_len] = '\0';
     ESP_LOGI(TAG, "%d get data, topic:%s size=%d", __LINE__, topic,
              (int)event->data_len);
-    if (msg_process != NULL)
-    {
+    if (msg_process != NULL) {
       (*msg_process)(topic, (void *)event->data, (int)event->data_len);
-    }
-    else
-    {
+    } else {
       ESP_LOGE(TAG, "%d msg_process not init", __LINE__);
       return ESP_ERR_INVALID_ARG;
     }
@@ -114,41 +104,38 @@ static esp_err_t message_arrived_callback(esp_mqtt_event_handle_t event)
 }
 
 // global func ================================================================
-int mqtt_pub_msg(char *topic, uint8_t *buf, int size)
-{
+esp_err_t mqtt_pub_msg(char *topic, uint8_t *buf, int size) {
   esp_err_t err;
 
+  ESP_LOGI(TAG, "%4d %s mqtt pub msg,topic=%s,size=%d", __LINE__, __func__,
+           topic, size);
   err = esp_mqtt_client_publish(Mqtt_Client, topic, (const char *)buf, size, 0,
                                 0);
-  if (err != ESP_OK)
-  {
-    ESP_LOGE(TAG, "%d error", __LINE__);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%d %s error", __LINE__, __func__);
     return ESP_ERR_INVALID_STATE;
   }
 
-  return ESP_OK;
+  return err;
 }
 
-int mqtt_init(int mod_index,
-              char *module_id, uint64_t session_id, char *device_id,
-              void (*handle)(char *topic, void *buf, int size))
-{
+esp_err_t mqtt_init(int mod_index, char *module_id, uint64_t session_id,
+                    char *device_id,
+                    void (*handle)(char *topic, void *buf, int size)) {
 
-  //char *host, char *port, char *username, char *key,
+  // char *host, char *port, char *username, char *key,
   esp_err_t err;
   unsigned char *hmac_str = NULL;
   mt_nvs_host_t *host = malloc(sizeof(mt_nvs_host_t));
   mt_nvs_module_t *mod = malloc(sizeof(mt_nvs_module_t));
 
-  if (mt_nvs_config_get_host_config(host) != ESP_OK)
-  {
+  if (mt_nvs_config_get_host_config(host) != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s mt_nvs_config_get_host_config failed", __LINE__,
              __func__);
     return ESP_ERR_INVALID_ARG;
   }
 
-  if (mt_nvs_config_get_module(mod_index, mod) != ESP_OK)
-  {
+  if (mt_nvs_config_get_module(mod_index, mod) != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s mt_nvs_config_get_module index:%d failed", __LINE__,
              __func__, mod_index);
     return ESP_ERR_INVALID_ARG;
@@ -178,8 +165,7 @@ int mqtt_init(int mod_index,
   Mqtt_Client = esp_mqtt_client_init(&mqtt_cfg);
 
   err = esp_mqtt_client_start(Mqtt_Client);
-  if (err != ESP_OK)
-  {
+  if (err != ESP_OK) {
     ESP_LOGE(TAG, "%d esp_mqtt_client_start failed", __LINE__);
     return ESP_ERR_INVALID_STATE;
   }

@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package mt_power001;
+
+import "google/protobuf/empty.proto";
+
+service Service {
+  rpc GetDatas(google.protobuf.Empty) returns (GetDatasRes) {}
+  rpc GetData(google.protobuf.Empty) returns (GetDataRes) {}
+}
+
+message data {
+  float quility = 1; // 电量
+  float voltage = 2; // 电压
+  float current = 3; // 电流
+}
+
+message GetStatesRes {
+  int32 rescode = 1;
+  int32 portnum = 2;       // 总数
+  repeated data datas = 3; // 每路数据
+}
+
+message GetStateRes {
+  int32 rescode = 1;
+  data data = 2; // 数据
+}

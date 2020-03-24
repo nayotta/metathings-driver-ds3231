@@ -19,14 +19,12 @@ int RX_PIN = 15;
 int EN_PIN = 05;
 
 // test func =================================================================
-void test_get_data()
-{
+void test_get_data() {
   esp_err_t err = ESP_OK;
   gzpd800T_4ch_data_t data;
 
   err = mt_gzpd800T_get_4ch_data(&data);
-  if (err != ESP_OK)
-  {
+  if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s failed code:%d", __LINE__, __func__, err);
     return;
   }
@@ -44,16 +42,13 @@ void test_get_data()
   return;
 }
 
-void test_get_warn()
-{
+void test_get_warn() {
   esp_err_t err = ESP_OK;
   bool warn = false;
 
-  for (int i = 0; i < 4; i++)
-  {
+  for (int i = 0; i < 4; i++) {
     err = mt_gzpd800T_get_warn(i + 1, &warn);
-    if (err != ESP_OK)
-    {
+    if (err != ESP_OK) {
       ESP_LOGE(TAG, "%4d %s failed code:%d", __LINE__, __func__, err);
       return;
     }
@@ -66,21 +61,18 @@ void test_get_warn()
 }
 
 // main func ==================================================================
-void app_main()
-{
+void app_main() {
   esp_err_t err = ESP_OK;
 
   ESP_LOGI(TAG, "test begin");
 
   err = mt_gzpd800T_init(TX_PIN, RX_PIN, EN_PIN);
-  if (err != ESP_OK)
-  {
+  if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d modbus_init failed", __LINE__);
     return;
   }
 
-  while (1)
-  {
+  while (1) {
     // test get data
     vTaskDelay(2000 / portTICK_RATE_MS);
     test_get_data();

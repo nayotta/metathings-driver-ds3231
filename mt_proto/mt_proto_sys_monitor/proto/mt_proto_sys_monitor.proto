@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package mt_sys_monitor;
+
+import "google/protobuf/empty.proto";
+
+service MtSysMonitor {
+  rpc SysMonitorGetState(google.protobuf.Empty) returns (GetStateRes) {}
+  rpc SysMonitorSetRestart(google.protobuf.Empty) returns (SetRestartRes) {}
+}
+
+message State {
+  int32 startup = 1;      // 启动到现在的时间按 单位秒
+  int32 restartcount = 2; // 重启计数
+  float free = 3;         // 空闲内存百分比
+  int32 errorcount = 4;   // 错误计数器
+}
+
+message GetStateRes {
+  int32 code = 1;
+  State state = 2;
+}
+
+message SetRestartRes { int32 code = 1; }

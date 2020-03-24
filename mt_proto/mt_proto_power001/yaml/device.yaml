@@ -1,0 +1,30 @@
+# yaml
+version: v1beta
+description: power001 德力西DDSU6606
+flow:
+  name: m1
+  fields:
+    Q0:
+      description: 开关0电量(开关地址用尾数标记)
+      unit:
+      driver: power001
+      type: float
+      period: 600
+      min: 0
+      max: 10000
+    U0:
+      description: 开关0电压(开关地址用尾数标记)
+      unit:
+      driver: power001
+      type: float
+      period: 600
+      min: 0
+      max: 1000
+    I0:
+      description: 开关0电流(开关地址用尾数标记)
+      unit:
+      driver: power001
+      type: float
+      period: 600
+      min: 0
+      max: 1000

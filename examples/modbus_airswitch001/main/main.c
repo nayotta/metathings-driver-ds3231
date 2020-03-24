@@ -21,15 +21,13 @@ int EXAMPLE_NUM_MASTER = 1;
 int EXAMPLE_NUM_SLAVER = 1;
 
 // test func =================================================================
-void test_airswitch001_get_addrs()
-{
+void test_airswitch001_get_addrs() {
   esp_err_t err = ESP_OK;
   USHORT addrs = 0;
 
 REGET:
   err = mt_airswitch001_get_addrs(ADDR, &addrs);
-  if (err != ESP_OK)
-  {
+  if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s failed code:%d", __LINE__, __func__, err);
     vTaskDelay(2000 / portTICK_RATE_MS);
     goto REGET;
@@ -39,8 +37,7 @@ REGET:
   ESP_LOGI(TAG, "%4d %s ret:%d", __LINE__, __func__, addrs);
 }
 
-void test_airswitch001_get_config(UCHAR target)
-{
+void test_airswitch001_get_config(UCHAR target) {
   esp_err_t err = ESP_OK;
   double votage_high = 0;
   double votage_low = 0;
@@ -51,8 +48,7 @@ void test_airswitch001_get_config(UCHAR target)
 
   err = mt_airswitch001_get_configs(ADDR, target, &votage_high, &votage_low,
                                     &leak_current, &power, &temp, &current);
-  if (err != ESP_OK)
-  {
+  if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s failed code:%d", __LINE__, __func__, err);
     return;
   }
@@ -65,8 +61,7 @@ void test_airswitch001_get_config(UCHAR target)
   ESP_LOGI(TAG, "%4d %s cfg_current     :%f", __LINE__, __func__, current);
 }
 
-void test_airswitch001_get_data(UCHAR target)
-{
+void test_airswitch001_get_data(UCHAR target) {
   esp_err_t err = ESP_OK;
   bool state = false;
   bool ctrl = false;
@@ -78,8 +73,7 @@ void test_airswitch001_get_data(UCHAR target)
 
   err = mt_airswitch001_get_datas(ADDR, target, &state, &ctrl, &votage,
                                   &leak_current, &power, &temp, &current);
-  if (err != ESP_OK)
-  {
+  if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s mt_airswitch001_get_datas failed code:%d", __LINE__,
              __func__, err);
     return;
@@ -95,31 +89,27 @@ void test_airswitch001_get_data(UCHAR target)
 }
 
 // main func ==================================================================
-void app_main()
-{
+void app_main() {
   esp_err_t err = ESP_OK;
 
   ESP_LOGI(TAG, "test begin");
 
   mt_nvs_init();
 
-  if (mt_nvs_write_int32_config("mod_1_master", EXAMPLE_NUM_MASTER) == false)
-  {
+  if (mt_nvs_write_int32_config("mod_1_master", EXAMPLE_NUM_MASTER) == false) {
     ESP_LOGE(TAG, "%4d %s mt_nvs_write_int32_config mod_1_master failed",
              __LINE__, __func__);
     return;
   }
 
-  if (mt_nvs_write_int32_config("mod_1_slaver", EXAMPLE_NUM_SLAVER) == false)
-  {
+  if (mt_nvs_write_int32_config("mod_1_slaver", EXAMPLE_NUM_SLAVER) == false) {
     ESP_LOGE(TAG, "%4d %s mt_nvs_write_int32_config mod_1_slaver failed",
              __LINE__, __func__);
     return;
   }
 
   err = mt_modbus_airswitch001_task(TX_PIN, RX_PIN, EN_PIN);
-  if (err != ESP_OK)
-  {
+  if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s mt_modbus_airswitch001_task failed", __LINE__,
              __func__);
     return;
@@ -130,10 +120,8 @@ void app_main()
 
   test_airswitch001_get_addrs();
 
-  while (1)
-  {
-    for (int i = 1; i <= EXAMPLE_NUM_MASTER + EXAMPLE_NUM_SLAVER; i++)
-    {
+  while (1) {
+    for (int i = 1; i <= EXAMPLE_NUM_MASTER + EXAMPLE_NUM_SLAVER; i++) {
       ESP_LOGW(TAG, "\n\n==================switch:%d", i);
       test_airswitch001_get_config(i);
       test_airswitch001_get_data(i);

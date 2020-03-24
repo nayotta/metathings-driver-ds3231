@@ -1,0 +1,67 @@
+syntax = "proto3";
+
+package mt_sys_config;
+
+import "google/protobuf/empty.proto";
+
+service MtSysConfig {
+  rpc SysConfigGetIntConfig(GetIntConfigReq) returns (GetIntConfigRes) {}
+
+  rpc SysConfigSetIntConfig(SetIntConfigReq) returns (SetRes) {}
+
+  rpc SysConfigGetStringConfig(GetStringConfigReq)
+      returns (GetStringConfigRes) {}
+  rpc SysConfigSetStringConfig(SetStringConfigReq) returns (SetRes) {}
+
+  rpc SysConfigGetHostConfig(google.protobuf.Empty) returns (GetHostConfigRes) {
+  }
+
+  rpc SysConfigSetHostConfig(SetHostConfigReq) returns (SetRes) {}
+}
+
+message SetRes { int32 code = 1; }
+
+message IntConfig { int32 value = 1; }
+
+message StringConfig { string value = 1; }
+
+message HostConfig {
+  string host = 1;     // host addr
+  bool usessl = 2;     // if use ssl
+  int32 httpport = 3;  // http port
+  string mqtthost = 4; // mqtt host
+  int32 mqttport = 5;  // mqtt port
+  string credid = 6;   // module cred id
+  string credkey = 7;  // module cred key
+}
+
+message GetIntConfigReq { string key = 1; }
+
+message GetIntConfigRes {
+  int32 code = 1;
+  IntConfig intconfig = 2;
+}
+
+message SetIntConfigReq {
+  string key = 1;
+  int32 value = 2;
+}
+
+message GetStringConfigReq { string key = 1; }
+
+message GetStringConfigRes {
+  int32 code = 1;
+  StringConfig stringconfig = 2;
+}
+
+message SetStringConfigReq {
+  string key = 1;
+  string value = 2;
+}
+
+message GetHostConfigRes {
+  int32 code = 1;
+  HostConfig hostconfig = 2;
+}
+
+message SetHostConfigReq { HostConfig hostconfig = 1; }

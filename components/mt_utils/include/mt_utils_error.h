@@ -1,0 +1,11 @@
+#ifndef _MT_UTILS_ERROR_H
+#define _MT_UTILS_ERROR_H
+
+typedef enum {
+  MT_ERR_NO_ERR = 0,
+  MT_ERR_UNKNOWN = 1,
+  MT_ERR_INVALID_ARG = 100,
+  MT_ERR_INVALID_RESPONSE = 101,
+} MT_UTILS_ERROR;
+
+#endif

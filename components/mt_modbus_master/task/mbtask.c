@@ -148,7 +148,7 @@ static void modbus_loop(void *parameter) {
   // theard lock
   modbus_lock_init();
 
-  RetMsg = malloc(sizeof(struct RetMsg_t));  // global no need free
+  RetMsg = malloc(sizeof(struct RetMsg_t)); // global no need free
   memset(RetMsg->retBuf, 0, BUF_MAXLEN);
   RetMsg->recvCmd = 0;
   RetMsg->retLen = 0;

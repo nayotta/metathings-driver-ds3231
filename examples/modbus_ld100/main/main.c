@@ -20,14 +20,12 @@ int EN_PIN = 05;
 int ADDR = 1;
 
 // test func =================================================================
-void test_ld100_get_addr()
-{
+void test_ld100_get_addr() {
   esp_err_t err = ESP_OK;
   bool state = true;
 
   err = mt_ld100_get_addr(ADDR, &state);
-  if (err != ESP_OK)
-  {
+  if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s failed code:%d", __LINE__, __func__, err);
     return;
   }
@@ -37,13 +35,11 @@ void test_ld100_get_addr()
   return;
 }
 
-void test_ld100_set_addr()
-{
+void test_ld100_set_addr() {
   esp_err_t err = ESP_OK;
 
   err = mt_ld100_set_addr(ADDR, ADDR);
-  if (err != ESP_OK)
-  {
+  if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s failed code:%d", __LINE__, __func__, err);
     return;
   }
@@ -53,22 +49,19 @@ void test_ld100_set_addr()
   return;
 }
 
-void test_ld100_get_state_and_relay()
-{
+void test_ld100_get_state_and_relay() {
   esp_err_t err = ESP_OK;
   bool state = true;
   bool relay = true;
 
   err = mt_ld100_get_state(ADDR, &state);
-  if (err != ESP_OK)
-  {
+  if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s failed code:%d", __LINE__, __func__, err);
     return;
   }
 
   err = mt_ld100_get_relay(ADDR, &relay);
-  if (err != ESP_OK)
-  {
+  if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s failed code:%d", __LINE__, __func__, err);
     return;
   }
@@ -78,13 +71,11 @@ void test_ld100_get_state_and_relay()
   return;
 }
 
-void test_ld100_set_relay(bool state)
-{
+void test_ld100_set_relay(bool state) {
   esp_err_t err = ESP_OK;
 
   err = mt_ld100_set_relay(ADDR, state);
-  if (err != ESP_OK)
-  {
+  if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s failed code:%d", __LINE__, __func__, err);
     return;
   }
@@ -95,16 +86,14 @@ void test_ld100_set_relay(bool state)
 }
 
 // main func ==================================================================
-void app_main()
-{
+void app_main() {
   eMBErrorCode emb_ret = 0;
 
   ESP_LOGI(TAG, "test begin");
 
-  emb_ret =
-      modbus_ld100_init(RS485_PORT, RS485_BAUD, RS485_PARITY, TX_PIN, RX_PIN, EN_PIN);
-  if (emb_ret != 0)
-  {
+  emb_ret = modbus_ld100_init(RS485_PORT, RS485_BAUD, RS485_PARITY, TX_PIN,
+                              RX_PIN, EN_PIN);
+  if (emb_ret != 0) {
     ESP_LOGE(TAG, "%4d modbus_init failed", __LINE__);
     return;
   }
@@ -129,8 +118,7 @@ void app_main()
 
   ESP_LOGI(TAG, "test end");
 
-  while (1)
-  {
+  while (1) {
     test_ld100_get_state_and_relay();
     vTaskDelay(2000 / portTICK_RATE_MS);
   }

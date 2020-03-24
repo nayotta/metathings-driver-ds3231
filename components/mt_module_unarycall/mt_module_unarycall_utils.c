@@ -13,35 +13,29 @@ static const char *TAG = "MT_MOUDLE_UNARYCALL_UTILS";
 
 // global func ================================================================
 esp_err_t mt_module_unarycall_utils_check(
-    Ai__Metathings__Component__DownStreamFrame *msg)
-{
-  if (msg == NULL)
-  {
+    Ai__Metathings__Component__DownStreamFrame *msg) {
+  if (msg == NULL) {
     ESP_LOGE(TAG, "%4d %s msg NULL", __LINE__, __func__);
     return ESP_ERR_INVALID_ARG;
   }
 
   if (msg->union_case !=
-      AI__METATHINGS__COMPONENT__DOWN_STREAM_FRAME__UNION_UNARY_CALL)
-  {
+      AI__METATHINGS__COMPONENT__DOWN_STREAM_FRAME__UNION_UNARY_CALL) {
     ESP_LOGE(TAG, "%4d %s msg->union_case != unarycall", __LINE__, __func__);
     return ESP_ERR_INVALID_ARG;
   }
 
-  if (msg->unary_call == NULL)
-  {
+  if (msg->unary_call == NULL) {
     ESP_LOGE(TAG, "%4d %s msg->unary_call NULL", __LINE__, __func__);
     return ESP_ERR_INVALID_ARG;
   }
 
-  if (msg->unary_call->value == NULL)
-  {
+  if (msg->unary_call->value == NULL) {
     ESP_LOGE(TAG, "%4d %s msg->unary_call->value NULL", __LINE__, __func__);
     return ESP_ERR_INVALID_ARG;
   }
-  
-  if(msg->unary_call->session == NULL)
-  {
+
+  if (msg->unary_call->session == NULL) {
     ESP_LOGE(TAG, "%4d %s msg->unary_call->session NULL", __LINE__, __func__);
     return ESP_ERR_INVALID_ARG;
   }
@@ -51,8 +45,7 @@ esp_err_t mt_module_unarycall_utils_check(
 
 uint8_t *mt_module_unarycall_utils_pack(
     uint8_t *buf_in, int size_in, const char *methodres_in,
-    Ai__Metathings__Component__DownStreamFrame *msg_in, int *frame_size_out)
-{
+    Ai__Metathings__Component__DownStreamFrame *msg_in, int *frame_size_out) {
   uint8_t *frame_buf = NULL;
   char url[128] = "";
 

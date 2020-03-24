@@ -6,8 +6,13 @@
 typedef void (*mt_module_mqtt_app_handle_t)(
     Ai__Metathings__Component__DownStreamFrame *msg, char *module_id);
 
-typedef struct _mt_module_mqtt_t
-{
+typedef struct _mt_module_mqtt_msg_t {
+  char *topic;
+  uint8_t *buf;
+  int buf_size;
+} mt_module_mqtt_msg_t;
+
+typedef struct _mt_module_mqtt_t {
   int handle_size;
   mt_module_mqtt_app_handle_t *handles;
   char **methods;

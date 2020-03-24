@@ -1,0 +1,146 @@
+# yaml
+version: v1beta
+description: 空气开关airswitch001, 总路:0, 分路:1, 2
+flow:
+  name: m1
+  fields:
+    notify:
+      description: 开关状态通知(目前支持state通知)
+      driver: airswitch001
+      type: bool
+    from:
+      description: 开关变化原因(net:远程操作 local:本地操作)
+      driver: airswitch001
+      type: string
+    ctrl0:
+      description: 开关0能否控制, true:可以控制 false:不能控制
+      unit:
+      driver: airswitch001
+      type: bool
+      period: 10000
+    current0:
+      description: 电流
+      unit: A
+      driver: airswitch001
+      type: float
+      period: 10000
+      min: 0
+      max: 100000
+    leakCurren0:
+      description: 开关0漏电流
+      unit: A
+      driver: airswitch001
+      type: float
+      period: 10000
+      min: 0
+      max: 100000
+    power0:
+      description: 开关0功率
+      unit: W
+      driver: airswitch001
+      type: float
+      period: 10000
+      min: 0
+      max: 10000
+    state0:
+      description: 开关0 状态, true:打开 false:关闭
+      unit:
+      driver: airswitch001
+      type: bool
+      period: 10000
+    temp0:
+      description: 开关0温度
+      unit: centigrade
+      driver: airswitch001
+      type: float
+      period: 10000
+      min: -200
+      max: 200
+    votage0:
+      description: 开关0电压
+      unit: W
+      driver: airswitch001
+      type: float
+      period: 10000
+      min: 0
+      max: 1000
+    quality0:
+      description: 电量
+      unit: kwh
+      driver: airswitch001
+      type: float
+      period: 10000
+      min: 0
+      max: 10000
+    notecurrent0:
+      description: 电流预警, true 预警时上传
+      unit:
+      driver: airswitch001
+      type: bool
+      period: 0
+    noteleak0:
+      description: 漏电预警, true 预警时上传
+      unit:
+      driver: airswitch001
+      type: bool
+      period: 0
+    notevotagelow0:
+      description: 欠压预警, true 预警时上传
+      unit:
+      driver: airswitch001
+      type: bool
+      period: 0
+    notevotagehigh0:
+      description: 过压预警, true 预警时上传
+      unit:
+      driver: airswitch001
+      type: bool
+      period: 0
+    warnfire0:
+      description: 打火报警, true 报警时上传
+      unit:
+      driver: airswitch001
+      type: bool
+      period: 0
+    warnvotagehigh0:
+      description: 过压报警, true 报警时上传
+      unit:
+      driver: airswitch001
+      type: bool
+      period: 0
+    warncurrent0:
+      description: 过流报警, true 报警时上传
+      unit:
+      driver: airswitch001
+      type: bool
+      period: 0
+    warnleak0:
+      description: 漏电报警, true 报警时上传
+      unit:
+      driver: airswitch001
+      type: bool
+      period: 0
+    warntemp0:
+      description: 温度报警, true 报警时上传
+      unit:
+      driver: airswitch001
+      type: bool
+      period: 0
+    warnpower0:
+      description: 过流报警, true 报警时上传
+      unit:
+      driver: airswitch001
+      type: bool
+      period: 0
+    warnwave0:
+      description: 浪涌报警, true 报警时上传
+      unit:
+      driver: airswitch001
+      type: bool
+      period: 0
+    warnshort0:
+      description: 短路报警, true 报警时上传
+      unit:
+      driver: airswitch001
+      type: bool
+      period: 0

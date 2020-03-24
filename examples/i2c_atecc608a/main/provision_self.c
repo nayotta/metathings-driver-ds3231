@@ -65,29 +65,35 @@ int client_privision_self(void) {
 
   // 检查config_zone是否锁住
   ret = atcab_is_locked(LOCK_ZONE_CONFIG, &lockstate);
-  if (log_ret(ret, "atcab_is_locked config_zone") != ATCA_SUCCESS) return ret;
+  if (log_ret(ret, "atcab_is_locked config_zone") != ATCA_SUCCESS)
+    return ret;
 
   if (!lockstate) {
     // 设置config_zone
     ret = atcab_write_config_zone(g_ecc_configdata);
-    if (log_ret(ret, "atcab_write_config_zone") != ATCA_SUCCESS) return ret;
+    if (log_ret(ret, "atcab_write_config_zone") != ATCA_SUCCESS)
+      return ret;
 
     // 加锁config_zone
     ret = atcab_lock_config_zone();
-    if (log_ret(ret, "atcab_lock_config_zone") != ATCA_SUCCESS) return ret;
+    if (log_ret(ret, "atcab_lock_config_zone") != ATCA_SUCCESS)
+      return ret;
   } else {
     printf("WARN: atecc608a config_zone has been locked\n");
   }
 
   // 写入配置和真实配置存在差异, 以读取配置为准, 读取两次,每次32byte
   ret = atcab_read_zone(ATCA_ZONE_CONFIG, 0, 0, 0, &config_read_64[0], 32);
-  if (log_ret(ret, "atcab_read_zone config") != ATCA_SUCCESS) return ret;
+  if (log_ret(ret, "atcab_read_zone config") != ATCA_SUCCESS)
+    return ret;
   ret = atcab_read_zone(ATCA_ZONE_CONFIG, 0, 1, 0, &config_read_64[32], 32);
-  if (log_ret(ret, "atcab_read_zone config") != ATCA_SUCCESS) return ret;
+  if (log_ret(ret, "atcab_read_zone config") != ATCA_SUCCESS)
+    return ret;
 
   // 检查data_zone 是否加锁
   ret = atcab_is_locked(LOCK_ZONE_DATA, &lockstate);
-  if (log_ret(ret, "atcab_is_locked data_zone") != ATCA_SUCCESS) return ret;
+  if (log_ret(ret, "atcab_is_locked data_zone") != ATCA_SUCCESS)
+    return ret;
 
   if (!lockstate) {
     // 设置ca_priv_key slot 7
@@ -99,7 +105,8 @@ int client_privision_self(void) {
     // 设置aceess_key slot 4
     ret = atcab_write_zone(ATCA_ZONE_DATA, g_access_key_slot, 0, 0,
                            g_access_key, 32);
-    if (log_ret(ret, "atcab_write_zone access_key") != ATCA_SUCCESS) return ret;
+    if (log_ret(ret, "atcab_write_zone access_key") != ATCA_SUCCESS)
+      return ret;
 
     // 加锁data_zone
     ret = atcab_lock_data_zone();
@@ -112,25 +119,29 @@ int client_privision_self(void) {
   printf("\nConfig in ATECC608A:\n");
   for (int i = 0; i < 64; i++) {
     printf("%2x ", config_read_64[i]);
-    if ((i + 1) % 12 == 0) printf("\n");
+    if ((i + 1) % 12 == 0)
+      printf("\n");
   }
   printf("\n\n");
 
   // 生成signer_ca_pub_key slot 7
   ret = atcab_get_pubkey(g_signer_ca_priv_key_slot, pub_key_signer_ca);
-  if (log_ret(ret, "atcab_get_pubkey singner_ca") != ATCA_SUCCESS) return ret;
+  if (log_ret(ret, "atcab_get_pubkey singner_ca") != ATCA_SUCCESS)
+    return ret;
   atcab_printbin_label("Signer CA Public Key:\r\n", pub_key_signer_ca,
                        ATCA_PUB_KEY_SIZE);
 
   // 生成signer_pub_key slot 2
   ret = atcab_genkey(g_signer_priv_key_slot, pub_key_signer);
-  if (log_ret(ret, "atcab_genkey signer_key") != ATCA_SUCCESS) return ret;
+  if (log_ret(ret, "atcab_genkey signer_key") != ATCA_SUCCESS)
+    return ret;
   atcab_printbin_label("Signer Public Key:\r\n", pub_key_signer,
                        ATCA_PUB_KEY_SIZE);
 
   // 生成device_pub_key slot 0
   ret = atcab_genkey(g_device_priv_key_slot, pub_key_device);
-  if (log_ret(ret, "atcab_genkey device_key") != ATCA_SUCCESS) return ret;
+  if (log_ret(ret, "atcab_genkey device_key") != ATCA_SUCCESS)
+    return ret;
   atcab_printbin_label("Device Public Key:\r\n", pub_key_device,
                        ATCA_PUB_KEY_SIZE);
 

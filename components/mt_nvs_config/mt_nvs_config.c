@@ -5,9 +5,62 @@
 #include "mt_nvs_storage.h"
 
 // global config ==============================================================
+
 static const char *TAG = "MT_NVS_CONFIG";
 
+// help func ==================================================================
+
+void mt_nvs_config_free_host(mt_nvs_host_t *host) {
+  if (host == NULL)
+    return;
+
+  if (host->host != NULL)
+    free(host->host);
+
+  if (host->mqtt_port != NULL)
+    free(host->mqtt_port);
+
+  if (host->net_type != NULL)
+    free(host->net_type);
+
+  free(host);
+}
+
+void mt_nvs_config_free_flows(mt_nvs_flows_t *flows) {
+  if (flows == NULL)
+    return;
+
+  for (int i = 0; i < flows->flow_num; i++) {
+    if (flows->flows[i] != NULL)
+      free(flows->flows[i]);
+  }
+
+  free(flows->flows);
+
+  free(flows);
+}
+
+void mt_nvs_config_free_module(mt_nvs_module_t *module) {
+  if (module == NULL)
+    return;
+
+  if (module->id != NULL)
+    free(module->id);
+
+  if (module->key != NULL)
+    free(module->key);
+
+  if (module->name != NULL)
+    free(module->name);
+
+  if (module->flows != NULL)
+    mt_nvs_config_free_flows(module->flows);
+
+  free(module);
+}
+
 // global func ================================================================
+
 esp_err_t mt_nvs_config_get_host_config(mt_nvs_host_t *host_out) {
   size_t size = 0;
 
@@ -145,7 +198,7 @@ esp_err_t mt_nvs_config_get_module_num(int *num_out) {
 
 esp_err_t mt_nvs_config_get_module(int index_in, mt_nvs_module_t *module_out) {
   size_t size = 0;
-  char key[16] = "";
+  char key[32] = "";
 
   // check index_in
   if (index_in <= 0) {
@@ -222,7 +275,7 @@ esp_err_t mt_nvs_config_get_module(int index_in, mt_nvs_module_t *module_out) {
 
 esp_err_t mt_nvs_config_get_flow(int index_in, mt_nvs_flows_t *flows_out) {
   size_t size = 0;
-  char key[16] = "";
+  char key[32] = "";
 
   // check index_in
   if (index_in <= 0) {
@@ -263,7 +316,7 @@ esp_err_t mt_nvs_config_get_flow(int index_in, mt_nvs_flows_t *flows_out) {
 
 char *mt_nvs_config_get_flow_name(int module_index, int flow_index) {
   char *flow_name = NULL;
-  char key[16] = "";
+  char key[32] = "";
   size_t size = 0;
 
   sprintf(key, "mod_%d_flow_%d", module_index, flow_index);
@@ -275,4 +328,23 @@ char *mt_nvs_config_get_flow_name(int module_index, int flow_index) {
   }
 
   return flow_name;
+}
+
+char *mt_nvs_config_get_net_type() {
+  char *net_type = NULL;
+  char key[32] = "net_type";
+  size_t size = 0;
+
+  net_type = mt_nvs_read_string_config(key, &size);
+  if (net_type == NULL) {
+    if (mt_nvs_write_string_config(key, "lan") == false) {
+      ESP_LOGE(TAG, "%4d %s mt_nvs_write_string_config failed", __LINE__,
+               __func__);
+      return NULL;
+    }
+  }
+
+  net_type = mt_nvs_read_string_config(key, &size);
+
+  return net_type;
 }
