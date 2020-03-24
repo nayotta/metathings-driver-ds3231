@@ -100,7 +100,7 @@ esp_err_t rs322_sim_air720h_mqtt_set_connect(int keepalive_interval) {
   sprintf(cmd, "AT+MCONNECT=1,%d\r", keepalive_interval);
 
   err = rs232_sim_air720h_sent_manage_sent_and_wait_finish(
-      (uint8_t *)cmd, strlen(cmd), MQTT_CMD_TIMEOUT,
+      (uint8_t *)cmd, strlen(cmd), MQTT_REQ_TIMEOUT,
       rs232_sim_air720h_recv_manage_get_mqtt_connect_ok,
       rs232_sim_air720h_recv_manage_get_ok);
   if (err != ESP_OK) {
@@ -127,7 +127,7 @@ esp_err_t rs322_sim_air720h_mqtt_set_sub_topic(char *topic) {
   sprintf(cmd, "AT+MSUB=\"%s\",0\r", topic);
 
   err = rs232_sim_air720h_sent_manage_sent_and_wait_finish(
-      (uint8_t *)cmd, strlen(cmd), MQTT_CMD_TIMEOUT,
+      (uint8_t *)cmd, strlen(cmd), MQTT_REQ_TIMEOUT,
       rs232_sim_air720h_recv_manage_get_mqtt_sub_ok,
       rs232_sim_air720h_recv_manage_get_ok);
   if (err != ESP_OK) {
@@ -163,7 +163,7 @@ esp_err_t rs322_sim_air720h_mqtt_set_pub_msg(char *topic, char *msg) {
   sprintf(cmd, "AT+MPUB=\"%s\",0,0,\"%s\"\r", topic, msg);
 
   err = rs232_sim_air720h_sent_manage_sent_and_wait_finish(
-      (uint8_t *)cmd, strlen(cmd), MQTT_CMD_TIMEOUT, NULL,
+      (uint8_t *)cmd, strlen(cmd), MQTT_REQ_TIMEOUT, NULL,
       rs232_sim_air720h_recv_manage_get_ok);
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s CMD failed", __LINE__, __func__);

@@ -32,6 +32,7 @@ static char *device_id = "9c8dc3454c5643988cb9da831471f485";
 static char *module_id = "693180ceb6cd4cb3b81e0d408a20e42e";
 
 // static func ================================================================
+
 static void test_handle(char *topic, char *buf, int size) {
   printf("no handle\n");
 }

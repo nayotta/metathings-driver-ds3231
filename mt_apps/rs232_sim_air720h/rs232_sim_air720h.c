@@ -955,3 +955,27 @@ esp_err_t rs232_sim_air720h_mqtt_task(char *module_id, char *device_id,
               "rs232_sim_http_task", 8 * 1024, NULL, 10, NULL);
   return ESP_OK;
 }
+
+esp_err_t rs232_sim_air720h_mqtt_pub(char *topic, uint8_t *buf, int size) {
+  esp_err_t err = ESP_OK;
+  char *hex_str = NULL;
+
+  hex_str = rs232_sim_air720h_utils_byte_to_hex(buf, size);
+  if (hex_str == NULL) {
+    ESP_LOGE(TAG, "%4d %s rs232_sim_air720h_utils_byte_to_hex NULL", __LINE__,
+             __func__);
+    err = ESP_ERR_INVALID_ARG;
+    goto EXIT;
+  }
+
+  err = rs322_sim_air720h_mqtt_set_pub_msg(topic, hex_str);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s rs322_sim_air720h_mqtt_set_pub_msg failed", __LINE__,
+             __func__);
+    goto EXIT;
+  }
+
+EXIT:
+  if (hex_str != NULL)
+    free(hex_str);
+}
