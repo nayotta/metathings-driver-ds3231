@@ -12,6 +12,6 @@ bool rs232_sim_air720h_recv_manage_get_mqtt_sub_state();
 
 void rs232_sim_air720h_recv_manage_set_mqtt_sub_state(bool state_in);
 
-esp_err_t rs232_sim_air720h_recv_manage_process_mqtt_pub(uint8_t byte);
+esp_err_t rs232_sim_air720h_recv_manage_process_mqtt_sub(uint8_t byte);
 
 #endif

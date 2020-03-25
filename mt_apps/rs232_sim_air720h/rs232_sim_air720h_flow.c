@@ -10,6 +10,7 @@
 // static define ==============================================================
 
 static const char *TAG = "RS232_SIM_AIR720H_FLOW";
+static mt_module_flow_t *MODULE_FLOW = NULL;
 
 // static func ================================================================
 
@@ -121,12 +122,71 @@ RESTART:
 
     ping_once(module_flow);
     // TODO(ZH) add pub msg process
+
+    // debug here
     // module_flow->ping_count++;
     vTaskDelay(module_flow->ping_interval / portTICK_PERIOD_MS);
   }
 }
 
 // global func ================================================================
+
+esp_err_t rs232_sim_air720h_flow_process_pong() {
+  if (MODULE_FLOW == NULL) {
+    ESP_LOGE(TAG, "%4d %s MODULE_FLOW NULL", __LINE__, __func__);
+    return ESP_ERR_INVALID_ARG;
+  }
+
+  MODULE_FLOW->ping_count = 0;
+
+  return ESP_OK;
+}
+
+esp_err_t rs232_sim_air720h_flow_process_all(char *topic, uint8_t *buf,
+                                             uint8_t size) {
+  PushFrameToFlowResponse *frame_res = NULL;
+  esp_err_t err = ESP_OK;
+
+  if (MODULE_FLOW == NULL) {
+    ESP_LOGE(TAG, "%4d %s MODULE_FLOW NULL", __LINE__, __func__);
+    return ESP_ERR_INVALID_ARG;
+  }
+
+  frame_res = push_frame_to_flow_response__unpack(NULL, size, buf);
+  if (frame_res == NULL) {
+    ESP_LOGE(TAG, "%4d %s push_frame_to_flow_response__unpack get NULL",
+             __LINE__, __func__);
+    err = ESP_ERR_INVALID_ARG;
+    goto EXIT;
+  }
+
+  switch (frame_res->response_case) {
+  case PUSH_FRAME_TO_FLOW_RESPONSE__RESPONSE_PONG:
+    err = rs232_sim_air720h_flow_process_pong();
+    if (err != ESP_OK) {
+      ESP_LOGE(TAG, "%4d %s rs232_sim_air720h_flow_process_pong failed",
+               __LINE__, __func__);
+      goto EXIT;
+    }
+    break;
+  case PUSH_FRAME_TO_FLOW_RESPONSE__RESPONSE_CONFIG:
+    // use http, no need
+    break;
+  case PUSH_FRAME_TO_FLOW_RESPONSE__RESPONSE_ACK:
+    // TODO(ZH)
+    break;
+  default:
+    ESP_LOGE(TAG, "%4d %s unexcept frame_res->response_case:%d", __LINE__,
+             __func__, frame_res->response_case);
+    err = ESP_ERR_INVALID_ARG;
+    goto EXIT;
+  }
+
+EXIT:
+  push_frame_to_flow_response__free_unpacked(frame_res, NULL);
+
+  return err;
+}
 
 esp_err_t rs232_sim_air720h_flow_task(mt_module_flow_t *module_flow) {
   // arg check
@@ -160,6 +220,8 @@ esp_err_t rs232_sim_air720h_flow_task(mt_module_flow_t *module_flow) {
       return ESP_ERR_INVALID_ARG;
     }
   }
+
+  MODULE_FLOW = module_flow;
 
   xTaskCreate((TaskFunction_t)rs232_sim_air720h_flow_loop, "AIR720H_FLOW",
               4 * 1024, module_flow, 10, NULL);

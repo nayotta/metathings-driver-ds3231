@@ -133,6 +133,21 @@ EXIT:
   return;
 }
 
+// help func ==================================================================
+
+void mt_module_mqtt_free_msg(mt_module_mqtt_msg_t *msg) {
+  if (msg == NULL)
+    return;
+
+  if (msg->topic != NULL)
+    free(msg->topic);
+
+  if (msg->buf != NULL)
+    free(msg->buf);
+
+  free(msg);
+}
+
 // global func ================================================================
 
 void mt_module_mqtt_add_handle(

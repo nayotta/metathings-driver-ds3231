@@ -17,8 +17,6 @@ static int MQTT_PUB_MAX_SIZE = 1360; // max cmd size 1360
 
 // global func ================================================================
 
-void rs232_sim_air720h_recv_manage_process_mqtt_sub(uint8_t data) {}
-
 // set config
 esp_err_t rs322_sim_air720h_mqtt_set_client_config(char *username,
                                                    char *password) {

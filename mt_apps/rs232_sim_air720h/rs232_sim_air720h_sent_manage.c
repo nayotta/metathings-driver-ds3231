@@ -13,7 +13,7 @@
 static const char *TAG = "rs232_sim_air720_sent_manage";
 
 static SemaphoreHandle_t SENT_LOCK = NULL;
-static long SENT_TIMEOUT = 300;
+static long SENT_TIMEOUT = 3000;
 static rs232_dev_config_t *DEV_CONFIG = NULL;
 
 // static func ================================================================

@@ -36,6 +36,7 @@ static char *DEVICE_ID = NULL;
 // static func ================================================================
 
 static void rs232_sim_air720h_http_task_loop(mt_module_http_t *module_http) {
+  int init_interval = 30 * 1000;               // 30s
   int issue_module_token_interval = 30 * 1000; // 30s
   int show_module_retry_max = 10;
   int show_module_retry_count = 10;
@@ -46,6 +47,21 @@ static void rs232_sim_air720h_http_task_loop(mt_module_http_t *module_http) {
   esp_err_t err = ESP_OK;
 
 RESTART:
+  // http init
+  while (true) {
+    err = rs232_sim_air720h_http_init(module_http);
+    if (err != ESP_OK) {
+      ESP_LOGE(TAG, "%4d %s rs232_sim_air720h_http_init failed", __LINE__,
+               __func__);
+    } else {
+      ESP_LOGI(TAG, "%4d %s rs232_sim_air720h_http_init success", __LINE__,
+               __func__);
+      break;
+    }
+
+    vTaskDelay(init_interval / portTICK_PERIOD_MS);
+  }
+
   // issue token loop
   while (true) {
     err = rs232_sim_air720h_http_issue_module_token(module_http);
@@ -890,7 +906,7 @@ esp_err_t rs232_sim_air720h_mqtt_init() {
   }
 
   // set device sub
-  device_topic = mt_mqtt_utils_new_module_topic(DEVICE_ID);
+  device_topic = mt_mqtt_utils_new_device_topic(DEVICE_ID);
   if (device_topic == NULL) {
     ESP_LOGE(TAG, "%4d %s mt_mqtt_utils_new_module_topic failed", __LINE__,
              __func__);
@@ -978,4 +994,5 @@ esp_err_t rs232_sim_air720h_mqtt_pub(char *topic, uint8_t *buf, int size) {
 EXIT:
   if (hex_str != NULL)
     free(hex_str);
+  return err;
 }

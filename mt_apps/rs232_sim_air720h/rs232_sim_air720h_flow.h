@@ -8,6 +8,11 @@
 
 // func =======================================================================
 
+esp_err_t rs232_sim_air720h_flow_process_pong();
+
+esp_err_t rs232_sim_air720h_flow_process_all(char *topic, uint8_t *buf,
+                                             uint8_t size);
+
 esp_err_t rs232_sim_air720h_flow_task(mt_module_flow_t *module_flow);
 
 #endif

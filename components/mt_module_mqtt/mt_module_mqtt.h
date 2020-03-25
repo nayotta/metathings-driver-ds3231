@@ -20,6 +20,10 @@ typedef struct _mt_module_mqtt_handle_t {
   char **methods;
 } mt_module_mqtt_handle_t;
 
+// help func ==================================================================
+
+void mt_module_mqtt_free_msg(mt_module_mqtt_msg_t *msg);
+
 // func =======================================================================
 
 void mt_module_mqtt_add_handle(

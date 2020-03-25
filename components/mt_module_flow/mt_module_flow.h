@@ -57,6 +57,10 @@ void mt_module_flow_free_struct_group(mt_module_flow_struct_group_t *value);
 uint8_t *mt_module_flow_pack_frame(mt_module_flow_struct_group_t *value_in,
                                    char *session_id, int *size_out);
 
+uint8_t *mt_module_flow_repack_frame_with_session(uint8_t *buf_in, int size_in,
+                                                  char *session_id,
+                                                  int *size_out);
+
 // func =======================================================================
 
 void mt_module_flow_process(mt_module_flow_t *module_flow, char *topic,
