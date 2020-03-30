@@ -257,7 +257,7 @@ EXIT:
   return;
 }
 
-void mt_module_flow_task(mt_module_flow_t *module_flow, char *task_name) {
+void mt_module_flow_task(mt_module_flow_t *module_flow) {
   // arg check
   if (module_flow == NULL) {
     ESP_LOGE(TAG, "%4d %s flow_name NULL", __LINE__, __func__);
@@ -291,8 +291,8 @@ void mt_module_flow_task(mt_module_flow_t *module_flow, char *task_name) {
     }
   }
 
-  xTaskCreate((TaskFunction_t)module_flow_task_loop, task_name, 4 * 1024,
-              module_flow, 10, NULL);
+  xTaskCreate((TaskFunction_t)module_flow_task_loop, "MT_MODULE_FLOW_TASK",
+              4 * 1024, module_flow, 10, NULL);
 }
 
 mt_module_flow_t *mt_module_flow_new(int module_index, int flow_index,
@@ -330,9 +330,6 @@ mt_module_flow_t *mt_module_flow_new(int module_index, int flow_index,
              __LINE__, __func__, module_index, flow_index);
     return NULL;
   }
-
-  // TODO(ZH) seprate task and new
-  // mt_module_flow_task(module_flow, "MT_MODULE_FLOW");
 
   return module_flow;
 }

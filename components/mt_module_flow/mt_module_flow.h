@@ -62,7 +62,7 @@ uint8_t *mt_module_flow_pack_frame(mt_module_flow_struct_group_t *value_in,
 void mt_module_flow_process(mt_module_flow_t *module_flow, char *topic,
                             uint8_t *buf, uint8_t size);
 
-void mt_module_flow_task(mt_module_flow_t *module_flow, char *task_name);
+void mt_module_flow_task(mt_module_flow_t *module_flow);
 
 mt_module_flow_t *mt_module_flow_new(int module_index, int flow_index,
                                      mt_module_http_t *module_http);

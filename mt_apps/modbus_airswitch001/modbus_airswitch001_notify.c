@@ -22,7 +22,7 @@ static const char *TAG = "MODBUS_AIRSWITCH001_NOTIFY";
 static int CHECK_INTERVAL = 2000; // 2s
 static bool STATE[24] = {false};
 static bool DELAY_CHECK = false;
-static int DELAY_CHECK_TIME = 2000; // 2s
+static int DELAY_CHECK_TIME = 5000; // 5s
 
 // static func ================================================================
 

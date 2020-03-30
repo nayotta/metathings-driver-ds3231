@@ -160,7 +160,7 @@ EXIT:
   return;
 }
 
-static void module_flow_loop() {
+static void modbus_airswitch_flow_loop() {
   while (true) {
     module_get_datas_process();
     vTaskDelay(MODULE_FLOW->push_frame_interval / portTICK_RATE_MS);
@@ -181,9 +181,9 @@ esp_err_t module_notify_process(mt_module_flow_struct_group_t *group) {
   return err;
 }
 
-void module_flow_task(mt_module_flow_t *module_flow, char *task_name) {
+void modbus_airswitch_flow_task(mt_module_flow_t *module_flow) {
   MODULE_FLOW = module_flow;
-  xTaskCreate((TaskFunction_t)module_flow_loop, task_name, 8 * 1024, NULL, 10,
-              NULL);
+  xTaskCreate((TaskFunction_t)modbus_airswitch_flow_loop,
+              "MODBUS_AIRSWITCH_FLOW_TASK", 8 * 1024, NULL, 10, NULL);
   modbus_airswitch001_notify_task();
 }

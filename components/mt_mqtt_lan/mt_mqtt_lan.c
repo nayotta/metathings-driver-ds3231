@@ -172,3 +172,9 @@ esp_err_t mqtt_init(int mod_index, char *module_id, uint64_t session_id,
 
   return ESP_OK;
 }
+
+esp_err_t mt_mqtt_lan_update_session_id(uint64_t session_id) {
+  Session_id = session_id;
+
+  return ESP_OK;
+}

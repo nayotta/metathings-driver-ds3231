@@ -5,6 +5,8 @@
 #include "esp_http_client.h"
 #include "stdint.h"
 
+// define =====================================================================
+
 #ifndef CONFIG_LOG_DEFAULT_LEVEL
 #define CONFIG_LOG_DEFAULT_LEVEL ESP_LOG_DEBUG
 #endif
@@ -144,6 +146,8 @@ typedef struct _mt_module_http_t {
   int response_content_size;
 } mt_module_http_t;
 
+// func =======================================================================
+
 esp_err_t
 mt_module_http_actions_issue_module_token(mt_module_http_t *module_http);
 
@@ -176,7 +180,7 @@ mt_module_http_actions_push_frame_to_flow(mt_module_http_t *module_http,
                                           flow_t *flow_in, bool config_ack_in,
                                           bool push_ack_in);
 
-void mt_module_http_task(mt_module_http_t *module_http, char *task_name);
+void mt_module_http_task(mt_module_http_t *module_http);
 
 mt_module_http_t *mt_module_http_new(int module_index);
 

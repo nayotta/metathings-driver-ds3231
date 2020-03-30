@@ -91,7 +91,6 @@ static void quality_cache_loop() {
   }
 }
 
-// global func ================================================================
 static void cache_print(Cache_t *cache) {
   ESP_LOGI(TAG, "%4d %s cache num_master:%d num_slaver:%d", __LINE__, __func__,
            cache->num_master, cache->num_slaver);
@@ -104,6 +103,69 @@ static void cache_print(Cache_t *cache) {
              cache->slavers[i]);
   }
 }
+
+// help func ==================================================================
+
+Cache_t *cache_new() {
+  Cache_t *cache = malloc(sizeof(Cache_t));
+  cache->num_master = 0;
+  cache->num_slaver = 0;
+  cache->masters = NULL;
+  cache->slavers = NULL;
+
+  return cache;
+}
+
+void cache_free(Cache_t *cache) {
+  if (cache != NULL) {
+    if (cache->masters != NULL) {
+      free(cache->masters);
+    }
+
+    if (cache->slavers != NULL) {
+      free(cache->slavers);
+    }
+
+    free(cache);
+    cache = NULL;
+  }
+}
+
+bool cahce_diff(Cache_t *cache1, Cache_t *cache2) {
+  int i;
+
+  if (cache1->num_master != cache2->num_master) {
+    ESP_LOGE(TAG, "%4d %s num_master %d:%d not match", __LINE__, __func__,
+             cache1->num_master, cache2->num_master);
+    return false;
+  }
+
+  for (i = 0; i < cache1->num_master; i++) {
+    if (cache1->masters[i] != cache2->masters[i]) {
+      ESP_LOGE(TAG, "%4d %s master:%d addr %d:%d not match", __LINE__, __func__,
+               i, cache1->masters[i], cache2->masters[i]);
+      return false;
+    }
+  }
+
+  if (cache1->num_slaver != cache2->num_slaver) {
+    ESP_LOGE(TAG, "%4d %s num_slaver %d:%d not match", __LINE__, __func__,
+             cache1->num_slaver, cache2->num_slaver);
+    return false;
+  }
+
+  for (i = 0; i < cache1->num_slaver; i++) {
+    if (cache1->slavers[i] != cache2->slavers[i]) {
+      ESP_LOGE(TAG, "%4d %s slaver:%d addr %d:%d not match", __LINE__, __func__,
+               i, cache1->slavers[i], cache2->slavers[i]);
+      return false;
+    }
+  }
+
+  return true;
+}
+
+// global func ================================================================
 
 Cache_t *cache_get() {
   esp_err_t err = ESP_OK;
@@ -239,21 +301,6 @@ esp_err_t cache_set(Cache_t *cache) {
   return ESP_OK;
 }
 
-void cache_free(Cache_t *cache) {
-  if (cache != NULL) {
-    if (cache->masters != NULL) {
-      free(cache->masters);
-    }
-
-    if (cache->slavers != NULL) {
-      free(cache->slavers);
-    }
-
-    free(cache);
-    cache = NULL;
-  }
-}
-
 Cache_t *cache_get_and_check(int num_master, int num_slaver) {
   Cache_t *cache = NULL;
 
@@ -272,40 +319,6 @@ Cache_t *cache_get_and_check(int num_master, int num_slaver) {
   }
 
   return cache;
-}
-
-bool cahce_diff(Cache_t *cache1, Cache_t *cache2) {
-  int i;
-
-  if (cache1->num_master != cache2->num_master) {
-    ESP_LOGE(TAG, "%4d %s num_master %d:%d not match", __LINE__, __func__,
-             cache1->num_master, cache2->num_master);
-    return false;
-  }
-
-  for (i = 0; i < cache1->num_master; i++) {
-    if (cache1->masters[i] != cache2->masters[i]) {
-      ESP_LOGE(TAG, "%4d %s master:%d addr %d:%d not match", __LINE__, __func__,
-               i, cache1->masters[i], cache2->masters[i]);
-      return false;
-    }
-  }
-
-  if (cache1->num_slaver != cache2->num_slaver) {
-    ESP_LOGE(TAG, "%4d %s num_slaver %d:%d not match", __LINE__, __func__,
-             cache1->num_slaver, cache2->num_slaver);
-    return false;
-  }
-
-  for (i = 0; i < cache1->num_slaver; i++) {
-    if (cache1->slavers[i] != cache2->slavers[i]) {
-      ESP_LOGE(TAG, "%4d %s slaver:%d addr %d:%d not match", __LINE__, __func__,
-               i, cache1->slavers[i], cache2->slavers[i]);
-      return false;
-    }
-  }
-
-  return true;
 }
 
 void cache_from_modbus(UCHAR slaveAddr, Cache_t *cache) {

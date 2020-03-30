@@ -13,6 +13,7 @@
 #include "mt_module_http.h"
 #include "mt_module_http_manage.h"
 #include "mt_module_http_utils.h"
+#include "mt_mqtt.h"
 #include "mt_mqtt_lan.h"
 #include "mt_nvs_config.h"
 #include "mt_utils.h"
@@ -1268,6 +1269,7 @@ RESTART:
   // debug here
   // module_http->session_id = 12345678;
   Session_id = module_http->session_id;
+  mt_mqtt_update_session_id(Session_id);
 
   while (true) {
     if (heartbeat_count <= 0) {
@@ -1293,7 +1295,7 @@ RESTART:
   return;
 }
 
-void mt_module_http_task(mt_module_http_t *module_http, char *task_name) {
+void mt_module_http_task(mt_module_http_t *module_http) {
   // arg check
   if (module_http == NULL) {
     ESP_LOGE(TAG, "%4d %s module_http NULL", __LINE__, __func__);
@@ -1332,8 +1334,8 @@ void mt_module_http_task(mt_module_http_t *module_http, char *task_name) {
     }
   }
 
-  xTaskCreate((TaskFunction_t)mt_module_http_task_loop, task_name, 8 * 1024,
-              module_http, 10, NULL);
+  xTaskCreate((TaskFunction_t)mt_module_http_task_loop, "MT_MODULE_HTTP",
+              8 * 1024, module_http, 10, NULL);
 }
 
 mt_module_http_t *mt_module_http_new(int mod_index_in) {
@@ -1377,7 +1379,6 @@ mt_module_http_t *mt_module_http_new(int mod_index_in) {
 
   MODULE_HTTP = module_http;
   mt_module_http_manage_add(module_http, mod_index_in);
-  // mt_module_http_task(module_http, module_http->module->name);
 
   return module_http;
 }

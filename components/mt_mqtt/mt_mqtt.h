@@ -6,6 +6,8 @@
 
 #include "esp_err.h"
 
+// define =====================================================================
+
 #ifndef CONFIG_LOG_DEFAULT_LEVEL
 #define CONFIG_LOG_DEFAULT_LEVEL ESP_LOG_DEBUG
 #endif
@@ -17,10 +19,14 @@
 #define URI_MAX_SIZE 128
 #define TOPIC_MAX_SIZE 512
 
+// func =======================================================================
+
 esp_err_t mt_mqtt_pub_msg(char *topic, uint8_t *buf, int size);
 
 esp_err_t mt_mqtt_init(int mod_index, char *module_id, uint64_t session_id,
                        char *device_id,
                        void (*handle)(char *topic, void *buf, int size));
+
+esp_err_t mt_mqtt_update_session_id(uint64_t session_id);
 
 #endif
