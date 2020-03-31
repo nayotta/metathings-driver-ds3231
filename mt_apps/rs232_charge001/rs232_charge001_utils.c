@@ -2,7 +2,7 @@
 
 // static define ==============================================================
 
-static const char *TAG = "RS232_CHARGE001_UTILS";
+// static const char *TAG = "RS232_CHARGE001_UTILS";
 
 // global func ================================================================
 
@@ -59,6 +59,8 @@ uint8_t *rs232_charge001_utils_marshal_set_charge(int32_t port, int32_t money,
   data[4] = time & 0x00ff;
 
   buf_out = rs232_charge001_utils_marshal_buf(2, data, data_size, buf_size);
+
+  return buf_out;
 }
 
 uint8_t *rs232_charge001_utils_marshal_get_state(int32_t port,
@@ -70,6 +72,8 @@ uint8_t *rs232_charge001_utils_marshal_get_state(int32_t port,
   data[0] = port & 0x000000ff;
 
   buf_out = rs232_charge001_utils_marshal_buf(6, data, data_size, buf_size);
+
+  return buf_out;
 }
 
 uint8_t *rs232_charge001_utils_marshal_get_states(int32_t *buf_size) {
@@ -80,4 +84,6 @@ uint8_t *rs232_charge001_utils_marshal_get_states(int32_t *buf_size) {
   data[0] = 0x00;
 
   buf_out = rs232_charge001_utils_marshal_buf(1, data, data_size, buf_size);
+
+  return buf_out;
 }

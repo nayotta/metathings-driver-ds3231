@@ -4,15 +4,6 @@
 #include "esp_err.h"
 #include "esp_log.h"
 
-#include "mt_proto_charge001.pb-c.h"
-#include "rs232_charge001_recv_manage.h"
-#include "rs232_charge001_recv_manage_get_state.h"
-#include "rs232_charge001_recv_manage_get_states.h"
-#include "rs232_charge001_recv_manage_set_charge.h"
-#include "rs232_charge001_sent_manage.h"
-#include "rs232_charge001_utils.h"
-#include "rs232_dev.h"
-
 // define =====================================================================
 
 typedef struct _rs232_charge001_state1_t {

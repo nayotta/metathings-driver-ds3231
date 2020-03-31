@@ -22,7 +22,6 @@ static int MQTT_PUB_MAX_SIZE = 1360; // max cmd size 1360
 esp_err_t rs232_sim_air720h_mqtt_get_state() {
   esp_err_t err = ESP_OK;
   char *cmd = "AT+MQTTSTATU\r";
-  char *client_id = NULL;
 
   err = rs232_sim_air720h_sent_manage_sent_and_wait_finish(
       (uint8_t *)cmd, strlen(cmd), MQTT_CMD_TIMEOUT,

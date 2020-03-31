@@ -1,5 +1,12 @@
 #include "rs232_charge001.h"
 
+#include "mt_proto_charge001.pb-c.h"
+#include "rs232_charge001_recv_manage.h"
+#include "rs232_charge001_recv_manage_get_state.h"
+#include "rs232_charge001_recv_manage_get_states.h"
+#include "rs232_charge001_recv_manage_set_charge.h"
+#include "rs232_charge001_sent_manage.h"
+#include "rs232_charge001_utils.h"
 #include "rs232_dev.h"
 
 // static define ==============================================================
@@ -134,7 +141,8 @@ rs232_charge001_state2_t *rs232_charge001_get_state(int32_t port) {
   if (buf_sent == NULL) {
     ESP_LOGE(TAG, "%4d %s rs232_charge001_utils_marshal_get_state NULL",
              __LINE__, __func__);
-    return ESP_ERR_INVALID_RESPONSE;
+    err = ESP_ERR_INVALID_RESPONSE;
+    return NULL;
   }
 
   // reset buf
@@ -193,7 +201,8 @@ rs232_charge001_states_t *rs232_charge001_get_states() {
   if (buf_sent == NULL) {
     ESP_LOGE(TAG, "%4d %s rs232_charge001_utils_marshal_get_states NULL",
              __LINE__, __func__);
-    return ESP_ERR_INVALID_RESPONSE;
+    err = ESP_ERR_INVALID_RESPONSE;
+    return NULL;
   }
 
   // reset buf
@@ -245,8 +254,6 @@ esp_err_t rs232_charge001_set_charge(int32_t port, int32_t money, int32_t time,
   esp_err_t err = ESP_OK;
   uint8_t *buf_sent = NULL;
   int buf_sent_size = 0;
-  int32_t res_port = 0;
-  int32_t res_result = 0;
 
   // marshal cmd
   buf_sent = rs232_charge001_utils_marshal_set_charge(port, money, time,

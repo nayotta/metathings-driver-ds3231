@@ -9,7 +9,7 @@
 
 // global define ==============================================================
 
-static const char *TAG = "MT_MODULE_UNARYCALL";
+//static const char *TAG = "MT_MODULE_UNARYCALL";
 
 // global func ================================================================
 
