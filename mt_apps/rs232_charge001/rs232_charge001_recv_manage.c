@@ -17,6 +17,7 @@ static void rs232_charge001_recv_manage_parse_msg() {
 
   ESP_LOGI(TAG, "%4d %s recv msg:%2d---> %s", __LINE__, __func__,
            strlen((char *)RECV_BUF), RECV_BUF);
+  // TODO(ZH) parse msg
 EXIT:
   RECV_BUF[0] = '\0';
   RECV_SIZE = 0;
@@ -50,7 +51,7 @@ static void rs232_charge001_recv_manage_loop(rs232_dev_config_t *dev_config) {
     {
       if (len == 1) {
         // debug here
-        // printf("%c", data);
+        printf("%2x ", data);
         rs232_charge001_recv_manage_push_byte(data);
       }
     }

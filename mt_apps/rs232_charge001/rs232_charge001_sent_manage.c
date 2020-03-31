@@ -75,8 +75,6 @@ esp_err_t rs232_charge001_sent_manage_sent_and_wait_finish(
   int count = timeout / interval + 1;
   bool msg_finish = false;
 
-  // reset ack cache
-
   // ESP_LOGI(TAG, "%4d %s sent cmd:%s", __LINE__, __func__, buf);
 
   if (msg_handle == NULL) {
