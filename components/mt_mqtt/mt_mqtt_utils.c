@@ -282,7 +282,7 @@ char *mt_mqtt_utils_get_path_from_topic(char *topic) {
     offset++;
   }
   s2[start] = '\0';
-  if (strcmp(s2, "modules") != 0 && strcmp(s2, "devices") != 0) {
+  if (strcmp(s2, "modules") != 0 || strcmp(s2, "devices") != 0) {
     ESP_LOGE(TAG, "%4d %s unexcept string location 2:%s", __LINE__, __func__,
              s2);
     return NULL;

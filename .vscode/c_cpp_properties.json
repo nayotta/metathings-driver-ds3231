@@ -61,7 +61,10 @@
                 "${workspaceFolder}/components/mt_module_http_manage",
                 "${workspaceFolder}/components/mt_module_lora",
                 "${workspaceFolder}/mt_proto/mt_device_type",
-                "${workspaceFolder}/components/mt_module_unarycall"
+                "${workspaceFolder}/components/mt_module_unarycall",
+                "${workspaceFolder}/mt_proto/mt_proto_charge001/include",
+                "${workspaceFolder}/components/mt_http_client",
+                "${workspaceFolder}/components/mt_modbus_master_airswitch001/include"
             ],
             "defines": [
                 "_DEBUG",
