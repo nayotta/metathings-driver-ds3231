@@ -8,7 +8,7 @@
 
 // help func ==================================================================
 
-void rs232_sim_air720h_recv_manage_mqtt_reset();
+void rs232_sim_air720h_recv_manage_mqtt_state_reset();
 
 // func =======================================================================
 

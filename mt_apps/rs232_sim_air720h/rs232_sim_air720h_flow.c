@@ -160,6 +160,7 @@ esp_err_t rs232_sim_air720h_flow_process_all(char *topic, uint8_t *buf,
 
   switch (frame_res->response_case) {
   case PUSH_FRAME_TO_FLOW_RESPONSE__RESPONSE_PONG:
+    ESP_LOGI(TAG, "%4d %s flow pong", __LINE__, __func__);
     err = rs232_sim_air720h_flow_process_pong();
     if (err != ESP_OK) {
       ESP_LOGE(TAG, "%4d %s rs232_sim_air720h_flow_process_pong failed",
@@ -168,10 +169,12 @@ esp_err_t rs232_sim_air720h_flow_process_all(char *topic, uint8_t *buf,
     }
     break;
   case PUSH_FRAME_TO_FLOW_RESPONSE__RESPONSE_CONFIG:
+    ESP_LOGI(TAG, "%4d %s config ack", __LINE__, __func__);
     // use http, no need
     break;
   case PUSH_FRAME_TO_FLOW_RESPONSE__RESPONSE_ACK:
     // TODO(ZH)
+    ESP_LOGI(TAG, "%4d %s push ack", __LINE__, __func__);
     break;
   default:
     ESP_LOGE(TAG, "%4d %s unexcept frame_res->response_case:%d", __LINE__,

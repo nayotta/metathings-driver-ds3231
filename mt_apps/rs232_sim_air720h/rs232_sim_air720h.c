@@ -197,6 +197,7 @@ RESTART:
     } else {
       if (state != 1) {
         mqtt_state_check_count++;
+        ESP_LOGE(TAG, "%4d %s mqtt disconnect:%d", __LINE__, __func__, state);
       } else {
         mqtt_state_check_count = 0;
       }
@@ -1063,6 +1064,8 @@ esp_err_t rs232_sim_air720h_mqtt_state(int32_t *state) {
     ESP_LOGE(TAG, "%4d %s http_lock_take timeout", __LINE__, __func__);
     return NULL;
   }
+
+  rs232_sim_air720h_recv_manage_mqtt_state_reset();
 
   err = rs232_sim_air720h_mqtt_get_state();
   if (err != ESP_OK) {
