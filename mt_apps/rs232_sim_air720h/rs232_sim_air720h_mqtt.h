@@ -17,6 +17,9 @@ typedef enum {
 
 // func =======================================================================
 
+// get state
+esp_err_t rs232_sim_air720h_mqtt_get_state();
+
 // set config
 esp_err_t rs322_sim_air720h_mqtt_set_client_config(char *username,
                                                    char *password);

@@ -13,7 +13,7 @@
 static const char *TAG = "rs232_sim_air720_sent_manage";
 
 static SemaphoreHandle_t SENT_LOCK = NULL;
-static long SENT_TIMEOUT = 3000;
+static long SENT_TIMEOUT = 5000;
 static rs232_dev_config_t *DEV_CONFIG = NULL;
 
 // static func ================================================================
@@ -108,7 +108,7 @@ esp_err_t rs232_sim_air720h_sent_manage_sent_and_wait_finish(
   // reset ack cache
   rs232_sim_air720h_recv_manage_reset_ack();
 
-  // ESP_LOGI(TAG, "%4d %s sent cmd:%s", __LINE__, __func__, buf);
+  ESP_LOGI(TAG, "%4d %s sent cmd:%s", __LINE__, __func__, buf);
 
   // check arg
   if (msg_handle == NULL && ack_handle == NULL) {

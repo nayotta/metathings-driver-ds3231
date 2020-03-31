@@ -6,6 +6,7 @@
 #include "rs232_sim_air720h_mqtt.h"
 #include "rs232_sim_air720h_recv_manage_http_action.h"
 #include "rs232_sim_air720h_recv_manage_http_read.h"
+#include "rs232_sim_air720h_recv_manage_mqtt_state.h"
 #include "rs232_sim_air720h_recv_manage_mqtt_sub.h"
 
 // static define ==============================================================
@@ -28,6 +29,7 @@ static char *STR_MQTT_CLOSE_OK = "CLOSE";
 static char *STR_HTTP_READ = "+HTTPREAD: ";
 static char *STR_HTTP_ACTION = "+HTTPACTION:";
 static char *STR_MQTT_SUB = "+MSUB: ";
+static char *STR_MQTT_STATE = "+MQTTSTATU :";
 
 static rs232_sim_air720h_ack ACK = {false, false, false, false,
                                     false, false, false, false};
@@ -83,6 +85,11 @@ static void rs232_sim_air720h_recv_manage_parse_msg() {
 
   if (strstr((char *)RECV_BUF, STR_MQTT_CLOSE_OK)) {
     ACK.ack_mqtt_close_ok = true;
+    goto EXIT;
+  }
+
+  if (strstr((char *)RECV_BUF, STR_MQTT_STATE)) {
+    rs232_sim_air720h_recv_manage_process_mqtt_state((char *)RECV_BUF);
     goto EXIT;
   }
 

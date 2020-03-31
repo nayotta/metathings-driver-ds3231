@@ -121,10 +121,8 @@ RESTART:
     }
 
     ping_once(module_flow);
-    // TODO(ZH) add pub msg process
 
-    // debug here
-    // module_flow->ping_count++;
+    module_flow->ping_count++;
     vTaskDelay(module_flow->ping_interval / portTICK_PERIOD_MS);
   }
 }

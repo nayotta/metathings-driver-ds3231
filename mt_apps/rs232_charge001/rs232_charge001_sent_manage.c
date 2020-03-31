@@ -76,7 +76,6 @@ esp_err_t rs232_charge001_sent_manage_sent_and_wait_finish(
   bool msg_finish = false;
 
   // reset ack cache
-  rs232_sim_air720h_recv_manage_reset_ack();
 
   // ESP_LOGI(TAG, "%4d %s sent cmd:%s", __LINE__, __func__, buf);
 

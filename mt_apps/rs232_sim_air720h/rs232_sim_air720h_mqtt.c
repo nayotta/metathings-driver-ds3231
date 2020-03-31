@@ -1,6 +1,7 @@
 #include "rs232_sim_air720h_mqtt.h"
 
 #include "rs232_sim_air720h_recv_manage.h"
+#include "rs232_sim_air720h_recv_manage_mqtt_state.h"
 #include "rs232_sim_air720h_sent_manage.h"
 
 #include "mt_utils.h"
@@ -16,6 +17,25 @@ static int MQTT_CMD_MAX_SIZE = 1000; // max cmd size 1000
 static int MQTT_PUB_MAX_SIZE = 1360; // max cmd size 1360
 
 // global func ================================================================
+
+// get state
+esp_err_t rs232_sim_air720h_mqtt_get_state() {
+  esp_err_t err = ESP_OK;
+  char *cmd = "AT+MQTTSTATU\r";
+  char *client_id = NULL;
+
+  err = rs232_sim_air720h_sent_manage_sent_and_wait_finish(
+      (uint8_t *)cmd, strlen(cmd), MQTT_CMD_TIMEOUT,
+      rs232_sim_air720h_recv_manage_get_mqtt_state_finish,
+      rs232_sim_air720h_recv_manage_get_ok);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s CMD failed", __LINE__, __func__);
+    goto EXIT;
+  }
+
+EXIT:
+  return err;
+}
 
 // set config
 esp_err_t rs322_sim_air720h_mqtt_set_client_config(char *username,

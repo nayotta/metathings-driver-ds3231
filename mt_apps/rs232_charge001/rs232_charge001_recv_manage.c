@@ -36,11 +36,11 @@ static void rs232_charge001_recv_manage_push_byte(uint8_t data) {
   // one cmd
   if (data == '\n') {
     RECV_BUF[RECV_SIZE - 1] = '\0';
-    rs232_sim_charge001_recv_manage_parse_msg();
+    rs232_charge001_recv_manage_parse_msg();
   }
 }
 
-static rs232_charge001_recv_manage_loop(rs232_dev_config_t *dev_config) {
+static void rs232_charge001_recv_manage_loop(rs232_dev_config_t *dev_config) {
   int len = 0;
   uint8_t data = 0;
 

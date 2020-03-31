@@ -13,6 +13,7 @@
 #include "rs232_sim_air720h_mqtt.h"
 #include "rs232_sim_air720h_recv_manage.h"
 #include "rs232_sim_air720h_recv_manage_http_action.h"
+#include "rs232_sim_air720h_recv_manage_mqtt_state.h"
 #include "rs232_sim_air720h_sent_manage.h"
 #include "rs232_sim_air720h_utils.h"
 
@@ -26,6 +27,8 @@ static char *SHOW_MODULE_PATH = "/v1/device_cloud/actions/show_module";
 static char *HEARTBEAT_PATH = "/v1/device_cloud/actions/heartbeat";
 static char *PUSHFRAME_PATH = "/v1/device_cloud/actions/push_frame_to_flow";
 #define AIR720H_URL_MAX_SIZE 100
+static SemaphoreHandle_t AIR720H_HTTP_LOCK = NULL;
+static long AIR720H_HTTP_LOCK_TIMEOUT = 8000;
 
 // mqtt
 void (*MSG_PROCESS)(char *topic, void *buf, int size);
@@ -34,6 +37,24 @@ static uint64_t SESSION_ID = 0;
 static char *DEVICE_ID = NULL;
 
 // static func ================================================================
+
+static esp_err_t http_lock_take(long timeout) {
+  if (AIR720H_HTTP_LOCK == NULL) {
+    AIR720H_HTTP_LOCK = xSemaphoreCreateMutex();
+  }
+  if (xSemaphoreTake(AIR720H_HTTP_LOCK, (portTickType)timeout) == pdTRUE) {
+    return ESP_OK;
+  }
+  return ESP_ERR_INVALID_RESPONSE;
+}
+
+static void http_lock_release() {
+  if (AIR720H_HTTP_LOCK == NULL) {
+    AIR720H_HTTP_LOCK = xSemaphoreCreateMutex();
+  }
+
+  xSemaphoreGive(AIR720H_HTTP_LOCK);
+}
 
 static void rs232_sim_air720h_http_task_loop(mt_module_http_t *module_http) {
   int init_interval = 30 * 1000;               // 30s
@@ -136,10 +157,14 @@ RESTART:
 }
 
 static void rs232_sim_air720h_mqtt_task_loop() {
-  int mqtt_init_interval = 30 * 1000; // 30s
+  int mqtt_init_interval = 30 * 1000;        // 30s
+  int mqtt_state_check_interval = 60 * 1000; // 60s
+  int mqtt_state_check_max_time = 3;
+  int mqtt_state_check_count = 0;
   esp_err_t err = ESP_OK;
+  int32_t state = -1;
 
-  // RESTART:
+RESTART:
   // mqtt_init loop
   while (true) {
     err = rs232_sim_air720h_mqtt_init();
@@ -156,9 +181,27 @@ static void rs232_sim_air720h_mqtt_task_loop() {
   }
 
   // mqtt state check loop
-  // (TODO ZH) check mqtt state and restart if disconnect
   while (true) {
-    vTaskDelay(mqtt_init_interval / portTICK_PERIOD_MS);
+    if (mqtt_state_check_count >= mqtt_state_check_max_time) {
+      ESP_LOGE(TAG, "%4d %s state count reach max, restart loop", __LINE__,
+               __func__);
+      mqtt_state_check_count = 0;
+      goto RESTART;
+    }
+
+    err = rs232_sim_air720h_mqtt_state(&state);
+    if (err != ESP_OK) {
+      ESP_LOGE(TAG, "%4d %s rs232_sim_air720h_mqtt_state failed", __LINE__,
+               __func__);
+      mqtt_state_check_count++;
+    } else {
+      if (state != 1) {
+        mqtt_state_check_count++;
+      } else {
+        mqtt_state_check_count = 0;
+      }
+    }
+    vTaskDelay(mqtt_state_check_interval / portTICK_PERIOD_MS);
   }
 }
 
@@ -287,6 +330,13 @@ rs232_sim_air720h_http_issue_module_token(mt_module_http_t *module_http) {
 
   ESP_LOGI(TAG, "%4d %s begin", __LINE__, __func__);
 
+  // lock
+  err = http_lock_take(AIR720H_HTTP_LOCK_TIMEOUT);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s http_lock_take timeout", __LINE__, __func__);
+    return ESP_ERR_TIMEOUT;
+  }
+
   if (module_http == NULL) {
     ESP_LOGE(TAG, "%4d %s module_http NULL", __LINE__, __func__);
     err = ESP_ERR_INVALID_ARG;
@@ -407,6 +457,7 @@ EXIT:
     free(res_data);
   if (token_out != NULL)
     mt_module_http_utils_free_token(token_out);
+  http_lock_release();
   return err;
 }
 
@@ -418,6 +469,13 @@ esp_err_t rs232_sim_air720h_http_show_module(mt_module_http_t *module_http) {
   module_t *mdl_out = NULL;
 
   ESP_LOGI(TAG, "%4d %s begin", __LINE__, __func__);
+
+  // lock
+  err = http_lock_take(AIR720H_HTTP_LOCK_TIMEOUT);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s http_lock_take timeout", __LINE__, __func__);
+    return ESP_ERR_TIMEOUT;
+  }
 
   if (module_http == NULL) {
     ESP_LOGE(TAG, "%4d %s module_http NULL", __LINE__, __func__);
@@ -513,6 +571,7 @@ EXIT:
     free(head);
   if (res_data != NULL)
     free(res_data);
+  http_lock_release();
   return err;
 }
 
@@ -523,6 +582,13 @@ esp_err_t rs232_sim_air720h_http_heartbeat(mt_module_http_t *module_http) {
   char *post_data = NULL;
 
   ESP_LOGI(TAG, "%4d %s begin", __LINE__, __func__);
+
+  // lock
+  err = http_lock_take(AIR720H_HTTP_LOCK_TIMEOUT);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s http_lock_take timeout", __LINE__, __func__);
+    return ESP_ERR_TIMEOUT;
+  }
 
   if (module_http == NULL) {
     ESP_LOGE(TAG, "%4d %s module_http NULL", __LINE__, __func__);
@@ -614,6 +680,7 @@ EXIT:
     free(head);
   if (post_data != NULL)
     free(post_data);
+  http_lock_release();
   return err;
 }
 
@@ -628,6 +695,13 @@ rs232_sim_air720h_http_push_frame_to_flow(mt_module_http_t *module_http,
   push_frame_res_t *res_out = NULL;
 
   ESP_LOGI(TAG, "%4d %s begin", __LINE__, __func__);
+
+  // lock
+  err = http_lock_take(AIR720H_HTTP_LOCK_TIMEOUT);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s http_lock_take timeout", __LINE__, __func__);
+    return NULL;
+  }
 
   // check arg
   if (module_http == NULL) {
@@ -744,6 +818,7 @@ EXIT:
     free(post_data);
   if (res_data != NULL)
     free(res_data);
+  http_lock_release();
   return res_out;
 }
 
@@ -800,6 +875,13 @@ esp_err_t rs232_sim_air720h_mqtt_init() {
   char *device_topic = NULL;
 
   ESP_LOGI(TAG, "%4d %s begin", __LINE__, __func__);
+
+  // lock
+  err = http_lock_take(AIR720H_HTTP_LOCK_TIMEOUT);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s http_lock_take timeout", __LINE__, __func__);
+    return NULL;
+  }
 
   // arg check
   if (DEVICE_ID == NULL) {
@@ -927,7 +1009,7 @@ EXIT:
     free(module_topic);
   if (device_topic != NULL)
     free(device_topic);
-
+  http_lock_release();
   return err;
 }
 
@@ -972,9 +1054,40 @@ esp_err_t rs232_sim_air720h_mqtt_task(char *module_id, char *device_id,
   return ESP_OK;
 }
 
+esp_err_t rs232_sim_air720h_mqtt_state(int32_t *state) {
+  esp_err_t err = ESP_OK;
+
+  // lock
+  err = http_lock_take(AIR720H_HTTP_LOCK_TIMEOUT);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s http_lock_take timeout", __LINE__, __func__);
+    return NULL;
+  }
+
+  err = rs232_sim_air720h_mqtt_get_state();
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %srs232_sim_air720h_mqtt_get_state failed", __LINE__,
+             __func__);
+    goto EXIT;
+  }
+
+  *state = rs232_sim_air720h_recv_manage_get_mqtt_state();
+
+EXIT:
+  http_lock_release();
+  return err;
+}
+
 esp_err_t rs232_sim_air720h_mqtt_pub(char *topic, uint8_t *buf, int size) {
   esp_err_t err = ESP_OK;
   char *hex_str = NULL;
+
+  // lock
+  err = http_lock_take(AIR720H_HTTP_LOCK_TIMEOUT);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s http_lock_take timeout", __LINE__, __func__);
+    return NULL;
+  }
 
   hex_str = rs232_sim_air720h_utils_byte_to_hex(buf, size);
   if (hex_str == NULL) {
@@ -994,5 +1107,6 @@ esp_err_t rs232_sim_air720h_mqtt_pub(char *topic, uint8_t *buf, int size) {
 EXIT:
   if (hex_str != NULL)
     free(hex_str);
+  http_lock_release();
   return err;
 }

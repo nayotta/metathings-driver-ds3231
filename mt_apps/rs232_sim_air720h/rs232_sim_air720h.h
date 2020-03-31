@@ -43,6 +43,8 @@ esp_err_t rs232_sim_air720h_mqtt_init();
 
 esp_err_t rs232_sim_air720h_mqtt_pub(char *topic, uint8_t *buf, int size);
 
+esp_err_t rs232_sim_air720h_mqtt_state(int32_t *state);
+
 esp_err_t rs232_sim_air720h_mqtt_task(char *module_id, char *device_id,
                                       uint64_t session_id,
                                       void (*handle)(char *topic, void *buf,
