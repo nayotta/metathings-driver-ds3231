@@ -8,6 +8,8 @@
 
 static const char *TAG = "MT_NVS_CONFIG";
 
+static const int DEFAULT_FLOW_INTERVAL = 600; // 10 minute
+
 // help func ==================================================================
 
 void mt_nvs_config_free_host(mt_nvs_host_t *host) {
@@ -371,4 +373,28 @@ char *mt_nvs_config_get_net_type() {
   net_type = mt_nvs_read_string_config(key, &size);
 
   return net_type;
+}
+
+esp_err_t mt_nvs_config_get_flow_interval(int32_t index, int32_t *interval) {
+  char key[32] = "";
+
+  if (index <= 0) {
+    ESP_LOGE(TAG, "%4d %s index:%d error", __LINE__, __func__, index);
+    return ESP_ERR_INVALID_ARG;
+  }
+
+  sprintf(key, "mod_%d_intr", index);
+
+  if (mt_nvs_read_int32_config(key, interval) == false) {
+    ESP_LOGE(TAG, "%4d %s read mod:%d interval failed", __LINE__, __func__,
+             index);
+    if (mt_nvs_write_int32_config(key, DEFAULT_FLOW_INTERVAL) == false) {
+      ESP_LOGE(TAG, "%4d %s write default mod:%d interval failed", __LINE__,
+               __func__, index);
+      return ESP_ERR_INVALID_RESPONSE;
+    }
+    *interval = DEFAULT_FLOW_INTERVAL;
+  }
+
+  return ESP_OK;
 }

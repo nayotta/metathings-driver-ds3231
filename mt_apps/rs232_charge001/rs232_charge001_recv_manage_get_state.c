@@ -45,7 +45,6 @@ esp_err_t rs232_charge001_recv_manage_get_state_finish() {
 
 rs232_charge001_state2_t *rs232_charge001_recv_manage_get_state_response() {
   rs232_charge001_state2_t *res = NULL;
-  esp_err_t err = ESP_OK;
   uint8_t *temp_buf = NULL;
   int32_t temp_buf_size = 0;
 
@@ -55,13 +54,12 @@ rs232_charge001_state2_t *rs232_charge001_recv_manage_get_state_response() {
     memcpy(temp_buf, BUF, temp_buf_size);
   } else {
     ESP_LOGE(TAG, "%4d %s BUF_SIZE:%d error", __LINE__, __func__, BUF_SIZE);
-    return ESP_ERR_INVALID_ARG;
+    return NULL;
   }
 
   if (temp_buf_size != STATE_RES_SIZE) {
     ESP_LOGE(TAG, "%4d %s except size:%d get:%d", __LINE__, __func__,
              STATE_RES_SIZE, temp_buf_size);
-    err = ESP_ERR_INVALID_ARG;
     goto EXIT;
   }
 

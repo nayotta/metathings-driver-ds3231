@@ -86,6 +86,40 @@ void rs232_charge001_free_states(rs232_charge001_states_t *states) {
   free(states);
 }
 
+rs232_charge001_states2_t *rs232_charge001_new_states2(int32_t num) {
+  if (num <= 0) {
+    ESP_LOGE(TAG, "%4d %s unexcept num:%d", __LINE__, __func__, num);
+    return NULL;
+  }
+
+  rs232_charge001_states2_t *state2 = malloc(sizeof(rs232_charge001_states2_t));
+
+  state2->num = num;
+  state2->states = malloc(num * sizeof(rs232_charge001_state2_t *));
+
+  for (int i = 0; i < num; i++) {
+    state2->states[i] = NULL;
+  }
+
+  return state2;
+}
+
+void rs232_charge001_free_states2(rs232_charge001_states2_t *states2) {
+  if (states2 == NULL)
+    return;
+
+  for (int i = 0; i < states2->num; i++) {
+    if (states2->states[i] != NULL) {
+      rs232_charge001_free_state2(states2->states[i]);
+    }
+  }
+
+  if (states2->states != NULL)
+    free(states2->states);
+
+  free(states2);
+}
+
 // global func ================================================================
 
 esp_err_t rs232_charge001_init(int32_t uart_num, int32_t rx_pin,
@@ -301,4 +335,27 @@ EXIT:
   }
 
   return err;
+}
+
+rs232_charge001_states2_t *rs232_charge001_get_states2() {
+  rs232_charge001_states_t *states1 = NULL;
+  rs232_charge001_states2_t *states2 = NULL;
+
+  states1 = rs232_charge001_get_states();
+  if (states1 == NULL) {
+    ESP_LOGE(TAG, "%4d %s rs232_charge001_get_states failed", __LINE__,
+             __func__);
+    return NULL;
+  }
+
+  states2 = rs232_charge001_new_states2(states1->num);
+  for (int i = 0; i < states1->num; i++) {
+    states2->states[i] = rs232_charge001_get_state(states1->states[i]->port);
+    if (states2->states[i] == NULL) {
+      ESP_LOGE(TAG, "%4d %s rs232_charge001_get_state %d failed", __LINE__,
+               __func__, states1->states[i]->port);
+    }
+  }
+
+  return states2;
 }

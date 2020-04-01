@@ -9,16 +9,16 @@ flow:
       driver: charge001
       type: bool
       period: 0
-    s0:
-      description: 开关0状态(1 空闲 2使用 3禁用 4故障)(开关地址用尾数标记)
+    s1:
+      description: 开关1状态(1 空闲 2使用 3禁用 4故障)(开关地址用尾数标记)
       unit:
       driver: charge001
       type: float
       period: 0
       min: 0
       max: 10
-    t0:
-      description: 开关0剩余时间(开关地址用尾数标记)
+    t1:
+      description: 开关1剩余时间(开关地址用尾数标记)
       unit:
       driver: charge001
       type: float

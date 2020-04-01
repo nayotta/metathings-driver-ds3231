@@ -55,7 +55,7 @@ rs232_charge001_states_t *rs232_charge001_recv_manage_get_states_response() {
     memcpy(temp_buf, BUF, temp_buf_size);
   } else {
     ESP_LOGE(TAG, "%4d %s BUF_SIZE:%d error", __LINE__, __func__, BUF_SIZE);
-    return ESP_ERR_INVALID_ARG;
+    return NULL;
   }
 
   port_num = temp_buf[0];

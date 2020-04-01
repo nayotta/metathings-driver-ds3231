@@ -73,13 +73,8 @@ esp_err_t rs232_charge001_sent_manage_sent_and_wait_finish(
   esp_err_t err = ESP_OK;
   int interval = 20;
   int count = timeout / interval + 1;
-  bool msg_finish = false;
 
   // ESP_LOGI(TAG, "%4d %s sent cmd:%s", __LINE__, __func__, buf);
-
-  if (msg_handle == NULL) {
-    msg_finish = true;
-  }
 
   if (sent_lock_take(SENT_TIMEOUT) != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s sent_lock_take timeout", __LINE__, __func__);
@@ -99,7 +94,6 @@ esp_err_t rs232_charge001_sent_manage_sent_and_wait_finish(
     if (msg_handle != NULL) {
       err = msg_handle();
       if (err == ESP_OK) {
-        msg_finish = true;
         goto EXIT;
       }
     }

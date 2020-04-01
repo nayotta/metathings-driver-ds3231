@@ -23,6 +23,11 @@ typedef struct _rs232_charge001_states_t {
   rs232_charge001_state1_t **states;
 } rs232_charge001_states_t;
 
+typedef struct _rs232_charge001_states2_t {
+  int32_t num;
+  rs232_charge001_state2_t **states;
+} rs232_charge001_states2_t;
+
 // help func ==================================================================
 
 rs232_charge001_state1_t *rs232_charge001_new_state1();
@@ -37,6 +42,10 @@ rs232_charge001_states_t *rs232_charge001_new_states(int32_t num);
 
 void rs232_charge001_free_states(rs232_charge001_states_t *states);
 
+rs232_charge001_states2_t *rs232_charge001_new_states2(int32_t num);
+
+void rs232_charge001_free_states2(rs232_charge001_states2_t *states);
+
 // func =======================================================================
 
 esp_err_t rs232_charge001_init(int32_t uart_num, int32_t rx_pin,
@@ -48,5 +57,8 @@ rs232_charge001_states_t *rs232_charge001_get_states();
 
 esp_err_t rs232_charge001_set_charge(int32_t port, int32_t money, int32_t time,
                                      int32_t *res_port, int32_t *res_result);
+
+// complex api
+rs232_charge001_states2_t *rs232_charge001_get_states2();
 
 #endif
