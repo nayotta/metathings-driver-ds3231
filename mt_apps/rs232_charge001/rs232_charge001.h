@@ -6,6 +6,16 @@
 
 // define =====================================================================
 
+typedef enum {
+  RS232_CHARGE001_CMD_TYPE_GET_STATES = 0x01,
+  RS232_CHARGE001_CMD_TYPE_SET_CHARGE = 0x02,
+  RS232_CHARGE001_CMD_TYPE_NOTIFY_COIN = 0x03,
+  RS232_CHARGE001_CMD_TYPE_NOTIFY_CARD = 0x04,
+  RS232_CHARGE001_CMD_TYPE_NOTIFY_OVER = 0x05,
+  RS232_CHARGE001_CMD_TYPE_GET_STATE = 0x06,
+  RS232_CHARGE001_CMD_TYPE_SET_STOP = 0x0B,
+} rs232_charge001_cmd_t;
+
 typedef struct _rs232_charge001_state1_t {
   int32_t port;
   int32_t state;

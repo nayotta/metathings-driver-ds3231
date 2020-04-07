@@ -2,7 +2,40 @@
 
 // static define ==============================================================
 
-// static const char *TAG = "RS232_CHARGE001_UTILS";
+static const char *TAG = "RS232_CHARGE001_UTILS";
+
+// help func ==================================================================
+
+rs232_charge001_msg_t *rs232_charge001_utils_new_msg() {
+  rs232_charge001_msg_t *msg = malloc(sizeof(rs232_charge001_msg_t));
+
+  msg->size = 0;
+  msg->cmd = 0;
+  msg->session = 0;
+  msg->buf = NULL;
+
+  return msg;
+}
+
+void rs232_charge001_utils_free_msg(rs232_charge001_msg_t *msg) {
+  if (msg == NULL)
+    return;
+
+  if (msg->buf != NULL)
+    free(msg->buf);
+
+  free(msg);
+}
+
+static uint8_t rs232_charge001_sum(uint8_t *buf, int32_t size) {
+  uint8_t sum = 0;
+
+  for (int i = 1; i < size - 1; i++) {
+    sum = sum ^ buf[i];
+  }
+
+  return sum;
+}
 
 // global func ================================================================
 
@@ -34,15 +67,70 @@ uint8_t *rs232_charge001_utils_marshal_buf(uint8_t cmd, uint8_t *data,
   memcpy(buf_out + 9, data, data_size);
 
   // gen sum
-  uint8_t sum = 0;
-  for (int i = 1; i < buf_out_size - 1; i++) {
-    sum = sum ^ buf_out[i];
-  }
+  uint8_t sum = rs232_charge001_sum(buf_out, buf_out_size);
+
   buf_out[buf_out_size - 1] = sum;
 
   *buf_size_out = buf_out_size;
 
   return buf_out;
+}
+
+rs232_charge001_msg_t *rs232_chrage001_utils_unmarshal_buf(uint8_t *buf,
+                                                           int32_t size) {
+  esp_err_t err = ESP_OK;
+  rs232_charge001_msg_t *msg = rs232_charge001_utils_new_msg();
+
+  if (size <= 10) {
+    ESP_LOGE(TAG, "%4d %s size:%d error", __LINE__, __func__, size);
+    err = ESP_ERR_INVALID_ARG;
+    goto EXIT;
+  }
+
+  // check head
+  if (buf[0] != 0xEE) {
+    ESP_LOGE(TAG, "%4d %s buf[0]:%2x not equal 0xEE", __LINE__, __func__,
+             buf[0]);
+    err = ESP_ERR_INVALID_ARG;
+    goto EXIT;
+  }
+
+  // check min size
+  if (buf[1] - 8 <= 0) {
+    ESP_LOGE(TAG, "%4d %s buf[1]:%2x less than 8", __LINE__, __func__, buf[1]);
+    err = ESP_ERR_INVALID_ARG;
+    goto EXIT;
+  }
+
+  // save buf size
+  msg->size = buf[1] - 8;
+
+  // save cmd
+  msg->cmd = buf[2];
+
+  // save session
+  memcpy(&msg->session, buf + 3, 6);
+
+  // save buf
+  msg->buf = malloc(msg->size);
+    memcpy(msg->buf, buf + 9, msg->size);
+
+  // check sum
+  uint8_t sum = rs232_charge001_sum(buf, size);
+  if (sum != buf[size - 1]) {
+    ESP_LOGE(TAG, "%4d %s except sum:%2x recv:%2x", __LINE__, __func__, sum,
+             buf[size - 1]);
+    err = ESP_ERR_INVALID_ARG;
+    goto EXIT;
+  }
+
+EXIT:
+  if (err != ESP_OK) {
+    rs232_charge001_utils_free_msg(msg);
+    msg = NULL;
+  }
+
+  return msg;
 }
 
 uint8_t *rs232_charge001_utils_marshal_set_charge(int32_t port, int32_t money,

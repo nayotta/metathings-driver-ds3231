@@ -16,6 +16,7 @@
 #include "mt_module_flow_manage.h"
 #include "mt_module_http.h"
 #include "mt_module_http_utils.h"
+#include "mt_module_lora.h"
 #include "mt_module_mqtt.h"
 #include "mt_utils_session.h"
 
@@ -35,12 +36,6 @@ static int LORA_TX_PIN = 17;
 
 // new session may cause heartbeat 409, false better for test
 #define NEW_SESSION false
-
-// static func ================================================================
-
-static void test_handle(char *topic, char *buf, int size) {
-  printf("no handle\n");
-}
 
 // gloabal func ===============================================================
 
@@ -81,9 +76,9 @@ void app_main() {
     vTaskDelay(2000 / portTICK_RATE_MS);
   }
 
-  err = rs232_sim_air720h_mqtt_task(module_http->module->id,
-                                    module_http->module->deviceID,
-                                    module_http->session_id, test_handle);
+  err = rs232_sim_air720h_mqtt_task(
+      module_http->module->id, module_http->module->deviceID,
+      module_http->session_id, mt_module_lora_handle);
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s rs232_sim_air720h_mqtt_task failed", __LINE__,
              __func__);

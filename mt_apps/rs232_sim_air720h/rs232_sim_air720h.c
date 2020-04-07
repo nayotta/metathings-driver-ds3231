@@ -3,6 +3,7 @@
 #include "mt_module_flow.h"
 #include "mt_module_http.h"
 #include "mt_module_http_utils.h"
+#include "mt_module_lora.h"
 #include "mt_mqtt_utils.h"
 #include "mt_nvs_config.h"
 #include "mt_utils.h"
@@ -128,9 +129,13 @@ RESTART:
 
   // heartbeat loop
   heartbeat_count = heartbeat_max;
-  module_http->session_id =
-      mt_utils_session_new_session(mt_utils_session_gen_startup_session(),
-                                   mt_utils_session_gen_major_session());
+  // debug here!!!!
+  module_http->session_id = 12345678;
+
+  // module_http->session_id =
+  //   mt_utils_session_new_session(mt_utils_session_gen_startup_session(),
+  //                               mt_utils_session_gen_major_session());
+  mt_module_lora_update_session(module_http->session_id);
 
   while (true) {
     if (heartbeat_count <= 0) {

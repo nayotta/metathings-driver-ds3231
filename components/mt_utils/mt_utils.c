@@ -94,16 +94,17 @@ unsigned char *mt_hmac_sha256_mqtt(const uint8_t *key, int key_size,
       sizeof(MQTT_HMAC_TIME_STAMP) - 1, (uint32_t)MQTT_HMAC_NONCE);
 }
 
-char *mt_utils_int64_to_string(uint64_t src, uint8_t *size_out) {
+char *mt_utils_int64_to_string(uint64_t src) {
   char *des = malloc(64);
   char *ret = NULL;
+  int size_out = 0;
 
   sprintf(des, "%llu", src);
   if (des != NULL) {
-    *size_out = (uint8_t)strlen(des) + 1;
+    size_out = (uint8_t)strlen(des) + 1;
   }
 
-  if (*size_out > 0) {
+  if (size_out > 0) {
     ret = malloc(strlen(des) + 1);
     ret[strlen(des)] = '\0';
     memcpy(ret, des, strlen(des));

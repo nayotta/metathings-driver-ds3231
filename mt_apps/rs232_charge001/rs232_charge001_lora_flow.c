@@ -70,7 +70,7 @@ static uint8_t *rs232_charge001_pack_frame(rs232_charge001_states2_t *datas,
   group->value[count]->key = malloc(strlen(key) + 1);
   memcpy(group->value[count]->key, key, strlen(key) + 1);
   group->value[count]->type = GOOGLE__PROTOBUF__VALUE__KIND_NUMBER_VALUE;
-  group->value[count++]->number_value = 1;
+  group->value[count++]->number_value = LORA_ID;
 
   frame_req_buf = mt_module_flow_pack_frame(group, NULL, frame_size);
   if (frame_req_buf == NULL) {

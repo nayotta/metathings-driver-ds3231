@@ -473,6 +473,52 @@ EXIT:
   return topic;
 }
 
+char *mt_mqtt_utils_convert_path_unarycall_req_to_res(char *topic,
+                                                      char *session_id) {
+  char *topic_out = NULL;
+  int begin_offset = 0;
+  int topic_size = 0;
+  int match = 0;
+
+  if (topic == NULL) {
+    ESP_LOGE(TAG, "%4d %s topic NULL", __LINE__, __func__);
+    return NULL;
+  }
+  topic_size = strlen(topic);
+
+  if (session_id == NULL) {
+    ESP_LOGE(TAG, "%4d %s session_id NULL", __LINE__, __func__);
+    return NULL;
+  }
+
+  for (int i = topic_size - 1; i >= 0; i--) {
+    if (topic[i] == '/') {
+      match++;
+    }
+    if (match == 2) {
+      begin_offset = i + 1;
+      break;
+    }
+  }
+
+  if (match != 2) {
+    ESP_LOGE(TAG, "%4d %s unexcept topic:%s", __LINE__, __func__, topic);
+    return NULL;
+  }
+
+  int out_size = begin_offset + strlen(session_id) + strlen("/upstream") + 1;
+
+  topic_out = malloc(out_size);
+
+  memcpy(topic_out, topic, begin_offset);
+  memcpy(topic_out + begin_offset, session_id, strlen(session_id));
+  memcpy(topic_out + begin_offset + strlen(session_id), "/upstream",
+         strlen("/upstream"));
+  topic_out[out_size - 1] = '\0';
+
+  return topic_out;
+}
+
 char *mt_mqtt_utils_new_device_topic(char *device_id) {
   esp_err_t err = ESP_OK;
   char *topic = malloc(256);

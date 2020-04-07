@@ -339,7 +339,7 @@ esp_err_t mt_module_http_actions_heartbeat(mt_module_http_t *module_http,
   cJSON_Delete(root);
 
   // request extra header
-  session_id_str = mt_utils_int64_to_string(module_http->session_id, &str_size);
+  session_id_str = mt_utils_int64_to_string(module_http->session_id);
   err = esp_http_client_set_header(client, "MT-Module-Session", session_id_str);
   if (err != ESP_OK) {
     ESP_LOGE(TAG,

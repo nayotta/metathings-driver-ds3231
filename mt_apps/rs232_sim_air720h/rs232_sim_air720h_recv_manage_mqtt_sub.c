@@ -5,6 +5,7 @@
 #include "rs232_sim_air720h_recv_manage_mqtt_sub.h"
 #include "rs232_sim_air720h_utils.h"
 
+#include "mt_module_lora.h"
 #include "mt_mqtt_utils.h"
 
 #include "esp_timer.h"
@@ -224,13 +225,12 @@ static esp_err_t rs232_sim_air720h_recv_manage_mqtt_process_all(char *topic,
     goto EXIT;
   }
 
-  // TODO(ZH)
-  /*
+  // TODO(ZH) handle could change
   if (strcmp(path, "proxy") == 0) {
     ESP_LOGI(TAG, "%4d %s get proxy message", __LINE__, __func__);
-    mt_module_mqtt_proxy_process(topic, buf, size);
+    mt_module_lora_handle(topic, buf, size);
     goto EXIT;
-  }*/
+  }
 
   if (strcmp(path, "flow_channel") == 0) {
     ESP_LOGI(TAG, "%4d %s get flow message", __LINE__, __func__);

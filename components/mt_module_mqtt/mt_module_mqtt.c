@@ -19,7 +19,7 @@ static const char *TAG = "MT_MODULE_MQTT";
 extern char Module_id[128];
 extern uint64_t Session_id;
 
-mt_module_mqtt_handle_t *app_handle = NULL;
+static mt_module_mqtt_handle_t *app_handle = NULL;
 
 // static func ================================================================
 

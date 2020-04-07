@@ -65,7 +65,13 @@
                 "${workspaceFolder}/mt_proto/mt_proto_charge001/include",
                 "${workspaceFolder}/components/mt_http_client",
                 "${workspaceFolder}/components/mt_modbus_master_airswitch001/include",
-                "${workspaceFolder}/mt_apps/rs232_charge001"
+                "${workspaceFolder}/mt_apps/rs232_charge001",
+                "D:/7esp32/msys32/home/zhanghui/work/metathings-esp32-airswitch001/metathings-esp32-lib/components/mt_module_flow",
+                "D:/7esp32/msys32/home/zhanghui/work/metathings-esp32-lib/components/mt_module_flow",
+                "D:/7esp32/msys32/home/zhanghui/work/metathings-esp32-lib/components/mt_module_flow",
+                "D:/7esp32/msys32/home/zhanghui/work/metathings-esp32-airswitch001/metathings-esp32-lib/components/mt_module_flow",
+                "D:/7esp32/msys32/home/zhanghui/work/metathings-esp32-lib/components/mt_module_flow",
+                "${workspaceFolder}/mt_proto/mt_proto_device_gate/include"
             ],
             "defines": [
                 "_DEBUG",

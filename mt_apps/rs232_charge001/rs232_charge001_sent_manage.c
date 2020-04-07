@@ -28,21 +28,24 @@ static void sent_lock_release() {
   xSemaphoreGive(SENT_LOCK);
 }
 
-static esp_err_t sent_cmd(const char *buf) {
-  int sent_size = 0;
-  int sent_ret_size = 0;
+static esp_err_t sent_cmd(uint8_t *buf, int32_t size) {
+  esp_err_t err = ESP_OK;
 
   if (DEV_CONFIG == NULL) {
     ESP_LOGE(TAG, "%4d %s DEV_CONFIG NULL", __LINE__, __func__);
     return ESP_ERR_INVALID_STATE;
   }
 
-  sent_size = strlen(buf);
+  // debug here
+  printf("sent:");
+  for (int i = 0; i < size; i++) {
+    printf("%2x ", buf[i]);
+  }
+  printf("\n");
 
-  sent_ret_size = uart_write_bytes(DEV_CONFIG->uart_num, buf, sent_size);
-  if (sent_ret_size != sent_size) {
-    ESP_LOGE(TAG, "%4d %s sent:%d but sent_ret:%d", __LINE__, __func__,
-             sent_size, sent_ret_size);
+  err = rs232_dev_write(DEV_CONFIG, buf, size);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s rs232_dev_write failed", __LINE__, __func__);
     return ESP_ERR_INVALID_RESPONSE;
   }
 
@@ -82,7 +85,7 @@ esp_err_t rs232_charge001_sent_manage_sent_and_wait_finish(
   }
 
   // sent cmd
-  err = sent_cmd((const char *)buf);
+  err = sent_cmd(buf, buf_size);
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s sent_cmd failed", __LINE__, __func__);
     goto EXIT;
