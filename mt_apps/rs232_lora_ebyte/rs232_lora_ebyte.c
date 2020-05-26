@@ -404,6 +404,7 @@ esp_err_t rs232_lora_ebyte_init(int uart_num, int rx_pin, int tx_pin,
   CONFIG->rx_pin = rx_pin;
   CONFIG->tx_pin = tx_pin;
   CONFIG->uart_config->baud_rate = baud_rate;
+  CONFIG->timeout = 1000;
 
   err = rs232_dev_init(CONFIG);
   if (err != ESP_OK) {

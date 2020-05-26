@@ -64,7 +64,7 @@ static void mt_module_mqtt_handle_unarycall(
     }
   }
 
-  ESP_LOGE(TAG, "%4d %s get unexcept method:%s", __LINE__, __func__,
+  ESP_LOGE(TAG, "%4d %s get unexcept method:\"%s\"", __LINE__, __func__,
            msg->unary_call->method->value);
 
 EXIT:
@@ -154,7 +154,7 @@ void mt_module_mqtt_add_handle(
     void (*handle)(Ai__Metathings__Component__DownStreamFrame *msg,
                    char module_id[128]),
     char *method) {
-  ESP_LOGI(TAG, "%4d %s add handle method:%s", __LINE__, __func__, method);
+  ESP_LOGI(TAG, "%4d %s add handle method:\"%s\"", __LINE__, __func__, method);
 
   if (app_handle == NULL) {
     app_handle = malloc(sizeof(mt_module_mqtt_handle_t));
@@ -184,6 +184,7 @@ void mt_module_mqtt_add_handle(
            strlen(method) + 1);
 
     free(temp_handle->methods);
+    free(temp_handle->handles);
     free(temp_handle);
   }
 }
