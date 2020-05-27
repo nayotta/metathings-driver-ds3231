@@ -24,6 +24,8 @@ void mt_module_unarycall_config_get_int32_config_handle(
   esp_err_t err = ESP_OK;
   MtSysConfig__GetIntConfigReq *req = NULL;
   MtSysConfig__GetIntConfigRes res = MT_SYS_CONFIG__GET_INT_CONFIG_RES__INIT;
+  res.has_code = true;
+  res.code = MT_ERR_NO_ERR;
   MtSysConfig__IntConfig int_config = MT_SYS_CONFIG__INT_CONFIG__INIT;
   res.intconfig = &int_config;
   int res_size = 0;
@@ -57,6 +59,7 @@ void mt_module_unarycall_config_get_int32_config_handle(
     err = MT_ERR_INVALID_RESPONSE;
     goto ERROR;
   }
+  res.intconfig->has_value = true;
 
 ERROR:
   // marshall res
@@ -101,6 +104,8 @@ void mt_module_unarycall_config_set_int32_config_handle(
   esp_err_t err = ESP_OK;
   MtSysConfig__SetIntConfigReq *req = NULL;
   MtSysConfig__SetRes res = MT_SYS_CONFIG__SET_RES__INIT;
+  res.has_code = true;
+  res.code = MT_ERR_NO_ERR;
   int res_size = 0;
   uint8_t *res_buf = NULL;
   int frame_size = 0;
@@ -176,6 +181,8 @@ void mt_module_unarycall_config_get_string_config_handle(
   MtSysConfig__GetStringConfigReq *req = NULL;
   MtSysConfig__GetStringConfigRes res =
       MT_SYS_CONFIG__GET_STRING_CONFIG_RES__INIT;
+  res.has_code = true;
+  res.code = MT_ERR_NO_ERR;
   MtSysConfig__StringConfig string_config = MT_SYS_CONFIG__STRING_CONFIG__INIT;
   res.stringconfig = &string_config;
   int res_size = 0;
@@ -257,6 +264,8 @@ void mt_module_unarycall_config_set_string_config_handle(
   esp_err_t err = ESP_OK;
   MtSysConfig__SetStringConfigReq *req = NULL;
   MtSysConfig__SetRes res = MT_SYS_CONFIG__SET_RES__INIT;
+  res.has_code = true;
+  res.code = MT_ERR_NO_ERR;
   int res_size = 0;
   uint8_t *res_buf = NULL;
   int frame_size = 0;
@@ -337,6 +346,8 @@ void mt_module_unarycall_config_get_host_config_handle(
     Ai__Metathings__Component__DownStreamFrame *msg, char module_id[128]) {
   esp_err_t err = ESP_OK;
   MtSysConfig__GetHostConfigRes res = MT_SYS_CONFIG__GET_HOST_CONFIG_RES__INIT;
+  res.has_code = true;
+  res.code = MT_ERR_NO_ERR;
   int res_size = 0;
   uint8_t *res_buf = NULL;
   int frame_size = 0;
@@ -353,9 +364,12 @@ void mt_module_unarycall_config_get_host_config_handle(
   }
   res.hostconfig = malloc(sizeof(MtSysConfig__HostConfig));
   res.hostconfig->host = temp_host->host;
+  res.hostconfig->has_usessl = true;
   res.hostconfig->usessl = temp_host->use_ssl;
+  res.hostconfig->has_httpport = true;
   res.hostconfig->httpport = temp_host->http_port;
   res.hostconfig->mqtthost = temp_host->mqtt_host;
+  res.hostconfig->has_mqttport = true;
   res.hostconfig->mqttport = temp_host->mqtt_port;
   res.hostconfig->credid = temp_host->module_cred_id;
   res.hostconfig->credkey = temp_host->module_cred_key;
@@ -410,6 +424,8 @@ void mt_module_unarycall_config_set_host_config_handle(
   esp_err_t err = ESP_OK;
   MtSysConfig__SetHostConfigReq *req = NULL;
   MtSysConfig__SetRes res = MT_SYS_CONFIG__SET_RES__INIT;
+  res.has_code = true;
+  res.code = MT_ERR_NO_ERR;
   int res_size = 0;
   uint8_t *res_buf = NULL;
   int frame_size = 0;
@@ -456,10 +472,16 @@ void mt_module_unarycall_config_set_host_config_handle(
     }
   }
   temp_host->host = req->hostconfig->host;
-  temp_host->use_ssl = req->hostconfig->usessl;
-  temp_host->http_port = req->hostconfig->httpport;
+  if (req->hostconfig->has_usessl == true) {
+    temp_host->use_ssl = req->hostconfig->usessl;
+  }
+  if (req->hostconfig->has_httpport == true) {
+    temp_host->http_port = req->hostconfig->httpport;
+  }
   temp_host->mqtt_host = req->hostconfig->mqtthost;
-  temp_host->mqtt_port = req->hostconfig->mqttport;
+  if (req->hostconfig->has_mqttport == true) {
+    temp_host->mqtt_port = req->hostconfig->mqttport;
+  }
   temp_host->module_cred_id = req->hostconfig->credid;
   temp_host->module_cred_key = req->hostconfig->credkey;
 
