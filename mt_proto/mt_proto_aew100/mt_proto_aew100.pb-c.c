@@ -10,7 +10,7 @@
 void   mt_aew100__data__init
                      (MtAew100__Data         *message)
 {
-  static const MtAew100__Data init_value = MT_AEW100__DATA__INIT;
+  static MtAew100__Data init_value = MT_AEW100__DATA__INIT;
   *message = init_value;
 }
 size_t mt_aew100__data__get_packed_size
@@ -47,15 +47,13 @@ void   mt_aew100__data__free_unpacked
                      (MtAew100__Data *message,
                       ProtobufCAllocator *allocator)
 {
-  if(!message)
-    return;
   assert(message->base.descriptor == &mt_aew100__data__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
 void   mt_aew100__get_data_req__init
                      (MtAew100__GetDataReq         *message)
 {
-  static const MtAew100__GetDataReq init_value = MT_AEW100__GET_DATA_REQ__INIT;
+  static MtAew100__GetDataReq init_value = MT_AEW100__GET_DATA_REQ__INIT;
   *message = init_value;
 }
 size_t mt_aew100__get_data_req__get_packed_size
@@ -92,15 +90,13 @@ void   mt_aew100__get_data_req__free_unpacked
                      (MtAew100__GetDataReq *message,
                       ProtobufCAllocator *allocator)
 {
-  if(!message)
-    return;
   assert(message->base.descriptor == &mt_aew100__get_data_req__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
 void   mt_aew100__get_data_res__init
                      (MtAew100__GetDataRes         *message)
 {
-  static const MtAew100__GetDataRes init_value = MT_AEW100__GET_DATA_RES__INIT;
+  static MtAew100__GetDataRes init_value = MT_AEW100__GET_DATA_RES__INIT;
   *message = init_value;
 }
 size_t mt_aew100__get_data_res__get_packed_size
@@ -137,15 +133,13 @@ void   mt_aew100__get_data_res__free_unpacked
                      (MtAew100__GetDataRes *message,
                       ProtobufCAllocator *allocator)
 {
-  if(!message)
-    return;
   assert(message->base.descriptor == &mt_aew100__get_data_res__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
 void   mt_aew100__current_data__init
                      (MtAew100__CurrentData         *message)
 {
-  static const MtAew100__CurrentData init_value = MT_AEW100__CURRENT_DATA__INIT;
+  static MtAew100__CurrentData init_value = MT_AEW100__CURRENT_DATA__INIT;
   *message = init_value;
 }
 size_t mt_aew100__current_data__get_packed_size
@@ -182,15 +176,13 @@ void   mt_aew100__current_data__free_unpacked
                      (MtAew100__CurrentData *message,
                       ProtobufCAllocator *allocator)
 {
-  if(!message)
-    return;
   assert(message->base.descriptor == &mt_aew100__current_data__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
 void   mt_aew100__get_current_req__init
                      (MtAew100__GetCurrentReq         *message)
 {
-  static const MtAew100__GetCurrentReq init_value = MT_AEW100__GET_CURRENT_REQ__INIT;
+  static MtAew100__GetCurrentReq init_value = MT_AEW100__GET_CURRENT_REQ__INIT;
   *message = init_value;
 }
 size_t mt_aew100__get_current_req__get_packed_size
@@ -227,15 +219,13 @@ void   mt_aew100__get_current_req__free_unpacked
                      (MtAew100__GetCurrentReq *message,
                       ProtobufCAllocator *allocator)
 {
-  if(!message)
-    return;
   assert(message->base.descriptor == &mt_aew100__get_current_req__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
 void   mt_aew100__get_current_res__init
                      (MtAew100__GetCurrentRes         *message)
 {
-  static const MtAew100__GetCurrentRes init_value = MT_AEW100__GET_CURRENT_RES__INIT;
+  static MtAew100__GetCurrentRes init_value = MT_AEW100__GET_CURRENT_RES__INIT;
   *message = init_value;
 }
 size_t mt_aew100__get_current_res__get_packed_size
@@ -272,8 +262,6 @@ void   mt_aew100__get_current_res__free_unpacked
                      (MtAew100__GetCurrentRes *message,
                       ProtobufCAllocator *allocator)
 {
-  if(!message)
-    return;
   assert(message->base.descriptor == &mt_aew100__get_current_res__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
@@ -282,9 +270,9 @@ static const ProtobufCFieldDescriptor mt_aew100__data__field_descriptors[24] =
   {
     "currentA",
     1,
-    PROTOBUF_C_LABEL_NONE,
+    PROTOBUF_C_LABEL_OPTIONAL,
     PROTOBUF_C_TYPE_DOUBLE,
-    0,   /* quantifier_offset */
+    offsetof(MtAew100__Data, has_currenta),
     offsetof(MtAew100__Data, currenta),
     NULL,
     NULL,
@@ -294,9 +282,9 @@ static const ProtobufCFieldDescriptor mt_aew100__data__field_descriptors[24] =
   {
     "currentB",
     2,
-    PROTOBUF_C_LABEL_NONE,
+    PROTOBUF_C_LABEL_OPTIONAL,
     PROTOBUF_C_TYPE_DOUBLE,
-    0,   /* quantifier_offset */
+    offsetof(MtAew100__Data, has_currentb),
     offsetof(MtAew100__Data, currentb),
     NULL,
     NULL,
@@ -306,9 +294,9 @@ static const ProtobufCFieldDescriptor mt_aew100__data__field_descriptors[24] =
   {
     "currentC",
     3,
-    PROTOBUF_C_LABEL_NONE,
+    PROTOBUF_C_LABEL_OPTIONAL,
     PROTOBUF_C_TYPE_DOUBLE,
-    0,   /* quantifier_offset */
+    offsetof(MtAew100__Data, has_currentc),
     offsetof(MtAew100__Data, currentc),
     NULL,
     NULL,
@@ -318,9 +306,9 @@ static const ProtobufCFieldDescriptor mt_aew100__data__field_descriptors[24] =
   {
     "votageA",
     4,
-    PROTOBUF_C_LABEL_NONE,
+    PROTOBUF_C_LABEL_OPTIONAL,
     PROTOBUF_C_TYPE_DOUBLE,
-    0,   /* quantifier_offset */
+    offsetof(MtAew100__Data, has_votagea),
     offsetof(MtAew100__Data, votagea),
     NULL,
     NULL,
@@ -330,9 +318,9 @@ static const ProtobufCFieldDescriptor mt_aew100__data__field_descriptors[24] =
   {
     "votageB",
     5,
-    PROTOBUF_C_LABEL_NONE,
+    PROTOBUF_C_LABEL_OPTIONAL,
     PROTOBUF_C_TYPE_DOUBLE,
-    0,   /* quantifier_offset */
+    offsetof(MtAew100__Data, has_votageb),
     offsetof(MtAew100__Data, votageb),
     NULL,
     NULL,
@@ -342,9 +330,9 @@ static const ProtobufCFieldDescriptor mt_aew100__data__field_descriptors[24] =
   {
     "votageC",
     6,
-    PROTOBUF_C_LABEL_NONE,
+    PROTOBUF_C_LABEL_OPTIONAL,
     PROTOBUF_C_TYPE_DOUBLE,
-    0,   /* quantifier_offset */
+    offsetof(MtAew100__Data, has_votagec),
     offsetof(MtAew100__Data, votagec),
     NULL,
     NULL,
@@ -354,9 +342,9 @@ static const ProtobufCFieldDescriptor mt_aew100__data__field_descriptors[24] =
   {
     "activePowerA",
     7,
-    PROTOBUF_C_LABEL_NONE,
+    PROTOBUF_C_LABEL_OPTIONAL,
     PROTOBUF_C_TYPE_DOUBLE,
-    0,   /* quantifier_offset */
+    offsetof(MtAew100__Data, has_activepowera),
     offsetof(MtAew100__Data, activepowera),
     NULL,
     NULL,
@@ -366,9 +354,9 @@ static const ProtobufCFieldDescriptor mt_aew100__data__field_descriptors[24] =
   {
     "activePowerB",
     8,
-    PROTOBUF_C_LABEL_NONE,
+    PROTOBUF_C_LABEL_OPTIONAL,
     PROTOBUF_C_TYPE_DOUBLE,
-    0,   /* quantifier_offset */
+    offsetof(MtAew100__Data, has_activepowerb),
     offsetof(MtAew100__Data, activepowerb),
     NULL,
     NULL,
@@ -378,9 +366,9 @@ static const ProtobufCFieldDescriptor mt_aew100__data__field_descriptors[24] =
   {
     "activePowerC",
     9,
-    PROTOBUF_C_LABEL_NONE,
+    PROTOBUF_C_LABEL_OPTIONAL,
     PROTOBUF_C_TYPE_DOUBLE,
-    0,   /* quantifier_offset */
+    offsetof(MtAew100__Data, has_activepowerc),
     offsetof(MtAew100__Data, activepowerc),
     NULL,
     NULL,
@@ -390,9 +378,9 @@ static const ProtobufCFieldDescriptor mt_aew100__data__field_descriptors[24] =
   {
     "reactivePowerA",
     10,
-    PROTOBUF_C_LABEL_NONE,
+    PROTOBUF_C_LABEL_OPTIONAL,
     PROTOBUF_C_TYPE_DOUBLE,
-    0,   /* quantifier_offset */
+    offsetof(MtAew100__Data, has_reactivepowera),
     offsetof(MtAew100__Data, reactivepowera),
     NULL,
     NULL,
@@ -402,9 +390,9 @@ static const ProtobufCFieldDescriptor mt_aew100__data__field_descriptors[24] =
   {
     "reactivePowerB",
     11,
-    PROTOBUF_C_LABEL_NONE,
+    PROTOBUF_C_LABEL_OPTIONAL,
     PROTOBUF_C_TYPE_DOUBLE,
-    0,   /* quantifier_offset */
+    offsetof(MtAew100__Data, has_reactivepowerb),
     offsetof(MtAew100__Data, reactivepowerb),
     NULL,
     NULL,
@@ -414,9 +402,9 @@ static const ProtobufCFieldDescriptor mt_aew100__data__field_descriptors[24] =
   {
     "reactivePowerC",
     12,
-    PROTOBUF_C_LABEL_NONE,
+    PROTOBUF_C_LABEL_OPTIONAL,
     PROTOBUF_C_TYPE_DOUBLE,
-    0,   /* quantifier_offset */
+    offsetof(MtAew100__Data, has_reactivepowerc),
     offsetof(MtAew100__Data, reactivepowerc),
     NULL,
     NULL,
@@ -426,9 +414,9 @@ static const ProtobufCFieldDescriptor mt_aew100__data__field_descriptors[24] =
   {
     "powerFactorA",
     13,
-    PROTOBUF_C_LABEL_NONE,
+    PROTOBUF_C_LABEL_OPTIONAL,
     PROTOBUF_C_TYPE_DOUBLE,
-    0,   /* quantifier_offset */
+    offsetof(MtAew100__Data, has_powerfactora),
     offsetof(MtAew100__Data, powerfactora),
     NULL,
     NULL,
@@ -438,9 +426,9 @@ static const ProtobufCFieldDescriptor mt_aew100__data__field_descriptors[24] =
   {
     "powerFactorB",
     14,
-    PROTOBUF_C_LABEL_NONE,
+    PROTOBUF_C_LABEL_OPTIONAL,
     PROTOBUF_C_TYPE_DOUBLE,
-    0,   /* quantifier_offset */
+    offsetof(MtAew100__Data, has_powerfactorb),
     offsetof(MtAew100__Data, powerfactorb),
     NULL,
     NULL,
@@ -450,9 +438,9 @@ static const ProtobufCFieldDescriptor mt_aew100__data__field_descriptors[24] =
   {
     "powerFactorC",
     15,
-    PROTOBUF_C_LABEL_NONE,
+    PROTOBUF_C_LABEL_OPTIONAL,
     PROTOBUF_C_TYPE_DOUBLE,
-    0,   /* quantifier_offset */
+    offsetof(MtAew100__Data, has_powerfactorc),
     offsetof(MtAew100__Data, powerfactorc),
     NULL,
     NULL,
@@ -462,9 +450,9 @@ static const ProtobufCFieldDescriptor mt_aew100__data__field_descriptors[24] =
   {
     "qualityA",
     16,
-    PROTOBUF_C_LABEL_NONE,
+    PROTOBUF_C_LABEL_OPTIONAL,
     PROTOBUF_C_TYPE_DOUBLE,
-    0,   /* quantifier_offset */
+    offsetof(MtAew100__Data, has_qualitya),
     offsetof(MtAew100__Data, qualitya),
     NULL,
     NULL,
@@ -474,9 +462,9 @@ static const ProtobufCFieldDescriptor mt_aew100__data__field_descriptors[24] =
   {
     "qualityB",
     17,
-    PROTOBUF_C_LABEL_NONE,
+    PROTOBUF_C_LABEL_OPTIONAL,
     PROTOBUF_C_TYPE_DOUBLE,
-    0,   /* quantifier_offset */
+    offsetof(MtAew100__Data, has_qualityb),
     offsetof(MtAew100__Data, qualityb),
     NULL,
     NULL,
@@ -486,9 +474,9 @@ static const ProtobufCFieldDescriptor mt_aew100__data__field_descriptors[24] =
   {
     "qualityC",
     18,
-    PROTOBUF_C_LABEL_NONE,
+    PROTOBUF_C_LABEL_OPTIONAL,
     PROTOBUF_C_TYPE_DOUBLE,
-    0,   /* quantifier_offset */
+    offsetof(MtAew100__Data, has_qualityc),
     offsetof(MtAew100__Data, qualityc),
     NULL,
     NULL,
@@ -498,9 +486,9 @@ static const ProtobufCFieldDescriptor mt_aew100__data__field_descriptors[24] =
   {
     "tempA",
     19,
-    PROTOBUF_C_LABEL_NONE,
+    PROTOBUF_C_LABEL_OPTIONAL,
     PROTOBUF_C_TYPE_DOUBLE,
-    0,   /* quantifier_offset */
+    offsetof(MtAew100__Data, has_tempa),
     offsetof(MtAew100__Data, tempa),
     NULL,
     NULL,
@@ -510,9 +498,9 @@ static const ProtobufCFieldDescriptor mt_aew100__data__field_descriptors[24] =
   {
     "tempB",
     20,
-    PROTOBUF_C_LABEL_NONE,
+    PROTOBUF_C_LABEL_OPTIONAL,
     PROTOBUF_C_TYPE_DOUBLE,
-    0,   /* quantifier_offset */
+    offsetof(MtAew100__Data, has_tempb),
     offsetof(MtAew100__Data, tempb),
     NULL,
     NULL,
@@ -522,9 +510,9 @@ static const ProtobufCFieldDescriptor mt_aew100__data__field_descriptors[24] =
   {
     "tempC",
     21,
-    PROTOBUF_C_LABEL_NONE,
+    PROTOBUF_C_LABEL_OPTIONAL,
     PROTOBUF_C_TYPE_DOUBLE,
-    0,   /* quantifier_offset */
+    offsetof(MtAew100__Data, has_tempc),
     offsetof(MtAew100__Data, tempc),
     NULL,
     NULL,
@@ -534,9 +522,9 @@ static const ProtobufCFieldDescriptor mt_aew100__data__field_descriptors[24] =
   {
     "maxPowerA",
     22,
-    PROTOBUF_C_LABEL_NONE,
+    PROTOBUF_C_LABEL_OPTIONAL,
     PROTOBUF_C_TYPE_DOUBLE,
-    0,   /* quantifier_offset */
+    offsetof(MtAew100__Data, has_maxpowera),
     offsetof(MtAew100__Data, maxpowera),
     NULL,
     NULL,
@@ -546,9 +534,9 @@ static const ProtobufCFieldDescriptor mt_aew100__data__field_descriptors[24] =
   {
     "maxPowerB",
     23,
-    PROTOBUF_C_LABEL_NONE,
+    PROTOBUF_C_LABEL_OPTIONAL,
     PROTOBUF_C_TYPE_DOUBLE,
-    0,   /* quantifier_offset */
+    offsetof(MtAew100__Data, has_maxpowerb),
     offsetof(MtAew100__Data, maxpowerb),
     NULL,
     NULL,
@@ -558,9 +546,9 @@ static const ProtobufCFieldDescriptor mt_aew100__data__field_descriptors[24] =
   {
     "maxPowerC",
     24,
-    PROTOBUF_C_LABEL_NONE,
+    PROTOBUF_C_LABEL_OPTIONAL,
     PROTOBUF_C_TYPE_DOUBLE,
-    0,   /* quantifier_offset */
+    offsetof(MtAew100__Data, has_maxpowerc),
     offsetof(MtAew100__Data, maxpowerc),
     NULL,
     NULL,
@@ -619,9 +607,9 @@ static const ProtobufCFieldDescriptor mt_aew100__get_data_req__field_descriptors
   {
     "addr",
     1,
-    PROTOBUF_C_LABEL_NONE,
+    PROTOBUF_C_LABEL_OPTIONAL,
     PROTOBUF_C_TYPE_INT32,
-    0,   /* quantifier_offset */
+    offsetof(MtAew100__GetDataReq, has_addr),
     offsetof(MtAew100__GetDataReq, addr),
     NULL,
     NULL,
@@ -657,9 +645,9 @@ static const ProtobufCFieldDescriptor mt_aew100__get_data_res__field_descriptors
   {
     "code",
     1,
-    PROTOBUF_C_LABEL_NONE,
+    PROTOBUF_C_LABEL_OPTIONAL,
     PROTOBUF_C_TYPE_INT32,
-    0,   /* quantifier_offset */
+    offsetof(MtAew100__GetDataRes, has_code),
     offsetof(MtAew100__GetDataRes, code),
     NULL,
     NULL,
@@ -669,7 +657,7 @@ static const ProtobufCFieldDescriptor mt_aew100__get_data_res__field_descriptors
   {
     "data",
     2,
-    PROTOBUF_C_LABEL_NONE,
+    PROTOBUF_C_LABEL_OPTIONAL,
     PROTOBUF_C_TYPE_MESSAGE,
     0,   /* quantifier_offset */
     offsetof(MtAew100__GetDataRes, data),
@@ -708,9 +696,9 @@ static const ProtobufCFieldDescriptor mt_aew100__current_data__field_descriptors
   {
     "currentA",
     1,
-    PROTOBUF_C_LABEL_NONE,
+    PROTOBUF_C_LABEL_OPTIONAL,
     PROTOBUF_C_TYPE_DOUBLE,
-    0,   /* quantifier_offset */
+    offsetof(MtAew100__CurrentData, has_currenta),
     offsetof(MtAew100__CurrentData, currenta),
     NULL,
     NULL,
@@ -720,9 +708,9 @@ static const ProtobufCFieldDescriptor mt_aew100__current_data__field_descriptors
   {
     "currentB",
     2,
-    PROTOBUF_C_LABEL_NONE,
+    PROTOBUF_C_LABEL_OPTIONAL,
     PROTOBUF_C_TYPE_DOUBLE,
-    0,   /* quantifier_offset */
+    offsetof(MtAew100__CurrentData, has_currentb),
     offsetof(MtAew100__CurrentData, currentb),
     NULL,
     NULL,
@@ -732,9 +720,9 @@ static const ProtobufCFieldDescriptor mt_aew100__current_data__field_descriptors
   {
     "currentC",
     3,
-    PROTOBUF_C_LABEL_NONE,
+    PROTOBUF_C_LABEL_OPTIONAL,
     PROTOBUF_C_TYPE_DOUBLE,
-    0,   /* quantifier_offset */
+    offsetof(MtAew100__CurrentData, has_currentc),
     offsetof(MtAew100__CurrentData, currentc),
     NULL,
     NULL,
@@ -772,9 +760,9 @@ static const ProtobufCFieldDescriptor mt_aew100__get_current_req__field_descript
   {
     "addr",
     1,
-    PROTOBUF_C_LABEL_NONE,
+    PROTOBUF_C_LABEL_OPTIONAL,
     PROTOBUF_C_TYPE_INT32,
-    0,   /* quantifier_offset */
+    offsetof(MtAew100__GetCurrentReq, has_addr),
     offsetof(MtAew100__GetCurrentReq, addr),
     NULL,
     NULL,
@@ -810,9 +798,9 @@ static const ProtobufCFieldDescriptor mt_aew100__get_current_res__field_descript
   {
     "resCode",
     1,
-    PROTOBUF_C_LABEL_NONE,
+    PROTOBUF_C_LABEL_OPTIONAL,
     PROTOBUF_C_TYPE_INT32,
-    0,   /* quantifier_offset */
+    offsetof(MtAew100__GetCurrentRes, has_rescode),
     offsetof(MtAew100__GetCurrentRes, rescode),
     NULL,
     NULL,
@@ -822,7 +810,7 @@ static const ProtobufCFieldDescriptor mt_aew100__get_current_res__field_descript
   {
     "currentData",
     2,
-    PROTOBUF_C_LABEL_NONE,
+    PROTOBUF_C_LABEL_OPTIONAL,
     PROTOBUF_C_TYPE_MESSAGE,
     0,   /* quantifier_offset */
     offsetof(MtAew100__GetCurrentRes, currentdata),
