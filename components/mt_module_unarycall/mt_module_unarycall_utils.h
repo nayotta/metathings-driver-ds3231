@@ -21,4 +21,7 @@ uint8_t *mt_module_unarycall_utils_pack(
     uint8_t *buf_in, int size_in, const char *methodres_in,
     Ai__Metathings__Component__DownStreamFrame *msg_in, int *frame_size_out);
 
+esp_err_t mt_module_unarycall_utils_mqtt_sent_msg(
+    uint8_t *buf, int32_t size, char *module_id, char *method,
+    Ai__Metathings__Component__DownStreamFrame *msg);
 #endif

@@ -4,6 +4,8 @@
 #include "mt_mb.h"
 #include "mt_mbport.h"
 
+#include "mt_proto_aew100.pb-c.h"
+
 #ifndef CONFIG_LOG_DEFAULT_LEVEL
 #define CONFIG_LOG_DEFAULT_LEVEL ESP_LOG_DEBUG
 #endif
@@ -13,33 +15,6 @@
 #endif
 
 #define BUF_MAXLEN 64
-
-typedef struct _Aew100_data_t {
-  double currentA;
-  double currentB;
-  double currentC;
-  double votageA;
-  double votageB;
-  double votageC;
-  double activePowerA;
-  double activePowerB;
-  double activePowerC;
-  double reactivePowerA;
-  double reactivePowerB;
-  double reactivePowerC;
-  double powerFactorA;
-  double powerFactorB;
-  double powerFactorC;
-  double qualityA;
-  double qualityB;
-  double qualityC;
-  double tempA;
-  double tempB;
-  double tempC;
-  double maxPowerA;
-  double maxPowerB;
-  double maxPowerC;
-} Aew100_data_t;
 
 esp_err_t mt_aew100_get_current_ABC(UCHAR Addr, double *a, double *b,
                                     double *c);
@@ -82,11 +57,11 @@ esp_err_t mt_aew100_get_tempB(UCHAR addr, double *data);
 esp_err_t mt_aew100_get_tempC(UCHAR addr, double *data);
 
 // full data
-esp_err_t mt_aew100_get_data(UCHAR addr, Aew100_data_t *data);
+esp_err_t mt_aew100_get_data(UCHAR addr, MtAew100__Data *data);
 
-// simple data: current votage temp
-esp_err_t mt_aew100_get_data2(UCHAR addr, Aew100_data_t *data);
+// simple data: current votage temp (activepower powefactor){compute not real}
+esp_err_t mt_aew100_get_data2(UCHAR addr, MtAew100__Data *data);
 
-esp_err_t mt_aew100_init(int tx_pin, int rx_pin, int en_pin);
+esp_err_t mt_aew100_init(uint8_t port, int tx_pin, int rx_pin, int en_pin);
 
 #endif

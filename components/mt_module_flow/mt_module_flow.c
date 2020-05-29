@@ -84,6 +84,62 @@ void mt_module_flow_free_struct_group(mt_module_flow_struct_group_t *group) {
   free(group);
 }
 
+void mt_module_flow_set_bool_value(mt_module_flow_struct_t *struct_in,
+                                   char *key, bool value_in) {
+  int32_t key_size = 0;
+
+  if (key == NULL) {
+    key_size = 1;
+  } else {
+    key_size = strlen(key) + 1;
+  }
+  struct_in->key = malloc(key_size);
+  memcpy(struct_in->key, key, key_size);
+
+  struct_in->type = GOOGLE__PROTOBUF__VALUE__KIND_BOOL_VALUE;
+  struct_in->bool_value = value_in;
+}
+
+void mt_module_flow_set_number_value(mt_module_flow_struct_t *struct_in,
+                                     char *key, double value_in) {
+  int32_t key_size = 0;
+
+  if (key == NULL) {
+    key_size = 1;
+  } else {
+    key_size = strlen(key) + 1;
+  }
+  struct_in->key = malloc(key_size);
+  memcpy(struct_in->key, key, key_size);
+
+  struct_in->type = GOOGLE__PROTOBUF__VALUE__KIND_NUMBER_VALUE;
+  struct_in->number_value = value_in;
+}
+
+void mt_module_flow_set_string_value(mt_module_flow_struct_t *struct_in,
+                                     char *key, char *value_in) {
+  int32_t key_size = 0;
+  int32_t value_size = 0;
+
+  if (key == NULL) {
+    key_size = 1;
+  } else {
+    key_size = strlen(key) + 1;
+  }
+  struct_in->key = malloc(key_size);
+  memcpy(struct_in->key, key, key_size);
+
+  struct_in->type = GOOGLE__PROTOBUF__VALUE__KIND_STRING_VALUE;
+
+  if (value_in == NULL) {
+    value_size = 1;
+  } else {
+    value_size = strlen(value_in) + 1;
+  }
+  struct_in->string_value = malloc(value_size);
+  memcpy(struct_in->string_value, value_in, value_size);
+}
+
 // global func ================================================================
 
 static void ping_once(mt_module_flow_t *module_flow) {

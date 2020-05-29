@@ -969,108 +969,160 @@ esp_err_t mt_aew100_get_tempC(UCHAR addr, double *data) {
   return ESP_OK;
 }
 
-esp_err_t mt_aew100_get_data(UCHAR addr, Aew100_data_t *data) {
+esp_err_t mt_aew100_get_data(UCHAR addr, MtAew100__Data *data) {
   esp_err_t err = ESP_OK;
 
   // TODO(ZH) need lock
-  err = mt_aew100_get_current_ABC(addr, &data->currentA, &data->currentB,
-                                  &data->currentC);
+  err = mt_aew100_get_current_ABC(addr, &data->currenta, &data->currentb,
+                                  &data->currentc);
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_current_ABC failed", __LINE__,
              __func__, addr);
-    return err;
+  } else {
+    data->has_currenta = true;
+    data->has_currentb = true;
+    data->has_currentc = true;
   }
 
-  err = mt_aew100_get_votage_ABC(addr, &data->votageA, &data->votageB,
-                                 &data->votageC);
+  err = mt_aew100_get_votage_ABC(addr, &data->votagea, &data->votageb,
+                                 &data->votagec);
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_votage_ABC failed", __LINE__,
              __func__, addr);
-    return err;
+  } else {
+    data->has_votagea = true;
+    data->has_votageb = true;
+    data->has_votagec = true;
   }
 
-  err = mt_aew100_get_activePower_ABC(addr, &data->activePowerA,
-                                      &data->activePowerB, &data->activePowerC);
+  err = mt_aew100_get_activePower_ABC(addr, &data->activepowera,
+                                      &data->activepowerb, &data->activepowerc);
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_activePower_ABC failed",
              __LINE__, __func__, addr);
-    return err;
+  } else {
+    data->has_activepowera = true;
+    data->has_activepowerb = true;
+    data->has_activepowerc = true;
   }
 
-  err = mt_aew100_get_reactivePower_ABC(addr, &data->reactivePowerA,
-                                        &data->reactivePowerB,
-                                        &data->reactivePowerC);
+  err = mt_aew100_get_reactivePower_ABC(addr, &data->reactivepowera,
+                                        &data->reactivepowerb,
+                                        &data->reactivepowerc);
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_reactivePower_ABC failed",
              __LINE__, __func__, addr);
-    return err;
+  } else {
+    data->has_reactivepowera = true;
+    data->has_reactivepowerb = true;
+    data->has_reactivepowerc = true;
   }
 
-  err = mt_aew100_get_powerFactor_ABC(addr, &data->powerFactorA,
-                                      &data->powerFactorB, &data->powerFactorC);
+  err = mt_aew100_get_powerFactor_ABC(addr, &data->powerfactora,
+                                      &data->powerfactorb, &data->powerfactorc);
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_powerFactor_ABC failed",
              __LINE__, __func__, addr);
-    return err;
+  } else {
+    data->has_powerfactora = true;
+    data->has_powerfactorb = true;
+    data->has_powerfactorc = true;
   }
 
-  err = mt_aew100_get_quality_ABC(addr, &data->qualityA, &data->qualityB,
-                                  &data->qualityC);
+  err = mt_aew100_get_quality_ABC(addr, &data->qualitya, &data->qualityb,
+                                  &data->qualityc);
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_quality_ABC failed", __LINE__,
              __func__, addr);
-    return err;
+  } else {
+    data->has_qualitya = true;
+    data->has_qualityb = true;
+    data->has_qualityc = true;
+  }
+
+  err = mt_aew100_get_temp_ABC(addr, &data->tempa, &data->tempb, &data->tempc);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_temp_ABC failed", __LINE__,
+             __func__, addr);
+  } else {
+    data->has_tempa = true;
+    data->has_tempb = true;
+    data->has_tempc = true;
+  }
+
+  err = mt_aew100_get_temp_ABC(addr, &data->maxpowera, &data->maxpowerb,
+                               &data->maxpowerc);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_temp_ABC failed", __LINE__,
+             __func__, addr);
+  } else {
+    data->has_maxpowera = true;
+    data->has_maxpowerb = true;
+    data->has_maxpowerc = true;
   }
 
   return ESP_OK;
 }
 
-esp_err_t mt_aew100_get_data2(UCHAR addr, Aew100_data_t *data) {
+esp_err_t mt_aew100_get_data2(UCHAR addr, MtAew100__Data *data) {
   esp_err_t err = ESP_OK;
 
-  err = mt_aew100_get_current_ABC(addr, &data->currentA, &data->currentB,
-                                  &data->currentC);
+  err = mt_aew100_get_current_ABC(addr, &data->currenta, &data->currenta,
+                                  &data->currentc);
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_current_ABC failed", __LINE__,
              __func__, addr);
-    goto EXIT;
+  } else {
+    data->has_currenta = true;
+    data->has_currentb = true;
+    data->has_currentc = true;
   }
 
-  err = mt_aew100_get_votage_ABC(addr, &data->votageA, &data->votageB,
-                                 &data->votageC);
+  err = mt_aew100_get_votage_ABC(addr, &data->votagea, &data->votageb,
+                                 &data->votagec);
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_votage_ABC failed", __LINE__,
              __func__, addr);
-    goto EXIT;
+  } else {
+    data->has_votagea = true;
+    data->has_votageb = true;
+    data->has_votagec = true;
+
+    data->has_powerfactora = true;
+    data->has_powerfactorb = true;
+    data->has_powerfactorc = true;
+    data->powerfactora = 100.0;
+    data->powerfactorb = 100.0;
+    data->powerfactorc = 100.0;
+
+    data->has_activepowera = true;
+    data->has_activepowerb = true;
+    data->has_activepowerc = true;
+    data->activepowera = data->votagea * data->currenta;
+    data->activepowerb = data->votageb * data->currentb;
+    data->activepowerc = data->votagec * data->currentc;
   }
 
-  err = mt_aew100_get_temp_ABC(addr, &data->tempA, &data->tempB, &data->tempC);
+  err = mt_aew100_get_temp_ABC(addr, &data->tempa, &data->tempa, &data->tempc);
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_temp_ABC failed", __LINE__,
              __func__, addr);
-    goto EXIT;
+  } else {
+    data->has_tempa = true;
+    data->has_tempb = true;
+    data->has_tempc = true;
   }
-
-  data->powerFactorA = 100.0;
-  data->powerFactorB = 100.0;
-  data->powerFactorC = 100.0;
-
-  data->activePowerA = data->votageA * data->currentA;
-  data->activePowerB = data->votageB * data->currentB;
-  data->activePowerC = data->votageC * data->currentC;
 
 EXIT:
   return err;
 }
 
-esp_err_t mt_aew100_init(int tx_pin, int rx_pin, int en_pin) {
+esp_err_t mt_aew100_init(uint8_t port, int tx_pin, int rx_pin, int en_pin) {
   eMBErrorCode emb_ret = 0;
-  UCHAR RS485_PORT = 2;
   ULONG RS485_BAUD = 9600;
   eMBParity RS485_PARITY = MB_PAR_NONE;
 
-  emb_ret =
-      modbus_init(RS485_PORT, RS485_BAUD, RS485_PARITY, tx_pin, rx_pin, en_pin);
+  emb_ret = modbus_init(port, RS485_BAUD, RS485_PARITY, tx_pin, rx_pin, en_pin);
   if (emb_ret != 0) {
     ESP_LOGE(TAG, "%4d %s modbus_init failed", __LINE__, __func__);
     return emb_ret;
