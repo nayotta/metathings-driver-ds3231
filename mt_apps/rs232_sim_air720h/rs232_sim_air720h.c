@@ -746,7 +746,6 @@ esp_err_t rs232_sim_air720h_mqtt_init(int mod_index, char *module_id,
                                       void (*handle)(char *topic, void *buf,
                                                      int size)) {
   esp_err_t err = ESP_OK;
-  unsigned char *hmac_str = NULL;
 
   ESP_LOGI(TAG, "%4d %s begin", __LINE__, __func__);
 

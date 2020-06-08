@@ -150,7 +150,7 @@ bool mt_gpio_light_task(mt_gpio_light_t *light_handle) {
   }
 
   xTaskCreate((TaskFunction_t)mt_gpio_light_task_loop, "MT_GPIO_LIGHT_TASK",
-              1024 * 2, light_handle, 10, NULL);
+              1024, light_handle, 10, NULL);
   return true;
 }
 

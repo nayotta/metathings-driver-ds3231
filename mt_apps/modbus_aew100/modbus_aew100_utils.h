@@ -2,6 +2,8 @@
 #define _MODBUS_AEW100_UTILS_H
 
 #include "esp_err.h"
+#include "esp_log.h"
+
 #include "modbus_aew100.h"
 #include "mt_proto_aew100.pb-c.h"
 

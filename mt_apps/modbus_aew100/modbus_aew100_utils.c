@@ -1,6 +1,5 @@
-#include "esp_log.h"
-
 #include "modbus_aew100_utils.h"
+
 #include "mt_nvs_storage.h"
 #include "mt_utils_error.h"
 
@@ -54,7 +53,7 @@ esp_err_t modbus_aew100_utils_convert_virt_addr_to_real_addr(
   sprintf(key, "mod_%d_f_%d_addr", module_index, virt_addr);
 
   if (mt_nvs_read_int32_config(key, real_addr) == false) {
-    ESP_LOGE(TAG, "%4d %s key:\"%s\" not exist", key);
+    ESP_LOGE(TAG, "%4d %s key:\"%s\" not exist", __LINE__, __func__, key);
     return ESP_ERR_INVALID_ARG;
   }
 

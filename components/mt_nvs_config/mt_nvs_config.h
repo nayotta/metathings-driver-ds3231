@@ -29,7 +29,11 @@ typedef struct _mt_nvs_module_t {
 
 // help func =================================================================
 
-void mt_nvs_config_free_host(mt_nvs_host_t *host);
+mt_nvs_host_t *mt_nvs_config_new_host();
+
+mt_nvs_flows_t *mt_nvs_config_new_flows();
+
+mt_nvs_module_t *mt_nvs_config_new_module();
 
 void mt_nvs_config_free_flows(mt_nvs_flows_t *flows);
 

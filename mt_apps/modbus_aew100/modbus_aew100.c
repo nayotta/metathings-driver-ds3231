@@ -11,6 +11,7 @@
 #include "mt_mbfunc.h"
 #include "mt_mbtask.h"
 #include "mt_port.h"
+#include "mt_utils_byte.h"
 
 #include "modbus_aew100.h"
 #include "mt_mbtask.h"
@@ -69,12 +70,9 @@ esp_err_t mt_aew100_get_current_ABC(UCHAR addr, double *a, double *b,
       return ESP_ERR_INVALID_RESPONSE;
     }
 
-    *a = (cmd_ret_payload.retBuf[0] * (1 << 8) + cmd_ret_payload.retBuf[1]) /
-         100.0;
-    *b = (cmd_ret_payload.retBuf[2] * (1 << 8) + cmd_ret_payload.retBuf[3]) /
-         100.0;
-    *c = (cmd_ret_payload.retBuf[4] * (1 << 8) + cmd_ret_payload.retBuf[5]) /
-         100.0;
+    *a = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 100.0;
+    *b = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 2) / 100.0;
+    *c = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 4) / 100.0;
   }
 
   return ESP_OK;
@@ -102,9 +100,7 @@ esp_err_t mt_aew100_get_currentA(UCHAR addr, double *current) {
       return ESP_ERR_INVALID_RESPONSE;
     }
 
-    *current =
-        (cmd_ret_payload.retBuf[0] * (1 << 8) + cmd_ret_payload.retBuf[1]) /
-        100.0;
+    *current = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 100.0;
   }
 
   return ESP_OK;
@@ -132,9 +128,7 @@ esp_err_t mt_aew100_get_currentB(UCHAR addr, double *current) {
       return ESP_ERR_INVALID_RESPONSE;
     }
 
-    *current =
-        (cmd_ret_payload.retBuf[0] * (1 << 8) + cmd_ret_payload.retBuf[1]) /
-        100.0;
+    *current = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 100.0;
   }
 
   return ESP_OK;
@@ -162,9 +156,7 @@ esp_err_t mt_aew100_get_currentC(UCHAR addr, double *current) {
       return ESP_ERR_INVALID_RESPONSE;
     }
 
-    *current =
-        (cmd_ret_payload.retBuf[0] * (1 << 8) + cmd_ret_payload.retBuf[1]) /
-        100.0;
+    *current = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 100.0;
   }
 
   return ESP_OK;
@@ -194,12 +186,9 @@ esp_err_t mt_aew100_get_votage_ABC(UCHAR addr, double *a, double *b,
       return ESP_ERR_INVALID_RESPONSE;
     }
 
-    *a = (cmd_ret_payload.retBuf[0] * (1 << 8) + cmd_ret_payload.retBuf[1]) /
-         10.0;
-    *b = (cmd_ret_payload.retBuf[2] * (1 << 8) + cmd_ret_payload.retBuf[3]) /
-         10.0;
-    *c = (cmd_ret_payload.retBuf[4] * (1 << 8) + cmd_ret_payload.retBuf[5]) /
-         10.0;
+    *a = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 10.0;
+    *b = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 2) / 10.0;
+    *c = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 4) / 10.0;
   }
 
   return ESP_OK;
@@ -227,8 +216,7 @@ esp_err_t mt_aew100_get_votageA(UCHAR addr, double *data) {
       return ESP_ERR_INVALID_RESPONSE;
     }
 
-    *data = (cmd_ret_payload.retBuf[0] * (1 << 8) + cmd_ret_payload.retBuf[1]) /
-            10.0;
+    *data = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 10.0;
   }
 
   return ESP_OK;
@@ -256,8 +244,7 @@ esp_err_t mt_aew100_get_votageB(UCHAR addr, double *data) {
       return ESP_ERR_INVALID_RESPONSE;
     }
 
-    *data = (cmd_ret_payload.retBuf[0] * (1 << 8) + cmd_ret_payload.retBuf[1]) /
-            10.0;
+    *data = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 10.0;
   }
 
   return ESP_OK;
@@ -285,8 +272,7 @@ esp_err_t mt_aew100_get_votageC(UCHAR addr, double *data) {
       return ESP_ERR_INVALID_RESPONSE;
     }
 
-    *data = (cmd_ret_payload.retBuf[0] * (1 << 8) + cmd_ret_payload.retBuf[1]) /
-            10.0;
+    *data = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 10.0;
   }
 
   return ESP_OK;
@@ -297,7 +283,6 @@ esp_err_t mt_aew100_get_activePower_ABC(UCHAR addr, double *a, double *b,
   esp_err_t err = ESP_OK;
   struct RetMsg_t cmd_ret_payload;
   int data_size = 3;
-  int count = 0;
 
   // activePowerA
   err = modbus_sync_Cmd_03(addr, DATA_ACTIVEPOWERA, 2 * data_size,
@@ -318,21 +303,9 @@ esp_err_t mt_aew100_get_activePower_ABC(UCHAR addr, double *a, double *b,
       return ESP_ERR_INVALID_RESPONSE;
     }
 
-    *a = (cmd_ret_payload.retBuf[count++] * (1 << 24) +
-          cmd_ret_payload.retBuf[count++] * (1 << 16) +
-          cmd_ret_payload.retBuf[count++] * (1 << 8) +
-          cmd_ret_payload.retBuf[count++]) /
-         1000.0;
-    *b = (cmd_ret_payload.retBuf[count++] * (1 << 24) +
-          cmd_ret_payload.retBuf[count++] * (1 << 16) +
-          cmd_ret_payload.retBuf[count++] * (1 << 8) +
-          cmd_ret_payload.retBuf[count++]) /
-         1000.0;
-    *c = (cmd_ret_payload.retBuf[count++] * (1 << 24) +
-          cmd_ret_payload.retBuf[count++] * (1 << 16) +
-          cmd_ret_payload.retBuf[count++] * (1 << 8) +
-          cmd_ret_payload.retBuf[count++]) /
-         1000.0;
+    *a = mt_utils_byte_4char_to_int32(cmd_ret_payload.retBuf + 0) / 1000.0;
+    *b = mt_utils_byte_4char_to_int32(cmd_ret_payload.retBuf + 0) / 1000.0;
+    *c = mt_utils_byte_4char_to_int32(cmd_ret_payload.retBuf + 0) / 1000.0;
     if (cmd_ret_payload.retBuf[0] == 0xff) {
       *a = 0;
     }
@@ -369,10 +342,7 @@ esp_err_t mt_aew100_get_activePowerA(UCHAR addr, double *data) {
       return ESP_ERR_INVALID_RESPONSE;
     }
 
-    *data = (cmd_ret_payload.retBuf[0] * (1 << 24) +
-             cmd_ret_payload.retBuf[1] * (1 << 16) +
-             cmd_ret_payload.retBuf[2] * (1 << 8) + cmd_ret_payload.retBuf[3]) /
-            1000.0;
+    *data = mt_utils_byte_4char_to_int32(cmd_ret_payload.retBuf + 0) / 1000.0;
     if (cmd_ret_payload.retBuf[0] == 0xff) {
       *data = 0;
     }
@@ -403,10 +373,7 @@ esp_err_t mt_aew100_get_activePowerB(UCHAR addr, double *data) {
       return ESP_ERR_INVALID_RESPONSE;
     }
 
-    *data = (cmd_ret_payload.retBuf[0] * (1 << 24) +
-             cmd_ret_payload.retBuf[1] * (1 << 16) +
-             cmd_ret_payload.retBuf[2] * (1 << 8) + cmd_ret_payload.retBuf[3]) /
-            1000.0;
+    *data = mt_utils_byte_4char_to_int32(cmd_ret_payload.retBuf + 0) / 1000.0;
 
     if (cmd_ret_payload.retBuf[0] == 0xff) {
       *data = 0;
@@ -438,10 +405,7 @@ esp_err_t mt_aew100_get_activePowerC(UCHAR addr, double *data) {
       return ESP_ERR_INVALID_RESPONSE;
     }
 
-    *data = (cmd_ret_payload.retBuf[0] * (1 << 24) +
-             cmd_ret_payload.retBuf[1] * (1 << 16) +
-             cmd_ret_payload.retBuf[2] * (1 << 8) + cmd_ret_payload.retBuf[3]) /
-            1000.0;
+    *data = mt_utils_byte_4char_to_int32(cmd_ret_payload.retBuf + 0) / 1000.0;
 
     if (cmd_ret_payload.retBuf[0] == 0xff) {
       *data = 0;
@@ -456,7 +420,6 @@ esp_err_t mt_aew100_get_reactivePower_ABC(UCHAR addr, double *a, double *b,
   esp_err_t err = ESP_OK;
   struct RetMsg_t cmd_ret_payload;
   int data_size = 3;
-  int count = 0;
 
   // reactivePowerA
   err = modbus_sync_Cmd_03(addr, DATA_REACTIVEPOWERA, 2 * data_size,
@@ -477,21 +440,9 @@ esp_err_t mt_aew100_get_reactivePower_ABC(UCHAR addr, double *a, double *b,
       return ESP_ERR_INVALID_RESPONSE;
     }
 
-    *a = (cmd_ret_payload.retBuf[count++] * (1 << 24) +
-          cmd_ret_payload.retBuf[count++] * (1 << 16) +
-          cmd_ret_payload.retBuf[count++] * (1 << 8) +
-          cmd_ret_payload.retBuf[count++]) /
-         1000.0;
-    *b = (cmd_ret_payload.retBuf[count++] * (1 << 24) +
-          cmd_ret_payload.retBuf[count++] * (1 << 16) +
-          cmd_ret_payload.retBuf[count++] * (1 << 8) +
-          cmd_ret_payload.retBuf[count++]) /
-         1000.0;
-    *c = (cmd_ret_payload.retBuf[count++] * (1 << 24) +
-          cmd_ret_payload.retBuf[count++] * (1 << 16) +
-          cmd_ret_payload.retBuf[count++] * (1 << 8) +
-          cmd_ret_payload.retBuf[count++]) /
-         1000.0;
+    *a = mt_utils_byte_4char_to_int32(cmd_ret_payload.retBuf + 0) / 1000.0;
+    *b = mt_utils_byte_4char_to_int32(cmd_ret_payload.retBuf + 0) / 1000.0;
+    *c = mt_utils_byte_4char_to_int32(cmd_ret_payload.retBuf + 0) / 1000.0;
   }
 
   return ESP_OK;
@@ -519,10 +470,7 @@ esp_err_t mt_aew100_get_reactivePowerA(UCHAR addr, double *data) {
       return ESP_ERR_INVALID_RESPONSE;
     }
 
-    *data = (cmd_ret_payload.retBuf[0] * (1 << 24) +
-             cmd_ret_payload.retBuf[1] * (1 << 16) +
-             cmd_ret_payload.retBuf[2] * (1 << 8) + cmd_ret_payload.retBuf[3]) /
-            1000.0;
+    *data = mt_utils_byte_4char_to_int32(cmd_ret_payload.retBuf + 0) / 1000.0;
   }
 
   return ESP_OK;
@@ -550,10 +498,7 @@ esp_err_t mt_aew100_get_reactivePowerB(UCHAR addr, double *data) {
       return ESP_ERR_INVALID_RESPONSE;
     }
 
-    *data = (cmd_ret_payload.retBuf[0] * (1 << 24) +
-             cmd_ret_payload.retBuf[1] * (1 << 16) +
-             cmd_ret_payload.retBuf[2] * (1 << 8) + cmd_ret_payload.retBuf[3]) /
-            1000.0;
+    *data = mt_utils_byte_4char_to_int32(cmd_ret_payload.retBuf + 0) / 1000.0;
   }
 
   return ESP_OK;
@@ -581,10 +526,7 @@ esp_err_t mt_aew100_get_reactivePowerC(UCHAR addr, double *data) {
       return ESP_ERR_INVALID_RESPONSE;
     }
 
-    *data = (cmd_ret_payload.retBuf[0] * (1 << 24) +
-             cmd_ret_payload.retBuf[1] * (1 << 16) +
-             cmd_ret_payload.retBuf[2] * (1 << 8) + cmd_ret_payload.retBuf[3]) /
-            1000.0;
+    *data = mt_utils_byte_4char_to_int32(cmd_ret_payload.retBuf + 0) / 1000.0;
   }
 
   return ESP_OK;
@@ -595,7 +537,6 @@ esp_err_t mt_aew100_get_powerFactor_ABC(UCHAR addr, double *a, double *b,
   esp_err_t err = ESP_OK;
   struct RetMsg_t cmd_ret_payload;
   int data_size = 3;
-  int count = 0;
 
   // powerFactorA
   err = modbus_sync_Cmd_03(addr, DATA_POWERFACTORA, 1 * data_size,
@@ -616,15 +557,9 @@ esp_err_t mt_aew100_get_powerFactor_ABC(UCHAR addr, double *a, double *b,
       return ESP_ERR_INVALID_RESPONSE;
     }
 
-    *a = (cmd_ret_payload.retBuf[count++] * (1 << 8) +
-          cmd_ret_payload.retBuf[count++]) /
-         1000.0;
-    *b = (cmd_ret_payload.retBuf[count++] * (1 << 8) +
-          cmd_ret_payload.retBuf[count++]) /
-         1000.0;
-    *c = (cmd_ret_payload.retBuf[count++] * (1 << 8) +
-          cmd_ret_payload.retBuf[count++]) /
-         1000.0;
+    *a = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 1000.0;
+    *b = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 1000.0;
+    *c = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 1000.0;
   }
 
   return ESP_OK;
@@ -652,8 +587,7 @@ esp_err_t mt_aew100_get_powerFactorA(UCHAR addr, double *data) {
       return ESP_ERR_INVALID_RESPONSE;
     }
 
-    *data = (cmd_ret_payload.retBuf[0] * (1 << 8) + cmd_ret_payload.retBuf[1]) /
-            1000.0;
+    *data = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 1000.0;
   }
 
   return ESP_OK;
@@ -681,8 +615,7 @@ esp_err_t mt_aew100_get_powerFactorB(UCHAR addr, double *data) {
       return ESP_ERR_INVALID_RESPONSE;
     }
 
-    *data = (cmd_ret_payload.retBuf[0] * (1 << 8) + cmd_ret_payload.retBuf[1]) /
-            1000.0;
+    *data = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 1000.0;
   }
 
   return ESP_OK;
@@ -710,8 +643,7 @@ esp_err_t mt_aew100_get_powerFactorC(UCHAR addr, double *data) {
       return ESP_ERR_INVALID_RESPONSE;
     }
 
-    *data = (cmd_ret_payload.retBuf[0] * (1 << 8) + cmd_ret_payload.retBuf[1]) /
-            1000.0;
+    *data = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 1000.0;
   }
 
   return ESP_OK;
@@ -722,7 +654,6 @@ esp_err_t mt_aew100_get_quality_ABC(UCHAR addr, double *a, double *b,
   esp_err_t err = ESP_OK;
   struct RetMsg_t cmd_ret_payload;
   int data_size = 3;
-  int count = 0;
 
   // qualityA
   err =
@@ -743,15 +674,9 @@ esp_err_t mt_aew100_get_quality_ABC(UCHAR addr, double *a, double *b,
       return ESP_ERR_INVALID_RESPONSE;
     }
 
-    *a = (cmd_ret_payload.retBuf[count++] * (1 << 8) +
-          cmd_ret_payload.retBuf[count++]) /
-         1000.0;
-    *b = (cmd_ret_payload.retBuf[count++] * (1 << 8) +
-          cmd_ret_payload.retBuf[count++]) /
-         1000.0;
-    *c = (cmd_ret_payload.retBuf[count++] * (1 << 8) +
-          cmd_ret_payload.retBuf[count++]) /
-         1000.0;
+    *a = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 1000.0;
+    *b = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 1000.0;
+    *c = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 1000.0;
   }
 
   return ESP_OK;
@@ -779,8 +704,7 @@ esp_err_t mt_aew100_get_qualityA(UCHAR addr, double *data) {
       return ESP_ERR_INVALID_RESPONSE;
     }
 
-    *data = (cmd_ret_payload.retBuf[0] * (1 << 8) + cmd_ret_payload.retBuf[1]) /
-            1000.0;
+    *data = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 1000.0;
   }
 
   return ESP_OK;
@@ -808,8 +732,7 @@ esp_err_t mt_aew100_get_qualityB(UCHAR addr, double *data) {
       return ESP_ERR_INVALID_RESPONSE;
     }
 
-    *data = (cmd_ret_payload.retBuf[0] * (1 << 8) + cmd_ret_payload.retBuf[1]) /
-            1000.0;
+    *data = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 1000.0;
   }
 
   return ESP_OK;
@@ -837,8 +760,7 @@ esp_err_t mt_aew100_get_qualityC(UCHAR addr, double *data) {
       return ESP_ERR_INVALID_RESPONSE;
     }
 
-    *data = (cmd_ret_payload.retBuf[0] * (1 << 8) + cmd_ret_payload.retBuf[1]) /
-            1000.0;
+    *data = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 1000.0;
   }
 
   return ESP_OK;
@@ -848,7 +770,6 @@ esp_err_t mt_aew100_get_temp_ABC(UCHAR addr, double *a, double *b, double *c) {
   esp_err_t err = ESP_OK;
   struct RetMsg_t cmd_ret_payload;
   int data_size = 3;
-  int count = 0;
 
   // tempA
   err = modbus_sync_Cmd_03(addr, DATA_TEMPA, 1 * data_size, &cmd_ret_payload);
@@ -868,15 +789,9 @@ esp_err_t mt_aew100_get_temp_ABC(UCHAR addr, double *a, double *b, double *c) {
       return ESP_ERR_INVALID_RESPONSE;
     }
 
-    *a = (cmd_ret_payload.retBuf[count++] * (1 << 8) +
-          cmd_ret_payload.retBuf[count++]) /
-         10.0;
-    *b = (cmd_ret_payload.retBuf[count++] * (1 << 8) +
-          cmd_ret_payload.retBuf[count++]) /
-         10.0;
-    *c = (cmd_ret_payload.retBuf[count++] * (1 << 8) +
-          cmd_ret_payload.retBuf[count++]) /
-         10.0;
+    *a = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 10.0;
+    *b = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 10.0;
+    *c = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 10.0;
   }
 
   return ESP_OK;
@@ -904,8 +819,7 @@ esp_err_t mt_aew100_get_tempA(UCHAR addr, double *data) {
       return ESP_ERR_INVALID_RESPONSE;
     }
 
-    *data = (cmd_ret_payload.retBuf[0] * (1 << 8) + cmd_ret_payload.retBuf[1]) /
-            10.0;
+    *data = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 10.0;
   }
 
   return ESP_OK;
@@ -933,8 +847,7 @@ esp_err_t mt_aew100_get_tempB(UCHAR addr, double *data) {
       return ESP_ERR_INVALID_RESPONSE;
     }
 
-    *data = (cmd_ret_payload.retBuf[0] * (1 << 8) + cmd_ret_payload.retBuf[1]) /
-            10.0;
+    *data = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 10.0;
   }
 
   return ESP_OK;
@@ -962,8 +875,7 @@ esp_err_t mt_aew100_get_tempC(UCHAR addr, double *data) {
       return ESP_ERR_INVALID_RESPONSE;
     }
 
-    *data = (cmd_ret_payload.retBuf[0] * (1 << 8) + cmd_ret_payload.retBuf[1]) /
-            10.0;
+    *data = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 10.0;
   }
 
   return ESP_OK;
@@ -1113,7 +1025,6 @@ esp_err_t mt_aew100_get_data2(UCHAR addr, MtAew100__Data *data) {
     data->has_tempc = true;
   }
 
-EXIT:
   return err;
 }
 
@@ -1129,7 +1040,7 @@ esp_err_t mt_aew100_init(uint8_t port, int tx_pin, int rx_pin, int en_pin) {
   }
 
   mt_vMBMaster_set_T35_interval(250);
-  mt_modbus_task();
+  // mt_modbus_task();
 
   return ESP_OK;
 }

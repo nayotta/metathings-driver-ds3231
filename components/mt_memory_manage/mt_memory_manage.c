@@ -14,7 +14,8 @@ static const char *TAG = "MT_MEMORY_MANAGE";
 
 // static func ================================================================
 
-void mt_menory_manage_loop(bool debug) {
+void mt_menory_manage_loop(bool *value) {
+  bool debug = *value;
   while (1) {
     if (debug == true) {
       ESP_LOGI(TAG, "free=%d", esp_get_free_heap_size());
@@ -33,6 +34,6 @@ void mt_menory_manage_loop(bool debug) {
 // global func ================================================================
 
 void mt_memory_manage_task(bool debug) {
-  xTaskCreate((TaskFunction_t)mt_menory_manage_loop, "MT_MOMORY_MANAGE_TASK",
-              100, debug, 2, NULL);
+  xTaskCreate((TaskFunction_t)mt_menory_manage_loop, "MT_MEMORY_MANAGE_TASK",
+              1024 * 2, &debug, 2, NULL);
 }

@@ -36,7 +36,7 @@
 #include "esp_log.h"
 #include "esp_timer.h"
 
-static const char *TAG = "FREE_MODBUS_SERIAL";
+static const char *TAG = "PORT_SERIAL";
 #define MB_LOG(...) ESP_LOGW(__VA_ARGS__)
 
 #define MB_UART UART_NUM_2
@@ -162,6 +162,7 @@ static void uart_event_task(void *pvParameters) {
 BOOL xMBPortSerialInit(UCHAR ucPORT, ULONG ulBaudRate, UCHAR ucDataBits,
                        eMBParity eParity, int tx_pin, int rx_pin, int en_pin) {
   esp_log_level_set(TAG, ESP_LOG_INFO);
+  esp_err_t err = ESP_OK;
   int lDataBit = UART_DATA_8_BITS;
   int lParity = UART_PARITY_DISABLE;
   switch (ucDataBits) {
@@ -201,7 +202,10 @@ BOOL xMBPortSerialInit(UCHAR ucPORT, ULONG ulBaudRate, UCHAR ucDataBits,
                                .stop_bits = UART_STOP_BITS_1,
                                .flow_ctrl = UART_HW_FLOWCTRL_DISABLE,
                                .rx_flow_ctrl_thresh = 122};
-  uart_param_config(MB_UART, &uart_config);
+  err = uart_param_config(MB_UART, &uart_config);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s uart_param_config failed", __LINE__, __func__);
+  }
 
   if (tx_pin == 0)
     tx_pin = MB_UART_TX_PIN;
@@ -213,17 +217,26 @@ BOOL xMBPortSerialInit(UCHAR ucPORT, ULONG ulBaudRate, UCHAR ucDataBits,
     en_pin = MB_UART_EN_PIN;
 
   // Set UART log level
-  esp_log_level_set(TAG, ESP_LOG_INFO);
+  esp_log_level_set(TAG, ESP_LOG_DEBUG);
   // Set UART pins (using UART0 default pins ie no changes.)
-  uart_set_pin(MB_UART, tx_pin, rx_pin, en_pin, UART_PIN_NO_CHANGE);
+  err = uart_set_pin(MB_UART, tx_pin, rx_pin, en_pin, UART_PIN_NO_CHANGE);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s esp_log_level_set failed", __LINE__, __func__);
+  }
   // Install UART driver, and get the queue.
-  uart_driver_install(MB_UART, MB_UART_BUF_SIZE * 2, MB_UART_BUF_SIZE * 2, 20,
-                      &mb_uart_queue, 0);
+  err = uart_driver_install(MB_UART, MB_UART_BUF_SIZE * 2, MB_UART_BUF_SIZE * 2,
+                            20, &mb_uart_queue, 0);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s uart_driver_install failed", __LINE__, __func__);
+  }
   // set uart mode rs485
-  uart_set_mode(MB_UART, UART_MODE_RS485_HALF_DUPLEX);
+  err = uart_set_mode(MB_UART, UART_MODE_RS485_HALF_DUPLEX);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s uart_set_mode failed", __LINE__, __func__);
+  }
   // Create a task to handler UART event from ISR
-  xTaskCreate(uart_event_task, "uart_event_task", 4096, NULL,
-              configMAX_PRIORITIES, NULL);
+  xTaskCreatePinnedToCore(uart_event_task, "uart_event_task", 4096, NULL, 10,
+                          NULL, 1);
 
   return TRUE;
 }

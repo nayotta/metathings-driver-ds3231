@@ -60,7 +60,7 @@ esp_err_t mt_mqtt_utils_get_session_id_from_topic(char *topic,
   if (strcmp(s2, "") == 0) {
     ESP_LOGE(TAG, "%4d %s unexcept string location 2:%s", __LINE__, __func__,
              s2);
-    return NULL;
+    return ESP_ERR_INVALID_ARG;
   }
 
   start = 0;
@@ -88,7 +88,7 @@ esp_err_t mt_mqtt_utils_get_session_id_from_topic(char *topic,
   if (strcmp(s4, "") == 0) {
     ESP_LOGE(TAG, "%4d %s unexcept string location5:%s", __LINE__, __func__,
              s4);
-    return NULL;
+    return ESP_ERR_INVALID_ARG;
   }
 
   start = 0;

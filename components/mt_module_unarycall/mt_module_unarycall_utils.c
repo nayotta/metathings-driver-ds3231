@@ -4,6 +4,7 @@
 #include "esp_log.h"
 
 #include "mt_module_unarycall_utils.h"
+#include "mt_mqtt_lan.h"
 #include "stream_frame.pb-c.h"
 
 #include "mt_proto_device_cloud_utils.h"
@@ -77,7 +78,7 @@ uint8_t *mt_module_unarycall_utils_pack(
 }
 
 esp_err_t mt_module_unarycall_utils_mqtt_sent_msg(
-    uint8_t *buf, int32_t size, char *module_id, char *method,
+    uint8_t *buf, int32_t size, char *module_id, const char *method,
     Ai__Metathings__Component__DownStreamFrame *msg) {
   esp_err_t err = ESP_OK;
   int frame_size = 0;
