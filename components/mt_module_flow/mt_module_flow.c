@@ -392,10 +392,20 @@ mt_module_flow_t *mt_module_flow_new(int module_index, int flow_index,
 
 uint8_t *mt_module_flow_pack_frame(mt_module_flow_struct_group_t *value_in,
                                    char *session_id, int *size_out) {
-  uint8_t frame_num = value_in->size;
+  uint8_t frame_num = 0;
   uint8_t frame_count = 0;
 
-  if (frame_num <= 0)
+  if (value_in->size <= 0)
+    return NULL;
+
+  // frame size which key not NULL
+  for (int i = 0; i < value_in->size; i++) {
+    if (value_in->value[i]->key != NULL) {
+      frame_num++;
+    }
+  }
+
+  if (frame_num == 0)
     return NULL;
 
   PushFrameToFlowRequest frame_req = PUSH_FRAME_TO_FLOW_REQUEST__INIT;
@@ -417,7 +427,11 @@ uint8_t *mt_module_flow_pack_frame(mt_module_flow_struct_group_t *value_in,
   frame_req.frame->data->fields =
       malloc(frame_num * sizeof(Google__Protobuf__Struct__FieldsEntry *));
 
-  for (int i = 0; i < frame_num; i++) {
+  for (int i = 0; i < value_in->size; i++) {
+    // ignore NULL key
+    if (value_in->value[i]->key == NULL) {
+      continue;
+    }
     frame_req.frame->data->fields[frame_count] =
         malloc(sizeof(Google__Protobuf__Struct__FieldsEntry));
     google__protobuf__struct__fields_entry__init(
@@ -519,9 +533,7 @@ esp_err_t mt_module_flow_sent_msg(mt_module_flow_t *module_flow,
         return ESP_ERR_INVALID_ARG;
       } else {
         if (group->value[i]->key == NULL) {
-          ESP_LOGE(TAG, "%4d %s group->value[%d]->key NULL", __LINE__, __func__,
-                   i);
-          return ESP_ERR_INVALID_ARG;
+          continue;
         }
       }
     }
