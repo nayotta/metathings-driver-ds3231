@@ -60,6 +60,8 @@ static void http_lock_release() {
 static void rs232_sim_air720h_http_task_loop(mt_module_http_t *module_http) {
   int init_interval = 30 * 1000;               // 30s
   int issue_module_token_interval = 30 * 1000; // 30s
+  int issue_module_token_max = 5;
+  int issue_module_token_count = 10;
   int show_module_retry_max = 10;
   int show_module_retry_count = 10;
   int show_module_interval = 30 * 1000; // 30s
@@ -86,13 +88,21 @@ RESTART:
 
   // issue token loop
   while (true) {
+    if (issue_module_token_count <= 0) {
+      ESP_LOGE(TAG, "%4d %s issue_module_token_count get limit, restart loop",
+               __LINE__, __func__);
+      goto RESTART;
+    }
+
     err = rs232_sim_air720h_http_issue_module_token(module_http);
     if (err != ESP_OK) {
       ESP_LOGE(TAG, "%4d %s rs232_sim_air720h_http_issue_module_token failed",
                __LINE__, __func__);
+      issue_module_token_count--;
     } else {
       ESP_LOGI(TAG, "%4d %s rs232_sim_air720h_http_issue_module_token success",
                __LINE__, __func__);
+      issue_module_token_count = issue_module_token_max;
       break;
     }
 
@@ -122,6 +132,7 @@ RESTART:
     } else {
       ESP_LOGI(TAG, "%4d %s rs232_sim_air720h_http_show_module success",
                __LINE__, __func__);
+      show_module_retry_count = show_module_retry_max;
       break;
     }
     vTaskDelay(show_module_interval / portTICK_PERIOD_MS);
@@ -130,11 +141,11 @@ RESTART:
   // heartbeat loop
   heartbeat_count = heartbeat_max;
   // debug here!!!!
-  module_http->session_id = 12345678;
+  // module_http->session_id = 12345678;
 
-  // module_http->session_id =
-  //   mt_utils_session_new_session(mt_utils_session_gen_startup_session(),
-  //                               mt_utils_session_gen_major_session());
+  module_http->session_id =
+      mt_utils_session_new_session(mt_utils_session_gen_startup_session(),
+                                   mt_utils_session_gen_major_session());
   mt_module_lora_update_session(module_http->session_id);
 
   while (true) {
