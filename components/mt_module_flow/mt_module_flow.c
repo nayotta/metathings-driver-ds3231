@@ -84,6 +84,62 @@ void mt_module_flow_free_struct_group(mt_module_flow_struct_group_t *group) {
   free(group);
 }
 
+void mt_module_flow_set_bool_value(mt_module_flow_struct_t *struct_in,
+                                   char *key, bool value_in) {
+  int32_t key_size = 0;
+
+  if (key == NULL) {
+    key_size = 1;
+  } else {
+    key_size = strlen(key) + 1;
+  }
+  struct_in->key = malloc(key_size);
+  memcpy(struct_in->key, key, key_size);
+
+  struct_in->type = GOOGLE__PROTOBUF__VALUE__KIND_BOOL_VALUE;
+  struct_in->bool_value = value_in;
+}
+
+void mt_module_flow_set_number_value(mt_module_flow_struct_t *struct_in,
+                                     char *key, double value_in) {
+  int32_t key_size = 0;
+
+  if (key == NULL) {
+    key_size = 1;
+  } else {
+    key_size = strlen(key) + 1;
+  }
+  struct_in->key = malloc(key_size);
+  memcpy(struct_in->key, key, key_size);
+
+  struct_in->type = GOOGLE__PROTOBUF__VALUE__KIND_NUMBER_VALUE;
+  struct_in->number_value = value_in;
+}
+
+void mt_module_flow_set_string_value(mt_module_flow_struct_t *struct_in,
+                                     char *key, char *value_in) {
+  int32_t key_size = 0;
+  int32_t value_size = 0;
+
+  if (key == NULL) {
+    key_size = 1;
+  } else {
+    key_size = strlen(key) + 1;
+  }
+  struct_in->key = malloc(key_size);
+  memcpy(struct_in->key, key, key_size);
+
+  struct_in->type = GOOGLE__PROTOBUF__VALUE__KIND_STRING_VALUE;
+
+  if (value_in == NULL) {
+    value_size = 1;
+  } else {
+    value_size = strlen(value_in) + 1;
+  }
+  struct_in->string_value = malloc(value_size);
+  memcpy(struct_in->string_value, value_in, value_size);
+}
+
 // global func ================================================================
 
 static void ping_once(mt_module_flow_t *module_flow) {
@@ -336,10 +392,20 @@ mt_module_flow_t *mt_module_flow_new(int module_index, int flow_index,
 
 uint8_t *mt_module_flow_pack_frame(mt_module_flow_struct_group_t *value_in,
                                    char *session_id, int *size_out) {
-  uint8_t frame_num = value_in->size;
+  uint8_t frame_num = 0;
   uint8_t frame_count = 0;
 
-  if (frame_num <= 0)
+  if (value_in->size <= 0)
+    return NULL;
+
+  // frame size which key not NULL
+  for (int i = 0; i < value_in->size; i++) {
+    if (value_in->value[i]->key != NULL) {
+      frame_num++;
+    }
+  }
+
+  if (frame_num == 0)
     return NULL;
 
   PushFrameToFlowRequest frame_req = PUSH_FRAME_TO_FLOW_REQUEST__INIT;
@@ -361,7 +427,11 @@ uint8_t *mt_module_flow_pack_frame(mt_module_flow_struct_group_t *value_in,
   frame_req.frame->data->fields =
       malloc(frame_num * sizeof(Google__Protobuf__Struct__FieldsEntry *));
 
-  for (int i = 0; i < frame_num; i++) {
+  for (int i = 0; i < value_in->size; i++) {
+    // ignore NULL key
+    if (value_in->value[i]->key == NULL) {
+      continue;
+    }
     frame_req.frame->data->fields[frame_count] =
         malloc(sizeof(Google__Protobuf__Struct__FieldsEntry));
     google__protobuf__struct__fields_entry__init(
@@ -463,9 +533,7 @@ esp_err_t mt_module_flow_sent_msg(mt_module_flow_t *module_flow,
         return ESP_ERR_INVALID_ARG;
       } else {
         if (group->value[i]->key == NULL) {
-          ESP_LOGE(TAG, "%4d %s group->value[%d]->key NULL", __LINE__, __func__,
-                   i);
-          return ESP_ERR_INVALID_ARG;
+          continue;
         }
       }
     }

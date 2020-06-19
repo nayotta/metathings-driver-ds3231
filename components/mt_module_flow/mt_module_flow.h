@@ -57,6 +57,15 @@ void mt_module_flow_free_struct_group(mt_module_flow_struct_group_t *value);
 uint8_t *mt_module_flow_pack_frame(mt_module_flow_struct_group_t *value_in,
                                    char *session_id, int *size_out);
 
+void mt_module_flow_set_bool_value(mt_module_flow_struct_t *struct_in,
+                                   char *key, bool value_in);
+
+void mt_module_flow_set_number_value(mt_module_flow_struct_t *struct_in,
+                                     char *key, double value_in);
+
+void mt_module_flow_set_string_value(mt_module_flow_struct_t *struct_in,
+                                     char *key, char *value_in);
+
 // func =======================================================================
 
 void mt_module_flow_process(mt_module_flow_t *module_flow, char *topic,

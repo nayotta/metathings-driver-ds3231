@@ -19,7 +19,7 @@ flow:
       max: 10
     t0:
       description: 开关0剩余时间(开关地址用尾数标记)
-      unit:
+      unit: min
       driver: charge001
       type: float
       period: 0

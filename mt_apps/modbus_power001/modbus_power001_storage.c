@@ -9,7 +9,6 @@
 // static define ==============================================================
 
 static const char *TAG = "MODBUS_POWER001_STORAGE";
-static int FLOW_INTERVAL = 600; // 600s
 
 // help func ================================================================
 
