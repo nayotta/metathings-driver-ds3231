@@ -17,6 +17,7 @@
 static const char *TAG = "MODBUS_airswitch001";
 static SemaphoreHandle_t SemaphorMasterHdl = NULL;
 static int Lock_Timeout = 50;
+static int cmd_timeout = 2000;
 
 extern int NUM_MASTER;
 extern int NUM_SLAVER;
@@ -196,7 +197,7 @@ modbus_airswitch001_sync_cmd_01(UCHAR slaveAddr, USHORT target, USHORT num,
     return errorCode;
   }
 
-  errorCode = eMBMasterAirswitchReq01(slaveAddr, target, num, 1);
+  errorCode = eMBMasterAirswitchReq01(slaveAddr, target, num, cmd_timeout);
   if (errorCode != MB_MRE_NO_ERR) {
     ESP_LOGE(TAG, "%4d eMBsend error", __LINE__);
     goto EXIT;
@@ -223,9 +224,10 @@ modbus_airswitch001_sync_cmd_02(UCHAR slaveAddr, USHORT target, USHORT num,
     return errorCode;
   }
 
-  errorCode = eMBMasterAirswitchReq02(slaveAddr, target, num, 1);
+  errorCode = eMBMasterAirswitchReq02(slaveAddr, target, num, cmd_timeout);
   if (errorCode != MB_MRE_NO_ERR) {
-    ESP_LOGE(TAG, "%4d %s eMBsend error", __LINE__, __func__);
+    ESP_LOGE(TAG, "%4d %s eMBsend error,code %d", __LINE__, __func__,
+             errorCode);
     goto EXIT;
   }
 
@@ -250,9 +252,10 @@ modbus_airswitch001_sync_cmd_03(UCHAR slaveAddr, UCHAR subCmd, UCHAR target,
     return errorCode;
   }
 
-  errorCode = eMBMasterAirswitchReq03(slaveAddr, subCmd, target, num, 1);
+  errorCode =
+      eMBMasterAirswitchReq03(slaveAddr, subCmd, target, num, cmd_timeout);
   if (errorCode != MB_MRE_NO_ERR) {
-    ESP_LOGE(TAG, "%4d eMBsend error", __LINE__);
+    ESP_LOGE(TAG, "%4d eMBsend error,code %d", __LINE__, errorCode);
     goto EXIT;
   }
 
@@ -277,9 +280,10 @@ modbus_airswitch001_sync_cmd_04(UCHAR slaveAddr, UCHAR subCmd, UCHAR target,
     return errorCode;
   }
 
-  errorCode = eMBMasterAirswitchReq04(slaveAddr, subCmd, target, num, 1);
+  errorCode =
+      eMBMasterAirswitchReq04(slaveAddr, subCmd, target, num, cmd_timeout);
   if (errorCode != MB_MRE_NO_ERR) {
-    ESP_LOGE(TAG, "%4d eMBsend error", __LINE__);
+    ESP_LOGE(TAG, "%4d eMBsend error,code %d", __LINE__, errorCode);
     goto EXIT;
   }
 
@@ -304,9 +308,10 @@ modbus_airswitch001_sync_cmd_06(UCHAR slaveAddr, UCHAR subCmd, UCHAR target,
     return errorCode;
   }
 
-  errorCode = eMBMasterAirswitchReq06(slaveAddr, subCmd, target, num, 1);
+  errorCode =
+      eMBMasterAirswitchReq06(slaveAddr, subCmd, target, num, cmd_timeout);
   if (errorCode != MB_MRE_NO_ERR) {
-    ESP_LOGE(TAG, "%4d eMBsend error", __LINE__);
+    ESP_LOGE(TAG, "%4d eMBsend error,code %d", __LINE__, errorCode);
     goto EXIT;
   }
 
@@ -768,7 +773,8 @@ esp_err_t mt_airswitch001_set_config(UCHAR slaveAddr,
 esp_err_t mt_airswitch001_get_datas(UCHAR slaveAddr, UCHAR target, bool *state,
                                     bool *ctrl, double *votage,
                                     double *leak_current, double *power,
-                                    double *temp, double *current) {
+                                    double *temp, double *current,
+                                    double *quality) {
   esp_err_t err = ESP_OK;
   USHORT value = 0;
   bool bool_value = false;
@@ -835,6 +841,14 @@ esp_err_t mt_airswitch001_get_datas(UCHAR slaveAddr, UCHAR target, bool *state,
     return ESP_ERR_INVALID_RESPONSE;
   }
   *current = value / 100.0;
+
+  // DATA_QUALITY
+  err = mt_airswitch001_get_cache_quality(slaveAddr, target, quality);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s addr:%d target:%d failed code:%d", __LINE__, __func__,
+             slaveAddr, target, err);
+    return ESP_ERR_INVALID_RESPONSE;
+  }
 
   return ESP_OK;
 }

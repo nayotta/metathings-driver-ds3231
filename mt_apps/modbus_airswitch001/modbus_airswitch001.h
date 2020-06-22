@@ -103,6 +103,7 @@ typedef struct _airswitch_data_t {
   double power;
   double temp;
   double current;
+  double quality;
 } airswitch_data_t;
 
 typedef struct _airswitch_config_t {
@@ -159,7 +160,8 @@ esp_err_t mt_airswitch001_set_config(UCHAR slaveAddr,
 esp_err_t mt_airswitch001_get_datas(UCHAR slaveAddr, UCHAR target, bool *state,
                                     bool *ctrl, double *votage,
                                     double *leak_current, double *power,
-                                    double *temp, double *current);
+                                    double *temp, double *current,
+                                    double *quality);
 
 esp_err_t mt_airswitch001_get_configs(UCHAR slaveAddr, UCHAR target,
                                       double *votage_high, double *votage_low,

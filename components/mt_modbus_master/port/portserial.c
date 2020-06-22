@@ -235,8 +235,8 @@ BOOL xMBPortSerialInit(UCHAR ucPORT, ULONG ulBaudRate, UCHAR ucDataBits,
     ESP_LOGE(TAG, "%4d %s uart_set_mode failed", __LINE__, __func__);
   }
   // Create a task to handler UART event from ISR
-  xTaskCreatePinnedToCore(uart_event_task, "uart_event_task", 4096, NULL, 10,
-                          NULL, 1);
+  xTaskCreatePinnedToCore(uart_event_task, "uart_event_task", 4096, NULL,
+                          configMAX_PRIORITIES, NULL, 1);
 
   return TRUE;
 }
