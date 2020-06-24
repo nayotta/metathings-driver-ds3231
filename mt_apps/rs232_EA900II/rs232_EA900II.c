@@ -596,12 +596,14 @@ rs232_EA900II_config_t *rs232_EA900II_get_config() {
   }
 }
 
-esp_err_t rs232_EA900II_task() {
+esp_err_t rs232_EA900II_task(int tx_pin, int rx_pin) {
   esp_err_t err = ESP_OK;
   rs232_dev_config_t *config = NULL;
 
   config = rs232_dev_default_new();
   config->uart_config->baud_rate = 2400;
+  config->tx_pin = tx_pin;
+  config->rx_pin = rx_pin;
 
   err = rs232_dev_init(config);
   if (err != ESP_OK) {

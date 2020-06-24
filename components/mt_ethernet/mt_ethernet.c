@@ -2,6 +2,7 @@
 
 #include "driver/gpio.h"
 #include "driver/periph_ctrl.h"
+#include "esp32/rom/gpio.h"
 #include "esp_err.h"
 #include "esp_eth.h"
 #include "esp_event.h"
@@ -9,7 +10,6 @@
 #include "esp_log.h"
 #include "esp_system.h"
 #include "freertos/task.h"
-#include "esp32/rom/gpio.h"
 #include "tcpip_adapter.h"
 #include <stdio.h>
 #include <string.h>
@@ -115,4 +115,5 @@ void mt_ethernet_task(int light_pin, int light_pin_on_level) {
   esp_eth_config_t config = ETH_DEFAULT_CONFIG(mac, phy);
   esp_eth_handle_t eth_handle = NULL;
   ESP_ERROR_CHECK(esp_eth_driver_install(&config, &eth_handle));
+  ESP_ERROR_CHECK(esp_eth_start(eth_handle));
 }
