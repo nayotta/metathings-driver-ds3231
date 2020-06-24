@@ -108,6 +108,9 @@ mt_module_http_actions_issue_module_token(mt_module_http_t *module_http) {
       .event_handler = module_http->event_handler,
   };
 
+  ESP_LOGI(TAG, "%4d %s mt_module_http_actions_issue_module_token", __LINE__,
+           __func__);
+
   client = esp_http_client_init(&config);
 
   // post data
@@ -213,6 +216,9 @@ module_t *mt_module_http_actions_show_module(mt_module_http_t *module_http) {
       .event_handler = module_http->event_handler,
   };
 
+  ESP_LOGI(TAG, "%4d %s mt_module_http_actions_show_module", __LINE__,
+           __func__);
+
   client = esp_http_client_init(&config);
 
   // check argument
@@ -297,6 +303,8 @@ esp_err_t mt_module_http_actions_heartbeat(mt_module_http_t *module_http,
   uint8_t str_size = 0;
   char *session_id_str = NULL;
 
+  ESP_LOGI(TAG, "%4d %s mt_module_http_actions_heartbeat", __LINE__, __func__);
+
   esp_http_client_config_t config = {
       .host = module_http->host,
       .port = module_http->port,
@@ -333,8 +341,6 @@ esp_err_t mt_module_http_actions_heartbeat(mt_module_http_t *module_http,
   }
 
   // request post_data
-  // debug here
-
   root = cJSON_CreateObject();
   post_data = cJSON_Print(root);
   cJSON_Delete(root);
@@ -348,9 +354,6 @@ esp_err_t mt_module_http_actions_heartbeat(mt_module_http_t *module_http,
              __LINE__, err);
     goto EXIT;
   }
-
-  ESP_LOGI(TAG, "%4d %s session:%s post_data:%s", __LINE__, __func__,
-           session_id_str, post_data);
 
   // request
   err = mt_http_client_post_request(client, module_http->token, post_data);
@@ -400,6 +403,8 @@ esp_err_t mt_module_http_actions_put_object(mt_module_http_t *module_http,
       .path = "/v1/device_cloud/actions/put_object",
       .event_handler = module_http->event_handler,
   };
+
+  ESP_LOGI(TAG, "%4d %s mt_module_http_actions_put_object", __LINE__, __func__);
 
   client = esp_http_client_init(&config);
 
@@ -501,6 +506,9 @@ esp_err_t mt_module_http_actions_remove_object(mt_module_http_t *module_http,
       .event_handler = module_http->event_handler,
   };
 
+  ESP_LOGI(TAG, "%4d %s mt_module_http_actions_remove_object", __LINE__,
+           __func__);
+
   client = esp_http_client_init(&config);
 
   // check argument
@@ -595,6 +603,9 @@ esp_err_t mt_module_http_actions_rename_object(mt_module_http_t *module_http,
       .path = "/v1/device_cloud/actions/rename_object",
       .event_handler = module_http->event_handler,
   };
+
+  ESP_LOGI(TAG, "%4d %s mt_module_http_actions_rename_object", __LINE__,
+           __func__);
 
   client = esp_http_client_init(&config);
 
@@ -727,6 +738,8 @@ object_t *mt_module_http_actions_get_object(mt_module_http_t *module_http,
       .event_handler = module_http->event_handler,
   };
 
+  ESP_LOGI(TAG, "%4d %s mt_module_http_actions_get_object", __LINE__, __func__);
+
   client = esp_http_client_init(&config);
 
   // check argument
@@ -848,6 +861,9 @@ char *mt_module_http_actions_get_object_content(mt_module_http_t *module_http,
       .path = "/v1/device_cloud/actions/get_object_content",
       .event_handler = module_http->event_handler,
   };
+
+  ESP_LOGI(TAG, "%4d %s mt_module_http_actions_get_object_content", __LINE__,
+           __func__);
 
   client = esp_http_client_init(&config);
 
@@ -971,6 +987,9 @@ uint8_t *mt_module_http_actions_list_objects(mt_module_http_t *module_http,
       .event_handler = module_http->event_handler,
   };
 
+  ESP_LOGI(TAG, "%4d %s mt_module_http_actions_list_objects", __LINE__,
+           __func__);
+
   client = esp_http_client_init(&config);
 
   // check argument
@@ -1080,6 +1099,9 @@ mt_module_http_actions_push_frame_to_flow(mt_module_http_t *module_http,
       .path = "/v1/device_cloud/actions/push_frame_to_flow",
       .event_handler = module_http->event_handler,
   };
+
+  ESP_LOGI(TAG, "%4d %s mt_module_http_actions_push_frame_to_flow", __LINE__,
+           __func__);
 
   client = esp_http_client_init(&config);
 

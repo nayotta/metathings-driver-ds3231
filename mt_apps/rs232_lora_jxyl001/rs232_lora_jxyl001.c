@@ -265,3 +265,5 @@ EXIT:
 
   return err;
 }
+
+Rs232_Lora_Jxyl001_Devs *rs232_lora_jxyl001_get_devs() { return DEVS; }
