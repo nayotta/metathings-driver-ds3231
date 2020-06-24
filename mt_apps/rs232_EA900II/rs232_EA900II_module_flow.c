@@ -88,57 +88,57 @@ static void module_get_datas_process() {
   sprintf(key, "w7");
   group->value[count]->key = malloc(strlen(key) + 1);
   memcpy(group->value[count]->key, key, strlen(key) + 1);
-  group->value[count]->type = GOOGLE__PROTOBUF__VALUE__KIND_NUMBER_VALUE;
-  group->value[count++]->number_value = status->w7;
+  group->value[count]->type = GOOGLE__PROTOBUF__VALUE__KIND_BOOL_VALUE;
+  group->value[count++]->bool_value = status->w7;
 
   // w6
   sprintf(key, "w6");
   group->value[count]->key = malloc(strlen(key) + 1);
   memcpy(group->value[count]->key, key, strlen(key) + 1);
-  group->value[count]->type = GOOGLE__PROTOBUF__VALUE__KIND_NUMBER_VALUE;
-  group->value[count++]->number_value = status->w6;
+  group->value[count]->type = GOOGLE__PROTOBUF__VALUE__KIND_BOOL_VALUE;
+  group->value[count++]->bool_value = status->w6;
 
   // w5
   sprintf(key, "w5");
   group->value[count]->key = malloc(strlen(key) + 1);
   memcpy(group->value[count]->key, key, strlen(key) + 1);
-  group->value[count]->type = GOOGLE__PROTOBUF__VALUE__KIND_NUMBER_VALUE;
-  group->value[count++]->number_value = status->w5;
+  group->value[count]->type = GOOGLE__PROTOBUF__VALUE__KIND_BOOL_VALUE;
+  group->value[count++]->bool_value = status->w5;
 
   // w4
   sprintf(key, "w4");
   group->value[count]->key = malloc(strlen(key) + 1);
   memcpy(group->value[count]->key, key, strlen(key) + 1);
-  group->value[count]->type = GOOGLE__PROTOBUF__VALUE__KIND_NUMBER_VALUE;
-  group->value[count++]->number_value = status->w4;
+  group->value[count]->type = GOOGLE__PROTOBUF__VALUE__KIND_BOOL_VALUE;
+  group->value[count++]->bool_value = status->w4;
 
   // w3
   sprintf(key, "w3");
   group->value[count]->key = malloc(strlen(key) + 1);
   memcpy(group->value[count]->key, key, strlen(key) + 1);
-  group->value[count]->type = GOOGLE__PROTOBUF__VALUE__KIND_NUMBER_VALUE;
-  group->value[count++]->number_value = status->w3;
+  group->value[count]->type = GOOGLE__PROTOBUF__VALUE__KIND_BOOL_VALUE;
+  group->value[count++]->bool_value = status->w3;
 
   // w2
   sprintf(key, "w2");
   group->value[count]->key = malloc(strlen(key) + 1);
   memcpy(group->value[count]->key, key, strlen(key) + 1);
-  group->value[count]->type = GOOGLE__PROTOBUF__VALUE__KIND_NUMBER_VALUE;
-  group->value[count++]->number_value = status->w2;
+  group->value[count]->type = GOOGLE__PROTOBUF__VALUE__KIND_BOOL_VALUE;
+  group->value[count++]->bool_value = status->w2;
 
   // w1
   sprintf(key, "w1");
   group->value[count]->key = malloc(strlen(key) + 1);
   memcpy(group->value[count]->key, key, strlen(key) + 1);
-  group->value[count]->type = GOOGLE__PROTOBUF__VALUE__KIND_NUMBER_VALUE;
-  group->value[count++]->number_value = status->w1;
+  group->value[count]->type = GOOGLE__PROTOBUF__VALUE__KIND_BOOL_VALUE;
+  group->value[count++]->bool_value = status->w1;
 
   // w0
   sprintf(key, "w0");
   group->value[count]->key = malloc(strlen(key) + 1);
   memcpy(group->value[count]->key, key, strlen(key) + 1);
-  group->value[count]->type = GOOGLE__PROTOBUF__VALUE__KIND_NUMBER_VALUE;
-  group->value[count++]->number_value = status->w0;
+  group->value[count]->type = GOOGLE__PROTOBUF__VALUE__KIND_BOOL_VALUE;
+  group->value[count++]->bool_value = status->w0;
 
   // send msg
   err = mt_module_flow_sent_msg(MODULE_FLOW, group);
