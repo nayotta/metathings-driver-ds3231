@@ -6,7 +6,7 @@ flow:
   fields:
     Q0:
       description: 开关0电量(开关地址用尾数标记)
-      unit:
+      unit: Kwh
       driver: power001
       type: float
       period: 600
@@ -14,7 +14,7 @@ flow:
       max: 10000
     U0:
       description: 开关0电压(开关地址用尾数标记)
-      unit:
+      unit: V
       driver: power001
       type: float
       period: 600
@@ -22,7 +22,7 @@ flow:
       max: 1000
     I0:
       description: 开关0电流(开关地址用尾数标记)
-      unit:
+      unit: A
       driver: power001
       type: float
       period: 600

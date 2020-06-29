@@ -93,3 +93,34 @@ EXIT:
     free(net_type);
   return err;
 }
+
+esp_err_t mt_mqtt_update_session_id(uint64_t session_id) {
+  esp_err_t err = ESP_OK;
+  char *net_type = NULL;
+
+  net_type = mt_nvs_config_get_net_type();
+  if (net_type == NULL) {
+    ESP_LOGE(TAG, "%4d %s net_type NULL", __LINE__, __func__);
+    err = ESP_ERR_INVALID_RESPONSE;
+    goto EXIT;
+  }
+
+  if (strstr(net_type, "lan")) {
+    err = mt_mqtt_lan_update_session_id(session_id);
+    if (err != ESP_OK) {
+      ESP_LOGE(TAG, "%d mt_mqtt_lan_update_session_id", __LINE__);
+      goto EXIT;
+    }
+  }
+
+  if (strstr(net_type, "air720h")) {
+    // TODO(ZH) update session
+    err = ESP_ERR_INVALID_RESPONSE;
+    goto EXIT;
+  }
+
+EXIT:
+  if (net_type != NULL)
+    free(net_type);
+  return err;
+}

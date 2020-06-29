@@ -6,6 +6,8 @@
 #include "stdbool.h"
 #include "stdio.h"
 
+// define =====================================================================
+
 struct cache_t {
   int32_t num_master;
   int32_t *masters;
@@ -15,9 +17,7 @@ struct cache_t {
 
 typedef struct cache_t Cache_t;
 
-Cache_t *cache_get();
-
-esp_err_t cache_set(Cache_t *cache);
+// help func ==================================================================
 
 Cache_t *cache_new();
 
@@ -25,11 +25,15 @@ void cache_free(Cache_t *cache);
 
 bool cahce_diff(Cache_t *cache1, Cache_t *cache2);
 
+// func =======================================================================
+
+Cache_t *cache_get();
+
+esp_err_t cache_set(Cache_t *cache);
+
 void cache_from_modbus(UCHAR slaveAddr, Cache_t *cache);
 
 Cache_t *cache_get_and_check(int num_master, int num_slaver);
-
-// int *cache_convert(Cache_t *cache, int *num);
 
 esp_err_t cache_get_target(int addr_in, UCHAR *target);
 

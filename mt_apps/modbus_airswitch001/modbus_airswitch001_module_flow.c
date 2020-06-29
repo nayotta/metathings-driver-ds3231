@@ -41,6 +41,7 @@ static void module_get_datas_process() {
   double power[16];
   double temp[16];
   double current[16];
+  double quality[16];
   int count = 0;
   char key[24] = "";
 
@@ -58,7 +59,7 @@ static void module_get_datas_process() {
   for (int i = 1; i <= total_num; i++) {
     err = mt_airswitch001_get_datas(ADDR, i, &state[i], &ctrl[i], &votage[i],
                                     &leakCurrent[i], &power[i], &temp[i],
-                                    &current[i]);
+                                    &current[i], &quality[i]);
     if (err != ESP_OK) {
       ESP_LOGE(TAG, "%4d %s addr:%d target:%d mt_airswitch001_get_datas failed",
                __LINE__, __func__, ADDR, i);
@@ -73,7 +74,7 @@ static void module_get_datas_process() {
   int struct_size = 0;
   for (int i = 1; i <= total_num; i++) {
     if (get_state[i - 1] == true) {
-      struct_size += 7;
+      struct_size += 8;
     }
   }
 
@@ -130,6 +131,13 @@ static void module_get_datas_process() {
       memcpy(group->value[count]->key, key, strlen(key) + 1);
       group->value[count]->type = GOOGLE__PROTOBUF__VALUE__KIND_NUMBER_VALUE;
       group->value[count++]->number_value = current[i];
+
+      // quality
+      sprintf(key, "quality%d", i);
+      group->value[count]->key = malloc(strlen(key) + 1);
+      memcpy(group->value[count]->key, key, strlen(key) + 1);
+      group->value[count]->type = GOOGLE__PROTOBUF__VALUE__KIND_NUMBER_VALUE;
+      group->value[count++]->number_value = quality[i];
     }
   }
 
@@ -160,7 +168,7 @@ EXIT:
   return;
 }
 
-static void module_flow_loop() {
+static void modbus_airswitch_flow_loop() {
   while (true) {
     module_get_datas_process();
     vTaskDelay(MODULE_FLOW->push_frame_interval / portTICK_RATE_MS);
@@ -181,9 +189,9 @@ esp_err_t module_notify_process(mt_module_flow_struct_group_t *group) {
   return err;
 }
 
-void module_flow_task(mt_module_flow_t *module_flow, char *task_name) {
+void modbus_airswitch_flow_task(mt_module_flow_t *module_flow) {
   MODULE_FLOW = module_flow;
-  xTaskCreate((TaskFunction_t)module_flow_loop, task_name, 8 * 1024, NULL, 10,
-              NULL);
+  xTaskCreate((TaskFunction_t)modbus_airswitch_flow_loop,
+              "MODBUS_AIRSWITCH_FLOW_TASK", 8 * 1024, NULL, 10, NULL);
   modbus_airswitch001_notify_task();
 }

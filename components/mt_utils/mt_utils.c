@@ -117,16 +117,6 @@ char *mt_utils_int64_to_string(uint64_t src) {
   return ret;
 }
 
-char *mt_utils_string_copy(char *str_in) {
-  char *str_out = NULL;
-
-  str_out = malloc(strlen(str_in) + 1);
-  str_out[strlen(str_in)] = '\0';
-  memcpy(str_out, str_in, strlen(str_in));
-
-  return str_out;
-}
-
 char *mt_utils_get_random_client_id(int id_size) {
   char range[] =
       "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";

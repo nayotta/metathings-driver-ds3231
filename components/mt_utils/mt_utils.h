@@ -30,8 +30,6 @@ unsigned char *mt_hmac_sha256_mqtt(const uint8_t *key, int key_size,
 
 char *mt_utils_int64_to_string(uint64_t src);
 
-char *mt_utils_string_copy(char *str_in);
-
 char *mt_utils_get_random_client_id(int id_size);
 
 #endif

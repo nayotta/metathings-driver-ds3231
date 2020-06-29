@@ -117,8 +117,9 @@ static esp_err_t event_handler(void *arg, esp_event_base_t event_base,
     ssid_str = mt_nvs_read_string_config("ssid", &ssid_str_len);
     password_str = mt_nvs_read_string_config("password", &password_str_len);
 
-    if (ssid_str_len > 1 && password_str_len > 1) {
-      ESP_LOGI(TAG, "Find wifi store, read config from nvs");
+    if (ssid_str_len > 1) {
+      ESP_LOGI(TAG, "%4d %s Find wifi in nvs, connect to ssid: \"%s\"",
+               __LINE__, __func__, ssid_str);
       wifi_config_t wifi_config = {
           .sta =
               {
@@ -212,7 +213,7 @@ static esp_err_t event_handler(void *arg, esp_event_base_t event_base,
     bool ret = false;
     int ret1 = 0;
 
-    ESP_LOGI(TAG, "[MT] sta disconnect");
+    ESP_LOGI(TAG, "%4d %s sta disconnect", __LINE__, __func__);
 
     ret1 = esp_wifi_connect();
     if (ret1 != ESP_OK) {
@@ -382,7 +383,7 @@ void mt_smartconfig_task(int light_pin, int light_pin_on_level, int btn_pin,
     }
   }
 
-  xTaskCreate((TaskFunction_t)mt_wifi_loop, "MT_WIFI_TASK", 1024 * 8, NULL, 10,
+  xTaskCreate((TaskFunction_t)mt_wifi_loop, "MT_WIFI_TASK", 1024 * 8, NULL, 25,
               NULL);
   vTaskDelay(5000 / portTICK_RATE_MS);
 }

@@ -104,7 +104,7 @@ esp_err_t mt_sys_monitor_get_restart_count(int32_t *restart_count_out) {
 esp_err_t mt_sys_monitor_get_free(float *free_out) {
   uint32_t free = 0;
   free = esp_get_free_heap_size();
-  *free_out = free / (512 * 1024);
+  *free_out = free / 1.0;
 
   return ESP_OK;
 }

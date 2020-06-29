@@ -11,6 +11,7 @@
 #include "mt_mbfunc.h"
 #include "mt_mbtask.h"
 #include "mt_port.h"
+#include "mt_utils_byte.h"
 
 #include "modbus_aew100.h"
 #include "mt_mbtask.h"
@@ -45,6 +46,38 @@ static const char *TAG = "MT_MODBUS_AEW100";
 
 // global func ================================================================
 
+esp_err_t mt_aew100_get_current_ABC(UCHAR addr, double *a, double *b,
+                                    double *c) {
+  esp_err_t err = ESP_OK;
+  struct RetMsg_t cmd_ret_payload;
+  int data_size = 3;
+
+  // current A
+  err = modbus_sync_Cmd_03(addr, DATA_CURRENTA, data_size, &cmd_ret_payload);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s addr:%d failed", __LINE__, __func__, addr);
+    return err;
+  } else {
+    if (cmd_ret_payload.recvCmd != MODBUS_READ) {
+      ESP_LOGE(TAG, "%4d %s addr:%d get error ret cmd:%d", __LINE__, __func__,
+               addr, cmd_ret_payload.recvCmd);
+      return ESP_ERR_INVALID_RESPONSE;
+    }
+
+    if (cmd_ret_payload.retLen != 2 * data_size) {
+      ESP_LOGE(TAG, "%4d %s addr:%d get error ret size:%d", __LINE__, __func__,
+               addr, cmd_ret_payload.retLen);
+      return ESP_ERR_INVALID_RESPONSE;
+    }
+
+    *a = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 100.0;
+    *b = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 2) / 100.0;
+    *c = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 4) / 100.0;
+  }
+
+  return ESP_OK;
+}
+
 esp_err_t mt_aew100_get_currentA(UCHAR addr, double *current) {
   esp_err_t err = ESP_OK;
   struct RetMsg_t cmd_ret_payload;
@@ -67,9 +100,7 @@ esp_err_t mt_aew100_get_currentA(UCHAR addr, double *current) {
       return ESP_ERR_INVALID_RESPONSE;
     }
 
-    *current =
-        (cmd_ret_payload.retBuf[0] * (1 << 8) + cmd_ret_payload.retBuf[1]) /
-        100.0;
+    *current = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 100.0;
   }
 
   return ESP_OK;
@@ -97,9 +128,7 @@ esp_err_t mt_aew100_get_currentB(UCHAR addr, double *current) {
       return ESP_ERR_INVALID_RESPONSE;
     }
 
-    *current =
-        (cmd_ret_payload.retBuf[0] * (1 << 8) + cmd_ret_payload.retBuf[1]) /
-        100.0;
+    *current = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 100.0;
   }
 
   return ESP_OK;
@@ -127,9 +156,39 @@ esp_err_t mt_aew100_get_currentC(UCHAR addr, double *current) {
       return ESP_ERR_INVALID_RESPONSE;
     }
 
-    *current =
-        (cmd_ret_payload.retBuf[0] * (1 << 8) + cmd_ret_payload.retBuf[1]) /
-        100.0;
+    *current = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 100.0;
+  }
+
+  return ESP_OK;
+}
+
+esp_err_t mt_aew100_get_votage_ABC(UCHAR addr, double *a, double *b,
+                                   double *c) {
+  esp_err_t err = ESP_OK;
+  struct RetMsg_t cmd_ret_payload;
+  int data_size = 3;
+
+  // votage A
+  err = modbus_sync_Cmd_03(addr, DATA_VOTAGEA, data_size, &cmd_ret_payload);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s addr:%d failed", __LINE__, __func__, addr);
+    return err;
+  } else {
+    if (cmd_ret_payload.recvCmd != MODBUS_READ) {
+      ESP_LOGE(TAG, "%4d %s addr:%d get error ret cmd:%d", __LINE__, __func__,
+               addr, cmd_ret_payload.recvCmd);
+      return ESP_ERR_INVALID_RESPONSE;
+    }
+
+    if (cmd_ret_payload.retLen != 2 * data_size) {
+      ESP_LOGE(TAG, "%4d %s addr:%d get error ret size:%d", __LINE__, __func__,
+               addr, cmd_ret_payload.retLen);
+      return ESP_ERR_INVALID_RESPONSE;
+    }
+
+    *a = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 10.0;
+    *b = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 2) / 10.0;
+    *c = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 4) / 10.0;
   }
 
   return ESP_OK;
@@ -157,8 +216,7 @@ esp_err_t mt_aew100_get_votageA(UCHAR addr, double *data) {
       return ESP_ERR_INVALID_RESPONSE;
     }
 
-    *data = (cmd_ret_payload.retBuf[0] * (1 << 8) + cmd_ret_payload.retBuf[1]) /
-            10.0;
+    *data = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 10.0;
   }
 
   return ESP_OK;
@@ -186,8 +244,7 @@ esp_err_t mt_aew100_get_votageB(UCHAR addr, double *data) {
       return ESP_ERR_INVALID_RESPONSE;
     }
 
-    *data = (cmd_ret_payload.retBuf[0] * (1 << 8) + cmd_ret_payload.retBuf[1]) /
-            10.0;
+    *data = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 10.0;
   }
 
   return ESP_OK;
@@ -215,8 +272,49 @@ esp_err_t mt_aew100_get_votageC(UCHAR addr, double *data) {
       return ESP_ERR_INVALID_RESPONSE;
     }
 
-    *data = (cmd_ret_payload.retBuf[0] * (1 << 8) + cmd_ret_payload.retBuf[1]) /
-            10.0;
+    *data = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 10.0;
+  }
+
+  return ESP_OK;
+}
+
+esp_err_t mt_aew100_get_activePower_ABC(UCHAR addr, double *a, double *b,
+                                        double *c) {
+  esp_err_t err = ESP_OK;
+  struct RetMsg_t cmd_ret_payload;
+  int data_size = 3;
+
+  // activePowerA
+  err = modbus_sync_Cmd_03(addr, DATA_ACTIVEPOWERA, 2 * data_size,
+                           &cmd_ret_payload);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s addr:%d failed", __LINE__, __func__, addr);
+    return err;
+  } else {
+    if (cmd_ret_payload.recvCmd != MODBUS_READ) {
+      ESP_LOGE(TAG, "%4d %s addr:%d get error ret cmd:%d", __LINE__, __func__,
+               addr, cmd_ret_payload.recvCmd);
+      return ESP_ERR_INVALID_RESPONSE;
+    }
+
+    if (cmd_ret_payload.retLen != 4 * data_size) {
+      ESP_LOGE(TAG, "%4d %s addr:%d get error ret size:%d", __LINE__, __func__,
+               addr, cmd_ret_payload.retLen);
+      return ESP_ERR_INVALID_RESPONSE;
+    }
+
+    *a = mt_utils_byte_4char_to_int32(cmd_ret_payload.retBuf + 0) / 1000.0;
+    *b = mt_utils_byte_4char_to_int32(cmd_ret_payload.retBuf + 0) / 1000.0;
+    *c = mt_utils_byte_4char_to_int32(cmd_ret_payload.retBuf + 0) / 1000.0;
+    if (cmd_ret_payload.retBuf[0] == 0xff) {
+      *a = 0;
+    }
+    if (cmd_ret_payload.retBuf[4] == 0xff) {
+      *b = 0;
+    }
+    if (cmd_ret_payload.retBuf[8] == 0xff) {
+      *c = 0;
+    }
   }
 
   return ESP_OK;
@@ -244,10 +342,7 @@ esp_err_t mt_aew100_get_activePowerA(UCHAR addr, double *data) {
       return ESP_ERR_INVALID_RESPONSE;
     }
 
-    *data = (cmd_ret_payload.retBuf[0] * (1 << 24) +
-             cmd_ret_payload.retBuf[1] * (1 << 16) +
-             cmd_ret_payload.retBuf[2] * (1 << 8) + cmd_ret_payload.retBuf[3]) /
-            1000.0;
+    *data = mt_utils_byte_4char_to_int32(cmd_ret_payload.retBuf + 0) / 1000.0;
     if (cmd_ret_payload.retBuf[0] == 0xff) {
       *data = 0;
     }
@@ -278,10 +373,7 @@ esp_err_t mt_aew100_get_activePowerB(UCHAR addr, double *data) {
       return ESP_ERR_INVALID_RESPONSE;
     }
 
-    *data = (cmd_ret_payload.retBuf[0] * (1 << 24) +
-             cmd_ret_payload.retBuf[1] * (1 << 16) +
-             cmd_ret_payload.retBuf[2] * (1 << 8) + cmd_ret_payload.retBuf[3]) /
-            1000.0;
+    *data = mt_utils_byte_4char_to_int32(cmd_ret_payload.retBuf + 0) / 1000.0;
 
     if (cmd_ret_payload.retBuf[0] == 0xff) {
       *data = 0;
@@ -313,14 +405,44 @@ esp_err_t mt_aew100_get_activePowerC(UCHAR addr, double *data) {
       return ESP_ERR_INVALID_RESPONSE;
     }
 
-    *data = (cmd_ret_payload.retBuf[0] * (1 << 24) +
-             cmd_ret_payload.retBuf[1] * (1 << 16) +
-             cmd_ret_payload.retBuf[2] * (1 << 8) + cmd_ret_payload.retBuf[3]) /
-            1000.0;
+    *data = mt_utils_byte_4char_to_int32(cmd_ret_payload.retBuf + 0) / 1000.0;
 
     if (cmd_ret_payload.retBuf[0] == 0xff) {
       *data = 0;
     }
+  }
+
+  return ESP_OK;
+}
+
+esp_err_t mt_aew100_get_reactivePower_ABC(UCHAR addr, double *a, double *b,
+                                          double *c) {
+  esp_err_t err = ESP_OK;
+  struct RetMsg_t cmd_ret_payload;
+  int data_size = 3;
+
+  // reactivePowerA
+  err = modbus_sync_Cmd_03(addr, DATA_REACTIVEPOWERA, 2 * data_size,
+                           &cmd_ret_payload);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s addr:%d failed", __LINE__, __func__, addr);
+    return err;
+  } else {
+    if (cmd_ret_payload.recvCmd != MODBUS_READ) {
+      ESP_LOGE(TAG, "%4d %s addr:%d get error ret cmd:%d", __LINE__, __func__,
+               addr, cmd_ret_payload.recvCmd);
+      return ESP_ERR_INVALID_RESPONSE;
+    }
+
+    if (cmd_ret_payload.retLen != 4 * data_size) {
+      ESP_LOGE(TAG, "%4d %s addr:%d get error ret size:%d", __LINE__, __func__,
+               addr, cmd_ret_payload.retLen);
+      return ESP_ERR_INVALID_RESPONSE;
+    }
+
+    *a = mt_utils_byte_4char_to_int32(cmd_ret_payload.retBuf + 0) / 1000.0;
+    *b = mt_utils_byte_4char_to_int32(cmd_ret_payload.retBuf + 0) / 1000.0;
+    *c = mt_utils_byte_4char_to_int32(cmd_ret_payload.retBuf + 0) / 1000.0;
   }
 
   return ESP_OK;
@@ -348,10 +470,7 @@ esp_err_t mt_aew100_get_reactivePowerA(UCHAR addr, double *data) {
       return ESP_ERR_INVALID_RESPONSE;
     }
 
-    *data = (cmd_ret_payload.retBuf[0] * (1 << 24) +
-             cmd_ret_payload.retBuf[1] * (1 << 16) +
-             cmd_ret_payload.retBuf[2] * (1 << 8) + cmd_ret_payload.retBuf[3]) /
-            1000.0;
+    *data = mt_utils_byte_4char_to_int32(cmd_ret_payload.retBuf + 0) / 1000.0;
   }
 
   return ESP_OK;
@@ -379,10 +498,7 @@ esp_err_t mt_aew100_get_reactivePowerB(UCHAR addr, double *data) {
       return ESP_ERR_INVALID_RESPONSE;
     }
 
-    *data = (cmd_ret_payload.retBuf[0] * (1 << 24) +
-             cmd_ret_payload.retBuf[1] * (1 << 16) +
-             cmd_ret_payload.retBuf[2] * (1 << 8) + cmd_ret_payload.retBuf[3]) /
-            1000.0;
+    *data = mt_utils_byte_4char_to_int32(cmd_ret_payload.retBuf + 0) / 1000.0;
   }
 
   return ESP_OK;
@@ -410,10 +526,40 @@ esp_err_t mt_aew100_get_reactivePowerC(UCHAR addr, double *data) {
       return ESP_ERR_INVALID_RESPONSE;
     }
 
-    *data = (cmd_ret_payload.retBuf[0] * (1 << 24) +
-             cmd_ret_payload.retBuf[1] * (1 << 16) +
-             cmd_ret_payload.retBuf[2] * (1 << 8) + cmd_ret_payload.retBuf[3]) /
-            1000.0;
+    *data = mt_utils_byte_4char_to_int32(cmd_ret_payload.retBuf + 0) / 1000.0;
+  }
+
+  return ESP_OK;
+}
+
+esp_err_t mt_aew100_get_powerFactor_ABC(UCHAR addr, double *a, double *b,
+                                        double *c) {
+  esp_err_t err = ESP_OK;
+  struct RetMsg_t cmd_ret_payload;
+  int data_size = 3;
+
+  // powerFactorA
+  err = modbus_sync_Cmd_03(addr, DATA_POWERFACTORA, 1 * data_size,
+                           &cmd_ret_payload);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s addr:%d failed", __LINE__, __func__, addr);
+    return err;
+  } else {
+    if (cmd_ret_payload.recvCmd != MODBUS_READ) {
+      ESP_LOGE(TAG, "%4d %s addr:%d get error ret cmd:%d", __LINE__, __func__,
+               addr, cmd_ret_payload.recvCmd);
+      return ESP_ERR_INVALID_RESPONSE;
+    }
+
+    if (cmd_ret_payload.retLen != 2 * data_size) {
+      ESP_LOGE(TAG, "%4d %s addr:%d get error ret size:%d", __LINE__, __func__,
+               addr, cmd_ret_payload.retLen);
+      return ESP_ERR_INVALID_RESPONSE;
+    }
+
+    *a = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 1000.0;
+    *b = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 1000.0;
+    *c = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 1000.0;
   }
 
   return ESP_OK;
@@ -441,8 +587,7 @@ esp_err_t mt_aew100_get_powerFactorA(UCHAR addr, double *data) {
       return ESP_ERR_INVALID_RESPONSE;
     }
 
-    *data = (cmd_ret_payload.retBuf[0] * (1 << 8) + cmd_ret_payload.retBuf[1]) /
-            1000.0;
+    *data = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 1000.0;
   }
 
   return ESP_OK;
@@ -470,8 +615,7 @@ esp_err_t mt_aew100_get_powerFactorB(UCHAR addr, double *data) {
       return ESP_ERR_INVALID_RESPONSE;
     }
 
-    *data = (cmd_ret_payload.retBuf[0] * (1 << 8) + cmd_ret_payload.retBuf[1]) /
-            1000.0;
+    *data = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 1000.0;
   }
 
   return ESP_OK;
@@ -499,8 +643,40 @@ esp_err_t mt_aew100_get_powerFactorC(UCHAR addr, double *data) {
       return ESP_ERR_INVALID_RESPONSE;
     }
 
-    *data = (cmd_ret_payload.retBuf[0] * (1 << 8) + cmd_ret_payload.retBuf[1]) /
-            1000.0;
+    *data = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 1000.0;
+  }
+
+  return ESP_OK;
+}
+
+esp_err_t mt_aew100_get_quality_ABC(UCHAR addr, double *a, double *b,
+                                    double *c) {
+  esp_err_t err = ESP_OK;
+  struct RetMsg_t cmd_ret_payload;
+  int data_size = 3;
+
+  // qualityA
+  err =
+      modbus_sync_Cmd_03(addr, DATA_QUALITYA, 1 * data_size, &cmd_ret_payload);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s addr:%d failed", __LINE__, __func__, addr);
+    return err;
+  } else {
+    if (cmd_ret_payload.recvCmd != MODBUS_READ) {
+      ESP_LOGE(TAG, "%4d %s addr:%d get error ret cmd:%d", __LINE__, __func__,
+               addr, cmd_ret_payload.recvCmd);
+      return ESP_ERR_INVALID_RESPONSE;
+    }
+
+    if (cmd_ret_payload.retLen != 2 * data_size) {
+      ESP_LOGE(TAG, "%4d %s addr:%d get error ret size:%d", __LINE__, __func__,
+               addr, cmd_ret_payload.retLen);
+      return ESP_ERR_INVALID_RESPONSE;
+    }
+
+    *a = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 1000.0;
+    *b = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 1000.0;
+    *c = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 1000.0;
   }
 
   return ESP_OK;
@@ -528,8 +704,7 @@ esp_err_t mt_aew100_get_qualityA(UCHAR addr, double *data) {
       return ESP_ERR_INVALID_RESPONSE;
     }
 
-    *data = (cmd_ret_payload.retBuf[0] * (1 << 8) + cmd_ret_payload.retBuf[1]) /
-            1000.0;
+    *data = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 1000.0;
   }
 
   return ESP_OK;
@@ -557,8 +732,7 @@ esp_err_t mt_aew100_get_qualityB(UCHAR addr, double *data) {
       return ESP_ERR_INVALID_RESPONSE;
     }
 
-    *data = (cmd_ret_payload.retBuf[0] * (1 << 8) + cmd_ret_payload.retBuf[1]) /
-            1000.0;
+    *data = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 1000.0;
   }
 
   return ESP_OK;
@@ -586,8 +760,38 @@ esp_err_t mt_aew100_get_qualityC(UCHAR addr, double *data) {
       return ESP_ERR_INVALID_RESPONSE;
     }
 
-    *data = (cmd_ret_payload.retBuf[0] * (1 << 8) + cmd_ret_payload.retBuf[1]) /
-            1000.0;
+    *data = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 1000.0;
+  }
+
+  return ESP_OK;
+}
+
+esp_err_t mt_aew100_get_temp_ABC(UCHAR addr, double *a, double *b, double *c) {
+  esp_err_t err = ESP_OK;
+  struct RetMsg_t cmd_ret_payload;
+  int data_size = 3;
+
+  // tempA
+  err = modbus_sync_Cmd_03(addr, DATA_TEMPA, 1 * data_size, &cmd_ret_payload);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s addr:%d failed", __LINE__, __func__, addr);
+    return err;
+  } else {
+    if (cmd_ret_payload.recvCmd != MODBUS_READ) {
+      ESP_LOGE(TAG, "%4d %s addr:%d get error ret cmd:%d", __LINE__, __func__,
+               addr, cmd_ret_payload.recvCmd);
+      return ESP_ERR_INVALID_RESPONSE;
+    }
+
+    if (cmd_ret_payload.retLen != 2 * data_size) {
+      ESP_LOGE(TAG, "%4d %s addr:%d get error ret size:%d", __LINE__, __func__,
+               addr, cmd_ret_payload.retLen);
+      return ESP_ERR_INVALID_RESPONSE;
+    }
+
+    *a = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 10.0;
+    *b = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 10.0;
+    *c = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 10.0;
   }
 
   return ESP_OK;
@@ -615,8 +819,7 @@ esp_err_t mt_aew100_get_tempA(UCHAR addr, double *data) {
       return ESP_ERR_INVALID_RESPONSE;
     }
 
-    *data = (cmd_ret_payload.retBuf[0] * (1 << 8) + cmd_ret_payload.retBuf[1]) /
-            10.0;
+    *data = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 10.0;
   }
 
   return ESP_OK;
@@ -644,8 +847,7 @@ esp_err_t mt_aew100_get_tempB(UCHAR addr, double *data) {
       return ESP_ERR_INVALID_RESPONSE;
     }
 
-    *data = (cmd_ret_payload.retBuf[0] * (1 << 8) + cmd_ret_payload.retBuf[1]) /
-            10.0;
+    *data = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 10.0;
   }
 
   return ESP_OK;
@@ -673,241 +875,172 @@ esp_err_t mt_aew100_get_tempC(UCHAR addr, double *data) {
       return ESP_ERR_INVALID_RESPONSE;
     }
 
-    *data = (cmd_ret_payload.retBuf[0] * (1 << 8) + cmd_ret_payload.retBuf[1]) /
-            10.0;
+    *data = mt_utils_byte_2char_to_int32(cmd_ret_payload.retBuf + 0) / 10.0;
   }
 
   return ESP_OK;
 }
 
-esp_err_t mt_aew100_get_data(UCHAR addr, Aew100_data_t *data) {
+esp_err_t mt_aew100_get_data(UCHAR addr, MtAew100__Data *data) {
   esp_err_t err = ESP_OK;
 
   // TODO(ZH) need lock
-  err = mt_aew100_get_currentA(addr, &data->currentA);
+  err = mt_aew100_get_current_ABC(addr, &data->currenta, &data->currentb,
+                                  &data->currentc);
   if (err != ESP_OK) {
-    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_currentA failed", __LINE__,
+    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_current_ABC failed", __LINE__,
              __func__, addr);
-    return err;
+  } else {
+    data->has_currenta = true;
+    data->has_currentb = true;
+    data->has_currentc = true;
   }
 
-  err = mt_aew100_get_currentB(addr, &data->currentB);
+  err = mt_aew100_get_votage_ABC(addr, &data->votagea, &data->votageb,
+                                 &data->votagec);
   if (err != ESP_OK) {
-    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_currentB failed", __LINE__,
+    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_votage_ABC failed", __LINE__,
              __func__, addr);
-    return err;
+  } else {
+    data->has_votagea = true;
+    data->has_votageb = true;
+    data->has_votagec = true;
   }
 
-  err = mt_aew100_get_currentC(addr, &data->currentC);
+  err = mt_aew100_get_activePower_ABC(addr, &data->activepowera,
+                                      &data->activepowerb, &data->activepowerc);
   if (err != ESP_OK) {
-    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_currentC failed", __LINE__,
-             __func__, addr);
-    return err;
-  }
-
-  err = mt_aew100_get_votageA(addr, &data->votageA);
-  if (err != ESP_OK) {
-    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_votageA failed", __LINE__,
-             __func__, addr);
-    return err;
-  }
-
-  err = mt_aew100_get_votageB(addr, &data->votageB);
-  if (err != ESP_OK) {
-    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_votageB failed", __LINE__,
-             __func__, addr);
-    return err;
-  }
-  err = mt_aew100_get_votageC(addr, &data->votageC);
-  if (err != ESP_OK) {
-    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_votageC failed", __LINE__,
-             __func__, addr);
-    return err;
-  }
-
-  err = mt_aew100_get_activePowerA(addr, &data->activePowerA);
-  if (err != ESP_OK) {
-    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_activePowerA failed", __LINE__,
-             __func__, addr);
-    return err;
-  }
-
-  err = mt_aew100_get_activePowerB(addr, &data->activePowerB);
-  if (err != ESP_OK) {
-    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_activePowerB failed", __LINE__,
-             __func__, addr);
-    return err;
-  }
-
-  err = mt_aew100_get_activePowerC(addr, &data->activePowerC);
-  if (err != ESP_OK) {
-    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_activePowerC failed", __LINE__,
-             __func__, addr);
-    return err;
-  }
-
-  err = mt_aew100_get_reactivePowerA(addr, &data->reactivePowerA);
-  if (err != ESP_OK) {
-    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_reactivePowerA failed",
+    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_activePower_ABC failed",
              __LINE__, __func__, addr);
-    return err;
+  } else {
+    data->has_activepowera = true;
+    data->has_activepowerb = true;
+    data->has_activepowerc = true;
   }
 
-  err = mt_aew100_get_reactivePowerB(addr, &data->reactivePowerB);
+  err = mt_aew100_get_reactivePower_ABC(addr, &data->reactivepowera,
+                                        &data->reactivepowerb,
+                                        &data->reactivepowerc);
   if (err != ESP_OK) {
-    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_reactivePowerB failed",
+    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_reactivePower_ABC failed",
              __LINE__, __func__, addr);
-    return err;
+  } else {
+    data->has_reactivepowera = true;
+    data->has_reactivepowerb = true;
+    data->has_reactivepowerc = true;
   }
 
-  err = mt_aew100_get_reactivePowerC(addr, &data->reactivePowerC);
+  err = mt_aew100_get_powerFactor_ABC(addr, &data->powerfactora,
+                                      &data->powerfactorb, &data->powerfactorc);
   if (err != ESP_OK) {
-    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_reactivePowerC failed",
+    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_powerFactor_ABC failed",
              __LINE__, __func__, addr);
-    return err;
+  } else {
+    data->has_powerfactora = true;
+    data->has_powerfactorb = true;
+    data->has_powerfactorc = true;
   }
 
-  err = mt_aew100_get_powerFactorA(addr, &data->powerFactorA);
+  err = mt_aew100_get_quality_ABC(addr, &data->qualitya, &data->qualityb,
+                                  &data->qualityc);
   if (err != ESP_OK) {
-    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_powerFactorA failed", __LINE__,
+    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_quality_ABC failed", __LINE__,
              __func__, addr);
-    return err;
+  } else {
+    data->has_qualitya = true;
+    data->has_qualityb = true;
+    data->has_qualityc = true;
   }
 
-  err = mt_aew100_get_powerFactorB(addr, &data->powerFactorB);
+  err = mt_aew100_get_temp_ABC(addr, &data->tempa, &data->tempb, &data->tempc);
   if (err != ESP_OK) {
-    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_powerFactorB failed", __LINE__,
+    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_temp_ABC failed", __LINE__,
              __func__, addr);
-    return err;
+  } else {
+    data->has_tempa = true;
+    data->has_tempb = true;
+    data->has_tempc = true;
   }
 
-  err = mt_aew100_get_powerFactorC(addr, &data->powerFactorC);
+  err = mt_aew100_get_temp_ABC(addr, &data->maxpowera, &data->maxpowerb,
+                               &data->maxpowerc);
   if (err != ESP_OK) {
-    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_powerFactorC failed", __LINE__,
+    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_temp_ABC failed", __LINE__,
              __func__, addr);
-    return err;
-  }
-
-  err = mt_aew100_get_qualityA(addr, &data->qualityA);
-  if (err != ESP_OK) {
-    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_qualityA failed", __LINE__,
-             __func__, addr);
-    return err;
-  }
-
-  err = mt_aew100_get_qualityB(addr, &data->qualityB);
-  if (err != ESP_OK) {
-    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_qualityB failed", __LINE__,
-             __func__, addr);
-    return err;
-  }
-
-  err = mt_aew100_get_qualityC(addr, &data->qualityC);
-  if (err != ESP_OK) {
-    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_qualityC failed", __LINE__,
-             __func__, addr);
-    return err;
+  } else {
+    data->has_maxpowera = true;
+    data->has_maxpowerb = true;
+    data->has_maxpowerc = true;
   }
 
   return ESP_OK;
 }
 
-esp_err_t mt_aew100_get_data2(UCHAR addr, Aew100_data_t *data) {
+esp_err_t mt_aew100_get_data2(UCHAR addr, MtAew100__Data *data) {
   esp_err_t err = ESP_OK;
 
-  err = mt_aew100_get_currentA(addr, &data->currentA);
+  err = mt_aew100_get_current_ABC(addr, &data->currenta, &data->currenta,
+                                  &data->currentc);
   if (err != ESP_OK) {
-    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_currentA failed", __LINE__,
+    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_current_ABC failed", __LINE__,
              __func__, addr);
-    goto EXIT;
   } else {
-    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_currentA success", __LINE__,
-             __func__, addr);
+    data->has_currenta = true;
+    data->has_currentb = true;
+    data->has_currentc = true;
   }
 
-  err = mt_aew100_get_currentB(addr, &data->currentB);
+  err = mt_aew100_get_votage_ABC(addr, &data->votagea, &data->votageb,
+                                 &data->votagec);
   if (err != ESP_OK) {
-    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_currentB failed", __LINE__,
+    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_votage_ABC failed", __LINE__,
              __func__, addr);
-    goto EXIT;
+  } else {
+    data->has_votagea = true;
+    data->has_votageb = true;
+    data->has_votagec = true;
+
+    data->has_powerfactora = true;
+    data->has_powerfactorb = true;
+    data->has_powerfactorc = true;
+    data->powerfactora = 100.0;
+    data->powerfactorb = 100.0;
+    data->powerfactorc = 100.0;
+
+    data->has_activepowera = true;
+    data->has_activepowerb = true;
+    data->has_activepowerc = true;
+    data->activepowera = data->votagea * data->currenta;
+    data->activepowerb = data->votageb * data->currentb;
+    data->activepowerc = data->votagec * data->currentc;
   }
 
-  err = mt_aew100_get_currentC(addr, &data->currentC);
+  err = mt_aew100_get_temp_ABC(addr, &data->tempa, &data->tempa, &data->tempc);
   if (err != ESP_OK) {
-    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_currentC failed", __LINE__,
+    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_temp_ABC failed", __LINE__,
              __func__, addr);
-    goto EXIT;
+  } else {
+    data->has_tempa = true;
+    data->has_tempb = true;
+    data->has_tempc = true;
   }
 
-  err = mt_aew100_get_votageA(addr, &data->votageA);
-  if (err != ESP_OK) {
-    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_votageA failed", __LINE__,
-             __func__, addr);
-    goto EXIT;
-  }
-
-  err = mt_aew100_get_votageB(addr, &data->votageB);
-  if (err != ESP_OK) {
-    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_votageB failed", __LINE__,
-             __func__, addr);
-    goto EXIT;
-  }
-
-  err = mt_aew100_get_votageC(addr, &data->votageC);
-  if (err != ESP_OK) {
-    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_votageC failed", __LINE__,
-             __func__, addr);
-    goto EXIT;
-  }
-
-  err = mt_aew100_get_tempA(addr, &data->tempA);
-  if (err != ESP_OK) {
-    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_tempA failed", __LINE__,
-             __func__, addr);
-    goto EXIT;
-  }
-
-  err = mt_aew100_get_tempB(addr, &data->tempB);
-  if (err != ESP_OK) {
-    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_tempB failed", __LINE__,
-             __func__, addr);
-    goto EXIT;
-  }
-
-  err = mt_aew100_get_tempC(addr, &data->tempC);
-  if (err != ESP_OK) {
-    ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_tempC failed", __LINE__,
-             __func__, addr);
-    goto EXIT;
-  }
-
-  data->powerFactorA = 100.0;
-  data->powerFactorB = 100.0;
-  data->powerFactorC = 100.0;
-
-  data->activePowerA = data->votageA * data->currentA;
-  data->activePowerB = data->votageB * data->currentB;
-  data->activePowerC = data->votageC * data->currentC;
-
-EXIT:
   return err;
 }
 
-esp_err_t mt_aew100_init(int tx_pin, int rx_pin, int en_pin) {
+esp_err_t mt_aew100_init(uint8_t port, int tx_pin, int rx_pin, int en_pin) {
   eMBErrorCode emb_ret = 0;
-  UCHAR RS485_PORT = 2;
   ULONG RS485_BAUD = 9600;
   eMBParity RS485_PARITY = MB_PAR_NONE;
 
-  emb_ret =
-      modbus_init(RS485_PORT, RS485_BAUD, RS485_PARITY, tx_pin, rx_pin, en_pin);
+  emb_ret = modbus_init(port, RS485_BAUD, RS485_PARITY, tx_pin, rx_pin, en_pin);
   if (emb_ret != 0) {
     ESP_LOGE(TAG, "%4d %s modbus_init failed", __LINE__, __func__);
     return emb_ret;
   }
 
   mt_vMBMaster_set_T35_interval(250);
-  mt_modbus_task();
+  // mt_modbus_task();
 
   return ESP_OK;
 }

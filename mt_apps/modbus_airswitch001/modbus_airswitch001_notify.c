@@ -22,7 +22,7 @@ static const char *TAG = "MODBUS_AIRSWITCH001_NOTIFY";
 static int CHECK_INTERVAL = 2000; // 2s
 static bool STATE[24] = {false};
 static bool DELAY_CHECK = false;
-static int DELAY_CHECK_TIME = 2000; // 2s
+static int DELAY_CHECK_TIME = 5000; // 5s
 
 // static func ================================================================
 
@@ -32,11 +32,13 @@ static void modbus_airswitch001_notify_loop() {
   bool cache_success = false;
   esp_err_t err = ESP_OK;
 
+RESTART:
   // get total switch num
   cache = cache_get();
   if (cache == NULL) {
     ESP_LOGE(TAG, "%4d %s cache_get failed", __LINE__, __func__);
-    return;
+    vTaskDelay(5000 / portTICK_RATE_MS);
+    goto RESTART;
   }
   total_num = cache->num_master + cache->num_slaver;
 

@@ -5,6 +5,8 @@
 #include "rs232_dev.h"
 #include "stdio.h"
 
+// define =====================================================================
+
 typedef struct _rs232_lora_jxyl001_fog {
   int32_t addr;
   int64_t update_time;
@@ -28,6 +30,10 @@ typedef struct _rs232_lora_jxyl001_devs {
   rs232_lora_jxyl001_temp **temps;
 } Rs232_Lora_Jxyl001_Devs;
 
+// global func ================================================================
+
 esp_err_t rs232_lora_jxyl001_task();
+
+Rs232_Lora_Jxyl001_Devs *rs232_lora_jxyl001_get_devs();
 
 #endif
