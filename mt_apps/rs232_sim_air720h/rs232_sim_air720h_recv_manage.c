@@ -6,6 +6,7 @@
 #include "rs232_sim_air720h_mqtt.h"
 #include "rs232_sim_air720h_recv_manage_http_action.h"
 #include "rs232_sim_air720h_recv_manage_http_read.h"
+#include "rs232_sim_air720h_recv_manage_mqtt_state.h"
 #include "rs232_sim_air720h_recv_manage_mqtt_sub.h"
 
 // static define ==============================================================
@@ -19,7 +20,7 @@ static int RECV_SIZE = 0;
 static char *STR_OK = "OK";
 static char *STR_ERROR = "ERROR";
 static char *STR_DOWNLOAD = "DOWNLOAD";
-static char *STR_CONNECT_OK = "CONNECT OK";
+static char *STR_CONNECT_OK = "CONNECT";
 static char *STR_NET_OK = "+CGATT: 1";
 static char *STR_MQTT_CONN_OK = "CONNACK OK";
 static char *STR_MQTT_SUB_OK = "SUBACK";
@@ -28,6 +29,7 @@ static char *STR_MQTT_CLOSE_OK = "CLOSE";
 static char *STR_HTTP_READ = "+HTTPREAD: ";
 static char *STR_HTTP_ACTION = "+HTTPACTION:";
 static char *STR_MQTT_SUB = "+MSUB: ";
+static char *STR_MQTT_STATE = "+MQTTSTATU :";
 
 static rs232_sim_air720h_ack ACK = {false, false, false, false,
                                     false, false, false, false};
@@ -39,13 +41,14 @@ static void rs232_sim_air720h_recv_manage_parse_msg() {
     goto EXIT;
   }
 
-  ESP_LOGI(TAG, "%4d %s recv msg %s", __LINE__, __func__, RECV_BUF);
+  ESP_LOGI(TAG, "%4d %s recv msg:%2d---> %s", __LINE__, __func__,
+           strlen((char *)RECV_BUF), RECV_BUF);
 
   if (strstr((char *)RECV_BUF, "AT+")) {
     goto EXIT;
   }
 
-  if (strstr((char *)RECV_BUF, STR_OK)) {
+  if (strstr((char *)RECV_BUF, STR_OK) && strlen((char *)RECV_BUF) == 3) {
     ACK.ack_ok = true;
     goto EXIT;
   }
@@ -82,6 +85,11 @@ static void rs232_sim_air720h_recv_manage_parse_msg() {
 
   if (strstr((char *)RECV_BUF, STR_MQTT_CLOSE_OK)) {
     ACK.ack_mqtt_close_ok = true;
+    goto EXIT;
+  }
+
+  if (strstr((char *)RECV_BUF, STR_MQTT_STATE)) {
+    rs232_sim_air720h_recv_manage_process_mqtt_state((char *)RECV_BUF);
     goto EXIT;
   }
 
@@ -162,7 +170,7 @@ esp_err_t rs232_sim_air720h_recv_manage_init(rs232_dev_config_t *dev_config) {
   esp_err_t err = ESP_OK;
 
   xTaskCreate((TaskFunction_t)rs232_sim_air720h_recv_manage_loop,
-              "NYT_4G_AIR720H_TASK", 4 * 1024, dev_config, 8, NULL);
+              "NYT_4G_AIR720H_TASK", 8 * 1024, dev_config, 8, NULL);
 
   return err;
 }

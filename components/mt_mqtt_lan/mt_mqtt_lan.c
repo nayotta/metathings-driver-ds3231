@@ -126,16 +126,18 @@ esp_err_t mqtt_init(int mod_index, char *module_id, uint64_t session_id,
   // char *host, char *port, char *username, char *key,
   esp_err_t err;
   unsigned char *hmac_str = NULL;
-  mt_nvs_host_t *host = malloc(sizeof(mt_nvs_host_t));
-  mt_nvs_module_t *mod = malloc(sizeof(mt_nvs_module_t));
+  mt_nvs_host_t *host = NULL;
+  mt_nvs_module_t *mod = NULL;
 
-  if (mt_nvs_config_get_host_config(host) != ESP_OK) {
+  host = mt_nvs_config_get_host_config();
+  if (host == NULL) {
     ESP_LOGE(TAG, "%4d %s mt_nvs_config_get_host_config failed", __LINE__,
              __func__);
     return ESP_ERR_INVALID_ARG;
   }
 
-  if (mt_nvs_config_get_module(mod_index, mod) != ESP_OK) {
+  mod = mt_nvs_config_get_module(mod_index);
+  if (mod == NULL) {
     ESP_LOGE(TAG, "%4d %s mt_nvs_config_get_module index:%d failed", __LINE__,
              __func__, mod_index);
     return ESP_ERR_INVALID_ARG;

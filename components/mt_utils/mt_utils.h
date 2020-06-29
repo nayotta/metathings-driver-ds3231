@@ -28,7 +28,7 @@ unsigned char *mt_hmac_sha256_base64(const uint8_t *key, int key_size,
 unsigned char *mt_hmac_sha256_mqtt(const uint8_t *key, int key_size,
                                    const uint8_t *id, int id_size);
 
-char *mt_utils_int64_to_string(uint64_t src, uint8_t *size_out);
+char *mt_utils_int64_to_string(uint64_t src);
 
 char *mt_utils_get_random_client_id(int id_size);
 

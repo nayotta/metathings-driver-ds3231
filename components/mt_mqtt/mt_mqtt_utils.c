@@ -452,3 +452,89 @@ char *mt_mqtt_utils_set_path_downstream_to_upstream(char *topic) {
   topic_out[topic_out_size - 1] = '\0';
   return topic_out;
 }
+
+char *mt_mqtt_utils_new_module_topic(char *module_id) {
+  esp_err_t err = ESP_OK;
+  char *topic = malloc(256);
+
+  if (module_id == NULL) {
+    ESP_LOGE(TAG, "%4d %s module_id NULL", __LINE__, __func__);
+    err = ESP_ERR_INVALID_ARG;
+    goto EXIT;
+  }
+
+  sprintf(topic, "mt/modules/%s/+/sessions/+/downstream", module_id);
+
+EXIT:
+  if (err != ESP_OK) {
+    free(topic);
+    topic = NULL;
+  }
+  return topic;
+}
+
+char *mt_mqtt_utils_convert_path_unarycall_req_to_res(char *topic,
+                                                      char *session_id) {
+  char *topic_out = NULL;
+  int begin_offset = 0;
+  int topic_size = 0;
+  int match = 0;
+
+  if (topic == NULL) {
+    ESP_LOGE(TAG, "%4d %s topic NULL", __LINE__, __func__);
+    return NULL;
+  }
+  topic_size = strlen(topic);
+
+  if (session_id == NULL) {
+    ESP_LOGE(TAG, "%4d %s session_id NULL", __LINE__, __func__);
+    return NULL;
+  }
+
+  for (int i = topic_size - 1; i >= 0; i--) {
+    if (topic[i] == '/') {
+      match++;
+    }
+    if (match == 2) {
+      begin_offset = i + 1;
+      break;
+    }
+  }
+
+  if (match != 2) {
+    ESP_LOGE(TAG, "%4d %s unexcept topic:%s", __LINE__, __func__, topic);
+    return NULL;
+  }
+
+  int out_size = begin_offset + strlen(session_id) + strlen("/upstream") + 1;
+
+  topic_out = malloc(out_size);
+
+  memcpy(topic_out, topic, begin_offset);
+  memcpy(topic_out + begin_offset, session_id, strlen(session_id));
+  memcpy(topic_out + begin_offset + strlen(session_id), "/upstream",
+         strlen("/upstream"));
+  topic_out[out_size - 1] = '\0';
+
+  return topic_out;
+}
+
+char *mt_mqtt_utils_new_device_topic(char *device_id) {
+  esp_err_t err = ESP_OK;
+  char *topic = malloc(256);
+
+  if (device_id == NULL) {
+    ESP_LOGE(TAG, "%4d %s device_id NULL", __LINE__, __func__);
+    err = ESP_ERR_INVALID_ARG;
+    goto EXIT;
+  }
+
+  sprintf(topic, "mt/devices/%s/+/sessions/+/downstream", device_id);
+
+EXIT:
+  if (err != ESP_OK) {
+    free(topic);
+    topic = NULL;
+  }
+  return topic;
+}

@@ -17,9 +17,11 @@ PROTOBUF_C__BEGIN_DECLS
 #include "google/protobuf/empty.pb-c.h"
 
 typedef struct _MtCharge001__Charge MtCharge001__Charge;
-typedef struct _MtCharge001__State MtCharge001__State;
+typedef struct _MtCharge001__State1 MtCharge001__State1;
+typedef struct _MtCharge001__State2 MtCharge001__State2;
 typedef struct _MtCharge001__SetRes MtCharge001__SetRes;
 typedef struct _MtCharge001__SetChargeReq MtCharge001__SetChargeReq;
+typedef struct _MtCharge001__GetStatesRes MtCharge001__GetStatesRes;
 typedef struct _MtCharge001__GetStateRes MtCharge001__GetStateRes;
 
 
@@ -52,7 +54,26 @@ struct  _MtCharge001__Charge
     , 0,0, 0,0, 0,0 }
 
 
-struct  _MtCharge001__State
+struct  _MtCharge001__State1
+{
+  ProtobufCMessage base;
+  /*
+   * 端口编号
+   */
+  protobuf_c_boolean has_port;
+  int32_t port;
+  /*
+   * 端口状态
+   */
+  protobuf_c_boolean has_state;
+  int32_t state;
+};
+#define MT_CHARGE001__STATE1__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&mt_charge001__state1__descriptor) \
+    , 0,0, 0,0 }
+
+
+struct  _MtCharge001__State2
 {
   ProtobufCMessage base;
   /*
@@ -76,8 +97,8 @@ struct  _MtCharge001__State
   protobuf_c_boolean has_power;
   int32_t power;
 };
-#define MT_CHARGE001__STATE__INIT \
- { PROTOBUF_C_MESSAGE_INIT (&mt_charge001__state__descriptor) \
+#define MT_CHARGE001__STATE2__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&mt_charge001__state2__descriptor) \
     , 0,0, 0,0, 0,0, 0,0 }
 
 
@@ -103,9 +124,11 @@ struct  _MtCharge001__SetChargeReq
     , NULL }
 
 
-struct  _MtCharge001__GetStateRes
+struct  _MtCharge001__GetStatesRes
 {
   ProtobufCMessage base;
+  protobuf_c_boolean has_rescode;
+  int32_t rescode;
   /*
    *端口总数
    */
@@ -114,12 +137,27 @@ struct  _MtCharge001__GetStateRes
   /*
    * 端口状态
    */
-  size_t n_state;
-  MtCharge001__State **state;
+  size_t n_states;
+  MtCharge001__State1 **states;
+};
+#define MT_CHARGE001__GET_STATES_RES__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&mt_charge001__get_states_res__descriptor) \
+    , 0,0, 0,0, 0,NULL }
+
+
+struct  _MtCharge001__GetStateRes
+{
+  ProtobufCMessage base;
+  protobuf_c_boolean has_rescode;
+  int32_t rescode;
+  /*
+   * 端口状态
+   */
+  MtCharge001__State2 *state;
 };
 #define MT_CHARGE001__GET_STATE_RES__INIT \
  { PROTOBUF_C_MESSAGE_INIT (&mt_charge001__get_state_res__descriptor) \
-    , 0,0, 0,NULL }
+    , 0,0, NULL }
 
 
 /* MtCharge001__Charge methods */
@@ -141,24 +179,43 @@ MtCharge001__Charge *
 void   mt_charge001__charge__free_unpacked
                      (MtCharge001__Charge *message,
                       ProtobufCAllocator *allocator);
-/* MtCharge001__State methods */
-void   mt_charge001__state__init
-                     (MtCharge001__State         *message);
-size_t mt_charge001__state__get_packed_size
-                     (const MtCharge001__State   *message);
-size_t mt_charge001__state__pack
-                     (const MtCharge001__State   *message,
+/* MtCharge001__State1 methods */
+void   mt_charge001__state1__init
+                     (MtCharge001__State1         *message);
+size_t mt_charge001__state1__get_packed_size
+                     (const MtCharge001__State1   *message);
+size_t mt_charge001__state1__pack
+                     (const MtCharge001__State1   *message,
                       uint8_t             *out);
-size_t mt_charge001__state__pack_to_buffer
-                     (const MtCharge001__State   *message,
+size_t mt_charge001__state1__pack_to_buffer
+                     (const MtCharge001__State1   *message,
                       ProtobufCBuffer     *buffer);
-MtCharge001__State *
-       mt_charge001__state__unpack
+MtCharge001__State1 *
+       mt_charge001__state1__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data);
-void   mt_charge001__state__free_unpacked
-                     (MtCharge001__State *message,
+void   mt_charge001__state1__free_unpacked
+                     (MtCharge001__State1 *message,
+                      ProtobufCAllocator *allocator);
+/* MtCharge001__State2 methods */
+void   mt_charge001__state2__init
+                     (MtCharge001__State2         *message);
+size_t mt_charge001__state2__get_packed_size
+                     (const MtCharge001__State2   *message);
+size_t mt_charge001__state2__pack
+                     (const MtCharge001__State2   *message,
+                      uint8_t             *out);
+size_t mt_charge001__state2__pack_to_buffer
+                     (const MtCharge001__State2   *message,
+                      ProtobufCBuffer     *buffer);
+MtCharge001__State2 *
+       mt_charge001__state2__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data);
+void   mt_charge001__state2__free_unpacked
+                     (MtCharge001__State2 *message,
                       ProtobufCAllocator *allocator);
 /* MtCharge001__SetRes methods */
 void   mt_charge001__set_res__init
@@ -198,6 +255,25 @@ MtCharge001__SetChargeReq *
 void   mt_charge001__set_charge_req__free_unpacked
                      (MtCharge001__SetChargeReq *message,
                       ProtobufCAllocator *allocator);
+/* MtCharge001__GetStatesRes methods */
+void   mt_charge001__get_states_res__init
+                     (MtCharge001__GetStatesRes         *message);
+size_t mt_charge001__get_states_res__get_packed_size
+                     (const MtCharge001__GetStatesRes   *message);
+size_t mt_charge001__get_states_res__pack
+                     (const MtCharge001__GetStatesRes   *message,
+                      uint8_t             *out);
+size_t mt_charge001__get_states_res__pack_to_buffer
+                     (const MtCharge001__GetStatesRes   *message,
+                      ProtobufCBuffer     *buffer);
+MtCharge001__GetStatesRes *
+       mt_charge001__get_states_res__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data);
+void   mt_charge001__get_states_res__free_unpacked
+                     (MtCharge001__GetStatesRes *message,
+                      ProtobufCAllocator *allocator);
 /* MtCharge001__GetStateRes methods */
 void   mt_charge001__get_state_res__init
                      (MtCharge001__GetStateRes         *message);
@@ -222,14 +298,20 @@ void   mt_charge001__get_state_res__free_unpacked
 typedef void (*MtCharge001__Charge_Closure)
                  (const MtCharge001__Charge *message,
                   void *closure_data);
-typedef void (*MtCharge001__State_Closure)
-                 (const MtCharge001__State *message,
+typedef void (*MtCharge001__State1_Closure)
+                 (const MtCharge001__State1 *message,
+                  void *closure_data);
+typedef void (*MtCharge001__State2_Closure)
+                 (const MtCharge001__State2 *message,
                   void *closure_data);
 typedef void (*MtCharge001__SetRes_Closure)
                  (const MtCharge001__SetRes *message,
                   void *closure_data);
 typedef void (*MtCharge001__SetChargeReq_Closure)
                  (const MtCharge001__SetChargeReq *message,
+                  void *closure_data);
+typedef void (*MtCharge001__GetStatesRes_Closure)
+                 (const MtCharge001__GetStatesRes *message,
                   void *closure_data);
 typedef void (*MtCharge001__GetStateRes_Closure)
                  (const MtCharge001__GetStateRes *message,
@@ -245,6 +327,10 @@ struct _MtCharge001__Service_Service
                      const MtCharge001__SetChargeReq *input,
                      MtCharge001__SetRes_Closure closure,
                      void *closure_data);
+  void (*get_states)(MtCharge001__Service_Service *service,
+                     const Google__Protobuf__Empty *input,
+                     MtCharge001__GetStatesRes_Closure closure,
+                     void *closure_data);
   void (*get_state)(MtCharge001__Service_Service *service,
                     const Google__Protobuf__Empty *input,
                     MtCharge001__GetStateRes_Closure closure,
@@ -258,10 +344,15 @@ void mt_charge001__service__init (MtCharge001__Service_Service *service,
 #define MT_CHARGE001__SERVICE__INIT(function_prefix__) \
     { MT_CHARGE001__SERVICE__BASE_INIT,\
       function_prefix__ ## set_charge,\
+      function_prefix__ ## get_states,\
       function_prefix__ ## get_state  }
 void mt_charge001__service__set_charge(ProtobufCService *service,
                                        const MtCharge001__SetChargeReq *input,
                                        MtCharge001__SetRes_Closure closure,
+                                       void *closure_data);
+void mt_charge001__service__get_states(ProtobufCService *service,
+                                       const Google__Protobuf__Empty *input,
+                                       MtCharge001__GetStatesRes_Closure closure,
                                        void *closure_data);
 void mt_charge001__service__get_state(ProtobufCService *service,
                                       const Google__Protobuf__Empty *input,
@@ -271,9 +362,11 @@ void mt_charge001__service__get_state(ProtobufCService *service,
 /* --- descriptors --- */
 
 extern const ProtobufCMessageDescriptor mt_charge001__charge__descriptor;
-extern const ProtobufCMessageDescriptor mt_charge001__state__descriptor;
+extern const ProtobufCMessageDescriptor mt_charge001__state1__descriptor;
+extern const ProtobufCMessageDescriptor mt_charge001__state2__descriptor;
 extern const ProtobufCMessageDescriptor mt_charge001__set_res__descriptor;
 extern const ProtobufCMessageDescriptor mt_charge001__set_charge_req__descriptor;
+extern const ProtobufCMessageDescriptor mt_charge001__get_states_res__descriptor;
 extern const ProtobufCMessageDescriptor mt_charge001__get_state_res__descriptor;
 extern const ProtobufCServiceDescriptor mt_charge001__service__descriptor;
 

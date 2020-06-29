@@ -12,9 +12,11 @@
 static const char *TAG = "MT_MQTT";
 
 // global func ================================================================
+
 esp_err_t mt_mqtt_pub_msg(char *topic, uint8_t *buf, int size) {
   esp_err_t err = ESP_OK;
   char *net_type = NULL;
+  int match = 0;
 
   net_type = mt_nvs_config_get_net_type();
   if (net_type == NULL) {
@@ -24,20 +26,30 @@ esp_err_t mt_mqtt_pub_msg(char *topic, uint8_t *buf, int size) {
   }
 
   if (strstr(net_type, "lan")) {
+    match++;
     err = mqtt_pub_msg(topic, buf, size);
     if (err != ESP_OK) {
       ESP_LOGE(TAG, "%4d %s mqtt_pub_msg failed", __LINE__, __func__);
-      return ESP_ERR_INVALID_RESPONSE;
+      err = ESP_ERR_INVALID_RESPONSE;
+      goto EXIT;
     }
   }
 
   if (strstr(net_type, "air720h")) {
+    match++;
     err = rs232_sim_air720h_mqtt_pub(topic, buf, size);
     if (err != ESP_OK) {
       ESP_LOGE(TAG, "%4d %s rs232_sim_air720h_mqtt_pub failed", __LINE__,
                __func__);
-      return ESP_ERR_INVALID_RESPONSE;
+      err = ESP_ERR_INVALID_RESPONSE;
+      goto EXIT;
     }
+  }
+
+  if (match <= 0) {
+    ESP_LOGE(TAG, "%4d %s unmatch net_type:%s", __LINE__, __func__, net_type);
+    err = ESP_ERR_INVALID_ARG;
+    goto EXIT;
   }
 
 EXIT:

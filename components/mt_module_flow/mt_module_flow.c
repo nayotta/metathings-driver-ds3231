@@ -758,6 +758,46 @@ uint8_t *mt_module_flow_pack_frame(mt_module_flow_struct_group_t *value_in,
   return frame_req_buf;
 }
 
+uint8_t *mt_module_flow_repack_frame_with_session(uint8_t *buf_in, int size_in,
+                                                  char *session_id,
+                                                  int *size_out) {
+  uint8_t *buf_out = NULL;
+  PushFrameToFlowRequest *frame_req = NULL;
+
+  // arg check
+  if (buf_in == NULL) {
+    ESP_LOGE(TAG, "%4d %s buf_in NULL", __LINE__, __func__);
+    return NULL;
+  }
+  if (session_id == NULL) {
+    ESP_LOGE(TAG, "%4d %s session_id NULL", __LINE__, __func__);
+    return NULL;
+  }
+
+  // unpack
+  frame_req = push_frame_to_flow_request__unpack(NULL, size_in, buf_in);
+  if (frame_req == NULL) {
+    ESP_LOGE(TAG, "%4d %s push_frame_to_flow_request__unpack failed", __LINE__,
+             __func__);
+    return NULL;
+  }
+
+  google__protobuf__string_value__init(frame_req->id);
+  int session_size = strlen(session_id) + 1;
+  frame_req->id->value = malloc(session_size);
+  memcpy(frame_req->id->value, session_id, session_size);
+
+  // pack frame
+  *size_out = push_frame_to_flow_request__get_packed_size(frame_req);
+  buf_out = malloc(*size_out);
+  push_frame_to_flow_request__pack(frame_req, buf_out);
+
+  // free
+  push_frame_to_flow_request__free_unpacked(frame_req, NULL);
+
+  return buf_out;
+}
+
 esp_err_t mt_module_flow_sent_msg(mt_module_flow_t *module_flow,
                                   mt_module_flow_struct_group_t *group) {
   esp_err_t err = ESP_OK;
