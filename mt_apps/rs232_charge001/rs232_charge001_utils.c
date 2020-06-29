@@ -88,9 +88,9 @@ rs232_charge001_msg_t *rs232_chrage001_utils_unmarshal_buf(uint8_t *buf,
   }
 
   // check head
-  if (buf[0] != 0xEE) {
-    ESP_LOGE(TAG, "%4d %s buf[0]:%2x not equal 0xEE", __LINE__, __func__,
-             buf[0]);
+  if (!((buf[0] == 0xEE) || (buf[0] == 0x66))) {
+    ESP_LOGE(TAG, "%4d %s buf[0]:%2x not equal 0xEE or 0x66", __LINE__,
+             __func__, buf[0]);
     err = ESP_ERR_INVALID_ARG;
     goto EXIT;
   }
@@ -113,7 +113,7 @@ rs232_charge001_msg_t *rs232_chrage001_utils_unmarshal_buf(uint8_t *buf,
 
   // save buf
   msg->buf = malloc(msg->size);
-    memcpy(msg->buf, buf + 9, msg->size);
+  memcpy(msg->buf, buf + 9, msg->size);
 
   // check sum
   uint8_t sum = rs232_charge001_sum(buf, size);
