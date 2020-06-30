@@ -4,6 +4,8 @@
 #include "esp_err.h"
 #include "esp_log.h"
 
+#include "mt_module_flow.h"
+
 // define =====================================================================
 
 typedef enum {
@@ -70,5 +72,7 @@ esp_err_t rs232_charge001_set_charge(int32_t port, int32_t money, int32_t time,
 
 // complex api
 rs232_charge001_states2_t *rs232_charge001_get_states2();
+
+mt_module_flow_struct_group_t *rs232_charge001_get_flow_data();
 
 #endif

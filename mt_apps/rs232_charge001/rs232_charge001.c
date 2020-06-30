@@ -359,3 +359,28 @@ rs232_charge001_states2_t *rs232_charge001_get_states2() {
 
   return states2;
 }
+
+mt_module_flow_struct_group_t *rs232_charge001_get_flow_data() {
+  rs232_charge001_states2_t *state2 = rs232_charge001_get_states2();
+  if (state2 == NULL) {
+    ESP_LOGE(TAG, "%4d %s rs232_charge001_get_states2 failed", __LINE__,
+             __func__);
+    return NULL;
+  }
+
+  mt_module_flow_struct_group_t *data_out =
+      mt_module_flow_new_struct_group(state2->num * 2);
+  for (int i = 0; i < state2->num; i++) {
+    // state
+    data_out->value[i * 2]->type = GOOGLE__PROTOBUF__VALUE__KIND_NUMBER_VALUE;
+    data_out->value[i * 2]->number_value = state2->states[i]->state * 1.0;
+
+    // lefttime
+    data_out->value[i * 2 + 1]->type =
+        GOOGLE__PROTOBUF__VALUE__KIND_NUMBER_VALUE;
+    data_out->value[i * 2 + 1]->number_value =
+        state2->states[i]->lefttime * 1.0;
+  }
+
+  return data_out;
+}

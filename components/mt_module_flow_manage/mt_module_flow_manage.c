@@ -224,3 +224,23 @@ esp_err_t mt_module_flow_manage_get_index_by_module_id(char *module_id,
 
   return ESP_OK;
 }
+
+mt_module_flow_t *mt_module_flow_manage_get_flow_by_flowid(int flow_index) {
+  if (FLOW_MANAGE == NULL)
+    return NULL;
+
+  for (int i = 0; i < FLOW_MANAGE->flows_size; i++) {
+    if (FLOW_MANAGE->flows == NULL) {
+      continue;
+    }
+
+    if (FLOW_MANAGE->flows[i] == NULL) {
+      continue;
+    }
+
+    if (FLOW_MANAGE->flows[i]->flow_index == flow_index)
+      return FLOW_MANAGE->flows[i];
+  }
+
+  return NULL;
+}

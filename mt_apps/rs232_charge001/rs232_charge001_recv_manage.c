@@ -2,6 +2,8 @@
 #include "rs232_charge001.h"
 #include "rs232_charge001_recv_manage_get_state.h"
 #include "rs232_charge001_recv_manage_get_states.h"
+#include "rs232_charge001_recv_manage_notify_coin.h"
+#include "rs232_charge001_recv_manage_notify_over.h"
 #include "rs232_charge001_recv_manage_set_charge.h"
 #include "rs232_charge001_utils.h"
 
@@ -24,6 +26,12 @@ rs232_charge001_recv_manage_msg_dispatch(rs232_charge001_msg_t *msg) {
     break;
   case RS232_CHARGE001_CMD_TYPE_GET_STATES:
     rs232_charge001_recv_manage_get_states_parse(msg->buf, msg->size);
+    break;
+  case RS232_CHARGE001_CMD_TYPE_NOTIFY_OVER:
+    rs232_charge001_recv_manage_notify_over_push_flow(msg->buf, msg->size);
+    break;
+  case RS232_CHARGE001_CMD_TYPE_NOTIFY_COIN:
+    rs232_charge001_recv_manage_notify_coin_push_flow(msg->buf, msg->size);
     break;
   default:
     ESP_LOGE(TAG, "%4d %s unexcept cmd type:%d", __LINE__, __func__, msg->cmd);

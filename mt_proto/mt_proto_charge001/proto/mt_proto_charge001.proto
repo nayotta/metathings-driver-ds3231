@@ -7,7 +7,7 @@ import "google/protobuf/empty.proto";
 service Service {
   rpc SetCharge(SetChargeReq) returns (SetRes) {}
   rpc GetStates(google.protobuf.Empty) returns (GetStatesRes) {}
-  rpc GetState(google.protobuf.Empty) returns (GetStateRes) {}
+  rpc GetState(GetStateReq) returns (GetStateRes) {}
 }
 
 message Charge {
@@ -34,6 +34,10 @@ message SetRes {
 }
 
 message SetChargeReq { Charge charge = 1; }
+
+message GetStateReq {
+  int32 port = 1; // 端口编号
+}
 
 message GetStatesRes {
   int32 rescode = 1;
