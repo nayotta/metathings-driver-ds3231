@@ -35,7 +35,7 @@ esp_err_t mt_mqtt_pub_msg(char *topic, uint8_t *buf, int size) {
     }
   }
 
-  if (strstr(net_type, "air720h")) {
+  if (strstr(net_type, "4g")) {
     match++;
     err = rs232_sim_air720h_mqtt_pub(topic, buf, size);
     if (err != ESP_OK) {
@@ -79,7 +79,7 @@ esp_err_t mt_mqtt_init(int mod_index, char *module_id, uint64_t session_id,
     }
   }
 
-  if (strstr(net_type, "air720h")) {
+  if (strstr(net_type, "4g")) {
     err = rs232_sim_air720h_mqtt_init(mod_index, module_id, session_id,
                                       device_id, handle);
     if (err != ESP_OK) {
@@ -113,7 +113,7 @@ esp_err_t mt_mqtt_update_session_id(uint64_t session_id) {
     }
   }
 
-  if (strstr(net_type, "air720h")) {
+  if (strstr(net_type, "4g")) {
     // TODO(ZH) update session
     err = ESP_ERR_INVALID_RESPONSE;
     goto EXIT;

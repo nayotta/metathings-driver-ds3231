@@ -131,7 +131,7 @@ struct  _MtCharge001__GetStateReq
 struct  _MtCharge001__GetStatesRes
 {
   ProtobufCMessage base;
-  int32_t rescode;
+  int32_t code;
   /*
    *端口总数
    */
@@ -140,7 +140,7 @@ struct  _MtCharge001__GetStatesRes
    * 端口状态
    */
   size_t n_states;
-  MtCharge001__State1 **states;
+  MtCharge001__State2 **states;
 };
 #define MT_CHARGE001__GET_STATES_RES__INIT \
  { PROTOBUF_C_MESSAGE_INIT (&mt_charge001__get_states_res__descriptor) \
@@ -150,7 +150,7 @@ struct  _MtCharge001__GetStatesRes
 struct  _MtCharge001__GetStateRes
 {
   ProtobufCMessage base;
-  int32_t rescode;
+  int32_t code;
   /*
    * 端口状态
    */

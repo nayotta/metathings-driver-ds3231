@@ -669,8 +669,11 @@ uint8_t *mt_module_flow_pack_frame(mt_module_flow_struct_group_t *value_in,
   uint8_t frame_num = 0;
   uint8_t frame_count = 0;
 
-  if (value_in->size <= 0)
+  if (value_in->size <= 0) {
+    ESP_LOGE(TAG, "%4d %s value_in->size:%d error", __LINE__, __func__,
+             value_in->size);
     return NULL;
+  }
 
   // frame size which key not NULL
   for (int i = 0; i < value_in->size; i++) {
@@ -679,8 +682,10 @@ uint8_t *mt_module_flow_pack_frame(mt_module_flow_struct_group_t *value_in,
     }
   }
 
-  if (frame_num == 0)
+  if (frame_num == 0) {
+    ESP_LOGE(TAG, "%4d %s frame_num zero", __LINE__, __func__);
     return NULL;
+  }
 
   PushFrameToFlowRequest frame_req = PUSH_FRAME_TO_FLOW_REQUEST__INIT;
 

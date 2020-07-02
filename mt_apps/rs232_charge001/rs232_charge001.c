@@ -338,6 +338,7 @@ EXIT:
 }
 
 rs232_charge001_states2_t *rs232_charge001_get_states2() {
+  esp_err_t err = ESP_OK;
   rs232_charge001_states_t *states1 = NULL;
   rs232_charge001_states2_t *states2 = NULL;
 
@@ -346,6 +347,12 @@ rs232_charge001_states2_t *rs232_charge001_get_states2() {
     ESP_LOGE(TAG, "%4d %s rs232_charge001_get_states failed", __LINE__,
              __func__);
     return NULL;
+  }
+
+  if (states1->num == 0) {
+    ESP_LOGE(TAG, "%4d %s states1->num zero", __LINE__, __func__);
+    err = ESP_ERR_INVALID_ARG;
+    goto EXIT;
   }
 
   states2 = rs232_charge001_new_states2(states1->num);
@@ -357,6 +364,12 @@ rs232_charge001_states2_t *rs232_charge001_get_states2() {
     }
   }
 
+EXIT:
+  rs232_charge001_free_states(states1);
+  if (err != ESP_OK) {
+    rs232_charge001_free_states2(states2);
+    states2 = NULL;
+  }
   return states2;
 }
 
@@ -382,5 +395,6 @@ mt_module_flow_struct_group_t *rs232_charge001_get_flow_data() {
         state2->states[i]->lefttime * 1.0;
   }
 
+  rs232_charge001_free_states2(state2);
   return data_out;
 }

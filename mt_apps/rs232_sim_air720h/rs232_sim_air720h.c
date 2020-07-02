@@ -897,7 +897,7 @@ esp_err_t rs232_sim_air720h_mqtt_init() {
   err = http_lock_take(AIR720H_HTTP_LOCK_TIMEOUT);
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s http_lock_take timeout", __LINE__, __func__);
-    return NULL;
+    return ESP_ERR_INVALID_STATE;
   }
 
   // arg check
@@ -1078,7 +1078,7 @@ esp_err_t rs232_sim_air720h_mqtt_state(int32_t *state) {
   err = http_lock_take(AIR720H_HTTP_LOCK_TIMEOUT);
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s http_lock_take timeout", __LINE__, __func__);
-    return NULL;
+    return ESP_ERR_INVALID_STATE;
   }
 
   rs232_sim_air720h_recv_manage_mqtt_state_reset();
@@ -1105,7 +1105,7 @@ esp_err_t rs232_sim_air720h_mqtt_pub(char *topic, uint8_t *buf, int size) {
   err = http_lock_take(AIR720H_HTTP_LOCK_TIMEOUT);
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s http_lock_take timeout", __LINE__, __func__);
-    return NULL;
+    return ESP_ERR_INVALID_STATE;
   }
 
   hex_str = rs232_sim_air720h_utils_byte_to_hex(buf, size);

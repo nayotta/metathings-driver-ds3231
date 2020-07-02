@@ -1,6 +1,7 @@
 #include "rs232_charge001_recv_manage_notify_coin.h"
 
 #include "mt_module_flow_manage.h"
+#include "mt_utils_string.h"
 
 // static define ==============================================================
 

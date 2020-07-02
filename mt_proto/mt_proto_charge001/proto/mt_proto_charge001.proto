@@ -40,12 +40,12 @@ message GetStateReq {
 }
 
 message GetStatesRes {
-  int32 rescode = 1;
+  int32 code = 1;
   int32 portnum = 2;          //端口总数
-  repeated State1 states = 3; // 端口状态
+  repeated State2 states = 3; // 端口状态
 }
 
 message GetStateRes {
-  int32 rescode = 1;
+  int32 code = 1;
   State2 state = 2; // 端口状态
 }

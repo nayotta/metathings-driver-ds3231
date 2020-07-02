@@ -13,12 +13,18 @@
 #include "rs232_sim_air720h.h"
 #include "rs232_sim_air720h_flow.h"
 
+#include "mt_memory_manage.h"
 #include "mt_module_flow_manage.h"
 #include "mt_module_http.h"
 #include "mt_module_http_utils.h"
 #include "mt_module_lora.h"
 #include "mt_module_mqtt.h"
+#include "mt_nvs_storage.h"
 #include "mt_utils_session.h"
+
+#include "rs232_charge001.h"
+#include "rs232_charge001_module_flow.h"
+#include "rs232_charge001_module_mqtt.h"
 
 // global define ==============================================================
 
@@ -29,10 +35,9 @@ static int SIM_BAUD_RATE = 115200;
 static int SIM_RX_PIN = 15;
 static int SIM_TX_PIN = 13;
 
-static int LORA_UART_NUM = 1;
-static int LORA_BAUD_RATE = 9600;
-static int LORA_RX_PIN = 16;
-static int LORA_TX_PIN = 17;
+static int RS232_UART_NUM = 1;
+static int RS232_RX_PIN = 16;
+static int RS232_TX_PIN = 17;
 
 // gloabal func ===============================================================
 
@@ -43,12 +48,24 @@ void app_main() {
 
   ESP_LOGI(TAG, "test begin");
 
+  // nvs
+  mt_nvs_init();
+
+  mt_memory_manage_task(true);
+
   // serial init
   err = rs232_sim_air720h_serial_init(SIM_UART_NUM, SIM_RX_PIN, SIM_TX_PIN,
                                       SIM_BAUD_RATE);
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s rs232_sim_air720h_serial_init failed", __LINE__,
              __func__);
+    return;
+  }
+
+  // charge001 init
+  err = rs232_charge001_init(RS232_UART_NUM, RS232_RX_PIN, RS232_TX_PIN);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s rs232_charge001_init failed", __LINE__, __func__);
     return;
   }
 
@@ -81,6 +98,7 @@ void app_main() {
              __func__);
     return;
   }
+  rs232_charge001_module_mqtt_init();
 
   // metathings flow
   module_flow = mt_module_flow_new(1, 1, module_http);
@@ -88,8 +106,8 @@ void app_main() {
     ESP_LOGE(TAG, "%4d %s mt_module_flow_new failed", __LINE__, __func__);
     return;
   }
-  module_flow->push_frame_interval = 300 * 1000; // 300 second
-  module_flow->ping_interval = 57 * 1000;        // 57 second
+  module_flow->push_frame_interval = 30 * 1000; // 30 second
+  module_flow->ping_interval = 57 * 1000;       // 57 second
 
   // flow task
   err = rs232_sim_air720h_flow_task(module_flow);
@@ -98,4 +116,6 @@ void app_main() {
              __func__);
     return;
   }
+
+  rs232_charge001_module_flow_task(module_flow);
 }

@@ -5,6 +5,8 @@
 #include "esp_log.h"
 #include "string.h"
 
+#include "mt_proto_charge001.pb-c.h"
+
 // define =====================================================================
 
 typedef struct _rs232_charge001_msg_t {
@@ -19,6 +21,12 @@ typedef struct _rs232_charge001_msg_t {
 rs232_charge001_msg_t *rs232_charge001_utils_new_msg();
 
 void rs232_charge001_utils_free_msg(rs232_charge001_msg_t *msg);
+
+esp_err_t
+rs232_charge001_utils_check_set_charge_req(MtCharge001__SetChargeReq *req);
+
+esp_err_t
+rs232_charge001_utils_check_get_state_req(MtCharge001__GetStateReq *req);
 
 // func =======================================================================
 

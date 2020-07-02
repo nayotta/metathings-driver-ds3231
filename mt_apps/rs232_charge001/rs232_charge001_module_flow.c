@@ -14,17 +14,12 @@ static const char *TAG = "rs232_CHARGE001_MODULE_FLOW";
 
 static void rs232_charge001_flow_loop(mt_module_flow_t *module_flow) {
   esp_err_t err = ESP_OK;
-  int64_t begin = esp_timer_get_time() / 1000000;
-  int64_t end = 0;
-  mt_module_flow_struct_group_t *data_save = NULL;
   mt_module_flow_struct_group_t *data = NULL;
-  mt_module_flow_struct_group_t *data_diff = NULL;
-  bool change = false;
 
   while (true) {
-    data = rs232_charge001_get_states2();
+    data = rs232_charge001_get_flow_data();
     if (data == NULL) {
-      ESP_LOGE(TAG, "%4d %s rs232_charge001_get_states2 failed", __LINE__,
+      ESP_LOGE(TAG, "%4d %s rs232_charge001_get_flow_data failed", __LINE__,
                __func__);
     }
 
@@ -33,6 +28,9 @@ static void rs232_charge001_flow_loop(mt_module_flow_t *module_flow) {
       ESP_LOGE(TAG, "%4d %s mt_module_flow_sent_msg failed", __LINE__,
                __func__);
     }
+
+    mt_module_flow_free_struct_group(data);
+    data = NULL;
 
     vTaskDelay(module_flow->push_frame_interval / portTICK_PERIOD_MS);
   }
@@ -43,8 +41,4 @@ static void rs232_charge001_flow_loop(mt_module_flow_t *module_flow) {
 void rs232_charge001_module_flow_task(mt_module_flow_t *module_flow) {
   xTaskCreate((TaskFunction_t)rs232_charge001_flow_loop, "MODULE_FLOW",
               8 * 1024, module_flow, 10, NULL);
-}
-
-void modbus_charge001_module_flow_notify(uint8_t *buf, uint32_t size){
-    
 }

@@ -142,7 +142,7 @@ esp_err_t mt_module_flow_manage_add(mt_module_flow_t *flow) {
 
   temp_manage = FLOW_MANAGE;
   FLOW_MANAGE =
-      malloc((temp_manage->flows_size + 1) * sizeof(mt_module_flow_manage_t *));
+      malloc((temp_manage->flows_size + 1) * sizeof(mt_module_flow_manage_t));
   FLOW_MANAGE->flows_size = temp_manage->flows_size + 1;
   ESP_LOGI(TAG, "%4d %s new flow size=%d", __LINE__, __func__,
            FLOW_MANAGE->flows_size);
@@ -225,7 +225,7 @@ esp_err_t mt_module_flow_manage_get_index_by_module_id(char *module_id,
   return ESP_OK;
 }
 
-mt_module_flow_t *mt_module_flow_manage_get_flow_by_flowid(int flow_index) {
+mt_module_flow_t *mt_module_flow_manage_get_flow_by_flow_index(int flow_index) {
   if (FLOW_MANAGE == NULL)
     return NULL;
 

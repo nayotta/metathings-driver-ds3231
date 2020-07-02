@@ -689,12 +689,12 @@ const ProtobufCMessageDescriptor mt_charge001__get_state_req__descriptor =
 static const ProtobufCFieldDescriptor mt_charge001__get_states_res__field_descriptors[3] =
 {
   {
-    "rescode",
+    "code",
     1,
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_INT32,
     0,   /* quantifier_offset */
-    offsetof(MtCharge001__GetStatesRes, rescode),
+    offsetof(MtCharge001__GetStatesRes, code),
     NULL,
     NULL,
     0,             /* flags */
@@ -719,15 +719,15 @@ static const ProtobufCFieldDescriptor mt_charge001__get_states_res__field_descri
     PROTOBUF_C_TYPE_MESSAGE,
     offsetof(MtCharge001__GetStatesRes, n_states),
     offsetof(MtCharge001__GetStatesRes, states),
-    &mt_charge001__state1__descriptor,
+    &mt_charge001__state2__descriptor,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
 };
 static const unsigned mt_charge001__get_states_res__field_indices_by_name[] = {
+  0,   /* field[0] = code */
   1,   /* field[1] = portnum */
-  0,   /* field[0] = rescode */
   2,   /* field[2] = states */
 };
 static const ProtobufCIntRange mt_charge001__get_states_res__number_ranges[1 + 1] =
@@ -753,12 +753,12 @@ const ProtobufCMessageDescriptor mt_charge001__get_states_res__descriptor =
 static const ProtobufCFieldDescriptor mt_charge001__get_state_res__field_descriptors[2] =
 {
   {
-    "rescode",
+    "code",
     1,
     PROTOBUF_C_LABEL_NONE,
     PROTOBUF_C_TYPE_INT32,
     0,   /* quantifier_offset */
-    offsetof(MtCharge001__GetStateRes, rescode),
+    offsetof(MtCharge001__GetStateRes, code),
     NULL,
     NULL,
     0,             /* flags */
@@ -778,7 +778,7 @@ static const ProtobufCFieldDescriptor mt_charge001__get_state_res__field_descrip
   },
 };
 static const unsigned mt_charge001__get_state_res__field_indices_by_name[] = {
-  0,   /* field[0] = rescode */
+  0,   /* field[0] = code */
   1,   /* field[1] = state */
 };
 static const ProtobufCIntRange mt_charge001__get_state_res__number_ranges[1 + 1] =

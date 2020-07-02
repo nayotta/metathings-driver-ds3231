@@ -77,7 +77,8 @@
                 "${workspaceFolder}/components/mt_ethernet",
                 "${workspaceFolder}/components/mt_smartconfig",
                 "${workspaceFolder}/mt_apps/gpio_light",
-                "D:/7esp32/msys32/home/zhanghui/work/metathings-esp32-lora-charge001/metathings-esp32-lib/components/gpio_light"
+                "D:/7esp32/msys32/home/zhanghui/work/metathings-esp32-lora-charge001/metathings-esp32-lib/components/gpio_light",
+                "D:/7esp32/msys32/home/zhanghui/work/metathings-esp32-airswitch001/metathings-esp32-lib/components/mt_memory_manage"
             ],
             "defines": [
                 "_DEBUG",
