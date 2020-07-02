@@ -35,11 +35,14 @@ mt_nvs_flows_t *mt_nvs_config_new_flows();
 
 mt_nvs_module_t *mt_nvs_config_new_module();
 
+void mt_nvs_config_free_host(mt_nvs_host_t *host);
+
 void mt_nvs_config_free_flows(mt_nvs_flows_t *flows);
 
 void mt_nvs_config_free_module(mt_nvs_module_t *module);
 
-// func =======================================================================
+// func
+// =======================================================================
 
 mt_nvs_host_t *mt_nvs_config_get_host_config();
 
