@@ -7,4 +7,6 @@
 
 void rs232_charge001_module_flow_task(mt_module_flow_t *module_flow);
 
+void rs232_charge001_module_notify_state_task(int32_t port);
+
 #endif

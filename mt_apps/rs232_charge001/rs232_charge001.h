@@ -75,4 +75,7 @@ rs232_charge001_states2_t *rs232_charge001_get_states2();
 
 mt_module_flow_struct_group_t *rs232_charge001_get_flow_data();
 
+mt_module_flow_struct_group_t *
+rs232_charge001_get_port_notify_data(int32_t port);
+
 #endif

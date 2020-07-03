@@ -65,8 +65,8 @@ rs232_charge001_state2_t *rs232_charge001_recv_manage_get_state_response() {
 
   res = malloc(sizeof(rs232_charge001_state2_t));
   res->port = temp_buf[0];
-  res->lefttime = temp_buf[1] * 0xFF + temp_buf[2];
-  res->power = (temp_buf[3] * 0xFF + temp_buf[4]) / 10;
+  res->lefttime = temp_buf[1] * 256 + temp_buf[2];
+  res->power = (temp_buf[3] * 256 + temp_buf[4]) / 10;
   if (res->lefttime == 0) {
     res->state = 1;
   } else {

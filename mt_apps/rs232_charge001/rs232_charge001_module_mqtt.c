@@ -15,6 +15,7 @@
 #include "mt_utils_error.h"
 
 #include "rs232_charge001.h"
+#include "rs232_charge001_module_flow.h"
 #include "rs232_charge001_utils.h"
 
 // global config ==============================================================
@@ -66,6 +67,8 @@ static void rs232_charge001_mqtt_process_set_charge(
     res.code = MT_ERR_INVALID_RESPONSE;
     goto ERROR;
   }
+
+  rs232_charge001_module_notify_state_task(req->charge->port);
 
 ERROR:
   // response

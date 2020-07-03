@@ -417,6 +417,7 @@ rs232_charge001_states2_t *rs232_charge001_get_states2() {
     if (states2->states[i] == NULL) {
       ESP_LOGE(TAG, "%4d %s rs232_charge001_get_state %d failed", __LINE__,
                __func__, states1->states[i]->port);
+      states2->states[i]->state = states1->states[i]->state;
     }
   }
 
@@ -468,5 +469,45 @@ mt_module_flow_struct_group_t *rs232_charge001_get_flow_data() {
   }
 
   rs232_charge001_free_states2(state2);
+  return data_out;
+}
+
+mt_module_flow_struct_group_t *
+rs232_charge001_get_port_notify_data(int32_t port) {
+  rs232_charge001_state2_t *state2 = rs232_charge001_get_state(port);
+  int count = 0;
+  char key[24] = "";
+  if (state2 == NULL) {
+    ESP_LOGE(TAG, "%4d %s rs232_charge001_get_state port:%d failed", __LINE__,
+             __func__, port);
+    return NULL;
+  }
+
+  mt_module_flow_struct_group_t *data_out = mt_module_flow_new_struct_group(4);
+
+  // notify
+  data_out->value[count]->key = mt_utils_string_copy("notify");
+  data_out->value[count]->type = GOOGLE__PROTOBUF__VALUE__KIND_BOOL_VALUE;
+  data_out->value[count++]->bool_value = true;
+
+  // state
+  sprintf(key, "s%d", port);
+  data_out->value[count]->key = mt_utils_string_copy(key);
+  data_out->value[count]->type = GOOGLE__PROTOBUF__VALUE__KIND_NUMBER_VALUE;
+  data_out->value[count++]->number_value = state2->state;
+
+  // lefttime
+  sprintf(key, "t%d", port);
+  data_out->value[count]->key = mt_utils_string_copy(key);
+  data_out->value[count]->type = GOOGLE__PROTOBUF__VALUE__KIND_NUMBER_VALUE;
+  data_out->value[count++]->number_value = state2->lefttime;
+
+  // power
+  sprintf(key, "p%d", port);
+  data_out->value[count]->key = mt_utils_string_copy(key);
+  data_out->value[count]->type = GOOGLE__PROTOBUF__VALUE__KIND_NUMBER_VALUE;
+  data_out->value[count++]->number_value = state2->power;
+
+  rs232_charge001_free_state2(state2);
   return data_out;
 }
