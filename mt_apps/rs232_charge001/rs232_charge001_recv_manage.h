@@ -17,8 +17,8 @@ typedef struct _rs232_charge001_recv_buf_t {
 
 // help func ==================================================================
 
-rs232_charge001_recv_buf_t *rs232_charge001_new_recv_buf(uint8_t *buf,
-                                                         uint32_t size);
+rs232_charge001_recv_buf_t *
+rs232_charge001_new_recv_buf(uint8_t *buf, uint32_t size, uint32_t *left_size);
 
 void rs232_charge001_free_recv_buf(rs232_charge001_recv_buf_t *data);
 

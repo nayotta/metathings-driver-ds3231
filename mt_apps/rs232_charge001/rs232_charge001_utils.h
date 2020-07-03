@@ -45,4 +45,7 @@ uint8_t *rs232_charge001_utils_marshal_get_state(int32_t port,
 
 uint8_t *rs232_charge001_utils_marshal_get_states(int32_t *buf_size);
 
+uint8_t *rs232_charge001_utils_marshal_set_stop(int32_t port,
+                                                int32_t *buf_size);
+
 #endif

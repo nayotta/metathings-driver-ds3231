@@ -1,5 +1,7 @@
 #include "rs232_charge001_utils.h"
 
+#include "rs232_charge001.h"
+
 // static define ==============================================================
 
 static const char *TAG = "RS232_CHARGE001_UTILS";
@@ -210,6 +212,20 @@ uint8_t *rs232_charge001_utils_marshal_get_states(int32_t *buf_size) {
   data[0] = 0x00;
 
   buf_out = rs232_charge001_utils_marshal_buf(1, data, data_size, buf_size);
+
+  return buf_out;
+}
+
+uint8_t *rs232_charge001_utils_marshal_set_stop(int32_t port,
+                                                int32_t *buf_size) {
+  uint8_t *buf_out = NULL;
+  uint8_t data[1] = "";
+  int data_size = 1;
+
+  data[0] = port;
+
+  buf_out = rs232_charge001_utils_marshal_buf(RS232_CHARGE001_CMD_TYPE_SET_STOP,
+                                              data, data_size, buf_size);
 
   return buf_out;
 }

@@ -7,6 +7,7 @@
 #include "rs232_charge001_recv_manage_get_state.h"
 #include "rs232_charge001_recv_manage_get_states.h"
 #include "rs232_charge001_recv_manage_set_charge.h"
+#include "rs232_charge001_recv_manage_set_stop.h"
 #include "rs232_charge001_sent_manage.h"
 #include "rs232_charge001_utils.h"
 #include "rs232_dev.h"
@@ -377,6 +378,70 @@ esp_err_t rs232_charge001_set_charge(int32_t port, int32_t money, int32_t time,
   if (*res_port != port) {
     ESP_LOGE(TAG, "%4d %s res_port:%d but port:%d", __LINE__, __func__,
              *res_port, port);
+    err = ESP_ERR_INVALID_RESPONSE;
+    goto EXIT;
+  }
+
+EXIT:
+  if (buf_sent != NULL) {
+    free(buf_sent);
+  }
+
+  rs232_charge001_lock_release();
+
+  return err;
+}
+
+esp_err_t rs232_charge001_set_stop(int32_t port) {
+  esp_err_t err = ESP_OK;
+  uint8_t *buf_sent = NULL;
+  int buf_sent_size = 0;
+  int32_t res_port = 0;
+  int32_t res_time = 0;
+
+  // lock
+  err = rs232_charge001_lock_take(RS232_CHARGE001_LOCK_TIMEOUT);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s rs232_charge001_lock_take timeout", __LINE__,
+             __func__);
+    return err;
+  }
+
+  // marshal cmd
+  buf_sent = rs232_charge001_utils_marshal_set_stop(port, &buf_sent_size);
+  if (buf_sent == NULL) {
+    ESP_LOGE(TAG, "%4d %s rs232_charge001_utils_marshal_set_stop NULL",
+             __LINE__, __func__);
+    err = ESP_ERR_INVALID_RESPONSE;
+    goto EXIT;
+  }
+
+  // reset buf
+  rs232_charge001_recv_manage_set_stop_reset();
+
+  // sent cmd
+  err = rs232_charge001_sent_manage_sent_and_wait_finish(
+      buf_sent, buf_sent_size, RS232_CHARGE001_CMD_TIMEOUT,
+      rs232_charge001_recv_manage_set_stop_finish);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG,
+             "%4d %s rs232_charge001_sent_manage_sent_and_wait_finish failed",
+             __LINE__, __func__);
+    goto EXIT;
+  }
+
+  // get response
+  err = rs232_charge001_recv_manage_set_stop_response(&res_port, &res_time);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s rs232_charge001_recv_manage_set_stop_response failed",
+             __LINE__, __func__);
+    goto EXIT;
+  }
+
+  // parse response
+  if (res_port != port) {
+    ESP_LOGE(TAG, "%4d %s res_port:%d but port:%d", __LINE__, __func__,
+             res_port, port);
     err = ESP_ERR_INVALID_RESPONSE;
     goto EXIT;
   }

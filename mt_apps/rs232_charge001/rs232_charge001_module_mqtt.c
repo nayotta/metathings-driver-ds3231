@@ -59,13 +59,23 @@ static void rs232_charge001_mqtt_process_set_charge(
            __func__, req->charge->port, req->charge->time, req->charge->money);
   int32_t result = 0;
   int32_t res_port = 0;
-  err = rs232_charge001_set_charge(req->charge->port, req->charge->money,
-                                   req->charge->time, &res_port, &result);
-  if (err != ESP_OK || (req->charge->port != res_port)) {
-    ESP_LOGE(TAG, "%4d %s rs232_charge001_set_charge failed", __LINE__,
-             __func__);
-    res.code = MT_ERR_INVALID_RESPONSE;
-    goto ERROR;
+  if (req->charge->time == 0) {
+    err = rs232_charge001_set_stop(req->charge->port);
+    if (err != ESP_OK) {
+      ESP_LOGE(TAG, "%4d %s rs232_charge001_set_stop failed", __LINE__,
+               __func__);
+      res.code = MT_ERR_INVALID_RESPONSE;
+      goto ERROR;
+    }
+  } else {
+    err = rs232_charge001_set_charge(req->charge->port, req->charge->money,
+                                     req->charge->time, &res_port, &result);
+    if (err != ESP_OK || (req->charge->port != res_port)) {
+      ESP_LOGE(TAG, "%4d %s rs232_charge001_set_charge failed", __LINE__,
+               __func__);
+      res.code = MT_ERR_INVALID_RESPONSE;
+      goto ERROR;
+    }
   }
 
   rs232_charge001_module_notify_state_task(req->charge->port);

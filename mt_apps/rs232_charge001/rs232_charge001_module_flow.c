@@ -37,9 +37,11 @@ static void rs232_charge001_flow_loop() {
   }
 }
 
-static void rs232_charge001_module_flow_sent_notify_state_loop(int32_t port) {
+static void
+rs232_charge001_module_flow_sent_notify_state_loop(int32_t *port_in) {
   esp_err_t err = ESP_OK;
   mt_module_flow_struct_group_t *data = NULL;
+  int32_t port = *port_in;
 
   // delay 1s wait open
   vTaskDelay(1000 / portTICK_PERIOD_MS);
@@ -48,7 +50,7 @@ static void rs232_charge001_module_flow_sent_notify_state_loop(int32_t port) {
   if (data == NULL) {
     ESP_LOGE(TAG, "%4d %s rs232_charge001_get_port_notify_data port:%d failed",
              __LINE__, __func__, port);
-    return;
+    goto EXIT;
   }
 
   err = mt_module_flow_sent_msg(MODULE_FLOW, data);
@@ -56,7 +58,9 @@ static void rs232_charge001_module_flow_sent_notify_state_loop(int32_t port) {
     ESP_LOGE(TAG, "%4d %s mt_module_flow_sent_msg failed", __LINE__, __func__);
   }
 
+EXIT:
   mt_module_flow_free_struct_group(data);
+  free(port_in);
   vTaskDelete(NULL);
 }
 
@@ -68,7 +72,10 @@ void rs232_charge001_module_flow_task(mt_module_flow_t *module_flow) {
               8 * 1024, NULL, 10, NULL);
 }
 
-void rs232_charge001_module_notify_state_task(int32_t port) {
-  xTaskCreate((TaskFunction_t)rs232_charge001_flow_loop, "MODULE_FLOW",
-              8 * 1024, port, 10, NULL);
+void rs232_charge001_module_notify_state_task(int32_t port_in) {
+  int32_t *port = malloc(sizeof(int32_t));
+  *port = port_in;
+  xTaskCreate(
+      (TaskFunction_t)rs232_charge001_module_flow_sent_notify_state_loop,
+      "MODULE_FLOW", 8 * 1024, port, 10, NULL);
 }

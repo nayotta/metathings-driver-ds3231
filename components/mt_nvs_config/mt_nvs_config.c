@@ -406,8 +406,6 @@ char *mt_nvs_config_get_net_type() {
     }
   }
 
-  net_type = mt_nvs_read_string_config(key, &size);
-
   return net_type;
 }
 
