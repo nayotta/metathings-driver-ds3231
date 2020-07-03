@@ -5,7 +5,7 @@ flow:
   name: m1
   fields:
     notify:
-      description: 通知消息标记(s0+t0通知)(coin通知)
+      description: 通知消息标记(s1+t1通知)(coin通知)
       driver: charge001
       type: bool
       period: 0
@@ -19,7 +19,15 @@ flow:
       max: 10
     t1:
       description: 开关1剩余时间(开关地址用尾数标记)
-      unit:
+      unit: min
+      driver: charge001
+      type: float
+      period: 0
+      min: 0
+      max: 1000
+    p1:
+      description: 开关1功率(开关地址用尾数标记)
+      unit: min
       driver: charge001
       type: float
       period: 0
@@ -29,5 +37,9 @@ flow:
       description: 投币通知
       unit:
       driver: charge001
-      type: bool
-      period: 0
+      type: float
+    stopReason:
+      description: 停止原因(00-时间到了 01-用户停止 02-空载2分钟停止 03-设备出现故障 04-超出设备功率 06-充电前未接充电器)
+      unit:
+      driver: charge001
+      type: float

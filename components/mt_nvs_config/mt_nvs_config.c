@@ -150,8 +150,8 @@ mt_nvs_host_t *mt_nvs_config_get_host_config() {
       sprintf(host_out->net_type, "eth");
     else if (strcmp(net_type, "wifi") == 0)
       sprintf(host_out->net_type, "wifi");
-    else if (strcmp(net_type, "air720h") == 0)
-      sprintf(host_out->net_type, "air720h");
+    else if (strcmp(net_type, "4g") == 0)
+      sprintf(host_out->net_type, "4g");
     else
       sprintf(host_out->net_type, "wifi");
   }
@@ -192,7 +192,7 @@ esp_err_t mt_nvs_config_set_host_config(mt_nvs_host_t *host) {
 
   if (!(strcmp(host->net_type, "wifi") == 0 ||
         strcmp(host->net_type, "eth") == 0 ||
-        strcmp(host->net_type, "air720h") == 0)) {
+        strcmp(host->net_type, "4g") == 0)) {
     ESP_LOGE(TAG, "%4d %s host->net_type error:%s", __LINE__, __func__,
              host->net_type);
     return ESP_ERR_INVALID_ARG;
@@ -405,8 +405,6 @@ char *mt_nvs_config_get_net_type() {
       return NULL;
     }
   }
-
-  net_type = mt_nvs_read_string_config(key, &size);
 
   return net_type;
 }

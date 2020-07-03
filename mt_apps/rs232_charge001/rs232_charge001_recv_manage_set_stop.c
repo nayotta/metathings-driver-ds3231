@@ -1,17 +1,17 @@
-#include "rs232_charge001_recv_manage_get_state.h"
+#include "rs232_charge001_recv_manage_set_stop.h"
 
 // static define ==============================================================
 
-static const char *TAG = "rs232_charge001_recv_manage_get_state";
+static const char *TAG = "rs232_charge001_recv_manage_set_stop";
 static bool STATE = false;
-#define CHARGE001_GET_STATE_BUF_MAX_SIZE (1024)
-static uint8_t BUF[CHARGE001_GET_STATE_BUF_MAX_SIZE] = "";
+#define CHARGE001_SET_STOP_BUF_MAX_SIZE (1024)
+static uint8_t BUF[CHARGE001_SET_STOP_BUF_MAX_SIZE] = "";
 static int32_t BUF_SIZE = 0;
-static int32_t STATE_RES_SIZE = 5;
+static int32_t STATE_RES_SIZE = 3;
 
 // help func ==================================================================
 
-void rs232_charge001_recv_manage_get_state_reset() {
+void rs232_charge001_recv_manage_set_stop_reset() {
   STATE = false;
   BUF[0] = '\0';
   BUF_SIZE = 0;
@@ -19,12 +19,12 @@ void rs232_charge001_recv_manage_get_state_reset() {
 
 // global func ================================================================
 
-esp_err_t rs232_charge001_recv_manage_get_state_parse(uint8_t *buf,
-                                                      int32_t size) {
+esp_err_t rs232_charge001_recv_manage_set_stop_parse(uint8_t *buf,
+                                                     int32_t size) {
 
-  if (size >= CHARGE001_GET_STATE_BUF_MAX_SIZE) {
+  if (size >= CHARGE001_SET_STOP_BUF_MAX_SIZE) {
     ESP_LOGE(TAG, "%4d %s size:%d bigger than:%d", __LINE__, __func__, size,
-             CHARGE001_GET_STATE_BUF_MAX_SIZE);
+             CHARGE001_SET_STOP_BUF_MAX_SIZE);
     return ESP_ERR_INVALID_ARG;
   }
 
@@ -35,7 +35,7 @@ esp_err_t rs232_charge001_recv_manage_get_state_parse(uint8_t *buf,
   return ESP_OK;
 }
 
-esp_err_t rs232_charge001_recv_manage_get_state_finish() {
+esp_err_t rs232_charge001_recv_manage_set_stop_finish() {
   if (STATE == true) {
     return ESP_OK;
   } else {
@@ -43,8 +43,9 @@ esp_err_t rs232_charge001_recv_manage_get_state_finish() {
   }
 }
 
-rs232_charge001_state2_t *rs232_charge001_recv_manage_get_state_response() {
-  rs232_charge001_state2_t *res = NULL;
+esp_err_t rs232_charge001_recv_manage_set_stop_response(int32_t *port,
+                                                        int32_t *time) {
+  esp_err_t err = ESP_OK;
   uint8_t *temp_buf = NULL;
   int32_t temp_buf_size = 0;
 
@@ -54,28 +55,22 @@ rs232_charge001_state2_t *rs232_charge001_recv_manage_get_state_response() {
     memcpy(temp_buf, BUF, temp_buf_size);
   } else {
     ESP_LOGE(TAG, "%4d %s BUF_SIZE:%d error", __LINE__, __func__, BUF_SIZE);
-    return NULL;
+    return ESP_ERR_INVALID_ARG;
   }
 
   if (temp_buf_size != STATE_RES_SIZE) {
     ESP_LOGE(TAG, "%4d %s except size:%d get:%d", __LINE__, __func__,
              STATE_RES_SIZE, temp_buf_size);
+    err = ESP_ERR_INVALID_ARG;
     goto EXIT;
   }
 
-  res = malloc(sizeof(rs232_charge001_state2_t));
-  res->port = temp_buf[0];
-  res->lefttime = temp_buf[1] * 256 + temp_buf[2];
-  res->power = (temp_buf[3] * 256 + temp_buf[4]) / 10;
-  if (res->lefttime == 0) {
-    res->state = 1;
-  } else {
-    res->state = 2;
-  }
+  *port = temp_buf[0];
+  *time = temp_buf[1] * 256 + temp_buf[2];
 
 EXIT:
   if (temp_buf != NULL)
     free(temp_buf);
 
-  return res;
+  return err;
 }

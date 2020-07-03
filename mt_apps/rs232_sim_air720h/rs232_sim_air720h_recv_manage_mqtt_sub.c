@@ -6,7 +6,9 @@
 #include "rs232_sim_air720h_utils.h"
 
 #include "mt_module_lora.h"
+#include "mt_module_mqtt.h"
 #include "mt_mqtt_utils.h"
+#include "mt_utils_string.h"
 
 #include "esp_timer.h"
 
@@ -45,9 +47,8 @@ static int STAGE3_SIZE = 0;
 
 // static func ===============================================================
 
-static esp_err_t rs232_sim_air720h_recv_manage_mqtt_process_all(char *topic,
-                                                                uint8_t *buf,
-                                                                int size);
+static void rs232_sim_air720h_recv_manage_mqtt_process_all_task(
+    rs232_sim_air720h_mqtt_msg_t *data);
 
 static void rs232_sim_air720h_recv_manage_mqtt_sub_reset() {
   STAGE = 1;
@@ -197,7 +198,11 @@ static void rs232_sim_air720h_recv_manage_mqtt_sub_save_stage3(uint8_t byte) {
       goto EXIT;
     }
 
-    rs232_sim_air720h_recv_manage_mqtt_process_all(topic, buf, size);
+    rs232_sim_air720h_mqtt_msg_t *data =
+        rs232_sim_air720h_new_mqtt_msg(topic, buf, size);
+    xTaskCreate(
+        (TaskFunction_t)rs232_sim_air720h_recv_manage_mqtt_process_all_task,
+        "mqtt_process", 8 * 1024, data, 12, NULL);
 
   EXIT:
     if (topic != NULL)
@@ -211,16 +216,17 @@ static void rs232_sim_air720h_recv_manage_mqtt_sub_save_stage3(uint8_t byte) {
 
 // static func ===============================================================
 
-static esp_err_t rs232_sim_air720h_recv_manage_mqtt_process_all(char *topic,
-                                                                uint8_t *buf,
-                                                                int size) {
+static void rs232_sim_air720h_recv_manage_mqtt_process_all_task(
+    rs232_sim_air720h_mqtt_msg_t *data) {
   esp_err_t err = ESP_OK;
   char *path = NULL;
 
-  ESP_LOGI(TAG, "%4d %s get mqtt msg, topic:%s", __LINE__, __func__, topic);
-  path = mt_mqtt_utils_get_path_from_topic(topic);
+  ESP_LOGI(TAG, "%4d %s get mqtt msg, topic:%s", __LINE__, __func__,
+           data->topic);
+  path = mt_mqtt_utils_get_path_from_topic(data->topic);
   if (path == NULL) {
-    ESP_LOGE(TAG, "%4d %s get unexcept topic:%s", __LINE__, __func__, topic);
+    ESP_LOGE(TAG, "%4d %s get unexcept topic:%s", __LINE__, __func__,
+             data->topic);
     err = ESP_ERR_INVALID_ARG;
     goto EXIT;
   }
@@ -228,13 +234,14 @@ static esp_err_t rs232_sim_air720h_recv_manage_mqtt_process_all(char *topic,
   // TODO(ZH) handle could change
   if (strcmp(path, "proxy") == 0) {
     ESP_LOGI(TAG, "%4d %s get proxy message", __LINE__, __func__);
-    mt_module_lora_handle(topic, buf, size);
+    mt_module_mqtt_handle(data->topic, data->buf, data->size);
     goto EXIT;
   }
 
   if (strcmp(path, "flow_channel") == 0) {
     ESP_LOGI(TAG, "%4d %s get flow message", __LINE__, __func__);
-    err = rs232_sim_air720h_flow_process_all(topic, buf, size);
+    err =
+        rs232_sim_air720h_flow_process_all(data->topic, data->buf, data->size);
     if (err != ESP_OK) {
       ESP_LOGE(TAG, "%4d %s rs232_sim_air720h_flow_process_all failed",
                __LINE__, __func__);
@@ -248,7 +255,34 @@ static esp_err_t rs232_sim_air720h_recv_manage_mqtt_process_all(char *topic,
 EXIT:
   if (path != NULL)
     free(path);
-  return err;
+  rs232_sim_air720h_free_mqtt_msg(data);
+  vTaskDelete(NULL);
+}
+
+// help func ==================================================================
+
+rs232_sim_air720h_mqtt_msg_t *
+rs232_sim_air720h_new_mqtt_msg(char *topic, uint8_t *buf, uint32_t size) {
+  rs232_sim_air720h_mqtt_msg_t *data =
+      malloc(sizeof(rs232_sim_air720h_mqtt_msg_t));
+
+  data->topic = mt_utils_string_copy(topic);
+  data->buf = malloc(size);
+  memcpy(data->buf, buf, size);
+  data->size = size;
+
+  return data;
+}
+
+void rs232_sim_air720h_free_mqtt_msg(rs232_sim_air720h_mqtt_msg_t *data) {
+  if (data == NULL)
+    return;
+
+  if (data->topic != NULL)
+    free(data->topic);
+  if (data->buf != NULL)
+    free(data->buf);
+  free(data);
 }
 
 // global func ===============================================================

@@ -1,4 +1,5 @@
 #include "esp_log.h"
+#include "string.h"
 
 #include "driver/gpio.h"
 
@@ -9,7 +10,7 @@
 #include "mt_module_flow_manage.h"
 #include "mt_module_http.h"
 #include "mt_module_http_utils.h"
-#include "mt_mqtt_lan.h"
+#include "mt_mqtt.h"
 #include "mt_mqtt_utils.h"
 #include "mt_nvs_config.h"
 #include "mt_utils_string.h"
@@ -466,10 +467,10 @@ static void ping_once(mt_module_flow_t *module_flow) {
   frame_buf = malloc(frame_size);
   push_frame_to_flow_request__pack(&frame, frame_buf);
 
-  err = mqtt_pub_msg(ping_topic, frame_buf, frame_size);
+  err = mt_mqtt_pub_msg(ping_topic, frame_buf, frame_size);
   free(frame_buf);
   if (err != ESP_OK) {
-    ESP_LOGE(TAG, "%4d %s mqtt_pub_msg failed", __LINE__, __func__);
+    ESP_LOGE(TAG, "%4d %s mt_mqtt_pub_msg failed", __LINE__, __func__);
     return;
   }
 
@@ -669,8 +670,11 @@ uint8_t *mt_module_flow_pack_frame(mt_module_flow_struct_group_t *value_in,
   uint8_t frame_num = 0;
   uint8_t frame_count = 0;
 
-  if (value_in->size <= 0)
+  if (value_in->size <= 0) {
+    ESP_LOGE(TAG, "%4d %s value_in->size:%d error", __LINE__, __func__,
+             value_in->size);
     return NULL;
+  }
 
   // frame size which key not NULL
   for (int i = 0; i < value_in->size; i++) {
@@ -679,8 +683,10 @@ uint8_t *mt_module_flow_pack_frame(mt_module_flow_struct_group_t *value_in,
     }
   }
 
-  if (frame_num == 0)
+  if (frame_num == 0) {
+    ESP_LOGE(TAG, "%4d %s frame_num zero", __LINE__, __func__);
     return NULL;
+  }
 
   PushFrameToFlowRequest frame_req = PUSH_FRAME_TO_FLOW_REQUEST__INIT;
 
@@ -865,9 +871,9 @@ esp_err_t mt_module_flow_sent_msg(mt_module_flow_t *module_flow,
   }
 
   // mqtt pub
-  err = mqtt_pub_msg(req_topic, frame_req_buf, frame_req_size);
+  err = mt_mqtt_pub_msg(req_topic, frame_req_buf, frame_req_size);
   if (err != ESP_OK) {
-    ESP_LOGE(TAG, "%4d %s mqtt_pub_msg failed", __LINE__, __func__);
+    ESP_LOGE(TAG, "%4d %s mt_mqtt_pub_msg failed", __LINE__, __func__);
     goto EXIT;
   }
 

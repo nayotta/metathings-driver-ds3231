@@ -4,7 +4,6 @@
             "name": "esp32",
             "includePath": [
                 "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/esp_common/include",
-                "D:/0软件/ESP-IDF Tools/tools/xtensa-esp32-elf/include",
                 "D:/0软件/LLVM/lib/clang/9.0.0/include",
                 "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/freertos/include",
                 "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/mqtt/esp-mqtt/include",
@@ -41,7 +40,7 @@
                 "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/lwip/include/apps/sntp",
                 "${workspaceFolder}/components/rs232_dev",
                 "${workspaceFolder}/components/mt_module_http",
-                "${workspaceFolder}/components/mt_utils/include",
+                "${workspaceFolder}/components/mt_utils/",
                 "${workspaceFolder}/mt_apps/rs232_sim_air720h",
                 "${workspaceFolder}/components/mt_module_flow_manage",
                 "${workspaceFolder}/components/mt_module_flow",
@@ -71,10 +70,15 @@
                 "D:/7esp32/msys32/home/zhanghui/work/metathings-esp32-lib/components/mt_module_flow",
                 "D:/7esp32/msys32/home/zhanghui/work/metathings-esp32-airswitch001/metathings-esp32-lib/components/mt_module_flow",
                 "D:/7esp32/msys32/home/zhanghui/work/metathings-esp32-lib/components/mt_module_flow",
-                "${workspaceFolder}/mt_proto/mt_proto_device_gate/include",
                 "D:/7esp32/msys32/home/zhanghui/work/metathings-esp32-airswitch001/metathings-esp32-lib/mt_apps/rs232_EA900II",
                 "${workspaceFolder}/mt_proto/mt_proto_aew100/include",
-                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/newlib/include"
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/newlib/include",
+                "D:/7esp32/msys32/home/zhanghui/work/metathings-esp32-EA900II/metathings-esp32-lib/components/mt_utils",
+                "${workspaceFolder}/components/mt_ethernet",
+                "${workspaceFolder}/components/mt_smartconfig",
+                "${workspaceFolder}/mt_apps/gpio_light",
+                "D:/7esp32/msys32/home/zhanghui/work/metathings-esp32-lora-charge001/metathings-esp32-lib/components/gpio_light",
+                "D:/7esp32/msys32/home/zhanghui/work/metathings-esp32-airswitch001/metathings-esp32-lib/components/mt_memory_manage"
             ],
             "defines": [
                 "_DEBUG",
