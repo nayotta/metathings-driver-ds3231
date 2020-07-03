@@ -91,7 +91,7 @@ void app_main() {
   }
 
   err = rs232_sim_air720h_mqtt_task(
-      module_http->module->id, module_http->module->deviceID,
+      1, module_http->module->id, module_http->module->deviceID,
       module_http->session_id, mt_module_mqtt_handle);
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s rs232_sim_air720h_mqtt_task failed", __LINE__,
@@ -106,7 +106,7 @@ void app_main() {
     ESP_LOGE(TAG, "%4d %s mt_module_flow_new failed", __LINE__, __func__);
     return;
   }
-  module_flow->push_frame_interval = 30 * 1000; // 30 second
+  module_flow->push_frame_interval = 120 * 1000; // 120 second
   module_flow->ping_interval = 57 * 1000;       // 57 second
 
   // flow task

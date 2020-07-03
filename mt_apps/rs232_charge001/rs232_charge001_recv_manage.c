@@ -39,16 +39,17 @@ rs232_charge001_recv_manage_msg_dispatch(rs232_charge001_msg_t *msg) {
   }
 }
 
-static void rs232_charge001_recv_manage_parse_msg(uint8_t *buf, int32_t size) {
+static void
+rs232_charge001_recv_manage_parse_msg_task(rs232_charge001_recv_buf_t *data) {
   rs232_charge001_msg_t *msg = NULL;
 
-  if (size <= 2) {
+  if (data->size <= 2) {
     goto EXIT;
   }
 
-  ESP_LOGI(TAG, "%4d %s recv msg:%2d--->", __LINE__, __func__, size);
+  ESP_LOGI(TAG, "%4d %s recv msg:%2d--->", __LINE__, __func__, data->size);
 
-  msg = rs232_chrage001_utils_unmarshal_buf(buf, size);
+  msg = rs232_chrage001_utils_unmarshal_buf(data->buf, data->size);
   if (msg == NULL) {
     ESP_LOGE(TAG, "%4d %s rs232_chrage001_utils_unmarshal_buf NULL", __LINE__,
              __func__);
@@ -58,7 +59,9 @@ static void rs232_charge001_recv_manage_parse_msg(uint8_t *buf, int32_t size) {
   rs232_charge001_recv_manage_msg_dispatch(msg);
 
 EXIT:
+  rs232_charge001_free_recv_buf(data);
   rs232_charge001_utils_free_msg(msg);
+  vTaskDelete(NULL);
 }
 
 static void rs232_charge001_recv_manage_loop(rs232_dev_config_t *dev_config) {
@@ -75,14 +78,39 @@ static void rs232_charge001_recv_manage_loop(rs232_dev_config_t *dev_config) {
         for (int i = 0; i < len; i++)
           printf("%2x ", data[i]);
         printf("\n");
-        rs232_charge001_recv_manage_parse_msg(data, len);
+        rs232_charge001_recv_buf_t *recv_buf =
+            rs232_charge001_new_recv_buf(data, len);
+        xTaskCreate((TaskFunction_t)rs232_charge001_recv_manage_parse_msg_task,
+                    "parse_task", 8 * 1024, recv_buf, 12, NULL);
       }
     }
   }
 }
 
-// global func
-// ================================================================
+// help func ==================================================================
+
+rs232_charge001_recv_buf_t *rs232_charge001_new_recv_buf(uint8_t *buf,
+                                                         uint32_t size) {
+  rs232_charge001_recv_buf_t *data = malloc(sizeof(rs232_charge001_recv_buf_t));
+
+  data->buf = malloc(size);
+  memcpy(data->buf, buf, size);
+  data->size = size;
+
+  return data;
+}
+
+void rs232_charge001_free_recv_buf(rs232_charge001_recv_buf_t *data) {
+  if (data == NULL)
+    return;
+
+  if (data->buf != NULL)
+    free(data->buf);
+
+  free(data);
+}
+
+// global func ================================================================
 
 esp_err_t rs232_charge001_recv_manage_init(rs232_dev_config_t *dev_config) {
   esp_err_t err = ESP_OK;

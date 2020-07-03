@@ -6,6 +6,21 @@
 #include "esp_system.h"
 #include "string.h"
 
+// define =====================================================================
+
+typedef struct _rs232_sim_air720h_mqtt_msg_t {
+  char *topic;
+  uint8_t *buf;
+  uint32_t size;
+} rs232_sim_air720h_mqtt_msg_t;
+
+// help func ==================================================================
+
+rs232_sim_air720h_mqtt_msg_t *
+rs232_sim_air720h_new_mqtt_msg(char *topic, uint8_t *buf, uint32_t size);
+
+void rs232_sim_air720h_free_mqtt_msg(rs232_sim_air720h_mqtt_msg_t *data);
+
 // func =======================================================================
 
 bool rs232_sim_air720h_recv_manage_get_mqtt_sub_state();

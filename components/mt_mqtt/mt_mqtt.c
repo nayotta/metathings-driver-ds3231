@@ -10,6 +10,9 @@
 // global value ===============================================================
 
 static const char *TAG = "MT_MQTT";
+char Module_id[128] = "";
+char Device_id[128] = "";
+uint64_t Session_id = 0;
 
 // global func ================================================================
 
@@ -80,13 +83,16 @@ esp_err_t mt_mqtt_init(int mod_index, char *module_id, uint64_t session_id,
   }
 
   if (strstr(net_type, "4g")) {
-    err = rs232_sim_air720h_mqtt_init(mod_index, module_id, session_id,
-                                      device_id, handle);
+    err = rs232_sim_air720h_mqtt_init();
     if (err != ESP_OK) {
       ESP_LOGE(TAG, "%d  rs232_sim_air720h_mqtt_init failed", __LINE__);
       goto EXIT;
     }
   }
+
+  strcpy(Module_id, module_id);
+  strcpy(Device_id, device_id);
+  Session_id = session_id;
 
 EXIT:
   if (net_type != NULL)
@@ -95,32 +101,7 @@ EXIT:
 }
 
 esp_err_t mt_mqtt_update_session_id(uint64_t session_id) {
-  esp_err_t err = ESP_OK;
-  char *net_type = NULL;
-
-  net_type = mt_nvs_config_get_net_type();
-  if (net_type == NULL) {
-    ESP_LOGE(TAG, "%4d %s net_type NULL", __LINE__, __func__);
-    err = ESP_ERR_INVALID_RESPONSE;
-    goto EXIT;
-  }
-
-  if (strstr(net_type, "lan")) {
-    err = mt_mqtt_lan_update_session_id(session_id);
-    if (err != ESP_OK) {
-      ESP_LOGE(TAG, "%d mt_mqtt_lan_update_session_id", __LINE__);
-      goto EXIT;
-    }
-  }
-
-  if (strstr(net_type, "4g")) {
-    // TODO(ZH) update session
-    err = ESP_ERR_INVALID_RESPONSE;
-    goto EXIT;
-  }
-
-EXIT:
-  if (net_type != NULL)
-    free(net_type);
-  return err;
+  Session_id = session_id;
+  
+  return ESP_OK;
 }

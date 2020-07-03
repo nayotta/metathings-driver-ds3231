@@ -4,6 +4,7 @@
 #include "mt_module_http.h"
 #include "mt_module_http_utils.h"
 #include "mt_module_lora.h"
+#include "mt_mqtt.h"
 #include "mt_mqtt_utils.h"
 #include "mt_nvs_config.h"
 #include "mt_utils.h"
@@ -140,13 +141,13 @@ RESTART:
 
   // heartbeat loop
   heartbeat_count = heartbeat_max;
-  // debug here!!!!
-  // module_http->session_id = 12345678;
 
   module_http->session_id =
       mt_utils_session_new_session(mt_utils_session_gen_startup_session(),
                                    mt_utils_session_gen_major_session());
-  mt_module_lora_update_session(module_http->session_id);
+  // debug here!!!!
+  // module_http->session_id = 12345678;
+  mt_mqtt_update_session_id(module_http->session_id);
 
   while (true) {
     if (heartbeat_count <= 0) {
@@ -1030,8 +1031,8 @@ EXIT:
   return err;
 }
 
-esp_err_t rs232_sim_air720h_mqtt_task(char *module_id, char *device_id,
-                                      uint64_t session_id,
+esp_err_t rs232_sim_air720h_mqtt_task(int moudle_index, char *module_id,
+                                      char *device_id, uint64_t session_id,
                                       void (*handle)(char *topic, void *buf,
                                                      int size)) {
   // arg check
@@ -1065,6 +1066,7 @@ esp_err_t rs232_sim_air720h_mqtt_task(char *module_id, char *device_id,
   if (MSG_PROCESS != NULL)
     free(MSG_PROCESS);
   MSG_PROCESS = handle;
+  mt_mqtt_init(moudle_index, module_id, session_id, device_id, handle);
 
   xTaskCreate((TaskFunction_t)rs232_sim_air720h_mqtt_task_loop,
               "rs232_sim_http_task", 8 * 1024, NULL, 10, NULL);

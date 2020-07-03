@@ -23,12 +23,18 @@ void rs232_charge001_recv_manage_notify_over_push_flow(uint8_t *buf,
     return;
   }
 
-  data = mt_module_flow_new_struct_group(3);
+  data = mt_module_flow_new_struct_group(4);
 
   // notify
   data->value[count]->key = mt_utils_string_copy("notify");
   data->value[count]->type = GOOGLE__PROTOBUF__VALUE__KIND_BOOL_VALUE;
   data->value[count++]->bool_value = true;
+
+  // port
+  sprintf(key, "s%d", buf[0]);
+  data->value[count]->key = mt_utils_string_copy(key);
+  data->value[count]->type = GOOGLE__PROTOBUF__VALUE__KIND_NUMBER_VALUE;
+  data->value[count++]->number_value = 1;
 
   // lefttime
   sprintf(key, "t%d", buf[0]);

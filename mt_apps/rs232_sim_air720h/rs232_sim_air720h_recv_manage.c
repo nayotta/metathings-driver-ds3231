@@ -113,6 +113,7 @@ static void rs232_sim_air720h_recv_manage_push_byte(uint8_t data) {
   } else {
     ESP_LOGE(TAG, "%4d %s RECV_SIZE reach max:%d", __LINE__, __func__,
              RECV_SIZE);
+    RECV_SIZE = 0;
     return;
   }
 
@@ -170,7 +171,7 @@ esp_err_t rs232_sim_air720h_recv_manage_init(rs232_dev_config_t *dev_config) {
   esp_err_t err = ESP_OK;
 
   xTaskCreate((TaskFunction_t)rs232_sim_air720h_recv_manage_loop,
-              "NYT_4G_AIR720H_TASK", 8 * 1024, dev_config, 8, NULL);
+              "NYT_4G_AIR720H_TASK", 8 * 1024, dev_config, 25, NULL);
 
   return err;
 }

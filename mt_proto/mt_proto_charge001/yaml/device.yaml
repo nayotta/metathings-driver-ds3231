@@ -25,6 +25,14 @@ flow:
       period: 0
       min: 0
       max: 1000
+    p1:
+      description: 开关1功率(开关地址用尾数标记)
+      unit: min
+      driver: charge001
+      type: float
+      period: 0
+      min: 0
+      max: 1000
     coin:
       description: 投币通知
       unit:

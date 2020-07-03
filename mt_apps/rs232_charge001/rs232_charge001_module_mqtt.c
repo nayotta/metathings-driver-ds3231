@@ -126,6 +126,7 @@ static void rs232_charge001_mqtt_process_get_states(
   res->states = malloc(state->num * sizeof(MtCharge001__State2 *));
   for (int i = 0; i < state->num; i++) {
     res->states[i] = malloc(sizeof(MtCharge001__State2));
+    mt_charge001__state2__init(res->states[i]);
     res->states[i]->port = state->states[i]->port;
     res->states[i]->state = state->states[i]->state;
     res->states[i]->lefttime = state->states[i]->lefttime;
