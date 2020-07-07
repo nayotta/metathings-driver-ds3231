@@ -14,6 +14,10 @@ typedef struct _mt_nvs_host_t {
   int http_port;
   bool use_ssl;
   char *net_type;
+  char *ip_addr;
+  char *ip_mask;
+  char *ip_gate;
+  char *ip_dns;
 } mt_nvs_host_t;
 
 typedef struct _mt_nvs_flows_t {

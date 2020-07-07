@@ -22,6 +22,10 @@ mt_nvs_host_t *mt_nvs_config_new_host() {
   host->mqtt_port = 0;
   host->net_type = NULL;
   host->use_ssl = false;
+  host->ip_addr = NULL;
+  host->ip_mask = NULL;
+  host->ip_gate = NULL;
+  host->ip_dns = NULL;
 
   return host;
 }
@@ -59,6 +63,18 @@ void mt_nvs_config_free_host(mt_nvs_host_t *host) {
 
   if (host->net_type != NULL)
     free(host->net_type);
+
+  if (host->ip_addr != NULL)
+    free(host->ip_addr);
+
+  if (host->ip_mask != NULL)
+    free(host->ip_mask);
+
+  if (host->ip_gate != NULL)
+    free(host->ip_gate);
+
+  if (host->ip_dns != NULL)
+    free(host->ip_dns);
 
   free(host);
 }
@@ -103,7 +119,7 @@ void mt_nvs_config_free_module(mt_nvs_module_t *module) {
 mt_nvs_host_t *mt_nvs_config_get_host_config() {
   esp_err_t err = ESP_OK;
   size_t size = 0;
-  mt_nvs_host_t *host_out = malloc(sizeof(mt_nvs_host_t));
+  mt_nvs_host_t *host_out = mt_nvs_config_new_host();
   char *net_type = NULL;
 
   // get host_out->host
@@ -150,12 +166,38 @@ mt_nvs_host_t *mt_nvs_config_get_host_config() {
   } else {
     if (strcmp(net_type, "eth") == 0)
       sprintf(host_out->net_type, "eth");
+    else if (strcmp(net_type, "eth_static") == 0)
+      sprintf(host_out->net_type, "eth_static");
     else if (strcmp(net_type, "wifi") == 0)
       sprintf(host_out->net_type, "wifi");
     else if (strcmp(net_type, "4g") == 0)
       sprintf(host_out->net_type, "4g");
     else
       sprintf(host_out->net_type, "wifi");
+  }
+
+  // get host_out->ip_addr
+  host_out->ip_addr = mt_nvs_read_string_config("ip_addr", &size);
+  if (host_out->ip_addr == NULL) {
+    ESP_LOGW(TAG, "%4d %s get ip_addr failed", __LINE__, __func__);
+  }
+
+  // get host_out->ip_mask
+  host_out->ip_mask = mt_nvs_read_string_config("ip_mask", &size);
+  if (host_out->ip_mask == NULL) {
+    ESP_LOGW(TAG, "%4d %s get ip_mask failed", __LINE__, __func__);
+  }
+
+  // get host_out->ip_gate
+  host_out->ip_gate = mt_nvs_read_string_config("ip_gate", &size);
+  if (host_out->ip_gate == NULL) {
+    ESP_LOGW(TAG, "%4d %s get ip_gate failed", __LINE__, __func__);
+  }
+
+  // get host_out->ip_dns
+  host_out->ip_dns = mt_nvs_read_string_config("ip_dns", &size);
+  if (host_out->ip_dns == NULL) {
+    ESP_LOGW(TAG, "%4d %s get ip_dns failed", __LINE__, __func__);
   }
 
 EXIT:
@@ -224,6 +266,30 @@ esp_err_t mt_nvs_config_set_host_config(mt_nvs_host_t *host) {
     return ESP_ERR_INVALID_RESPONSE;
   }
 
+  if (mt_nvs_write_string_config("ip_addr", host->ip_addr) == false) {
+    ESP_LOGE(TAG, "%4d %s mt_nvs_write_string_config ip_addr error", __LINE__,
+             __func__);
+    return ESP_ERR_INVALID_RESPONSE;
+  }
+
+  if (mt_nvs_write_string_config("ip_mask", host->ip_mask) == false) {
+    ESP_LOGE(TAG, "%4d %s mt_nvs_write_string_config ip_mask error", __LINE__,
+             __func__);
+    return ESP_ERR_INVALID_RESPONSE;
+  }
+
+  if (mt_nvs_write_string_config("ip_gate", host->ip_gate) == false) {
+    ESP_LOGE(TAG, "%4d %s mt_nvs_write_string_config ip_gate error", __LINE__,
+             __func__);
+    return ESP_ERR_INVALID_RESPONSE;
+  }
+
+  if (mt_nvs_write_string_config("ip_dns", host->ip_dns) == false) {
+    ESP_LOGE(TAG, "%4d %s mt_nvs_write_string_config net_type error", __LINE__,
+             __func__);
+    return ESP_ERR_INVALID_RESPONSE;
+  }
+
   int32_t use_ssl = 0;
   if (host->use_ssl == true) {
     use_ssl = 1;
@@ -248,7 +314,7 @@ esp_err_t mt_nvs_config_get_module_num(int *num_out) {
 
 mt_nvs_module_t *mt_nvs_config_get_module(int index_in) {
   esp_err_t err = ESP_OK;
-  mt_nvs_module_t *module_out = malloc(sizeof(mt_nvs_module_t));
+  mt_nvs_module_t *module_out = mt_nvs_config_new_module();
   size_t size = 0;
   char key[32] = "";
 
@@ -444,7 +510,7 @@ char *mt_nvs_config_get_net_type() {
 
   net_type = mt_nvs_read_string_config(key, &size);
   if (net_type == NULL) {
-    if (mt_nvs_write_string_config(key, "lan") == false) {
+    if (mt_nvs_write_string_config(key, "wifi") == false) {
       ESP_LOGE(TAG, "%4d %s mt_nvs_write_string_config failed", __LINE__,
                __func__);
       return NULL;
@@ -513,6 +579,10 @@ char *mt_nvs_config_get_json_config() {
   cJSON_AddStringToObject(root, "mqtt_port", host->mqtt_port);
   cJSON_AddBoolToObject(root, "use_ssl", host->use_ssl);
   cJSON_AddStringToObject(root, "net_type", host->net_type);
+  cJSON_AddStringToObject(root, "ip_addr", host->ip_addr);
+  cJSON_AddStringToObject(root, "ip_mask", host->ip_mask);
+  cJSON_AddStringToObject(root, "ip_gate", host->ip_gate);
+  cJSON_AddStringToObject(root, "ip_dns", host->ip_dns);
 
   cJSON_AddItemToObject(root, "module", module_json = cJSON_CreateObject());
   cJSON_AddStringToObject(module_json, "id", module->id);
@@ -575,6 +645,18 @@ esp_err_t mt_nvs_config_set_json_config(char *data) {
       }
       if (strcmp(item->string, "net_type") == 0) {
         host->net_type = mt_utils_string_copy(item->valuestring);
+      }
+      if (strcmp(item->string, "ip_addr") == 0) {
+        host->ip_addr = mt_utils_string_copy(item->valuestring);
+      }
+      if (strcmp(item->string, "ip_mask") == 0) {
+        host->ip_mask = mt_utils_string_copy(item->valuestring);
+      }
+      if (strcmp(item->string, "ip_gate") == 0) {
+        host->ip_gate = mt_utils_string_copy(item->valuestring);
+      }
+      if (strcmp(item->string, "ip_dns") == 0) {
+        host->ip_dns = mt_utils_string_copy(item->valuestring);
       }
     } else if (cJSON_True == item->type) {
       if (strcmp(item->string, "use_ssl") == 0) {

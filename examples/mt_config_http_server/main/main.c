@@ -59,7 +59,7 @@ void app_main() {
 
   vTaskDelay(30 * 1000 / portTICK_PERIOD_MS);
 
-  mt_config_http_server_stop_webserver(handle);
+  // mt_config_http_server_stop_webserver(handle);
 
   ESP_LOGI(TAG, "test end");
 }
