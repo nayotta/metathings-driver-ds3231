@@ -18,6 +18,32 @@
 static const char *TAG = "MT_MODULE_FLOW_MANAGE";
 static mt_module_flow_manage_t *FLOW_MANAGE = NULL;
 
+// help func ==================================================================
+
+mt_module_flow_manage_t *mt_module_flow_manage_new() {
+  mt_module_flow_manage_t *manage = malloc(sizeof(mt_module_flow_manage_t));
+
+  manage->flows_size = 0;
+  manage->flows = NULL;
+  manage->flows_handle = NULL;
+
+  return manage;
+}
+
+void mt_module_flow_manage_free(mt_module_flow_manage_t *manage) {
+  if (manage == NULL)
+    return;
+
+  for (int i = 0; i < manage->flows_size; i++) {
+    if (manage->flows[i] != NULL)
+      free(manage->flows[i]);
+    if (manage->flows_handle[i] != NULL)
+      free(manage->flows_handle[i]);
+  }
+
+  free(manage);
+}
+
 // global func ================================================================
 
 esp_err_t mt_module_flow_manage_mqtt_process(char *topic, uint8_t *buf,
@@ -142,7 +168,7 @@ esp_err_t mt_module_flow_manage_add(mt_module_flow_t *flow) {
 
   temp_manage = FLOW_MANAGE;
   FLOW_MANAGE =
-      malloc((temp_manage->flows_size + 1) * sizeof(mt_module_flow_manage_t *));
+      malloc((temp_manage->flows_size + 1) * sizeof(mt_module_flow_manage_t));
   FLOW_MANAGE->flows_size = temp_manage->flows_size + 1;
   ESP_LOGI(TAG, "%4d %s new flow size=%d", __LINE__, __func__,
            FLOW_MANAGE->flows_size);
@@ -160,12 +186,6 @@ esp_err_t mt_module_flow_manage_add(mt_module_flow_t *flow) {
   }
   FLOW_MANAGE->flows[FLOW_MANAGE->flows_size - 1] = flow;
 
-  ESP_LOGI(TAG, "free2=%d", esp_get_free_heap_size());
-  // return ESP_OK; // debug
-  /*QueueHandle_t handle = NULL;
-  handle = xQueueCreate(1, sizeof(mt_module_mqtt_msg_t));
-  FLOW_MANAGE->flows_handle[FLOW_MANAGE->flows_size - 1] = handle;*/
-
   FLOW_MANAGE->flows_handle[FLOW_MANAGE->flows_size - 1] =
       xQueueCreate(1, sizeof(mt_module_mqtt_msg_t));
 
@@ -175,12 +195,11 @@ esp_err_t mt_module_flow_manage_add(mt_module_flow_t *flow) {
            __func__, FLOW_MANAGE->flows_size,
            FLOW_MANAGE->flows_handle[FLOW_MANAGE->flows_size - 1]);
 
-  // TODO(ZH) seprate task and new
-  // xTaskCreate((TaskFunction_t)mt_module_flow_manage_push_task_loop,
-  //           "FLOW_MANAGE_PUSH_TASK", 8 * 1024, flow, 10, NULL);
-
   if (temp_manage != NULL)
-    free(temp_manage);
+    if (temp_manage->flows_handle != NULL) {
+      free(temp_manage->flows_handle);
+    }
+  free(temp_manage);
   return ESP_OK;
 }
 

@@ -9,11 +9,21 @@
 
 #include "mt_module_flow.h"
 
+// define =====================================================================
+
 typedef struct _mt_module_flow_manage_t {
   int flows_size;
   mt_module_flow_t **flows;
   QueueHandle_t *flows_handle;
 } mt_module_flow_manage_t;
+
+// help func ==================================================================
+
+mt_module_flow_manage_t *mt_module_flow_manage_new();
+
+void mt_module_flow_manage_free();
+
+// func =======================================================================
 
 esp_err_t mt_module_flow_manage_mqtt_process(char *topic, uint8_t *buf,
                                              int size);
