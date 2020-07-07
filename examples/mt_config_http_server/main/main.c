@@ -52,7 +52,9 @@ void app_main() {
   mt_memory_manage_task(true);
 
   // network
-  mt_smartconfig_task(LIGHT_PIN, LIGHT_PIN_ON_LEVEL, BTN_PIN, BTN_PIN_ON_LEVEL);
+  // mt_smartconfig_task(LIGHT_PIN, LIGHT_PIN_ON_LEVEL, BTN_PIN, BTN_PIN_ON_LEVEL);
+  // mt_ethernet_task(-1, -1);
+  mt_ethernet_static_task(-1, -1);
 
   // http server
   handle = mt_config_http_server_start_webserver();
