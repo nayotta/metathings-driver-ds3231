@@ -15,6 +15,10 @@ typedef struct _mt_module_lora_t {
 
 esp_err_t mt_module_lora_get_client_id(int32_t *id);
 
+void mt_module_lora_free(mt_module_lora_t *msg);
+
+void mt_module_lora_update_session(uint64_t session_id);
+
 // func =======================================================================
 
 void mt_module_lora_handle(char *topic, void *buf, int size);

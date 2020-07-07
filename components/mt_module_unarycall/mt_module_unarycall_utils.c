@@ -4,7 +4,7 @@
 #include "esp_log.h"
 
 #include "mt_module_unarycall_utils.h"
-#include "mt_mqtt_lan.h"
+#include "mt_mqtt.h"
 #include "stream_frame.pb-c.h"
 
 #include "mt_proto_device_cloud_utils.h"
@@ -97,9 +97,9 @@ esp_err_t mt_module_unarycall_utils_mqtt_sent_msg(
   // pub msg
   sprintf(topic, "mt/modules/%s/proxy/sessions/%lld/upstream", module_id,
           msg->unary_call->session->value);
-  err = mqtt_pub_msg(topic, frame_buf, frame_size);
+  err = mt_mqtt_pub_msg(topic, frame_buf, frame_size);
   if (err != ESP_OK) {
-    ESP_LOGE(TAG, "%4d %s mqtt_pub_msg failed", __LINE__, __func__);
+    ESP_LOGE(TAG, "%4d %s mt_mqtt_pub_msg failed", __LINE__, __func__);
     err = ESP_ERR_INVALID_RESPONSE;
     goto EXIT;
   }

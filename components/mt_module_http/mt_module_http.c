@@ -300,7 +300,6 @@ esp_err_t mt_module_http_actions_heartbeat(mt_module_http_t *module_http,
   char *post_data = NULL;
   esp_http_client_handle_t client = NULL;
   cJSON *root = NULL;
-  uint8_t str_size = 0;
   char *session_id_str = NULL;
 
   ESP_LOGI(TAG, "%4d %s mt_module_http_actions_heartbeat", __LINE__, __func__);
@@ -346,7 +345,7 @@ esp_err_t mt_module_http_actions_heartbeat(mt_module_http_t *module_http,
   cJSON_Delete(root);
 
   // request extra header
-  session_id_str = mt_utils_int64_to_string(module_http->session_id, &str_size);
+  session_id_str = mt_utils_int64_to_string(module_http->session_id);
   err = esp_http_client_set_header(client, "MT-Module-Session", session_id_str);
   if (err != ESP_OK) {
     ESP_LOGE(TAG,
@@ -1362,10 +1361,11 @@ void mt_module_http_task(mt_module_http_t *module_http) {
 
 mt_module_http_t *mt_module_http_new(int mod_index_in) {
   mt_module_http_t *module_http = malloc(sizeof(mt_module_http_t));
-  mt_nvs_host_t *host = malloc(sizeof(mt_nvs_host_t));
+  mt_nvs_host_t *host = NULL;
   mt_nvs_module_t *mod = malloc(sizeof(mt_nvs_module_t));
 
-  if (mt_nvs_config_get_host_config(host) != ESP_OK) {
+  host = mt_nvs_config_get_host_config();
+  if (host == NULL) {
     ESP_LOGE(TAG, "%4d %s mt_nvs_config_get_host_config failed", __LINE__,
              __func__);
     return NULL;
@@ -1374,7 +1374,8 @@ mt_module_http_t *mt_module_http_new(int mod_index_in) {
   ESP_LOGI(TAG, "%4d %s host:%s http_port:%d mqtt_port:%s", __LINE__, __func__,
            host->host, host->http_port, host->mqtt_port);
 
-  if (mt_nvs_config_get_module(mod_index_in, mod) != ESP_OK) {
+  mod = mt_nvs_config_get_module(mod_index_in);
+  if (mod == NULL) {
     ESP_LOGE(TAG, "%4d %s mt_nvs_config_get_module index:%d failed", __LINE__,
              __func__, mod_index_in);
     return NULL;

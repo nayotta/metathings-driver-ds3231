@@ -3,6 +3,10 @@
 #include "mt_module_flow.h"
 #include "mt_module_http.h"
 #include "mt_module_http_utils.h"
+#include "mt_module_lora.h"
+#include "mt_mqtt.h"
+#include "mt_mqtt_utils.h"
+#include "mt_nvs_config.h"
 #include "mt_utils.h"
 #include "mt_utils_login.h"
 #include "mt_utils_session.h"
@@ -11,6 +15,7 @@
 #include "rs232_sim_air720h_mqtt.h"
 #include "rs232_sim_air720h_recv_manage.h"
 #include "rs232_sim_air720h_recv_manage_http_action.h"
+#include "rs232_sim_air720h_recv_manage_mqtt_state.h"
 #include "rs232_sim_air720h_sent_manage.h"
 #include "rs232_sim_air720h_utils.h"
 
@@ -18,18 +23,46 @@
 
 static const char *TAG = "rs232_sim_air720";
 
+// http
 static char *ISSUE_TOKEN_PATH = "/v1/device_cloud/actions/issue_module_token";
 static char *SHOW_MODULE_PATH = "/v1/device_cloud/actions/show_module";
 static char *HEARTBEAT_PATH = "/v1/device_cloud/actions/heartbeat";
 static char *PUSHFRAME_PATH = "/v1/device_cloud/actions/push_frame_to_flow";
 #define AIR720H_URL_MAX_SIZE 100
+static SemaphoreHandle_t AIR720H_HTTP_LOCK = NULL;
+static long AIR720H_HTTP_LOCK_TIMEOUT = 8000;
 
-void (*msg_process)(char *topic, void *buf, int size);
+// mqtt
+void (*MSG_PROCESS)(char *topic, void *buf, int size);
+static char *MODULE_ID = NULL;
+static uint64_t SESSION_ID = 0;
+static char *DEVICE_ID = NULL;
 
 // static func ================================================================
 
+static esp_err_t http_lock_take(long timeout) {
+  if (AIR720H_HTTP_LOCK == NULL) {
+    AIR720H_HTTP_LOCK = xSemaphoreCreateMutex();
+  }
+  if (xSemaphoreTake(AIR720H_HTTP_LOCK, (portTickType)timeout) == pdTRUE) {
+    return ESP_OK;
+  }
+  return ESP_ERR_INVALID_RESPONSE;
+}
+
+static void http_lock_release() {
+  if (AIR720H_HTTP_LOCK == NULL) {
+    AIR720H_HTTP_LOCK = xSemaphoreCreateMutex();
+  }
+
+  xSemaphoreGive(AIR720H_HTTP_LOCK);
+}
+
 static void rs232_sim_air720h_http_task_loop(mt_module_http_t *module_http) {
+  int init_interval = 30 * 1000;               // 30s
   int issue_module_token_interval = 30 * 1000; // 30s
+  int issue_module_token_max = 5;
+  int issue_module_token_count = 10;
   int show_module_retry_max = 10;
   int show_module_retry_count = 10;
   int show_module_interval = 30 * 1000; // 30s
@@ -39,15 +72,38 @@ static void rs232_sim_air720h_http_task_loop(mt_module_http_t *module_http) {
   esp_err_t err = ESP_OK;
 
 RESTART:
+  // http init
+  while (true) {
+    err = rs232_sim_air720h_http_init(module_http);
+    if (err != ESP_OK) {
+      ESP_LOGE(TAG, "%4d %s rs232_sim_air720h_http_init failed", __LINE__,
+               __func__);
+    } else {
+      ESP_LOGI(TAG, "%4d %s rs232_sim_air720h_http_init success", __LINE__,
+               __func__);
+      break;
+    }
+
+    vTaskDelay(init_interval / portTICK_PERIOD_MS);
+  }
+
   // issue token loop
   while (true) {
+    if (issue_module_token_count <= 0) {
+      ESP_LOGE(TAG, "%4d %s issue_module_token_count get limit, restart loop",
+               __LINE__, __func__);
+      goto RESTART;
+    }
+
     err = rs232_sim_air720h_http_issue_module_token(module_http);
     if (err != ESP_OK) {
       ESP_LOGE(TAG, "%4d %s rs232_sim_air720h_http_issue_module_token failed",
                __LINE__, __func__);
+      issue_module_token_count--;
     } else {
       ESP_LOGI(TAG, "%4d %s rs232_sim_air720h_http_issue_module_token success",
                __LINE__, __func__);
+      issue_module_token_count = issue_module_token_max;
       break;
     }
 
@@ -77,6 +133,7 @@ RESTART:
     } else {
       ESP_LOGI(TAG, "%4d %s rs232_sim_air720h_http_show_module success",
                __LINE__, __func__);
+      show_module_retry_count = show_module_retry_max;
       break;
     }
     vTaskDelay(show_module_interval / portTICK_PERIOD_MS);
@@ -84,9 +141,13 @@ RESTART:
 
   // heartbeat loop
   heartbeat_count = heartbeat_max;
+
   module_http->session_id =
       mt_utils_session_new_session(mt_utils_session_gen_startup_session(),
                                    mt_utils_session_gen_major_session());
+  // debug here!!!!
+  // module_http->session_id = 12345678;
+  mt_mqtt_update_session_id(module_http->session_id);
 
   while (true) {
     if (heartbeat_count <= 0) {
@@ -110,6 +171,56 @@ RESTART:
   }
 
   return;
+}
+
+static void rs232_sim_air720h_mqtt_task_loop() {
+  int mqtt_init_interval = 30 * 1000;        // 30s
+  int mqtt_state_check_interval = 60 * 1000; // 60s
+  int mqtt_state_check_max_time = 3;
+  int mqtt_state_check_count = 0;
+  esp_err_t err = ESP_OK;
+  int32_t state = -1;
+
+RESTART:
+  // mqtt_init loop
+  while (true) {
+    err = rs232_sim_air720h_mqtt_init();
+    if (err != ESP_OK) {
+      ESP_LOGE(TAG, "%4d %s rs232_sim_air720h_mqtt_init failed", __LINE__,
+               __func__);
+    } else {
+      ESP_LOGI(TAG, "%4d %s rs232_sim_air720h_mqtt_init success", __LINE__,
+               __func__);
+      break;
+    }
+
+    vTaskDelay(mqtt_init_interval / portTICK_PERIOD_MS);
+  }
+
+  // mqtt state check loop
+  while (true) {
+    if (mqtt_state_check_count >= mqtt_state_check_max_time) {
+      ESP_LOGE(TAG, "%4d %s state count reach max, restart loop", __LINE__,
+               __func__);
+      mqtt_state_check_count = 0;
+      goto RESTART;
+    }
+
+    err = rs232_sim_air720h_mqtt_state(&state);
+    if (err != ESP_OK) {
+      ESP_LOGE(TAG, "%4d %s rs232_sim_air720h_mqtt_state failed", __LINE__,
+               __func__);
+      mqtt_state_check_count++;
+    } else {
+      if (state != 1) {
+        mqtt_state_check_count++;
+        ESP_LOGE(TAG, "%4d %s mqtt disconnect:%d", __LINE__, __func__, state);
+      } else {
+        mqtt_state_check_count = 0;
+      }
+    }
+    vTaskDelay(mqtt_state_check_interval / portTICK_PERIOD_MS);
+  }
 }
 
 // global func ================================================================
@@ -237,6 +348,13 @@ rs232_sim_air720h_http_issue_module_token(mt_module_http_t *module_http) {
 
   ESP_LOGI(TAG, "%4d %s begin", __LINE__, __func__);
 
+  // lock
+  err = http_lock_take(AIR720H_HTTP_LOCK_TIMEOUT);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s http_lock_take timeout", __LINE__, __func__);
+    return ESP_ERR_TIMEOUT;
+  }
+
   if (module_http == NULL) {
     ESP_LOGE(TAG, "%4d %s module_http NULL", __LINE__, __func__);
     err = ESP_ERR_INVALID_ARG;
@@ -357,6 +475,7 @@ EXIT:
     free(res_data);
   if (token_out != NULL)
     mt_module_http_utils_free_token(token_out);
+  http_lock_release();
   return err;
 }
 
@@ -368,6 +487,13 @@ esp_err_t rs232_sim_air720h_http_show_module(mt_module_http_t *module_http) {
   module_t *mdl_out = NULL;
 
   ESP_LOGI(TAG, "%4d %s begin", __LINE__, __func__);
+
+  // lock
+  err = http_lock_take(AIR720H_HTTP_LOCK_TIMEOUT);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s http_lock_take timeout", __LINE__, __func__);
+    return ESP_ERR_TIMEOUT;
+  }
 
   if (module_http == NULL) {
     ESP_LOGE(TAG, "%4d %s module_http NULL", __LINE__, __func__);
@@ -463,6 +589,7 @@ EXIT:
     free(head);
   if (res_data != NULL)
     free(res_data);
+  http_lock_release();
   return err;
 }
 
@@ -473,6 +600,13 @@ esp_err_t rs232_sim_air720h_http_heartbeat(mt_module_http_t *module_http) {
   char *post_data = NULL;
 
   ESP_LOGI(TAG, "%4d %s begin", __LINE__, __func__);
+
+  // lock
+  err = http_lock_take(AIR720H_HTTP_LOCK_TIMEOUT);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s http_lock_take timeout", __LINE__, __func__);
+    return ESP_ERR_TIMEOUT;
+  }
 
   if (module_http == NULL) {
     ESP_LOGE(TAG, "%4d %s module_http NULL", __LINE__, __func__);
@@ -564,6 +698,7 @@ EXIT:
     free(head);
   if (post_data != NULL)
     free(post_data);
+  http_lock_release();
   return err;
 }
 
@@ -578,6 +713,13 @@ rs232_sim_air720h_http_push_frame_to_flow(mt_module_http_t *module_http,
   push_frame_res_t *res_out = NULL;
 
   ESP_LOGI(TAG, "%4d %s begin", __LINE__, __func__);
+
+  // lock
+  err = http_lock_take(AIR720H_HTTP_LOCK_TIMEOUT);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s http_lock_take timeout", __LINE__, __func__);
+    return NULL;
+  }
 
   // check arg
   if (module_http == NULL) {
@@ -694,6 +836,7 @@ EXIT:
     free(post_data);
   if (res_data != NULL)
     free(res_data);
+  http_lock_release();
   return res_out;
 }
 
@@ -709,7 +852,7 @@ esp_err_t rs232_sim_air720h_http_task(mt_module_http_t *module_http) {
     }
 
     if (module_http->port == 0) {
-      ESP_LOGE(TAG, "%4d %s module_http->host NULL", __LINE__, __func__);
+      ESP_LOGE(TAG, "%4d %s module_http->port NULL", __LINE__, __func__);
       return ESP_ERR_INVALID_ARG;
     }
 
@@ -741,22 +884,250 @@ esp_err_t rs232_sim_air720h_http_task(mt_module_http_t *module_http) {
   return ESP_OK;
 };
 
-esp_err_t rs232_sim_air720h_mqtt_init(int mod_index, char *module_id,
-                                      uint64_t session_id, char *device_id,
-                                      void (*handle)(char *topic, void *buf,
-                                                     int size)) {
+esp_err_t rs232_sim_air720h_mqtt_init() {
   esp_err_t err = ESP_OK;
+  unsigned char *hmac_str = NULL;
+  mt_nvs_host_t *host = NULL;
+  mt_nvs_module_t *mod = NULL;
+  char *module_topic = NULL;
+  char *device_topic = NULL;
 
   ESP_LOGI(TAG, "%4d %s begin", __LINE__, __func__);
 
+  // lock
+  err = http_lock_take(AIR720H_HTTP_LOCK_TIMEOUT);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s http_lock_take timeout", __LINE__, __func__);
+    return ESP_ERR_INVALID_STATE;
+  }
+
+  // arg check
+  if (DEVICE_ID == NULL) {
+    ESP_LOGE(TAG, "%4d %s device_id NULL", __LINE__, __func__);
+    err = ESP_ERR_INVALID_ARG;
+    goto EXIT;
+  }
+  if (MODULE_ID == NULL) {
+    ESP_LOGE(TAG, "%4d %s module_id NULL", __LINE__, __func__);
+    err = ESP_ERR_INVALID_ARG;
+    goto EXIT;
+  }
+
+  // get config from nvs
+  host = mt_nvs_config_get_host_config();
+  if (host == NULL) {
+    ESP_LOGE(TAG, "%4d %s mt_nvs_config_get_host_config failed", __LINE__,
+             __func__);
+    err = ESP_ERR_INVALID_ARG;
+    goto EXIT;
+  }
+
+  mod = mt_nvs_config_get_module(1);
+  if (mod == NULL) {
+    ESP_LOGE(TAG, "%4d %s mt_nvs_config_get_module index:%d failed", __LINE__,
+             __func__, 1);
+    err = ESP_ERR_INVALID_ARG;
+    goto EXIT;
+  }
+
+  hmac_str = mt_hmac_sha256_mqtt((uint8_t *)mod->key, strlen(mod->key),
+                                 (uint8_t *)mod->id, strlen(mod->id));
+
+  // clear mqtt connect
+  err = rs322_sim_air720h_mqtt_set_mqtt_close();
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s rs322_sim_air720h_mqtt_set_mqtt_close failed",
+             __LINE__, __func__);
+    goto EXIT;
+  }
+
+  // clear connect
+  err = rs322_sim_air720h_mqtt_set_close();
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s rs322_sim_air720h_mqtt_set_close failed", __LINE__,
+             __func__);
+    goto EXIT;
+  }
+
   // config
-  err = rs322_sim_air720h_mqtt_set_client_config("test", "test");
+  err = rs322_sim_air720h_mqtt_set_client_config(mod->id, (char *)hmac_str);
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s rs322_sim_air720h_mqtt_set_client_config failed",
              __LINE__, __func__);
     goto EXIT;
   }
 
+  // set host
+  err = rs322_sim_air720h_mqtt_set_host(host->host, host->mqtt_port);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s rs322_sim_air720h_mqtt_set_host failed", __LINE__,
+             __func__);
+    goto EXIT;
+  }
+
+  // set connect
+  err = rs322_sim_air720h_mqtt_set_connect(120);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s rs322_sim_air720h_mqtt_set_connect failed", __LINE__,
+             __func__);
+    goto EXIT;
+  }
+
+  // set sent mode
+  err = rs322_sim_air720h_mqtt_set_sent_mode(RS232_SIM_AIR720H_SENT_MODE_HEX);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s rs322_sim_air720h_mqtt_set_sent_mode failed",
+             __LINE__, __func__);
+    goto EXIT;
+  }
+
+  // set recv mode
+  err =
+      rs322_sim_air720h_mqtt_set_recv_mode(RS232_SIM_AIR720H_RECV_MODE_DIRECT);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s rs322_sim_air720h_mqtt_set_recv_mode failed",
+             __LINE__, __func__);
+    goto EXIT;
+  }
+
+  // set module sub
+  module_topic = mt_mqtt_utils_new_module_topic(MODULE_ID);
+  if (module_topic == NULL) {
+    ESP_LOGE(TAG, "%4d %s mt_mqtt_utils_new_module_topic failed", __LINE__,
+             __func__);
+    err = ESP_ERR_INVALID_ARG;
+    goto EXIT;
+  }
+  err = rs322_sim_air720h_mqtt_set_sub_topic(module_topic);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s rs322_sim_air720h_mqtt_set_sub_topic failed",
+             __LINE__, __func__);
+    goto EXIT;
+  }
+
+  // set device sub
+  device_topic = mt_mqtt_utils_new_device_topic(DEVICE_ID);
+  if (device_topic == NULL) {
+    ESP_LOGE(TAG, "%4d %s mt_mqtt_utils_new_module_topic failed", __LINE__,
+             __func__);
+    err = ESP_ERR_INVALID_ARG;
+    goto EXIT;
+  }
+  err = rs322_sim_air720h_mqtt_set_sub_topic(device_topic);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s rs322_sim_air720h_mqtt_set_sub_topic failed",
+             __LINE__, __func__);
+    goto EXIT;
+  }
+
 EXIT:
+  mt_nvs_config_free_host(host);
+  mt_nvs_config_free_module(mod);
+  if (module_topic != NULL)
+    free(module_topic);
+  if (device_topic != NULL)
+    free(device_topic);
+  http_lock_release();
+  return err;
+}
+
+esp_err_t rs232_sim_air720h_mqtt_task(int moudle_index, char *module_id,
+                                      char *device_id, uint64_t session_id,
+                                      void (*handle)(char *topic, void *buf,
+                                                     int size)) {
+  // arg check
+  if (module_id == NULL) {
+    ESP_LOGE(TAG, "%4d %s module_id NULL", __LINE__, __func__);
+    return ESP_ERR_INVALID_ARG;
+  }
+  if (device_id == NULL) {
+    ESP_LOGE(TAG, "%4d %s device_id NULL", __LINE__, __func__);
+    return ESP_ERR_INVALID_ARG;
+  }
+  if (session_id == 0) {
+    ESP_LOGE(TAG, "%4d %s session_id zero", __LINE__, __func__);
+    return ESP_ERR_INVALID_ARG;
+  }
+  if (handle == NULL) {
+    ESP_LOGE(TAG, "%4d %s handle NULL", __LINE__, __func__);
+    return ESP_ERR_INVALID_ARG;
+  }
+
+  if (MODULE_ID != NULL)
+    free(MODULE_ID);
+  MODULE_ID = module_id;
+
+  if (DEVICE_ID != NULL)
+    free(DEVICE_ID);
+  DEVICE_ID = device_id;
+
+  SESSION_ID = session_id;
+
+  if (MSG_PROCESS != NULL)
+    free(MSG_PROCESS);
+  MSG_PROCESS = handle;
+  mt_mqtt_init(moudle_index, module_id, session_id, device_id, handle);
+
+  xTaskCreate((TaskFunction_t)rs232_sim_air720h_mqtt_task_loop,
+              "rs232_sim_http_task", 8 * 1024, NULL, 10, NULL);
+  return ESP_OK;
+}
+
+esp_err_t rs232_sim_air720h_mqtt_state(int32_t *state) {
+  esp_err_t err = ESP_OK;
+
+  // lock
+  err = http_lock_take(AIR720H_HTTP_LOCK_TIMEOUT);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s http_lock_take timeout", __LINE__, __func__);
+    return ESP_ERR_INVALID_STATE;
+  }
+
+  rs232_sim_air720h_recv_manage_mqtt_state_reset();
+
+  err = rs232_sim_air720h_mqtt_get_state();
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %srs232_sim_air720h_mqtt_get_state failed", __LINE__,
+             __func__);
+    goto EXIT;
+  }
+
+  *state = rs232_sim_air720h_recv_manage_get_mqtt_state();
+
+EXIT:
+  http_lock_release();
+  return err;
+}
+
+esp_err_t rs232_sim_air720h_mqtt_pub(char *topic, uint8_t *buf, int size) {
+  esp_err_t err = ESP_OK;
+  char *hex_str = NULL;
+
+  // lock
+  err = http_lock_take(AIR720H_HTTP_LOCK_TIMEOUT);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s http_lock_take timeout", __LINE__, __func__);
+    return ESP_ERR_INVALID_STATE;
+  }
+
+  hex_str = rs232_sim_air720h_utils_byte_to_hex(buf, size);
+  if (hex_str == NULL) {
+    ESP_LOGE(TAG, "%4d %s rs232_sim_air720h_utils_byte_to_hex NULL", __LINE__,
+             __func__);
+    err = ESP_ERR_INVALID_ARG;
+    goto EXIT;
+  }
+
+  err = rs322_sim_air720h_mqtt_set_pub_msg(topic, hex_str);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s rs322_sim_air720h_mqtt_set_pub_msg failed", __LINE__,
+             __func__);
+    goto EXIT;
+  }
+
+EXIT:
+  if (hex_str != NULL)
+    free(hex_str);
+  http_lock_release();
   return err;
 }

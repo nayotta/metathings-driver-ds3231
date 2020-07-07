@@ -46,7 +46,7 @@
 #include "mt_mbproto.h"
 
 /* ----------------------- Defines ------------------------------------------*/
-static const char *TAG = "MT_MODBUS_MASTER";
+// static const char *TAG = "MT_MODBUS_MASTER";
 // send parse
 #define MB_PDU_REQ_TARGET_OFF (MB_PDU_DATA_OFF + 0)
 #define MB_PDU_REQ_SUBCMD_OFF (MB_PDU_DATA_OFF + 0)

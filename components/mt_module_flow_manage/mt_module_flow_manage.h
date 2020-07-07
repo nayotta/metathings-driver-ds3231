@@ -17,12 +17,6 @@ typedef struct _mt_module_flow_manage_t {
   QueueHandle_t *flows_handle;
 } mt_module_flow_manage_t;
 
-// help func ==================================================================
-
-mt_module_flow_manage_t *mt_module_flow_manage_new();
-
-void mt_module_flow_manage_free();
-
 // func =======================================================================
 
 esp_err_t mt_module_flow_manage_mqtt_process(char *topic, uint8_t *buf,
@@ -32,5 +26,7 @@ esp_err_t mt_module_flow_manage_add(mt_module_flow_t *flow);
 
 esp_err_t mt_module_flow_manage_get_index_by_module_id(char *module_id,
                                                        int *module_index);
+
+mt_module_flow_t *mt_module_flow_manage_get_flow_by_flow_index(int flow_index);
 
 #endif

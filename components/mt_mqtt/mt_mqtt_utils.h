@@ -22,4 +22,11 @@ char *mt_mqtt_utils_get_module_id_from_topic(char *topic);
 
 char *mt_mqtt_utils_set_path_downstream_to_upstream(char *topic);
 
+char *mt_mqtt_utils_convert_path_unarycall_req_to_res(char *topic,
+                                                      char *session_id);
+
+char *mt_mqtt_utils_new_module_topic(char *module_id);
+
+char *mt_mqtt_utils_new_device_topic(char *device_id);
+
 #endif

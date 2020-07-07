@@ -9,9 +9,13 @@
 #include "mt_module_lora.h"
 #include "mt_module_mqtt.h"
 #include "mt_module_unarycall_ota.h"
+#include "mt_module_unarycall_utils.h"
+#include "mt_mqtt.h"
 #include "mt_mqtt_lan.h"
 #include "mt_mqtt_utils.h"
+#include "mt_nvs_config.h"
 #include "mt_nvs_storage.h"
+#include "mt_utils.h"
 
 #include "google/protobuf/any.pb-c.h"
 #include "google/protobuf/empty.pb-c.h"
@@ -21,12 +25,11 @@
 #include "rs232_lora_ebyte_module_manage.h"
 
 // global define ==============================================================
+
 static const char *TAG = "MT_MODULE_LORA";
 
 extern char Module_id[128];
 extern uint64_t Session_id;
-
-mt_module_mqtt_t *app_handle = NULL;
 
 // static func ================================================================
 
@@ -61,47 +64,24 @@ EXIT:
 static void
 mt_module_lora_handle_unarycall_app_task(mt_module_lora_t *lora_msg) {
   esp_err_t err = ESP_OK;
-  char *module_id = NULL;
-  int module_index = 0;
-  int16_t lora_addr = 0;
   rs232_lora_ebyte_data_t *ebyte_data = NULL;
   rs232_lora_ebyte_data_t *ebyte_out = NULL;
   char *up_topic = NULL;
+  Ai__Metathings__Component__DownStreamFrame *msg = NULL;
 
-  module_id = mt_mqtt_utils_get_module_id_from_topic(lora_msg->topic);
-  if (module_id == NULL) {
-    ESP_LOGE(TAG, "%4d %s module_id NULL", __LINE__, __func__);
-    err = ESP_ERR_INVALID_ARG;
-    goto EXIT;
-  }
-
-  err = mt_module_http_manage_get_index_by_module_id(module_id, &module_index);
-  if (err != ESP_OK) {
-    ESP_LOGE(TAG,
-             "%4d %s mt_module_flow_manage_get_index_by_module_id module_id:%s "
-             "failed",
-             __LINE__, __func__, module_id);
-    err = ESP_ERR_INVALID_RESPONSE;
-    goto EXIT;
-  }
-
-  err = rs232_lora_ebyte_module_manage_get_id_by_module_index(module_index,
-                                                              &lora_addr);
-  if (err != ESP_OK) {
-    ESP_LOGE(TAG,
-             "%4d %s rs232_lora_ebyte_module_manage_get_id_by_module_index "
-             "module_index:%d "
-             "failed",
-             __LINE__, __func__, module_index);
-    err = ESP_ERR_INVALID_RESPONSE;
+  msg = ai__metathings__component__down_stream_frame__unpack(
+      NULL, lora_msg->size, lora_msg->buf);
+  if (msg == NULL) {
+    ESP_LOGE(TAG, "%4d %s get null msg or unknown msg", __LINE__, __func__);
     goto EXIT;
   }
 
   ebyte_data = rs232_lora_ebyte_new_data();
-  ebyte_data->id = lora_addr;
+  ebyte_data->id = 2;
   ebyte_data->cmd = RS232_LORA_EBYTE_CMD_TYPE_UNARYCALL;
-  ebyte_data->type = 1;
-  ebyte_data->data = lora_msg->buf;
+  ebyte_data->type = 2;
+  ebyte_data->data = malloc(lora_msg->size);
+  memcpy(ebyte_data->data, lora_msg->buf, lora_msg->size);
   ebyte_data->len = lora_msg->size;
 
   ebyte_out = rs232_lora_ebyte_sent_and_wait_finish(ebyte_data);
@@ -109,38 +89,58 @@ mt_module_lora_handle_unarycall_app_task(mt_module_lora_t *lora_msg) {
   if (ebyte_out == NULL) {
     ESP_LOGE(TAG, "%4d %s rs232_lora_ebyte_sent_and_wait_finish return NULL",
              __LINE__, __func__);
-    goto EXIT;
+    err = ESP_ERR_INVALID_RESPONSE;
+    goto ERROR;
   }
+  ESP_LOGW(TAG, "%4d %s session=%lld id=%d cmd=%d type=%d data=%p len=%d",
+           __LINE__, __func__, msg->unary_call->session->value, ebyte_out->id,
+           ebyte_out->cmd, ebyte_out->type, ebyte_out->data, ebyte_out->len);
 
-  up_topic = mt_mqtt_utils_set_path_downstream_to_upstream(lora_msg->topic);
+  char *session_str = NULL;
+  session_str = mt_utils_int64_to_string(msg->unary_call->session->value);
+  up_topic = mt_mqtt_utils_convert_path_unarycall_req_to_res(lora_msg->topic,
+                                                             session_str);
+  if (session_str != NULL)
+    free(session_str);
   if (up_topic == NULL) {
     ESP_LOGE(TAG, "%4d %s mt_mqtt_utils_set_path_downstream_to_upstream null",
              __LINE__, __func__);
-    goto EXIT;
+    err = ESP_ERR_INVALID_RESPONSE;
+    goto ERROR;
   }
 
-  err = mqtt_pub_msg(up_topic, ebyte_data->data, ebyte_data->len);
+ERROR:
   if (err != ESP_OK) {
-    ESP_LOGE(TAG, "%4d %s mqtt_pub_msg failed", __LINE__, __func__);
-    goto EXIT;
+    uint8_t *err_buf = NULL;
+    int32_t err_size = 0;
+    err_buf = mt_module_unarycall_utils_pack(
+        NULL, 0, msg->unary_call->method->value, msg, &err_size);
+    if (err_buf == NULL) {
+      ESP_LOGE(TAG, "%4d %s mt_module_unarycall_utils_pack failed", __LINE__,
+               __func__);
+      goto EXIT;
+    }
+
+    err = mt_mqtt_pub_msg(up_topic, err_buf, err_size);
+    if (err != ESP_OK) {
+      ESP_LOGE(TAG, "%4d %s mt_mqtt_pub_msgs failed", __LINE__, __func__);
+      goto EXIT;
+    }
+  } else {
+    err = mt_mqtt_pub_msg(up_topic, ebyte_out->data, ebyte_out->len);
+    if (err != ESP_OK) {
+      ESP_LOGE(TAG, "%4d %s mt_mqtt_pub_msgs failed", __LINE__, __func__);
+      goto EXIT;
+    }
   }
 
 EXIT:
-  if (lora_msg != NULL) {
-    if (lora_msg->topic != NULL) {
-      free(lora_msg->topic);
-    }
-    if (lora_msg->buf != NULL) {
-      free(lora_msg->buf);
-    }
-    free(lora_msg);
-  }
+  mt_module_lora_free(lora_msg);
   if (up_topic != NULL) {
     free(up_topic);
   }
-  if (module_id != NULL) {
-    free(module_id);
-  }
+  ai__metathings__component__down_stream_frame__free_unpacked(msg, NULL);
+  rs232_lora_ebyte_free_data(ebyte_data);
   vTaskDelete(NULL);
 };
 
@@ -202,9 +202,7 @@ static void mt_module_lora_handle_unarycall(char *topic, uint8_t *buf,
 
   // app api
   mt_module_lora_t *lora_msg = NULL;
-  lora_msg =
-      mt_module_lora_copy_msg_to_lora(topic, msg->unary_call->value->value.data,
-                                      msg->unary_call->value->value.len);
+  lora_msg = mt_module_lora_copy_msg_to_lora(topic, buf, size);
   xTaskCreate((TaskFunction_t)mt_module_lora_handle_unarycall_app_task,
               "UNARYCALL_TASK", 8 * 1024, lora_msg, 10, NULL);
 
@@ -258,6 +256,20 @@ esp_err_t mt_module_lora_get_client_id(int32_t *id) {
   }
 
   return ESP_OK;
+}
+
+void mt_module_lora_free(mt_module_lora_t *msg) {
+  if (msg == NULL)
+    return;
+
+  if (msg->buf != NULL)
+    free(msg->buf);
+
+  free(msg);
+}
+
+void mt_module_lora_update_session(uint64_t session_id) {
+  Session_id = session_id;
 }
 
 // global func ================================================================
