@@ -28,7 +28,17 @@ esp_err_t mt_mqtt_pub_msg(char *topic, uint8_t *buf, int size) {
     goto EXIT;
   }
 
-  if (strstr(net_type, "lan")) {
+  if (strstr(net_type, "eth")) {
+    match++;
+    err = mqtt_pub_msg(topic, buf, size);
+    if (err != ESP_OK) {
+      ESP_LOGE(TAG, "%4d %s mqtt_pub_msg failed", __LINE__, __func__);
+      err = ESP_ERR_INVALID_RESPONSE;
+      goto EXIT;
+    }
+  }
+
+  if (strstr(net_type, "wifi")) {
     match++;
     err = mqtt_pub_msg(topic, buf, size);
     if (err != ESP_OK) {
@@ -67,6 +77,12 @@ esp_err_t mt_mqtt_init(int mod_index, char *module_id, uint64_t session_id,
   esp_err_t err = ESP_OK;
   char *net_type = NULL;
 
+  strcpy(Module_id, module_id);
+  strcpy(Device_id, device_id);
+  Session_id = session_id;
+
+  printf("moduleID:%s deviceID:%s\n", Module_id, Device_id);
+
   net_type = mt_nvs_config_get_net_type();
   if (net_type == NULL) {
     ESP_LOGE(TAG, "%4d %s net_type NULL", __LINE__, __func__);
@@ -74,7 +90,15 @@ esp_err_t mt_mqtt_init(int mod_index, char *module_id, uint64_t session_id,
     goto EXIT;
   }
 
-  if (strstr(net_type, "lan")) {
+  if (strstr(net_type, "eth")) {
+    err = mqtt_init(mod_index, module_id, session_id, device_id, handle);
+    if (err != ESP_OK) {
+      ESP_LOGE(TAG, "%d  mqtt_init failed", __LINE__);
+      goto EXIT;
+    }
+  }
+
+  if (strstr(net_type, "wifi")) {
     err = mqtt_init(mod_index, module_id, session_id, device_id, handle);
     if (err != ESP_OK) {
       ESP_LOGE(TAG, "%d  mqtt_init failed", __LINE__);
@@ -90,10 +114,6 @@ esp_err_t mt_mqtt_init(int mod_index, char *module_id, uint64_t session_id,
     }
   }
 
-  strcpy(Module_id, module_id);
-  strcpy(Device_id, device_id);
-  Session_id = session_id;
-
 EXIT:
   if (net_type != NULL)
     free(net_type);
@@ -102,6 +122,6 @@ EXIT:
 
 esp_err_t mt_mqtt_update_session_id(uint64_t session_id) {
   Session_id = session_id;
-  
+
   return ESP_OK;
 }

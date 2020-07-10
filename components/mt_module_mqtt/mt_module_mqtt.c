@@ -185,7 +185,6 @@ void mt_module_mqtt_add_handle(
 
     free(temp_handle->handles);
     free(temp_handle->methods);
-    free(temp_handle->handles);
     free(temp_handle);
   }
 }

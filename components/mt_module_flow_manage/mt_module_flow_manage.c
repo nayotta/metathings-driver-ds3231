@@ -163,6 +163,8 @@ esp_err_t mt_module_flow_manage_add(mt_module_flow_t *flow) {
 
   if (FLOW_MANAGE == NULL) {
     FLOW_MANAGE = malloc(sizeof(mt_module_flow_manage_t));
+    FLOW_MANAGE->flows = NULL;
+    FLOW_MANAGE->flows_handle = NULL;
     FLOW_MANAGE->flows_size = 0;
   }
 
@@ -188,8 +190,6 @@ esp_err_t mt_module_flow_manage_add(mt_module_flow_t *flow) {
 
   FLOW_MANAGE->flows_handle[FLOW_MANAGE->flows_size - 1] =
       xQueueCreate(1, sizeof(mt_module_mqtt_msg_t));
-
-  // return ESP_OK; // debug
 
   ESP_LOGI(TAG, "%4d %s create flow push task,flow_size=%d,handle=%p", __LINE__,
            __func__, FLOW_MANAGE->flows_size,

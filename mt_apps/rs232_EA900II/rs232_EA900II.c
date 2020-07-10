@@ -118,8 +118,8 @@ static rs232_EA900II_status_t *rs232_EA900II_parse_status_res(uint8_t *buf,
   rs232_EA900II_status_t *status = malloc(sizeof(rs232_EA900II_status_t));
 
   if (buf_size != 47) {
-    ESP_LOGE(TAG, "%4d %s get unexcept buf_size:%d", __LINE__, __func__,
-             buf_size);
+    ESP_LOGE(TAG, "%4d %s except:47 get unexcept buf_size:%d", __LINE__,
+             __func__, buf_size);
     err = ESP_ERR_INVALID_RESPONSE;
     goto EXIT;
   }
@@ -285,8 +285,8 @@ static rs232_EA900II_model_t *rs232_EA900II_parse_model_res(uint8_t *buf,
   rs232_EA900II_model_t *model = malloc(sizeof(rs232_EA900II_model_t));
 
   if (buf_size != 39) {
-    ESP_LOGE(TAG, "%4d %s get unexcept buf_size:%d", __LINE__, __func__,
-             buf_size);
+    ESP_LOGE(TAG, "%4d %s except:39 get unexcept buf_size:%d", __LINE__,
+             __func__, buf_size);
     err = ESP_ERR_INVALID_RESPONSE;
     goto EXIT;
   }
@@ -349,8 +349,8 @@ static rs232_EA900II_config_t *rs232_EA900II_parse_config_res(uint8_t *buf,
   rs232_EA900II_config_t *config = malloc(sizeof(rs232_EA900II_config_t));
 
   if (buf_size != 22) {
-    ESP_LOGE(TAG, "%4d %s get unexcept buf_size:%d", __LINE__, __func__,
-             buf_size);
+    ESP_LOGE(TAG, "%4d %s except 22 get unexcept buf_size:%d", __LINE__,
+             __func__, buf_size);
     err = ESP_ERR_INVALID_RESPONSE;
     goto EXIT;
   }
@@ -444,6 +444,8 @@ rs232_EA900II_req_status(rs232_dev_config_t *config) {
   esp_err_t err = ESP_OK;
   rs232_EA900II_status_t *status = NULL;
 
+  ESP_LOGI(TAG, "%4d %s start", __LINE__, __func__);
+
   err = rs232_EA900II_sent_status_req(config);
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s rs232_EA900II_sent_status_req failed", __LINE__,
@@ -479,6 +481,8 @@ rs232_EA900II_req_model(rs232_dev_config_t *config) {
   uint8_t *read_buf = NULL;
   esp_err_t err = ESP_OK;
   rs232_EA900II_model_t *model = NULL;
+
+  ESP_LOGI(TAG, "%4d %s start", __LINE__, __func__);
 
   err = rs232_EA900II_sent_model_req(config);
   if (err != ESP_OK) {
@@ -517,6 +521,8 @@ rs232_EA900II_req_config(rs232_dev_config_t *config) {
   esp_err_t err = ESP_OK;
   rs232_EA900II_config_t *ea_config = NULL;
 
+  ESP_LOGI(TAG, "%4d %s start", __LINE__, __func__);
+
   err = rs232_EA900II_sent_config_req(config);
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s rs232_EA900II_sent_config_req failed", __LINE__,
@@ -550,10 +556,12 @@ static void rs232_EA900II_loop(rs232_dev_config_t *config) {
   while (1) {
     if (MODEL == NULL) {
       MODEL = rs232_EA900II_req_model(config);
+      vTaskDelay(1000 / portTICK_RATE_MS);
     }
 
     if (CONFIG == NULL) {
       CONFIG = rs232_EA900II_req_config(config);
+      vTaskDelay(1000 / portTICK_RATE_MS);
     }
 
     if (EA_STATUS != NULL)
@@ -604,6 +612,7 @@ esp_err_t rs232_EA900II_task(int tx_pin, int rx_pin) {
   config->uart_config->baud_rate = 2400;
   config->tx_pin = tx_pin;
   config->rx_pin = rx_pin;
+  config->timeout = 2000;
 
   err = rs232_dev_init(config);
   if (err != ESP_OK) {
