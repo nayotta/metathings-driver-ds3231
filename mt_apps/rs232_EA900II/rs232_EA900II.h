@@ -41,6 +41,6 @@ rs232_EA900II_model_t *rs232_EA900II_get_model();
 
 rs232_EA900II_config_t *rs232_EA900II_get_config();
 
-esp_err_t rs232_EA900II_task();
+esp_err_t rs232_EA900II_task(int tx_pin, int rx_pin);
 
 #endif

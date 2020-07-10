@@ -300,7 +300,6 @@ esp_err_t mt_module_http_actions_heartbeat(mt_module_http_t *module_http,
   char *post_data = NULL;
   esp_http_client_handle_t client = NULL;
   cJSON *root = NULL;
-  uint8_t str_size = 0;
   char *session_id_str = NULL;
 
   ESP_LOGI(TAG, "%4d %s mt_module_http_actions_heartbeat", __LINE__, __func__);

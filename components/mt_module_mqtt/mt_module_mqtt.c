@@ -183,8 +183,8 @@ void mt_module_mqtt_add_handle(
     memcpy(app_handle->methods[app_handle->handle_size - 1], method,
            strlen(method) + 1);
 
-    free(temp_handle->methods);
     free(temp_handle->handles);
+    free(temp_handle->methods);
     free(temp_handle);
   }
 }
