@@ -78,36 +78,36 @@ static void eth_static_event_handler(void *arg, esp_event_base_t event_base,
     ESP_LOGI(TAG, "Ethernet HW Addr %02x:%02x:%02x:%02x:%02x:%02x", mac_addr[0],
              mac_addr[1], mac_addr[2], mac_addr[3], mac_addr[4], mac_addr[5]);
 
-/*
-    tcpip_adapter_ip_info_t eth_ip;
-    nvs_handle config_handle = 0;
-    char key[64] = "";
-    size_t size = 0;
-    int ret = 0;
-    err = nvs_open("storage", NVS_READWRITE, &config_handle);
-    if (err != ESP_OK) {
-      ESP_LOGI(TAG, "%4d %s nvs_open failed", __LINE__, __func__);
-      return;
-    }
-    nvs_get_str(config_handle, "ip_addr", key, &size);
-    ret = ip4addr_aton("10.1.1.112", &eth_ip.ip);
-    printf("ip_addr:%s, ret=%d\n", key, ret);
+    /*
+        tcpip_adapter_ip_info_t eth_ip;
+        nvs_handle config_handle = 0;
+        char key[64] = "";
+        size_t size = 0;
+        int ret = 0;
+        err = nvs_open("storage", NVS_READWRITE, &config_handle);
+        if (err != ESP_OK) {
+          ESP_LOGI(TAG, "%4d %s nvs_open failed", __LINE__, __func__);
+          return;
+        }
+        nvs_get_str(config_handle, "ip_addr", key, &size);
+        ret = ip4addr_aton("10.1.1.112", &eth_ip.ip);
+        printf("ip_addr:%s, ret=%d\n", key, ret);
 
-    nvs_get_str(config_handle, "ip_mask", key, &size);
-    ip4addr_aton("255.255.255.0", &eth_ip.netmask);
-    printf("ip_mask:%s, ret=%d\n", key, ret);
+        nvs_get_str(config_handle, "ip_mask", key, &size);
+        ip4addr_aton("255.255.255.0", &eth_ip.netmask);
+        printf("ip_mask:%s, ret=%d\n", key, ret);
 
-    nvs_get_str(config_handle, "ip_gate", key, &size);
-    ip4addr_aton("10.1.1.1", &eth_ip.gw);
-    printf("ip_gate:%s, ret=%d\n", key, ret);
+        nvs_get_str(config_handle, "ip_gate", key, &size);
+        ip4addr_aton("10.1.1.1", &eth_ip.gw);
+        printf("ip_gate:%s, ret=%d\n", key, ret);
 
-    vTaskDelay(3000/ portTICK_RATE_MS);
+        vTaskDelay(3000/ portTICK_RATE_MS);
 
-    err = tcpip_adapter_set_ip_info(TCPIP_ADAPTER_IF_ETH, &eth_ip);
-    if (err != ESP_OK) {
-      ESP_LOGE(TAG, "%4d %s tcpip_adapter_set_ip_info failed", __LINE__,
-               __func__);
-    }*/
+        err = tcpip_adapter_set_ip_info(TCPIP_ADAPTER_IF_ETH, &eth_ip);
+        if (err != ESP_OK) {
+          ESP_LOGE(TAG, "%4d %s tcpip_adapter_set_ip_info failed", __LINE__,
+                   __func__);
+        }*/
     break;
   case ETHERNET_EVENT_DISCONNECTED:
     ESP_LOGI(TAG, "Ethernet Link Down");
@@ -176,6 +176,7 @@ void mt_ethernet_task(int light_pin, int light_pin_on_level) {
   eth_mac_config_t mac_config = ETH_MAC_DEFAULT_CONFIG();
   eth_phy_config_t phy_config = ETH_PHY_DEFAULT_CONFIG();
   phy_config.phy_addr = 0;
+  phy_config.reset_gpio_num = -1;
 
   esp_eth_mac_t *mac = esp_eth_mac_new_esp32(&mac_config);
 
@@ -211,6 +212,7 @@ void mt_ethernet_static_task(int light_pin, int light_pin_on_level) {
   eth_mac_config_t mac_config = ETH_MAC_DEFAULT_CONFIG();
   eth_phy_config_t phy_config = ETH_PHY_DEFAULT_CONFIG();
   phy_config.phy_addr = 0;
+  phy_config.reset_gpio_num = -1;
 
   esp_eth_mac_t *mac = esp_eth_mac_new_esp32(&mac_config);
 
