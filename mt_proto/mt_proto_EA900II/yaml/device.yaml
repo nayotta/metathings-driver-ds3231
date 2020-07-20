@@ -61,7 +61,7 @@ flow:
       min: -80
       max: 200
     w7:
-      description: 市电故障 true:正常 false:故障
+      description: 市电故障 true:故障 false:正常
       driver: EA900II
       type: bool
       period: 60000
