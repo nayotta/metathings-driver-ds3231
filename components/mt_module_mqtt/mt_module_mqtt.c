@@ -19,7 +19,7 @@ static const char *TAG = "MT_MODULE_MQTT";
 extern char Module_id[128];
 extern uint64_t Session_id;
 
-mt_module_mqtt_t *app_handle = NULL;
+static mt_module_mqtt_handle_t *app_handle = NULL;
 
 // static func ================================================================
 
@@ -64,7 +64,7 @@ static void mt_module_mqtt_handle_unarycall(
     }
   }
 
-  ESP_LOGE(TAG, "%4d %s get unexcept method:%s", __LINE__, __func__,
+  ESP_LOGE(TAG, "%4d %s get unexcept method:\"%s\"", __LINE__, __func__,
            msg->unary_call->method->value);
 
 EXIT:
@@ -133,16 +133,31 @@ EXIT:
   return;
 }
 
+// help func ==================================================================
+
+void mt_module_mqtt_free_msg(mt_module_mqtt_msg_t *msg) {
+  if (msg == NULL)
+    return;
+
+  if (msg->topic != NULL)
+    free(msg->topic);
+
+  if (msg->buf != NULL)
+    free(msg->buf);
+
+  free(msg);
+}
+
 // global func ================================================================
 
 void mt_module_mqtt_add_handle(
     void (*handle)(Ai__Metathings__Component__DownStreamFrame *msg,
                    char module_id[128]),
     char *method) {
-  ESP_LOGI(TAG, "%4d %s add handle method:%s", __LINE__, __func__, method);
+  ESP_LOGI(TAG, "%4d %s add handle method:\"%s\"", __LINE__, __func__, method);
 
   if (app_handle == NULL) {
-    app_handle = malloc(sizeof(mt_module_mqtt_t));
+    app_handle = malloc(sizeof(mt_module_mqtt_handle_t));
     app_handle->handle_size = 1;
     app_handle->handles = (mt_module_mqtt_app_handle_t *)malloc(
         sizeof(mt_module_mqtt_app_handle_t));
@@ -151,8 +166,8 @@ void mt_module_mqtt_add_handle(
     app_handle->methods[0] = malloc(strlen(method) + 1);
     memcpy(app_handle->methods[0], method, strlen(method) + 1);
   } else {
-    mt_module_mqtt_t *temp_handle = app_handle;
-    app_handle = malloc(sizeof(mt_module_mqtt_t));
+    mt_module_mqtt_handle_t *temp_handle = app_handle;
+    app_handle = malloc(sizeof(mt_module_mqtt_handle_t));
     app_handle->handle_size = temp_handle->handle_size + 1;
     app_handle->handles = (mt_module_mqtt_app_handle_t *)malloc(
         sizeof(mt_module_mqtt_app_handle_t) * app_handle->handle_size);
@@ -169,6 +184,7 @@ void mt_module_mqtt_add_handle(
            strlen(method) + 1);
 
     free(temp_handle->methods);
+    free(temp_handle->handles);
     free(temp_handle);
   }
 }

@@ -30,9 +30,9 @@
 static const char *TAG = "MT_MQTT_LAN";
 
 esp_mqtt_client_handle_t Mqtt_Client;
-char Module_id[128] = "";
-char Device_id[128] = "";
-uint64_t Session_id = 0;
+extern char Module_id[128];
+extern char Device_id[128];
+extern uint64_t Session_id;
 void (*msg_process)(char *topic, void *buf, int size);
 
 // static func ================================================================
@@ -126,16 +126,18 @@ esp_err_t mqtt_init(int mod_index, char *module_id, uint64_t session_id,
   // char *host, char *port, char *username, char *key,
   esp_err_t err;
   unsigned char *hmac_str = NULL;
-  mt_nvs_host_t *host = malloc(sizeof(mt_nvs_host_t));
-  mt_nvs_module_t *mod = malloc(sizeof(mt_nvs_module_t));
+  mt_nvs_host_t *host = NULL;
+  mt_nvs_module_t *mod = NULL;
 
-  if (mt_nvs_config_get_host_config(host) != ESP_OK) {
+  host = mt_nvs_config_get_host_config();
+  if (host == NULL) {
     ESP_LOGE(TAG, "%4d %s mt_nvs_config_get_host_config failed", __LINE__,
              __func__);
     return ESP_ERR_INVALID_ARG;
   }
 
-  if (mt_nvs_config_get_module(mod_index, mod) != ESP_OK) {
+  mod = mt_nvs_config_get_module(mod_index);
+  if (mod == NULL) {
     ESP_LOGE(TAG, "%4d %s mt_nvs_config_get_module index:%d failed", __LINE__,
              __func__, mod_index);
     return ESP_ERR_INVALID_ARG;
@@ -147,9 +149,6 @@ esp_err_t mqtt_init(int mod_index, char *module_id, uint64_t session_id,
   strcat(mqtt_uri_str, ":");
   strcat(mqtt_uri_str, host->mqtt_port);
 
-  strcpy(Module_id, module_id);
-  strcpy(Device_id, device_id);
-  Session_id = session_id;
   msg_process = handle;
 
   hmac_str = mt_hmac_sha256_mqtt((uint8_t *)mod->key, strlen(mod->key),

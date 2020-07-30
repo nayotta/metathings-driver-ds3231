@@ -8,7 +8,42 @@
 
 static const char *TAG = "MT_NVS_CONFIG";
 
+static const int DEFAULT_FLOW_INTERVAL = 600; // 10 minute
+
 // help func ==================================================================
+
+mt_nvs_host_t *mt_nvs_config_new_host() {
+  mt_nvs_host_t *host = malloc(sizeof(mt_nvs_host_t));
+
+  host->host = NULL;
+  host->http_port = 0;
+  host->mqtt_port = 0;
+  host->net_type = NULL;
+  host->use_ssl = false;
+
+  return host;
+}
+
+mt_nvs_flows_t *mt_nvs_config_new_flows() {
+  mt_nvs_flows_t *flows = malloc(sizeof(mt_nvs_flows_t));
+
+  flows->flows = NULL;
+  flows->flow_num = 0;
+
+  return flows;
+}
+
+mt_nvs_module_t *mt_nvs_config_new_module() {
+  mt_nvs_module_t *module = malloc(sizeof(mt_nvs_module_t));
+
+  module->flows = NULL;
+  module->id = NULL;
+  module->index = 0;
+  module->key = NULL;
+  module->name = NULL;
+
+  return module;
+}
 
 void mt_nvs_config_free_host(mt_nvs_host_t *host) {
   if (host == NULL)
@@ -30,12 +65,14 @@ void mt_nvs_config_free_flows(mt_nvs_flows_t *flows) {
   if (flows == NULL)
     return;
 
-  for (int i = 0; i < flows->flow_num; i++) {
-    if (flows->flows[i] != NULL)
-      free(flows->flows[i]);
-  }
+  if (flows->flows != NULL) {
+    for (int i = 0; i < flows->flow_num; i++) {
+      if (flows->flows[i] != NULL)
+        free(flows->flows[i]);
+    }
 
-  free(flows->flows);
+    free(flows->flows);
+  }
 
   free(flows);
 }
@@ -61,33 +98,33 @@ void mt_nvs_config_free_module(mt_nvs_module_t *module) {
 
 // global func ================================================================
 
-esp_err_t mt_nvs_config_get_host_config(mt_nvs_host_t *host_out) {
+mt_nvs_host_t *mt_nvs_config_get_host_config() {
+  esp_err_t err = ESP_OK;
   size_t size = 0;
-
-  // check host_out
-  if (host_out == NULL) {
-    ESP_LOGE(TAG, "%4d %s host_out NULL", __LINE__, __func__);
-    return ESP_ERR_INVALID_ARG;
-  }
+  mt_nvs_host_t *host_out = malloc(sizeof(mt_nvs_host_t));
+  char *net_type = NULL;
 
   // get host_out->host
   host_out->host = mt_nvs_read_string_config("host", &size);
   if (host_out->host == NULL) {
     ESP_LOGE(TAG, "%4d %s get host failed", __LINE__, __func__);
-    return ESP_ERR_INVALID_ARG;
+    err = ESP_ERR_INVALID_ARG;
+    goto EXIT;
   }
 
   // get host_out->mqtt_port
   host_out->mqtt_port = mt_nvs_read_string_config("mqtt_port", &size);
   if (host_out->mqtt_port == NULL) {
     ESP_LOGE(TAG, "%4d %s get mqtt_port failed", __LINE__, __func__);
-    return ESP_ERR_INVALID_ARG;
+    err = ESP_ERR_INVALID_ARG;
+    goto EXIT;
   }
 
   // get host_out->http_port
   if (mt_nvs_read_int32_config("http_port", &host_out->http_port) == false) {
     ESP_LOGE(TAG, "%4d %s get http_port failed", __LINE__, __func__);
-    return ESP_ERR_INVALID_ARG;
+    err = ESP_ERR_INVALID_ARG;
+    goto EXIT;
   }
 
   // get host_out->use_ssl
@@ -102,22 +139,32 @@ esp_err_t mt_nvs_config_get_host_config(mt_nvs_host_t *host_out) {
     host_out->use_ssl = true;
 
   // get host_out->net_type
-  char *net_type = NULL;
   size_t net_type_len = 0;
   net_type = mt_nvs_read_string_config("net_type", &net_type_len);
+  host_out->net_type = malloc(12);
   if (net_type == NULL) {
     ESP_LOGE(TAG, "%4d %s get net_type failed", __LINE__, __func__);
-    host_out->net_type = "wifi";
+    sprintf(host_out->net_type, "wifi");
   } else {
     if (strcmp(net_type, "eth") == 0)
-      host_out->net_type = "eth";
+      sprintf(host_out->net_type, "eth");
     else if (strcmp(net_type, "wifi") == 0)
-      host_out->net_type = "wifi";
+      sprintf(host_out->net_type, "wifi");
+    else if (strcmp(net_type, "4g") == 0)
+      sprintf(host_out->net_type, "4g");
     else
-      host_out->net_type = "wifi";
+      sprintf(host_out->net_type, "wifi");
   }
 
-  return ESP_OK;
+EXIT:
+  if (err != ESP_OK) {
+    mt_nvs_config_free_host(host_out);
+    host_out = NULL;
+  }
+  if (net_type != NULL)
+    free(net_type);
+
+  return host_out;
 }
 
 esp_err_t mt_nvs_config_set_host_config(mt_nvs_host_t *host) {
@@ -144,7 +191,8 @@ esp_err_t mt_nvs_config_set_host_config(mt_nvs_host_t *host) {
   }
 
   if (!(strcmp(host->net_type, "wifi") == 0 ||
-        strcmp(host->net_type, "eth") == 0)) {
+        strcmp(host->net_type, "eth") == 0 ||
+        strcmp(host->net_type, "4g") == 0)) {
     ESP_LOGE(TAG, "%4d %s host->net_type error:%s", __LINE__, __func__,
              host->net_type);
     return ESP_ERR_INVALID_ARG;
@@ -196,20 +244,17 @@ esp_err_t mt_nvs_config_get_module_num(int *num_out) {
   return ESP_OK;
 }
 
-esp_err_t mt_nvs_config_get_module(int index_in, mt_nvs_module_t *module_out) {
+mt_nvs_module_t *mt_nvs_config_get_module(int index_in) {
+  esp_err_t err = ESP_OK;
+  mt_nvs_module_t *module_out = malloc(sizeof(mt_nvs_module_t));
   size_t size = 0;
   char key[32] = "";
 
   // check index_in
   if (index_in <= 0) {
     ESP_LOGE(TAG, "%4d %s index num error:%d", __LINE__, __func__, index_in);
-    return ESP_ERR_INVALID_ARG;
-  }
-
-  // check module_out
-  if (module_out == NULL) {
-    ESP_LOGE(TAG, "%4d %s module_out NULL", __LINE__, __func__);
-    return ESP_ERR_INVALID_ARG;
+    err = ESP_ERR_INVALID_ARG;
+    goto EXIT;
   }
 
   module_out->index = index_in;
@@ -220,7 +265,8 @@ esp_err_t mt_nvs_config_get_module(int index_in, mt_nvs_module_t *module_out) {
   if (module_out->id == NULL) {
     ESP_LOGE(TAG, "%4d %s get module %d id failed", __LINE__, __func__,
              index_in);
-    return ESP_ERR_INVALID_ARG;
+    err = ESP_ERR_INVALID_ARG;
+    goto EXIT;
   }
 
   // get key
@@ -229,7 +275,8 @@ esp_err_t mt_nvs_config_get_module(int index_in, mt_nvs_module_t *module_out) {
   if (module_out->key == NULL) {
     ESP_LOGE(TAG, "%4d %s get module %d key failed", __LINE__, __func__,
              index_in);
-    return ESP_ERR_INVALID_ARG;
+    err = ESP_ERR_INVALID_ARG;
+    goto EXIT;
   }
 
   // get name
@@ -238,7 +285,8 @@ esp_err_t mt_nvs_config_get_module(int index_in, mt_nvs_module_t *module_out) {
   if (module_out->name == NULL) {
     ESP_LOGE(TAG, "%4d %s get module %d name failed", __LINE__, __func__,
              index_in);
-    return ESP_ERR_INVALID_ARG;
+    err = ESP_ERR_INVALID_ARG;
+    goto EXIT;
   }
 
   // get flow
@@ -247,14 +295,16 @@ esp_err_t mt_nvs_config_get_module(int index_in, mt_nvs_module_t *module_out) {
   if (mt_nvs_read_int32_config(key, &module_out->flows->flow_num) == false) {
     ESP_LOGE(TAG, "%4d %s get module %d flow num failed", __LINE__, __func__,
              index_in);
-    return ESP_ERR_INVALID_ARG;
+    err = ESP_ERR_INVALID_ARG;
+    goto EXIT;
   }
 
   if (module_out->flows->flow_num <= 0) {
     if (module_out->flows->flow_num < 0) {
       ESP_LOGE(TAG, "%4d %s error flow_num:%d", __LINE__, __func__,
                module_out->flows->flow_num);
-      return ESP_ERR_INVALID_ARG;
+      err = ESP_ERR_INVALID_ARG;
+      goto EXIT;
     }
   } else {
     module_out->flows->flows =
@@ -265,28 +315,32 @@ esp_err_t mt_nvs_config_get_module(int index_in, mt_nvs_module_t *module_out) {
       if (module_out->flows->flows[i] == NULL) {
         ESP_LOGE(TAG, "%4d %s module:%d flow:%d get failed", __LINE__, __func__,
                  index_in, i);
-        return ESP_ERR_INVALID_ARG;
+        err = ESP_ERR_INVALID_ARG;
+        goto EXIT;
       }
     }
   }
 
-  return ESP_OK;
+EXIT:
+  if (err != ESP_OK) {
+    mt_nvs_config_free_module(module_out);
+    module_out = NULL;
+  }
+
+  return module_out;
 }
 
-esp_err_t mt_nvs_config_get_flow(int index_in, mt_nvs_flows_t *flows_out) {
+mt_nvs_flows_t *mt_nvs_config_get_flow(int index_in) {
+  esp_err_t err = ESP_OK;
+  mt_nvs_flows_t *flows_out = malloc(sizeof(mt_nvs_flows_t));
   size_t size = 0;
   char key[32] = "";
 
   // check index_in
   if (index_in <= 0) {
     ESP_LOGE(TAG, "%4d %s index num error:%d", __LINE__, __func__, index_in);
-    return ESP_ERR_INVALID_ARG;
-  }
-
-  // check flows_out
-  if (flows_out == NULL) {
-    ESP_LOGE(TAG, "%4d %s flows_out NULL", __LINE__, __func__);
-    return ESP_ERR_INVALID_ARG;
+    err = ESP_ERR_INVALID_ARG;
+    goto EXIT;
   }
 
   // get flow num
@@ -294,7 +348,8 @@ esp_err_t mt_nvs_config_get_flow(int index_in, mt_nvs_flows_t *flows_out) {
   if (mt_nvs_read_int32_config(key, &flows_out->flow_num) == false) {
     ESP_LOGE(TAG, "%4d %s get mod:%d flow_num failed", __LINE__, __func__,
              index_in);
-    return ESP_ERR_INVALID_ARG;
+    err = ESP_ERR_INVALID_ARG;
+    goto EXIT;
   }
 
   flows_out->flows = malloc(flows_out->flow_num * sizeof(char));
@@ -307,11 +362,18 @@ esp_err_t mt_nvs_config_get_flow(int index_in, mt_nvs_flows_t *flows_out) {
     if (flows_out->flows[i] == NULL) {
       ESP_LOGE(TAG, "%4d %s module:%d flow:%d get failed", __LINE__, __func__,
                index_in, i);
-      return ESP_ERR_INVALID_ARG;
+      err = ESP_ERR_INVALID_ARG;
+      goto EXIT;
     }
   }
 
-  return ESP_OK;
+EXIT:
+  if (err != ESP_OK) {
+    mt_nvs_config_free_flows(flows_out);
+    flows_out = NULL;
+  }
+
+  return flows_out;
 }
 
 char *mt_nvs_config_get_flow_name(int module_index, int flow_index) {
@@ -344,7 +406,29 @@ char *mt_nvs_config_get_net_type() {
     }
   }
 
-  net_type = mt_nvs_read_string_config(key, &size);
-
   return net_type;
+}
+
+esp_err_t mt_nvs_config_get_flow_interval(int32_t index, int32_t *interval) {
+  char key[32] = "";
+
+  if (index <= 0) {
+    ESP_LOGE(TAG, "%4d %s index:%d error", __LINE__, __func__, index);
+    return ESP_ERR_INVALID_ARG;
+  }
+
+  sprintf(key, "mod_%d_intr", index);
+
+  if (mt_nvs_read_int32_config(key, interval) == false) {
+    ESP_LOGE(TAG, "%4d %s read mod:%d interval failed", __LINE__, __func__,
+             index);
+    if (mt_nvs_write_int32_config(key, DEFAULT_FLOW_INTERVAL) == false) {
+      ESP_LOGE(TAG, "%4d %s write default mod:%d interval failed", __LINE__,
+               __func__, index);
+      return ESP_ERR_INVALID_RESPONSE;
+    }
+    *interval = DEFAULT_FLOW_INTERVAL;
+  }
+
+  return ESP_OK;
 }

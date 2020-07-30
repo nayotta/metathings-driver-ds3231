@@ -39,9 +39,13 @@ void mt_module_unarycall_monitor_get_state_handle(
     err = MT_ERR_INVALID_RESPONSE;
     goto ERROR;
   }
+  res.state->has_startup = true;
   res.state->startup = temp_state->startup;
+  res.state->has_restartcount = true;
   res.state->restartcount = temp_state->restart_count;
+  res.state->has_free = true;
   res.state->free = temp_state->free;
+  res.state->has_errorcount = true;
   res.state->errorcount = temp_state->error_count;
 
 ERROR:
@@ -64,7 +68,7 @@ ERROR:
     goto EXIT;
   }
 
-  if (res.code != MT_ERR_NO_ERR) {
+  if (res.code == MT_ERR_NO_ERR) {
     ESP_LOGI(
         TAG,
         "%4d %s session:%lld get state code:%d startup:%d restart_count:%d "

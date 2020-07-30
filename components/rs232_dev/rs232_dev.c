@@ -74,7 +74,7 @@ rs232_dev_config_t *rs232_dev_default_new() {
   config_out->rts_pin = UART_PIN_NO_CHANGE;
   config_out->cts_pin = UART_PIN_NO_CHANGE;
   config_out->buf_max_size = 1024;
-  config_out->timeout = 1000;
+  config_out->timeout = 10;
 
   config_out->uart_config->baud_rate = 9600;
   config_out->uart_config->data_bits = UART_DATA_8_BITS;

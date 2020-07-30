@@ -37,28 +37,32 @@ static uint8_t *modbus_power001_pack_frame(modbus_power001_datas_t *datas,
   group = mt_module_flow_new_struct_group(struct_size);
 
   for (int i = 1; i <= datas->port_num; i++) {
-    if (datas->datas[i] != NULL) {
+    if (datas->datas[i - 1] != NULL) {
 
       // quality
       sprintf(key, "Q%d", i);
       group->value[count]->key = malloc(strlen(key) + 1);
       memcpy(group->value[count]->key, key, strlen(key) + 1);
       group->value[count]->type = GOOGLE__PROTOBUF__VALUE__KIND_NUMBER_VALUE;
-      group->value[count++]->number_value = datas->datas[i]->quality;
+      group->value[count++]->number_value = datas->datas[i - 1]->quality;
 
       // voltage
       sprintf(key, "U%d", i);
       group->value[count]->key = malloc(strlen(key) + 1);
       memcpy(group->value[count]->key, key, strlen(key) + 1);
       group->value[count]->type = GOOGLE__PROTOBUF__VALUE__KIND_NUMBER_VALUE;
-      group->value[count++]->number_value = datas->datas[i]->voltage;
+      group->value[count++]->number_value = datas->datas[i - 1]->voltage;
 
       // CURRENT
       sprintf(key, "I%d", i);
       group->value[count]->key = malloc(strlen(key) + 1);
       memcpy(group->value[count]->key, key, strlen(key) + 1);
       group->value[count]->type = GOOGLE__PROTOBUF__VALUE__KIND_NUMBER_VALUE;
-      group->value[count++]->number_value = datas->datas[i]->current;
+      group->value[count++]->number_value = datas->datas[i - 1]->current;
+
+      ESP_LOGI(TAG, "%4d %s index:%d Quality:%4.3f votage:%4.3f current %4.3f",
+               __LINE__, __func__, i, datas->datas[i - 1]->quality,
+               datas->datas[i - 1]->voltage, datas->datas[i - 1]->current);
     }
   }
 
