@@ -28,6 +28,7 @@ static void module_get_datas_process() {
   esp_err_t err = ESP_OK;
   mt_module_flow_struct_group_t *group = NULL;
   rs232_EA900II_status_t *status = NULL;
+  rs232_EA900II_config_t *config = NULL;
   int count = 0;
   char key[24] = "";
 
@@ -38,9 +39,22 @@ static void module_get_datas_process() {
     return;
   }
 
+  config = rs232_EA900II_get_config();
+  if (config == NULL) {
+    ESP_LOGE(TAG, "%4d %s rs232_EA900II_get_config failed", __LINE__, __func__);
+    return;
+  }
+
   // data struct
-  int struct_size = 14;
+  int struct_size = 15;
   group = mt_module_flow_new_struct_group(struct_size);
+
+  // vBatMax
+  sprintf(key, "vBatMax");
+  group->value[count]->key = malloc(strlen(key) + 1);
+  memcpy(group->value[count]->key, key, strlen(key) + 1);
+  group->value[count]->type = GOOGLE__PROTOBUF__VALUE__KIND_NUMBER_VALUE;
+  group->value[count++]->number_value = config->batVotage;
 
   // vIn
   sprintf(key, "vIn");
@@ -161,6 +175,9 @@ static void module_get_datas_process() {
 EXIT:
   if (status != NULL)
     free(status);
+
+  if (config != NULL)
+    free(config);
 
   if (group != NULL)
     mt_module_flow_free_struct_group(group);
