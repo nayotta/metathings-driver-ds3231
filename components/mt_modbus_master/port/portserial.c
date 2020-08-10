@@ -58,7 +58,7 @@ static void prvvUARTRxISR(void);
 static uint8_t mb_serial_read(uint8_t *data, uint8_t size) {
   mbDataP = data;
   uint8_t remaindBytes = size;
-  // printf("get %d byte %lld\n", size, esp_timer_get_time()/1000);
+  printf("get %d byte %lld\n", size, esp_timer_get_time() / 1000);
   while (remaindBytes--) {
     prvvUARTRxISR();
   };
@@ -86,7 +86,7 @@ static void uart_event_task(void *pvParameters) {
       case UART_DATA: {
         uart_read_bytes(MB_UART, dtmp, event.size,
                         portMAX_DELAY); // portMAX_DELAY
-        // ESP_LOGI(TAG, "[DATA EVT]: size:%d", event.size);
+        ESP_LOGI(TAG, "[DATA EVT]: size:%d", event.size);
 
         if (event.size > 1) // ignore char 0x00
         {
