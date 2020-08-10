@@ -16,7 +16,8 @@
 #include "mt_mbtask.h"
 
 // global define ==============================================================
-static const char *TAG = "MT_MODBUS_gzpd800T";
+
+static const char *TAG = "MODBUS_gzpd800T";
 #define GZPD800T_DEAULT_ADDR 01
 #define GZPD800T_READ_DATA 03
 #define GZPD800T_READ_WARN 01
@@ -26,7 +27,8 @@ static const char *TAG = "MT_MODBUS_gzpd800T";
 #define GZPD800T_WARN_SIZE 1
 
 // global func ================================================================
-esp_err_t mt_gzpd800T_get_4ch_data(gzpd800T_4ch_data_t *data) {
+
+esp_err_t modbus_gzpd800T_get_4ch_data(gzpd800T_4ch_data_t *data) {
   esp_err_t err = ESP_OK;
   struct RetMsg_t cmd_ret_payload;
 
@@ -48,10 +50,6 @@ esp_err_t mt_gzpd800T_get_4ch_data(gzpd800T_4ch_data_t *data) {
              cmd_ret_payload.retLen);
     return ESP_ERR_INVALID_RESPONSE;
   }
-
-  // for (int i = 0; i < 2 * GZPD800T_DATA_SIZE; i++)
-  //  printf("%2x ", cmd_ret_payload.retBuf[i]);
-  // printf("\n");
 
   data->amp1 = (uint32_t)cmd_ret_payload.retBuf[0] << 24 |
                (uint32_t)cmd_ret_payload.retBuf[1] << 16 |
@@ -126,7 +124,7 @@ esp_err_t mt_gzpd800T_get_4ch_data(gzpd800T_4ch_data_t *data) {
   return ESP_OK;
 }
 
-esp_err_t mt_gzpd800T_get_warn(int addr, bool *warn) {
+esp_err_t modbus_gzpd800T_get_warn(int addr, bool *warn) {
   esp_err_t err = ESP_OK;
   struct RetMsg_t cmd_ret_payload;
   USHORT addr_ushort = addr;
@@ -161,7 +159,8 @@ esp_err_t mt_gzpd800T_get_warn(int addr, bool *warn) {
   return ESP_OK;
 }
 
-esp_err_t mt_gzpd800T_init(int tx_pin, int rx_pin, int en_pin) {
+esp_err_t modbus_gzpd800T_init(uint8_t port, int tx_pin, int rx_pin,
+                               int en_pin) {
   eMBErrorCode emb_ret = 0;
   UCHAR RS485_PORT = 2;
   ULONG RS485_BAUD = 9600;
