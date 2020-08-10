@@ -1,29 +1,23 @@
 #ifndef MODBUS_LD100_H
 #define MODBUS_LD100_H
 
-#include "mt_mb.h"
-#include "mt_mbport.h"
+#include "esp_err.h"
+#include "esp_log.h"
 
-#ifndef CONFIG_LOG_DEFAULT_LEVEL
-#define CONFIG_LOG_DEFAULT_LEVEL ESP_LOG_DEBUG
-#endif
+#include "mt_module_flow.h"
 
-#ifndef CONFIG_FREERTOS_HZ
-#define CONFIG_FREERTOS_HZ 100
-#endif
+esp_err_t modbus_ld100_get_addr(int addr, bool *state);
 
-#define BUF_MAXLEN 64
+esp_err_t modbus_ld100_set_addr(int addr, int new_addr);
 
-esp_err_t mt_ld100_get_addr(int addr, bool *state);
+esp_err_t modbus_ld100_get_state(int addr, bool *state);
 
-esp_err_t mt_ld100_set_addr(int addr, int new_addr);
+esp_err_t modbus_ld100_get_relay(int addr, bool *state);
 
-esp_err_t mt_ld100_get_state(int addr, bool *state);
+esp_err_t modbus_ld100_set_relay(int addr, bool state);
 
-esp_err_t mt_ld100_get_relay(int addr, bool *state);
+esp_err_t modbus_ld100_init(uint8_t port, int tx_pin, int rx_pin, int en_pin);
 
-esp_err_t mt_ld100_set_relay(int addr, bool state);
-
-esp_err_t mt_ld100_init(int tx_pin, int rx_pin, int en_pin);
+mt_module_flow_struct_group_t *modbus_ld100_get_data(uint8_t port);
 
 #endif
