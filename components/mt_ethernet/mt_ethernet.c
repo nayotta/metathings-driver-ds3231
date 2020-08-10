@@ -8,6 +8,7 @@
 #include "esp_event.h"
 #include "esp_event_loop.h"
 #include "esp_log.h"
+#include "esp_netif.h"
 #include "esp_system.h"
 #include "freertos/task.h"
 #include "nvs.h"
@@ -164,10 +165,11 @@ void mt_ethernet_task(int light_pin, int light_pin_on_level) {
     }
   }
 
-  tcpip_adapter_init();
-
+  ESP_ERROR_CHECK(esp_netif_init());
   ESP_ERROR_CHECK(esp_event_loop_create_default());
-  ESP_ERROR_CHECK(tcpip_adapter_set_default_eth_handlers());
+  esp_netif_config_t cfg = ESP_NETIF_DEFAULT_ETH();
+  esp_netif_t *eth_netif = esp_netif_new(&cfg);
+  ESP_ERROR_CHECK(esp_eth_set_default_handlers(eth_netif));
   ESP_ERROR_CHECK(esp_event_handler_register(ETH_EVENT, ESP_EVENT_ANY_ID,
                                              &eth_event_handler, NULL));
   ESP_ERROR_CHECK(esp_event_handler_register(IP_EVENT, IP_EVENT_ETH_GOT_IP,
@@ -185,6 +187,8 @@ void mt_ethernet_task(int light_pin, int light_pin_on_level) {
   esp_eth_config_t config = ETH_DEFAULT_CONFIG(mac, phy);
   esp_eth_handle_t eth_handle = NULL;
   ESP_ERROR_CHECK(esp_eth_driver_install(&config, &eth_handle));
+  ESP_ERROR_CHECK(
+      esp_netif_attach(eth_netif, esp_eth_new_netif_glue(eth_handle)));
   ESP_ERROR_CHECK(esp_eth_start(eth_handle));
 }
 
@@ -202,8 +206,11 @@ void mt_ethernet_static_task(int light_pin, int light_pin_on_level) {
 
   tcpip_adapter_init();
 
+  ESP_ERROR_CHECK(esp_netif_init());
   ESP_ERROR_CHECK(esp_event_loop_create_default());
-  ESP_ERROR_CHECK(tcpip_adapter_set_default_eth_static_handlers());
+  esp_netif_config_t cfg = ESP_NETIF_DEFAULT_ETH();
+  esp_netif_t *eth_netif = esp_netif_new(&cfg);
+  ESP_ERROR_CHECK(esp_eth_set_default_handlers(eth_netif));
   ESP_ERROR_CHECK(esp_event_handler_register(ETH_EVENT, ESP_EVENT_ANY_ID,
                                              &eth_static_event_handler, NULL));
   ESP_ERROR_CHECK(esp_event_handler_register(IP_EVENT, IP_EVENT_ETH_GOT_IP,
@@ -221,5 +228,7 @@ void mt_ethernet_static_task(int light_pin, int light_pin_on_level) {
   esp_eth_config_t config = ETH_DEFAULT_CONFIG(mac, phy);
   esp_eth_handle_t eth_handle = NULL;
   ESP_ERROR_CHECK(esp_eth_driver_install(&config, &eth_handle));
+  ESP_ERROR_CHECK(
+      esp_netif_attach(eth_netif, esp_eth_new_netif_glue(eth_handle)));
   ESP_ERROR_CHECK(esp_eth_start(eth_handle));
 }
