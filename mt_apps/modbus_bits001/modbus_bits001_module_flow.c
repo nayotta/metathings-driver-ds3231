@@ -17,7 +17,7 @@
 
 // global define ==============================================================
 
-static const char *TAG = "MODULE_AEW100_FLOW";
+static const char *TAG = "MODULE_BITS001_FLOW";
 
 // static func ================================================================
 
@@ -28,6 +28,8 @@ static void module_bits001_get_ht_data_process(mt_module_flow_t *module_flow) {
   double temp1;
   double hum2;
   double temp2;
+  double hum3;
+  double temp3;
   int count = 0;
 
   // get temp data
@@ -43,21 +45,33 @@ static void module_bits001_get_ht_data_process(mt_module_flow_t *module_flow) {
              __func__, 2);
     goto EXIT;
   }
+  err = modbus_bits001_get_temp(3, &temp3);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s modbus_bits001_get_temp addr:%d failed", __LINE__,
+             __func__, 3);
+    goto EXIT;
+  }
   err = modbus_bits001_get_hum(1, &hum1);
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s modbus_bits001_get_hum addr:%d failed", __LINE__,
              __func__, 1);
     goto EXIT;
   }
-  err = modbus_bits001_get_hum(1, &hum2);
+  err = modbus_bits001_get_hum(2, &hum2);
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s modbus_bits001_get_hum addr:%d failed", __LINE__,
              __func__, 2);
     goto EXIT;
   }
+  err = modbus_bits001_get_hum(3, &hum3);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s modbus_bits001_get_hum addr:%d failed", __LINE__,
+             __func__, 3);
+    goto EXIT;
+  }
 
   // data struct
-  int struct_size = 4;
+  int struct_size = 6;
   group = mt_module_flow_new_struct_group(struct_size);
 
   // temp1
@@ -66,11 +80,17 @@ static void module_bits001_get_ht_data_process(mt_module_flow_t *module_flow) {
   // temp2
   mt_module_flow_set_number_value(group->value[count++], "temp2", temp2);
 
+  // temp3
+  mt_module_flow_set_number_value(group->value[count++], "temp3", temp3);
+
   // hum1
   mt_module_flow_set_number_value(group->value[count++], "hum1", hum1);
 
   // hum2
   mt_module_flow_set_number_value(group->value[count++], "hum2", hum2);
+
+  // hum3
+  mt_module_flow_set_number_value(group->value[count++], "hum3", hum3);
 
   // send msg
   err = mt_module_flow_sent_msg(module_flow, group);
