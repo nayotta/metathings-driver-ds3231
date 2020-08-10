@@ -161,7 +161,6 @@ static void uart_event_task(void *pvParameters) {
 
 BOOL xMBPortSerialInit(UCHAR ucPORT, ULONG ulBaudRate, UCHAR ucDataBits,
                        eMBParity eParity, int tx_pin, int rx_pin, int en_pin) {
-  esp_log_level_set(TAG, ESP_LOG_INFO);
   esp_err_t err = ESP_OK;
   int lDataBit = UART_DATA_8_BITS;
   int lParity = UART_PARITY_DISABLE;
