@@ -124,7 +124,7 @@ module_bits001_get_frog_data_process(mt_module_flow_t *module_flow) {
   mt_module_flow_set_number_value(group->value[count++], "frog1", frog1);
 
   // frog2
-  mt_module_flow_set_number_value(group->value[count++], "temp2", frog2);
+  mt_module_flow_set_number_value(group->value[count++], "frog2", frog2);
 
   // send msg
   err = mt_module_flow_sent_msg(module_flow, group);

@@ -10,8 +10,8 @@
 
 #include "mt_mbfunc.h"
 #include "mt_mbport.h"
-#include "mt_port.h"
 #include "mt_mbtask.h"
+#include "mt_port.h"
 
 #include "modbus_bits001.h"
 
@@ -114,7 +114,7 @@ esp_err_t modbus_bits001_get_frog(int addr, double *frog) {
 }
 
 esp_err_t modbus_bits001_get_data(int addr, double *temp, double *hum,
-                              double *frog) {
+                                  double *frog) {
   esp_err_t err = ESP_OK;
 
   err = modbus_bits001_get_temp(addr, temp);
@@ -141,7 +141,8 @@ esp_err_t modbus_bits001_get_data(int addr, double *temp, double *hum,
   return ESP_OK;
 }
 
-esp_err_t modbus_bits001_init(uint8_t port, int tx_pin, int rx_pin, int en_pin) {
+esp_err_t modbus_bits001_init(uint8_t port, int tx_pin, int rx_pin,
+                              int en_pin) {
   eMBErrorCode emb_ret = 0;
   ULONG RS485_BAUD = 9600;
   eMBParity RS485_PARITY = MB_PAR_NONE;
@@ -152,8 +153,8 @@ esp_err_t modbus_bits001_init(uint8_t port, int tx_pin, int rx_pin, int en_pin) 
     return emb_ret;
   }
 
-  mt_vMBMaster_set_T35_interval(250);
-  // mt_modbus_task();
+  mt_vMBMaster_set_T35_interval(500);
+  mt_modbus_task();
 
   return ESP_OK;
 }
