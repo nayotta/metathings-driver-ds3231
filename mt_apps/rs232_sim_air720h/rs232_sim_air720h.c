@@ -10,6 +10,7 @@
 #include "mt_utils.h"
 #include "mt_utils_login.h"
 #include "mt_utils_session.h"
+#include "mt_utils_string.h"
 
 #include "rs232_sim_air720h_http.h"
 #include "rs232_sim_air720h_mqtt.h"
@@ -1055,11 +1056,11 @@ esp_err_t rs232_sim_air720h_mqtt_task(int moudle_index, char *module_id,
 
   if (MODULE_ID != NULL)
     free(MODULE_ID);
-  MODULE_ID = module_id;
+  MODULE_ID = mt_utils_string_copy(module_id);
 
   if (DEVICE_ID != NULL)
     free(DEVICE_ID);
-  DEVICE_ID = device_id;
+  DEVICE_ID = mt_utils_string_copy(device_id);
 
   SESSION_ID = session_id;
 
