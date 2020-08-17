@@ -12,6 +12,8 @@
 #include "mt_mbport.h"
 #include "mt_port.h"
 
+#include "mt_utils_string.h"
+
 #include "modbus_ld100.h"
 #include "mt_mbtask.h"
 
@@ -28,7 +30,7 @@ static const char *TAG = "MT_MODBUS_LD100";
 
 // global func ================================================================
 
-esp_err_t mt_ld100_get_addr(int addr, bool *state) {
+esp_err_t modbus_ld100_get_addr(int addr, bool *state) {
   esp_err_t err = ESP_OK;
   struct RetMsg_t cmd_ret_payload;
 
@@ -69,7 +71,7 @@ esp_err_t mt_ld100_get_addr(int addr, bool *state) {
   return ESP_OK;
 }
 
-esp_err_t mt_ld100_set_addr(int addr, int new_addr) {
+esp_err_t modbus_ld100_set_addr(int addr, int new_addr) {
   esp_err_t err = ESP_OK;
   struct RetMsg_t cmd_ret_payload;
 
@@ -110,7 +112,7 @@ esp_err_t mt_ld100_set_addr(int addr, int new_addr) {
   return ESP_OK;
 }
 
-esp_err_t mt_ld100_get_state(int addr, bool *state) {
+esp_err_t modbus_ld100_get_state(int addr, bool *state) {
   esp_err_t err = ESP_OK;
   struct RetMsg_t cmd_ret_payload;
 
@@ -156,7 +158,7 @@ esp_err_t mt_ld100_get_state(int addr, bool *state) {
   return ESP_OK;
 }
 
-esp_err_t mt_ld100_get_relay(int addr, bool *state) {
+esp_err_t modbus_ld100_get_relay(int addr, bool *state) {
   esp_err_t err = ESP_OK;
   struct RetMsg_t cmd_ret_payload;
 
@@ -202,7 +204,7 @@ esp_err_t mt_ld100_get_relay(int addr, bool *state) {
   return ESP_OK;
 }
 
-esp_err_t mt_ld100_set_relay(int addr, bool state) {
+esp_err_t modbus_ld100_set_relay(int addr, bool state) {
   esp_err_t err = ESP_OK;
   struct RetMsg_t cmd_ret_payload;
   USHORT target_state;
@@ -256,14 +258,12 @@ esp_err_t mt_ld100_set_relay(int addr, bool state) {
   return ESP_OK;
 }
 
-esp_err_t mt_ld100_init(int tx_pin, int rx_pin, int en_pin) {
+esp_err_t modbus_ld100_init(uint8_t port, int tx_pin, int rx_pin, int en_pin) {
   eMBErrorCode emb_ret = 0;
-  UCHAR RS485_PORT = 2;
   ULONG RS485_BAUD = 9600;
   eMBParity RS485_PARITY = MB_PAR_NONE;
 
-  emb_ret =
-      modbus_init(RS485_PORT, RS485_BAUD, RS485_PARITY, tx_pin, rx_pin, en_pin);
+  emb_ret = modbus_init(port, RS485_BAUD, RS485_PARITY, tx_pin, rx_pin, en_pin);
   if (emb_ret != 0) {
     ESP_LOGE(TAG, "%4d %s modbus_init failed", __LINE__, __func__);
     return emb_ret;
@@ -273,4 +273,34 @@ esp_err_t mt_ld100_init(int tx_pin, int rx_pin, int en_pin) {
   mt_modbus_task();
 
   return ESP_OK;
+}
+
+mt_module_flow_struct_group_t *modbus_ld100_get_data(uint8_t port) {
+  esp_err_t err = ESP_OK;
+  bool state = false;
+  int count = 0;
+
+  mt_module_flow_struct_group_t *data_out = mt_module_flow_new_struct_group(1);
+
+  // key
+  data_out->value[count++]->key = mt_utils_string_copy("state1");
+  count = 0;
+
+  // get state
+  err = modbus_ld100_get_state(port, &state);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s addr:%d modbus_ld100_get_state failed", __LINE__,
+             __func__, port);
+    goto EXIT;
+  } else {
+    data_out->value[count]->type = GOOGLE__PROTOBUF__VALUE__KIND_BOOL_VALUE;
+    data_out->value[count]->bool_value = state;
+  }
+
+EXIT:
+  if (err != ESP_OK) {
+    mt_module_flow_free_struct_group(data_out);
+    data_out = NULL;
+  }
+  return data_out;
 }

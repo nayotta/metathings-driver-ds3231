@@ -12,6 +12,8 @@
 #define CONFIG_FREERTOS_HZ 100
 #endif
 
+// define =====================================================================
+
 typedef struct _gzpd800T_4ch_data_t {
   uint32_t amp1;
   uint32_t freq1;
@@ -27,10 +29,13 @@ typedef struct _gzpd800T_4ch_data_t {
   uint32_t power4;
 } gzpd800T_4ch_data_t;
 
-esp_err_t mt_gzpd800T_get_4ch_data(gzpd800T_4ch_data_t *data);
+// func =======================================================================
 
-esp_err_t mt_gzpd800T_get_warn(int addr, bool *warn);
+esp_err_t modbus_gzpd800T_get_4ch_data(gzpd800T_4ch_data_t *data);
 
-esp_err_t mt_gzpd800T_init(int tx_pin, int rx_pin, int en_pin);
+esp_err_t modbus_gzpd800T_get_warn(int addr, bool *warn);
+
+esp_err_t modbus_gzpd800T_init(uint8_t port, int tx_pin, int rx_pin,
+                               int en_pin);
 
 #endif
