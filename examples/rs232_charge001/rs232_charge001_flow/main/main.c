@@ -85,7 +85,8 @@ void app_main() {
   }
 
   // wait module session build
-  while (module_http->module->id == NULL || module_http->session_id == 0 ||
+  while (module_http->module == NULL || module_http->module->id == NULL ||
+         module_http->session_id == 0 ||
          module_http->module->deviceID == NULL) {
     vTaskDelay(2000 / portTICK_RATE_MS);
   }
@@ -107,7 +108,7 @@ void app_main() {
     return;
   }
   module_flow->push_frame_interval = 120 * 1000; // 120 second
-  module_flow->ping_interval = 57 * 1000;       // 57 second
+  module_flow->ping_interval = 57 * 1000;        // 57 second
 
   // flow task
   err = rs232_sim_air720h_flow_task(module_flow);
