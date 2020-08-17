@@ -5,63 +5,55 @@
 #include "freertos/queue.h"
 #include "freertos/task.h"
 
-#include "driver/gpio.h"
+#include "gpio_motor.h"
 
 // global define ==============================================================
-static const char *TAG = "GPIO_WATER001_BASE";
 
-int PINA = 12;
-int PINB = 14;
-int OP_INTERVAL = 1000;
+static const char *TAG = "GPIO_MOTOR_BASE";
 
-// test func =================================================================
-void test_init(int pin) {
-  esp_err_t err = ESP_OK;
-  gpio_config_t conf;
-  conf.intr_type = GPIO_INTR_DISABLE;
-  conf.mode = GPIO_MODE_OUTPUT;
-  conf.pin_bit_mask = (1ULL << pin);
-  conf.pull_down_en = 0;
-  conf.pull_up_en = 0;
-
-  err = gpio_config(&conf);
-  if (err != ESP_OK) {
-    ESP_LOGE(TAG, "pin %d gpio_config error", pin);
-    return false;
-  }
-
-  gpio_set_level(PINA, 0);
-}
-
-void test_open() {
-  gpio_set_level(PINA, 1);
-  gpio_set_level(PINB, 0);
-  vTaskDelay(OP_INTERVAL / portTICK_RATE_MS);
-  gpio_set_level(PINA, 0);
-  gpio_set_level(PINB, 0);
-}
-
-void test_close() {
-  gpio_set_level(PINA, 0);
-  gpio_set_level(PINB, 1);
-  vTaskDelay(OP_INTERVAL / portTICK_RATE_MS);
-  gpio_set_level(PINA, 0);
-  gpio_set_level(PINB, 0);
-}
+int PINA = 23;
+int PINA_ON_LEVEL = 1;
+int PINB = 22;
+int PINB_ON_LEVEL = 1;
 
 // main func ==================================================================
 void app_main() {
   esp_err_t err = ESP_OK;
+  bool state = false;
 
   ESP_LOGI(TAG, "test begin");
 
-  test_init(PINA);
-  test_init(PINB);
+  err = gpio_motor_task(PINA, PINA_ON_LEVEL, PINB, PINB_ON_LEVEL);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s gpio_motor_task failed", __LINE__, __func__);
+    return;
+  }
 
   while (true) {
-    test_open();
-    vTaskDelay(3000 / portTICK_RATE_MS);
-    test_close();
-    vTaskDelay(3000 / portTICK_RATE_MS);
+    ESP_LOGI(TAG, "%4d %s OPEN", __LINE__, __func__);
+    gpio_motor_set_state(1);
+    gpio_motor_get_state(&state);
+    ESP_LOGI(TAG, "%4d %s GET STATE: %d", __LINE__, __func__, state);
+
+    vTaskDelay(5000 / portTICK_RATE_MS);
+
+    ESP_LOGI(TAG, "%4d %s CLOSE", __LINE__, __func__);
+    gpio_motor_set_state(0);
+    gpio_motor_get_state(&state);
+    ESP_LOGI(TAG, "%4d %s GET STATE: %d", __LINE__, __func__, state);
+
+    vTaskDelay(5000 / portTICK_RATE_MS);
+
+    ESP_LOGI(TAG, "%4d %s DELAY CLOSE", __LINE__, __func__);
+    gpio_motor_set_delay_close(0.01);
+    gpio_motor_get_state(&state);
+    ESP_LOGI(TAG, "%4d %s GET STATE: %d", __LINE__, __func__, state);
+
+    vTaskDelay(5000 / portTICK_RATE_MS);
+
+    gpio_motor_get_state(&state);
+    ESP_LOGI(TAG, "%4d %s GET STATE: %d", __LINE__, __func__, state);
+
+    vTaskDelay(5000 / portTICK_RATE_MS);
   }
 }

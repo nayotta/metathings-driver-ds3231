@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package mt_pulse_motor;
+
+import "google/protobuf/empty.proto";
+
+service PulseMotorService {
+  rpc SetState(SetStateReq) returns (SetStateRes) {}
+  rpc GetState(google.protobuf.Empty) returns (GetStateRes) {}
+  rpc SetStateWithDelay(SetStateWithDelayReq) returns (SetStateWithDelayRes) {}
+}
+
+message SetStateReq { bool state = 1; }
+
+message SetStateRes { int32 code = 1; }
+
+message GetStateRes {
+  int32 code = 1;
+  bool state = 2;     // true: open  false: close
+  float lefttime = 3; // unit: s
+}
+
+message SetStateWithDelayReq {
+  bool state = 1; // true: open  false: close
+  float time = 2; // uint: s min: 0.01s
+}
+
+message SetStateWithDelayRes { int32 code = 1; }
