@@ -22,6 +22,7 @@ typedef struct {
   union {
     float data;
     bool state;
+    int32_t number_data;
   };
 
   int64_t update_time;
@@ -36,6 +37,9 @@ typedef struct {
 esp_err_t rs232_PRS3342_task(rs232_PRS3342_t *prs3342);
 
 esp_err_t rs232_PRS3342_new_guiyi(rs232_PRS3342_data_t *data, int addr,
+                                  float convert, char *name);
+
+esp_err_t rs232_PRS3342_new_int(rs232_PRS3342_data_t *data, int addr,
                                   float convert, char *name);
 
 esp_err_t rs232_PRS3342_set_context(rs232_PRS3342_t *prs3342);

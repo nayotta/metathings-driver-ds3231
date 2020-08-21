@@ -127,7 +127,7 @@ EXIT:
   return err;
 }
 
-static rs232_lora_ebyte_data_t *rs232_lora_ebyte_data_parse(uint8_t *buf,
+rs232_lora_ebyte_data_t *rs232_lora_ebyte_data_parse(uint8_t *buf,
                                                             int buf_size) {
   esp_err_t err = ESP_OK;
   int offset = 0;

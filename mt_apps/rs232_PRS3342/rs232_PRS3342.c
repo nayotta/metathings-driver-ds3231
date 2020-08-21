@@ -294,6 +294,17 @@ esp_err_t rs232_PRS3342_new_guiyi(rs232_PRS3342_data_t *data, int addr,
   return ESP_OK;
 }
 
+esp_err_t rs232_PRS3342_new_int(rs232_PRS3342_data_t *data, int addr,
+                                  float convert, char *name) {
+  data->addr = addr;
+  data->type = RS232_PRS3342_DATA_TYPE_GUIYI;
+  data->convert = convert;
+  data->name = name;
+  data->update_time = 0;
+
+  return ESP_OK;
+}
+
 esp_err_t rs232_PRS3342_set_context(rs232_PRS3342_t *prs3342) {
   PRS3342 = prs3342;
 

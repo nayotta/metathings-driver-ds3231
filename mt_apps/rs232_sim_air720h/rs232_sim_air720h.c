@@ -32,6 +32,7 @@ static char *PUSHFRAME_PATH = "/v1/device_cloud/actions/push_frame_to_flow";
 #define AIR720H_URL_MAX_SIZE 100
 static SemaphoreHandle_t AIR720H_HTTP_LOCK = NULL;
 static long AIR720H_HTTP_LOCK_TIMEOUT = 8000;
+#define AIR720H_HTTP_HEAD_SIZE 256
 
 // mqtt
 void (*MSG_PROCESS)(char *topic, void *buf, int size);
@@ -73,6 +74,11 @@ static void rs232_sim_air720h_http_task_loop(mt_module_http_t *module_http) {
   esp_err_t err = ESP_OK;
 
 RESTART:
+  vTaskDelay(3000 / portTICK_PERIOD_MS);
+  issue_module_token_count = issue_module_token_max;
+  show_module_retry_count = show_module_retry_max;
+  heartbeat_count = heartbeat_max;
+
   // http init
   while (true) {
     err = rs232_sim_air720h_http_init(module_http);
@@ -93,6 +99,7 @@ RESTART:
     if (issue_module_token_count <= 0) {
       ESP_LOGE(TAG, "%4d %s issue_module_token_count get limit, restart loop",
                __LINE__, __func__);
+      vTaskDelay(issue_module_token_interval / portTICK_PERIOD_MS);
       goto RESTART;
     }
 
@@ -111,8 +118,6 @@ RESTART:
     vTaskDelay(issue_module_token_interval / portTICK_PERIOD_MS);
   }
 
-  show_module_retry_count = show_module_retry_max;
-
   // show module loop
   while (true) {
     if (module_http->module != NULL) {
@@ -123,6 +128,7 @@ RESTART:
     if (show_module_retry_count <= 0) {
       ESP_LOGE(TAG, "%4d %s show_module_retry_count get limit, restart loop",
                __LINE__, __func__);
+      vTaskDelay(show_module_interval / portTICK_PERIOD_MS);
       goto RESTART;
     }
 
@@ -141,8 +147,6 @@ RESTART:
   }
 
   // heartbeat loop
-  heartbeat_count = heartbeat_max;
-
   module_http->session_id =
       mt_utils_session_new_session(mt_utils_session_gen_startup_session(),
                                    mt_utils_session_gen_major_session());
@@ -154,6 +158,7 @@ RESTART:
     if (heartbeat_count <= 0) {
       ESP_LOGE(TAG, "%4d %s heartbeat_count get limit, restart loop", __LINE__,
                __func__);
+      vTaskDelay(heartbeat_interval / portTICK_PERIOD_MS);
       goto RESTART;
     }
 
@@ -342,7 +347,7 @@ esp_err_t
 rs232_sim_air720h_http_issue_module_token(mt_module_http_t *module_http) {
   esp_err_t err = ESP_OK;
   char url[AIR720H_URL_MAX_SIZE] = "";
-  char *head = NULL;
+  char head[AIR720H_HTTP_HEAD_SIZE] = "";
   char *post_data = NULL;
   char *res_data = NULL;
   token_t *token_out = NULL;
@@ -379,11 +384,31 @@ rs232_sim_air720h_http_issue_module_token(mt_module_http_t *module_http) {
     goto EXIT;
   }
 
-  // set head
-  head = rs232_sim_air720h_utils_get_head();
-  err = rs232_sim_air720h_http_set_para_head(head);
+  // clear head
+  err = rs232_sim_air720h_http_set_para_head("");
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s rs232_sim_air720h_http_set_para_head failed",
+             __LINE__, __func__);
+    goto EXIT;
+  }
+
+  // set head
+  sprintf(head, "%s", "Content-Type:application/json");
+  err = rs232_sim_air720h_http_set_para_head_user_defined(head);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG,
+             "%4d %s rs232_sim_air720h_http_set_para_head "
+             "Content-Type:application/json failed",
+             __LINE__, __func__);
+    goto EXIT;
+  }
+
+  sprintf(head, "%s", "Accept:application/json");
+  err = rs232_sim_air720h_http_set_para_head_user_defined(head);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG,
+             "%4d %s rs232_sim_air720h_http_set_para_head "
+             "Accept:application/json failed",
              __LINE__, __func__);
     goto EXIT;
   }
@@ -468,8 +493,6 @@ EXIT:
   else
     ESP_LOGE(TAG, "%4d %s issue token failed", __LINE__, __func__);
 
-  if (head != NULL)
-    free(head);
   if (post_data != NULL)
     free(post_data);
   if (res_data != NULL)
@@ -483,7 +506,7 @@ EXIT:
 esp_err_t rs232_sim_air720h_http_show_module(mt_module_http_t *module_http) {
   esp_err_t err = ESP_OK;
   char url[AIR720H_URL_MAX_SIZE] = "";
-  char *head = NULL;
+  char head[AIR720H_HTTP_HEAD_SIZE] = "";
   char *res_data = NULL;
   module_t *mdl_out = NULL;
 
@@ -524,11 +547,41 @@ esp_err_t rs232_sim_air720h_http_show_module(mt_module_http_t *module_http) {
     goto EXIT;
   }
 
-  // set head
-  head = rs232_sim_air720h_utils_get_head_with_token(module_http->token);
-  err = rs232_sim_air720h_http_set_para_head(head);
+  // clear head
+  err = rs232_sim_air720h_http_set_para_head("");
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s rs232_sim_air720h_http_set_para_head failed",
+             __LINE__, __func__);
+    goto EXIT;
+  }
+
+  // set head
+  sprintf(head, "%s", "Content-Type:application/json");
+  err = rs232_sim_air720h_http_set_para_head_user_defined(head);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG,
+             "%4d %s rs232_sim_air720h_http_set_para_head "
+             "Content-Type:application/json failed",
+             __LINE__, __func__);
+    goto EXIT;
+  }
+
+  sprintf(head, "%s", "Accept:application/json");
+  err = rs232_sim_air720h_http_set_para_head_user_defined(head);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG,
+             "%4d %s rs232_sim_air720h_http_set_para_head "
+             "Accept:application/json failed",
+             __LINE__, __func__);
+    goto EXIT;
+  }
+
+  sprintf(head, "Authorization:Bearer %s", module_http->token);
+  err = rs232_sim_air720h_http_set_para_head_user_defined(head);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG,
+             "%4d %s rs232_sim_air720h_http_set_para_head Authorization:Bearer "
+             "failed",
              __LINE__, __func__);
     goto EXIT;
   }
@@ -586,8 +639,6 @@ EXIT:
   else
     ESP_LOGE(TAG, "%4d %s show module failed", __LINE__, __func__);
 
-  if (head != NULL)
-    free(head);
   if (res_data != NULL)
     free(res_data);
   http_lock_release();
@@ -597,7 +648,7 @@ EXIT:
 esp_err_t rs232_sim_air720h_http_heartbeat(mt_module_http_t *module_http) {
   esp_err_t err = ESP_OK;
   char url[AIR720H_URL_MAX_SIZE] = "";
-  char *head = NULL;
+  char head[AIR720H_HTTP_HEAD_SIZE] = "";
   char *post_data = NULL;
 
   ESP_LOGI(TAG, "%4d %s begin", __LINE__, __func__);
@@ -637,13 +688,52 @@ esp_err_t rs232_sim_air720h_http_heartbeat(mt_module_http_t *module_http) {
     goto EXIT;
   }
 
-  // set head
-  head = rs232_sim_air720h_utils_get_head_with_token_and_session(
-      module_http->token, module_http->session_id);
-  err = rs232_sim_air720h_http_set_para_head(head);
+  // clear head
+  err = rs232_sim_air720h_http_set_para_head("");
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s rs232_sim_air720h_http_set_para_head failed",
              __LINE__, __func__);
+    goto EXIT;
+  }
+
+  // clear head
+  sprintf(head, "%s", "Content-Type:application/json");
+  err = rs232_sim_air720h_http_set_para_head_user_defined(head);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG,
+             "%4d %s rs232_sim_air720h_http_set_para_head "
+             "Content-Type:application/json failed",
+             __LINE__, __func__);
+    goto EXIT;
+  }
+
+  sprintf(head, "%s", "Accept:application/json");
+  err = rs232_sim_air720h_http_set_para_head_user_defined(head);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG,
+             "%4d %s rs232_sim_air720h_http_set_para_head "
+             "Accept:application/json failed",
+             __LINE__, __func__);
+    goto EXIT;
+  }
+
+  sprintf(head, "Authorization:Bearer %s", module_http->token);
+  err = rs232_sim_air720h_http_set_para_head_user_defined(head);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG,
+             "%4d %s rs232_sim_air720h_http_set_para_head Authorization:Bearer "
+             "failed",
+             __LINE__, __func__);
+    goto EXIT;
+  }
+
+  sprintf(head, "MT-Module-Session:%llu", module_http->session_id);
+  err = rs232_sim_air720h_http_set_para_head_user_defined(head);
+  if (err != ESP_OK) {
+    ESP_LOGE(
+        TAG,
+        "%4d %s rs232_sim_air720h_http_set_para_head  MT-Module-Sessionfailed",
+        __LINE__, __func__);
     goto EXIT;
   }
 
@@ -695,8 +785,6 @@ EXIT:
   else
     ESP_LOGE(TAG, "%4d %s heartbeat failed", __LINE__, __func__);
 
-  if (head != NULL)
-    free(head);
   if (post_data != NULL)
     free(post_data);
   http_lock_release();
@@ -708,7 +796,7 @@ rs232_sim_air720h_http_push_frame_to_flow(mt_module_http_t *module_http,
                                           mt_module_flow_t *flow_in) {
   esp_err_t err = ESP_OK;
   char url[AIR720H_URL_MAX_SIZE] = "";
-  char *head = NULL;
+  char head[AIR720H_HTTP_HEAD_SIZE] = "";
   char *res_data = NULL;
   char *post_data = NULL;
   push_frame_res_t *res_out = NULL;
@@ -750,11 +838,41 @@ rs232_sim_air720h_http_push_frame_to_flow(mt_module_http_t *module_http,
     goto EXIT;
   }
 
-  // set head
-  head = rs232_sim_air720h_utils_get_head_with_token(module_http->token);
-  err = rs232_sim_air720h_http_set_para_head(head);
+  // clear head
+  err = rs232_sim_air720h_http_set_para_head("");
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s rs232_sim_air720h_http_set_para_head failed",
+             __LINE__, __func__);
+    goto EXIT;
+  }
+
+  // set head
+  sprintf(head, "%s", "Content-Type:application/json");
+  err = rs232_sim_air720h_http_set_para_head_user_defined(head);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG,
+             "%4d %s rs232_sim_air720h_http_set_para_head "
+             "Content-Type:application/json failed",
+             __LINE__, __func__);
+    goto EXIT;
+  }
+
+  sprintf(head, "%s", "Accept:application/json");
+  err = rs232_sim_air720h_http_set_para_head_user_defined(head);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG,
+             "%4d %s rs232_sim_air720h_http_set_para_head "
+             "Accept:application/json failed",
+             __LINE__, __func__);
+    goto EXIT;
+  }
+
+  sprintf(head, "Authorization:Bearer %s", module_http->token);
+  err = rs232_sim_air720h_http_set_para_head_user_defined(head);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG,
+             "%4d %s rs232_sim_air720h_http_set_para_head Authorization:Bearer "
+             "failed",
              __LINE__, __func__);
     goto EXIT;
   }
@@ -831,8 +949,6 @@ EXIT:
   else
     ESP_LOGE(TAG, "%4d %s push_frame_to_flow failed", __LINE__, __func__);
 
-  if (head != NULL)
-    free(head);
   if (post_data != NULL)
     free(post_data);
   if (res_data != NULL)

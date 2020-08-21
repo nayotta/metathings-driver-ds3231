@@ -13,6 +13,7 @@
 #include "rs232_sim_air720h.h"
 #include "rs232_sim_air720h_flow.h"
 
+#include "mt_ethernet.h"
 #include "mt_memory_manage.h"
 #include "mt_module_flow_manage.h"
 #include "mt_module_http.h"
@@ -32,12 +33,16 @@ static const char *TAG = "rs232_sim_air720h_http";
 
 static int SIM_UART_NUM = 2;
 static int SIM_BAUD_RATE = 115200;
-static int SIM_RX_PIN = 15;
-static int SIM_TX_PIN = 13;
+// static int SIM_RX_PIN = 15;
+// static int SIM_TX_PIN = 13;
+static int SIM_RX_PIN = 4;
+static int SIM_TX_PIN = 16;
 
 static int RS232_UART_NUM = 1;
-static int RS232_RX_PIN = 16;
-static int RS232_TX_PIN = 17;
+// static int RS232_RX_PIN = 16;
+// static int RS232_TX_PIN = 17;
+static int RS232_RX_PIN = 15;
+static int RS232_TX_PIN = 13;
 
 // gloabal func ===============================================================
 
@@ -52,6 +57,10 @@ void app_main() {
   mt_nvs_init();
 
   mt_memory_manage_task(true);
+
+  // debug
+  mt_ethernet_task(-1, -1);
+  return;
 
   // serial init
   err = rs232_sim_air720h_serial_init(SIM_UART_NUM, SIM_RX_PIN, SIM_TX_PIN,
