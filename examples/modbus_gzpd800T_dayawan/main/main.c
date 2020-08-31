@@ -7,6 +7,7 @@
 #include "freertos/task.h"
 
 #include "mt_memory_manage.h"
+#include "mt_nvs_storage.h"
 
 #include "modbus_gzpd800T.h"
 #include "mt_mbtask.h"
@@ -34,11 +35,25 @@ void test_get_data() {
   esp_err_t err = ESP_OK;
   gzpd800T_4ch_data_t data;
 
-  err = modbus_gzpd800T_get_4ch_data(&data);
-  if (err != ESP_OK) {
-    ESP_LOGE(TAG, "%4d %s failed code:%d", __LINE__, __func__, err);
-    return;
-  }
+  // debug here
+  /*
+    err = modbus_gzpd800T_get_4ch_data(&data);
+    if (err != ESP_OK) {
+      ESP_LOGE(TAG, "%4d %s failed code:%d", __LINE__, __func__, err);
+      return;
+    }*/
+  data.amp1 = 1;
+  data.freq1 = 2;
+  data.power1 = 3;
+  data.amp2 = 4;
+  data.freq2 = 5;
+  data.power2 = 6;
+  data.amp3 = 7;
+  data.freq3 = 8;
+  data.power3 = 9;
+  data.amp4 = 10;
+  data.freq4 = 11;
+  data.power4 = 12;
 
   ESP_LOGI(TAG,
            "%4d %s \n"
@@ -77,6 +92,8 @@ void app_main() {
 
   ESP_LOGI(TAG, "test begin");
 
+  mt_nvs_init();
+
   mt_memory_manage_task(true);
 
   err = rs232_lora_ebyte_init(LORA_UART_NUM, LORA_RX_PIN, LORA_TX_PIN,
@@ -92,15 +109,33 @@ void app_main() {
     return;
   }
 
+  vTaskDelay(2000 / portTICK_RATE_MS);
+
   gzpd800T_4ch_data_t data;
   rs232_lora_ebyte_data_t *ebyte_data = NULL;
-  int interval = 30;
+  int interval = 30 * 1000;
   while (1) {
+    
     err = modbus_gzpd800T_get_4ch_data(&data);
     if (err != ESP_OK) {
       ESP_LOGE(TAG, "%4d %s failed code:%d", __LINE__, __func__, err);
       goto ERROR;
     }
+
+    // debug here
+    /*
+    data.amp1 = 1;
+    data.freq1 = 2;
+    data.power1 = 3;
+    data.amp2 = 4;
+    data.freq2 = 5;
+    data.power2 = 6;
+    data.amp3 = 7;
+    data.freq3 = 8;
+    data.power3 = 9;
+    data.amp4 = 10;
+    data.freq4 = 11;
+    data.power4 = 12;*/
 
     ESP_LOGI(TAG,
              "%4d %s \n"

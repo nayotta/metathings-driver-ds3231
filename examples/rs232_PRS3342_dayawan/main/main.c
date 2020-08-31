@@ -90,11 +90,17 @@ void app_main() {
     return;
   }
 
+  // debug here
+  /*
+  for (int i = 0; i < 31; i++) {
+    prs3342->datas[i]->data = i;
+  }*/
+
   rs232_lora_ebyte_data_t *ebyte_data = NULL;
-  int interval = 120;
+  int interval = 60 * 1000;
   while (true) {
     if (esp_timer_get_time() / 1000000 - prs3342->datas[0]->update_time <=
-        interval) {
+        interval / 1000) {
       ebyte_data = rs232_lora_ebyte_new_data();
       ebyte_data->id = 1;
       ebyte_data->type = 2;
