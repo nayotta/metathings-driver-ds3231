@@ -97,7 +97,8 @@
                 "databaseFilename": "",
                 "path": [
                     "${workspaceRoot}",
-                    "D:\\7esp32\\msys32\\home\\zhanghui\\esp\\esp-idf\\components"
+                    "D:\\7esp32\\msys32\\home\\zhanghui\\esp\\esp-idf\\components",
+                    "c:\\Users\\37044\\.espressif\\tools\\xtensa-esp32-elf\\esp-2019r2-8.2.0\\xtensa-esp32-elf\\xtensa-esp32-elf\\include"
                 ]
             }
         }
