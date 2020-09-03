@@ -34,6 +34,8 @@ esp_err_t gpio_pulse_motor_get_state(bool *state_out, float *left_time);
 // time uint:s
 esp_err_t gpio_pulse_motor_set_state_with_delay(bool state, float time);
 
+void gpio_pulse_motor_clear_delay_task();
+
 esp_err_t gpio_pulse_motor_task(int pin_a, int pin_a_on_level, int pin_b,
                                 int pin_b_on_level);
 

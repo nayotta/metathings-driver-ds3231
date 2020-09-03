@@ -353,6 +353,7 @@ static void mt_wifi_loop(void) {
 }
 
 // public func ================================================================
+
 void mt_smartconfig_task(int light_pin, int light_pin_on_level, int btn_pin,
                          int btn_pin_on_level) {
   esp_err_t err = ESP_OK;

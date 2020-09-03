@@ -3,7 +3,6 @@
 
 #include "esp_err.h"
 #include "esp_log.h"
-#include "mqtt_client.h"
 
 #include "google/protobuf/any.pb-c.h"
 #include "google/protobuf/empty.pb-c.h"
@@ -18,6 +17,7 @@
 #include "mt_utils_error.h"
 
 #include "gpio_pulse_motor.h"
+#include "gpio_pulse_motor_module_flow.h"
 #include "gpio_pulse_motor_utils.h"
 
 // global config ==============================================================
@@ -111,6 +111,7 @@ module_mqtt_process_set_state(Ai__Metathings__Component__DownStreamFrame *msg,
   }
 
   // cmd process
+  gpio_pulse_motor_clear_delay_task();
   err = gpio_pulse_motor_set_state(req->state);
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s gpio_pulse_motor_set_state failed", __LINE__,
@@ -120,7 +121,7 @@ module_mqtt_process_set_state(Ai__Metathings__Component__DownStreamFrame *msg,
   }
 
   // flow notify
-  // TODO(ZH)
+  gpio_pulse_motor_module_notify_state_task("net", req->state, 0);
 
 ERROR:
   // response
@@ -192,7 +193,7 @@ static void module_mqtt_process_set_state_with_delay(
   }
 
   // flow notify
-  // TODO(ZH)
+  gpio_pulse_motor_module_notify_state_task("net", req->state, req->time);
 
 ERROR:
   // response

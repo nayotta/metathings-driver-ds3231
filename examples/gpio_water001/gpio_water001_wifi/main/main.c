@@ -18,6 +18,8 @@
 #include "mt_smartconfig.h"
 
 #include "gpio_pulse_motor.h"
+#include "gpio_pulse_motor_button.h"
+#include "gpio_pulse_motor_light.h"
 #include "gpio_pulse_motor_module_flow.h"
 #include "gpio_pulse_motor_module_mqtt.h"
 
@@ -31,15 +33,17 @@ int LIGHT_PIN_ON_LEVEL = 0;
 int BTN_PIN = 35;
 int BTN_PIN_ON_LEVEL = 0;
 
-int PINA = 23;
+int PINA = 13;
 int PINA_ON_LEVEL = 1;
-int PINB = 22;
+int PINB = 15;
 int PINB_ON_LEVEL = 1;
+
+int PULSE_LIGHT_PIN = 12;
+int PULSE_LIGHT_PIN_ON_LEVEL = 0;
 
 // main func ==================================================================
 
 void app_main() {
-  esp_err_t err = ESP_OK;
   mt_module_http_t *module_http = NULL;
   mt_module_flow_t *module_flow = NULL;
 
@@ -59,6 +63,10 @@ void app_main() {
 
   // network
   mt_smartconfig_task(LIGHT_PIN, LIGHT_PIN_ON_LEVEL, BTN_PIN, BTN_PIN_ON_LEVEL);
+
+  // btn and light
+  gpio_pulse_motor_button_task(BTN_PIN, BTN_PIN_ON_LEVEL);
+  gpio_pulse_motor_light_task(PULSE_LIGHT_PIN, PULSE_LIGHT_PIN_ON_LEVEL);
 
   // metathings module http task
   module_http = mt_module_http_new(1);

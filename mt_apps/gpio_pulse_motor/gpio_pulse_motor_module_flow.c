@@ -58,6 +58,7 @@ gpio_pulse_motor_module_notify_loop(gpio_pusle_motor_data_t *motor_data) {
 
 EXIT:
   mt_module_flow_free_struct_group(data);
+  gpio_pulse_motor_free_data(motor_data);
   vTaskDelete(NULL);
 }
 
@@ -77,5 +78,5 @@ void gpio_pulse_motor_module_notify_state_task(char *type, bool state,
   data->time = time;
 
   xTaskCreate((TaskFunction_t)gpio_pulse_motor_module_notify_loop,
-              "MODULE_FLOW", 2 * 1024, data, 10, NULL);
+              "MODULE_FLOW", 10 * 1024, data, 10, NULL);
 }

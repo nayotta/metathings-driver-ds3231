@@ -284,6 +284,7 @@ esp_err_t gpio_pulse_motor_set_state_with_delay(bool state, float time) {
 
   // check if has task running
   if (DELAY_CLOSE_HANDLE != NULL) {
+    ESP_LOGI(TAG, "%4d %s delete running task", __LINE__, __func__);
     vTaskDelete(DELAY_CLOSE_HANDLE);
     DELAY_CLOSE_HANDLE = NULL;
   }
@@ -299,13 +300,21 @@ esp_err_t gpio_pulse_motor_set_state_with_delay(bool state, float time) {
   data->state = state;
   data->time = time;
   xTaskCreate((TaskFunction_t)gpio_pulse_motor_delay_close_loop,
-              "DELAY_CLOSE_TASK", 2 * 1024, data, 10, DELAY_CLOSE_HANDLE);
+              "DELAY_CLOSE_TASK", 2 * 1024, data, 10, &DELAY_CLOSE_HANDLE);
 
   START_TIME = esp_timer_get_time();
   DELAY_CLOSE_TIME = time;
 
 EXIT:
   return err;
+}
+
+void gpio_pulse_motor_clear_delay_task(){
+  if (DELAY_CLOSE_HANDLE != NULL) {
+    ESP_LOGI(TAG, "%4d %s delete running task", __LINE__, __func__);
+    vTaskDelete(DELAY_CLOSE_HANDLE);
+    DELAY_CLOSE_HANDLE = NULL;
+  }
 }
 
 esp_err_t gpio_pulse_motor_task(int pin_a, int pin_a_on_level, int pin_b,
