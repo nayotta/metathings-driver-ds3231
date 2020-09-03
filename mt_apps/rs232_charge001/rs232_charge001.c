@@ -482,7 +482,7 @@ rs232_charge001_states2_t *rs232_charge001_get_states2() {
     if (states2->states[i] == NULL) {
       ESP_LOGE(TAG, "%4d %s rs232_charge001_get_state %d failed", __LINE__,
                __func__, states1->states[i]->port);
-      states2->states[i]->state = states1->states[i]->state;
+      goto EXIT;
     }
   }
 

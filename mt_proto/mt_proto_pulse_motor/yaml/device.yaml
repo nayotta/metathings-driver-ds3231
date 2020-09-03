@@ -1,0 +1,19 @@
+# yaml
+version: v1beta
+description: pulse motor 脉冲电机
+flow:
+  name: data
+  fields:
+    from:
+      description: 操作来源 net:远程 local:本地操作
+      driver: pulseMotor
+      type: string
+    state:
+      description: 电机状态 true:打开 false:关闭
+      driver: pulseMotor
+      type: bool
+    leftTime:
+      description: 剩余切换时间
+      driver: pulseMotor
+      type: float
+      unit: s

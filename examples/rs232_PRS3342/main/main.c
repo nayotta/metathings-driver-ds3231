@@ -9,6 +9,9 @@
 // global define ==============================================================
 
 static const char *TAG = "example-rs232-PRS3342";
+static int TX_PIN = 13;
+static int RX_PIN = 15;
+static int RS232_PORT = 2;
 
 // gloabal func ===============================================================
 
@@ -21,6 +24,9 @@ void app_main() {
   ESP_LOGI(TAG, "test begin");
 
   prs3342->rs232_config = rs232_dev_default_new();
+  prs3342->rs232_config->tx_pin = TX_PIN;
+  prs3342->rs232_config->rx_pin = RX_PIN;
+  prs3342->rs232_config->timeout = 200;
 
   prs3342->data_num = 31;
   prs3342->datas = malloc(prs3342->data_num * sizeof(rs232_PRS3342_data_t *));

@@ -78,12 +78,12 @@
                 "${workspaceFolder}/mt_apps/gpio_light",
                 "D:/7esp32/msys32/home/zhanghui/work/metathings-esp32-lora-charge001/metathings-esp32-lib/components/gpio_light",
                 "D:/7esp32/msys32/home/zhanghui/work/metathings-esp32-airswitch001/metathings-esp32-lib/components/mt_memory_manage",
-                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/esp_http_server/include",
-                "${workspaceFolder}/components/mt_config_http_server",
+                "${workspaceFolder}/mt_proto/mt_proto_pulse_motor/include",
+                "${workspaceFolder}/mt_apps/gpio_pulse_motor",
                 "${workspaceFolder}/mt_apps/gpio_button",
-                "C:/Users/37044/.espressif/tools/xtensa-esp32-elf/esp-2019r2-8.2.0/xtensa-esp32-elf/xtensa-esp32-elf/include",
                 "${workspaceFolder}/mt_apps/rs232_PRS3342",
-                "${workspaceFolder}/mt_apps/modbus_gzpd800T"
+                "C:/Users/37044/.espressif/tools/xtensa-esp32-elf/esp-2019r2-8.2.0/xtensa-esp32-elf/xtensa-esp32-elf/include",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/esp_netif/include"
             ],
             "defines": [
                 "_DEBUG",
