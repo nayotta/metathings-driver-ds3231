@@ -7,6 +7,8 @@
 
 #include "mt_utils_string.h"
 
+#include "gpio_pulse_motor_module_flow.h"
+
 // static define ==============================================================
 
 static const char *TAG = "GPIO_PULSE_MOTOR";
@@ -116,6 +118,7 @@ static void gpio_pulse_motor_delay_close_loop(gpio_pusle_motor_data_t *data) {
   gpio_pulse_motor_delay_reset();
   DELAY_CLOSE_HANDLE = NULL;
   ESP_LOGW(TAG, "%4d %s TIME reached", __LINE__, __func__);
+  gpio_pulse_motor_module_notify_state_task("time", !data->state, 0);
   gpio_pulse_motor_free_data(data);
   vTaskDelete(NULL);
 }

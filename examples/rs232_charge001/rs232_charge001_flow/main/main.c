@@ -59,8 +59,8 @@ void app_main() {
   mt_memory_manage_task(true);
 
   // debug
-  mt_ethernet_task(-1, -1);
-  return;
+  //mt_ethernet_task(-1, -1);
+  //return;
 
   // serial init
   err = rs232_sim_air720h_serial_init(SIM_UART_NUM, SIM_RX_PIN, SIM_TX_PIN,
