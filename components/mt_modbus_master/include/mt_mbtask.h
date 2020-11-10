@@ -13,7 +13,7 @@
 #define CONFIG_FREERTOS_HZ 100
 #endif
 
-#define BUF_MAXLEN 64
+#define BUF_MAXLEN 128
 
 struct RetMsg_t // ret message struct
 {
