@@ -168,7 +168,7 @@ esp_err_t mt_aew100_get_votage_ABC(UCHAR addr, double *a, double *b,
   struct RetMsg_t cmd_ret_payload;
   int data_size = 3;
 
-  // votage A
+  // votage ABC
   err = modbus_sync_Cmd_03(addr, DATA_VOTAGEA, data_size, &cmd_ret_payload);
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s addr:%d failed", __LINE__, __func__, addr);
@@ -979,7 +979,7 @@ esp_err_t mt_aew100_get_data(UCHAR addr, MtAew100__Data *data) {
 esp_err_t mt_aew100_get_data2(UCHAR addr, MtAew100__Data *data) {
   esp_err_t err = ESP_OK;
 
-  err = mt_aew100_get_current_ABC(addr, &data->currenta, &data->currenta,
+  err = mt_aew100_get_current_ABC(addr, &data->currenta, &data->currentb,
                                   &data->currentc);
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_current_ABC failed", __LINE__,
@@ -1015,7 +1015,7 @@ esp_err_t mt_aew100_get_data2(UCHAR addr, MtAew100__Data *data) {
     data->activepowerc = data->votagec * data->currentc;
   }
 
-  err = mt_aew100_get_temp_ABC(addr, &data->tempa, &data->tempa, &data->tempc);
+  err = mt_aew100_get_temp_ABC(addr, &data->tempa, &data->tempb, &data->tempc);
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s addr:%d mt_aew100_get_temp_ABC failed", __LINE__,
              __func__, addr);
@@ -1040,7 +1040,7 @@ esp_err_t mt_aew100_init(uint8_t port, int tx_pin, int rx_pin, int en_pin) {
   }
 
   mt_vMBMaster_set_T35_interval(250);
-  // mt_modbus_task();
+  mt_modbus_task();
 
   return ESP_OK;
 }
