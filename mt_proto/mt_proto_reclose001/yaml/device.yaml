@@ -1,0 +1,44 @@
+# yaml
+version: v1beta
+description: reclose001 莱源重合闸LYL8-125Y
+flow:
+  name: sensor
+  fields:
+    notify:
+      description: 标注消息是否为推送通知
+      type: bool
+      default: false
+    addr:
+      description: 开关地址
+      driver: reclose001
+      type: float
+    state:
+      description: 开关状态(0关 1闭)
+      driver: reclose001
+      type: bool
+      default: true
+    warnHighVoltage:
+      description: 开关电压高报警(0正常 1报警)
+      driver: reclose001
+      type: bool
+      default: false
+    warnLowVoltage:
+      description: 开关电压低报警(0正常 1报警)
+      driver: reclose001
+      type: bool
+      default: false
+    warnOverload:
+      description: 开关过载报警(0正常 1报警)
+      driver: reclose001
+      type: bool
+      default: false
+    warnShort:
+      description: 开关短路报警(0正常 1报警)
+      driver: reclose001
+      type: bool
+      default: false
+    warnLeak:
+      description: 开关漏电报警(0正常 1报警)
+      driver: reclose001
+      type: bool
+      default: false

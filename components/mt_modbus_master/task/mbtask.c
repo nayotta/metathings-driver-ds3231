@@ -330,5 +330,6 @@ EXIT:
 
 void mt_modbus_task() {
   // task level must be highest 12!!!!!!!!!
-  xTaskCreate(modbus_loop, "mt_modbus_task", 1024 * 8, NULL, 12, NULL);
+  xTaskCreatePinnedToCore(modbus_loop, "mt_modbus_task", 1024 * 8, NULL, 10,
+                          NULL, 1);
 }

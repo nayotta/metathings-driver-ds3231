@@ -8,7 +8,7 @@
 
 #include "mt_http_client.h"
 #include "mt_module_http.h"
-#include "mt_utils.h"
+#include "mt_utils_string.h"
 
 // global define ==============================================================
 static const char *TAG = "MT_MODULE_HTTP_UTILS";

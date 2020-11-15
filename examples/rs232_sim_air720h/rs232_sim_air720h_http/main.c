@@ -110,6 +110,9 @@ void app_main() {
     }
   }
 
+  printf("debug: deivice_id:%s module_id:%s\n", module_http->module->id,
+         module_http->module->deviceID);
+
   // init flow
   module_flow = mt_module_flow_new(1, 1, module_http);
   if (module_flow == NULL) {

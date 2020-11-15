@@ -43,22 +43,20 @@ rs232_lora_ebyte_parse_flow(rs232_lora_ebyte_data_t *ebyte_data) {
   }
 
   for (int i = 0; i < manage->flows_size; i++) {
-    if (manage->flows_addr[i] == ebyte_data->id) {
-      char *topic = malloc(120);
-      match++;
-      sprintf(topic, "mt/devices/%s/flow_channel/sessions/%s/upstream",
-              manage->flows[i]->module_http->module->deviceID,
-              manage->flows[i]->session);
-      mqtt_msg->topic = topic;
-      mqtt_msg->buf = ebyte_data->data;
-      mqtt_msg->buf_size = ebyte_data->len;
+    char *topic = malloc(120);
+    match++;
+    sprintf(topic, "mt/devices/%s/flow_channel/sessions/%s/upstream",
+            manage->flows[i]->module_http->module->deviceID,
+            manage->flows[i]->session);
+    mqtt_msg->topic = topic;
+    mqtt_msg->buf = ebyte_data->data;
+    mqtt_msg->buf_size = ebyte_data->len;
 
-      ret = xQueueSend(manage->flows_handle[i], &mqtt_msg, timeout);
-      if (ret != pdTRUE) {
-        ESP_LOGE(TAG, "%4d %s xQueueSend failed", __LINE__, __func__);
-        err = ESP_ERR_INVALID_ARG;
-        goto EXIT;
-      }
+    ret = xQueueSend(manage->flows_handle[i], &mqtt_msg, timeout);
+    if (ret != pdTRUE) {
+      ESP_LOGE(TAG, "%4d %s xQueueSend failed", __LINE__, __func__);
+      err = ESP_ERR_INVALID_ARG;
+      goto EXIT;
     }
   }
 
@@ -87,7 +85,7 @@ rs232_lora_ebyte_parse_unarycall(rs232_lora_ebyte_data_t *ebyte_data) {
     return ESP_ERR_INVALID_ARG;
   }
 
-  ret = xQueueSend(ebyte_data->handle, &ebyte_data, 0);
+  ret = xQueueSend(ebyte_data->handle, ebyte_data, 0);
   if (ret != pdTRUE) {
     ESP_LOGE(TAG, "%4d %s xQueueSend:%p failed", __LINE__, __func__,
              ebyte_data->handle);
@@ -129,7 +127,7 @@ EXIT:
   return err;
 }
 
-static rs232_lora_ebyte_data_t *rs232_lora_ebyte_data_parse(uint8_t *buf,
+rs232_lora_ebyte_data_t *rs232_lora_ebyte_data_parse(uint8_t *buf,
                                                             int buf_size) {
   esp_err_t err = ESP_OK;
   int offset = 0;
@@ -366,8 +364,7 @@ static void rs232_lora_ebyte_loop() {
   vTaskDelete(NULL);
 }
 
-// global func
-// ================================================================
+// global func ================================================================
 
 rs232_lora_ebyte_data_t *rs232_lora_ebyte_new_data() {
   rs232_lora_ebyte_data_t *ebyte_data = malloc(sizeof(rs232_lora_ebyte_data_t));
@@ -407,6 +404,7 @@ esp_err_t rs232_lora_ebyte_init(int uart_num, int rx_pin, int tx_pin,
   CONFIG->rx_pin = rx_pin;
   CONFIG->tx_pin = tx_pin;
   CONFIG->uart_config->baud_rate = baud_rate;
+  CONFIG->timeout = 1000;
 
   err = rs232_dev_init(CONFIG);
   if (err != ESP_OK) {

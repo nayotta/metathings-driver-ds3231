@@ -1,6 +1,7 @@
 #include "rs232_sim_air720h_mqtt.h"
 
 #include "rs232_sim_air720h_recv_manage.h"
+#include "rs232_sim_air720h_recv_manage_mqtt_state.h"
 #include "rs232_sim_air720h_sent_manage.h"
 
 #include "mt_utils.h"
@@ -11,12 +12,29 @@ static const char *TAG = "rs232_sim_air720_mqtt";
 
 static int MQTT_CLIENT_ID_SIZE = 23;
 static int MQTT_CMD_TIMEOUT = 500;   // 500ms
+static int MQTT_REQ_TIMEOUT = 5000;  // 5000ms
 static int MQTT_CMD_MAX_SIZE = 1000; // max cmd size 1000
 static int MQTT_PUB_MAX_SIZE = 1360; // max cmd size 1360
 
 // global func ================================================================
 
-void rs232_sim_air720h_recv_manage_process_mqtt_sub(uint8_t data) {}
+// get state
+esp_err_t rs232_sim_air720h_mqtt_get_state() {
+  esp_err_t err = ESP_OK;
+  char *cmd = "AT+MQTTSTATU\r";
+
+  err = rs232_sim_air720h_sent_manage_sent_and_wait_finish(
+      (uint8_t *)cmd, strlen(cmd), MQTT_CMD_TIMEOUT,
+      rs232_sim_air720h_recv_manage_get_mqtt_state_finish,
+      rs232_sim_air720h_recv_manage_get_ok);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s CMD failed", __LINE__, __func__);
+    goto EXIT;
+  }
+
+EXIT:
+  return err;
+}
 
 // set config
 esp_err_t rs322_sim_air720h_mqtt_set_client_config(char *username,
@@ -36,7 +54,6 @@ esp_err_t rs322_sim_air720h_mqtt_set_client_config(char *username,
   }
 
   client_id = mt_utils_get_random_client_id(MQTT_CLIENT_ID_SIZE);
-  printf("debug client id:%s", client_id);
 
   sprintf(cmd, "AT+MCONFIG=\"%s\",\"%s\",\"%s\"\r", client_id, username,
           password);
@@ -72,7 +89,7 @@ esp_err_t rs322_sim_air720h_mqtt_set_host(char *host, char *port) {
   sprintf(cmd, "AT+MIPSTART=\"%s\",\"%s\"\r", host, port);
 
   err = rs232_sim_air720h_sent_manage_sent_and_wait_finish(
-      (uint8_t *)cmd, strlen(cmd), MQTT_CMD_TIMEOUT,
+      (uint8_t *)cmd, strlen(cmd), MQTT_REQ_TIMEOUT,
       rs232_sim_air720h_recv_manage_get_connect_ok,
       rs232_sim_air720h_recv_manage_get_ok);
   if (err != ESP_OK) {
@@ -100,7 +117,7 @@ esp_err_t rs322_sim_air720h_mqtt_set_connect(int keepalive_interval) {
   sprintf(cmd, "AT+MCONNECT=1,%d\r", keepalive_interval);
 
   err = rs232_sim_air720h_sent_manage_sent_and_wait_finish(
-      (uint8_t *)cmd, strlen(cmd), MQTT_CMD_TIMEOUT,
+      (uint8_t *)cmd, strlen(cmd), MQTT_REQ_TIMEOUT,
       rs232_sim_air720h_recv_manage_get_mqtt_connect_ok,
       rs232_sim_air720h_recv_manage_get_ok);
   if (err != ESP_OK) {
@@ -127,7 +144,7 @@ esp_err_t rs322_sim_air720h_mqtt_set_sub_topic(char *topic) {
   sprintf(cmd, "AT+MSUB=\"%s\",0\r", topic);
 
   err = rs232_sim_air720h_sent_manage_sent_and_wait_finish(
-      (uint8_t *)cmd, strlen(cmd), MQTT_CMD_TIMEOUT,
+      (uint8_t *)cmd, strlen(cmd), MQTT_REQ_TIMEOUT,
       rs232_sim_air720h_recv_manage_get_mqtt_sub_ok,
       rs232_sim_air720h_recv_manage_get_ok);
   if (err != ESP_OK) {
@@ -163,7 +180,7 @@ esp_err_t rs322_sim_air720h_mqtt_set_pub_msg(char *topic, char *msg) {
   sprintf(cmd, "AT+MPUB=\"%s\",0,0,\"%s\"\r", topic, msg);
 
   err = rs232_sim_air720h_sent_manage_sent_and_wait_finish(
-      (uint8_t *)cmd, strlen(cmd), MQTT_CMD_TIMEOUT, NULL,
+      (uint8_t *)cmd, strlen(cmd), MQTT_REQ_TIMEOUT, NULL,
       rs232_sim_air720h_recv_manage_get_ok);
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s CMD failed", __LINE__, __func__);
@@ -222,12 +239,12 @@ esp_err_t rs322_sim_air720h_mqtt_set_mqtt_close() {
   char *cmd = "AT+MDISCONNECT\r";
 
   err = rs232_sim_air720h_sent_manage_sent_and_wait_finish(
-      (uint8_t *)cmd, strlen(cmd), MQTT_CMD_TIMEOUT, NULL,
-      rs232_sim_air720h_recv_manage_get_ok);
+      (uint8_t *)cmd, strlen(cmd), MQTT_CMD_TIMEOUT, NULL, NULL);
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s CMD failed", __LINE__, __func__);
     goto EXIT;
   }
+  vTaskDelay(200 / portTICK_PERIOD_MS);
 
 EXIT:
   return err;
@@ -239,12 +256,12 @@ esp_err_t rs322_sim_air720h_mqtt_set_close() {
   char *cmd = "AT+MIPCLOSE\r";
 
   err = rs232_sim_air720h_sent_manage_sent_and_wait_finish(
-      (uint8_t *)cmd, strlen(cmd), MQTT_CMD_TIMEOUT, NULL,
-      rs232_sim_air720h_recv_manage_get_ok);
+      (uint8_t *)cmd, strlen(cmd), MQTT_CMD_TIMEOUT, NULL, NULL);
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s CMD failed", __LINE__, __func__);
     goto EXIT;
   }
+  vTaskDelay(200 / portTICK_PERIOD_MS);
 
 EXIT:
   return err;

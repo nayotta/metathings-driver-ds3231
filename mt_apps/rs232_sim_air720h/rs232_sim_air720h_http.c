@@ -207,6 +207,32 @@ EXIT:
   return err;
 }
 
+esp_err_t rs232_sim_air720h_http_set_para_head_user_defined(char *head) {
+  esp_err_t err = ESP_OK;
+  char *cmd = malloc(HTTP_CMD_MAX_SIZE);
+
+  // check arg
+  if (head == NULL) {
+    ESP_LOGE(TAG, "%4d %s head NULL", __LINE__, __func__);
+    err = ESP_ERR_INVALID_ARG;
+    goto EXIT;
+  }
+
+  sprintf(cmd, "AT+HTTPPARA=\"USER_DEFINED\",\"%s\"\r", head);
+
+  err = rs232_sim_air720h_sent_manage_sent_and_wait_finish(
+      (uint8_t *)cmd, strlen(cmd), HTTP_CMD_TIMEOUT, NULL,
+      rs232_sim_air720h_recv_manage_get_ok);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%4d %s CMD failed", __LINE__, __func__);
+    goto EXIT;
+  }
+
+EXIT:
+  free(cmd);
+  return err;
+}
+
 esp_err_t rs232_sim_air720h_http_set_post_data_size(uint32_t size) {
   esp_err_t err = ESP_OK;
   char *cmd = malloc(HTTP_CMD_MAX_SIZE);

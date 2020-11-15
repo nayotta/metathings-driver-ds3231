@@ -4,6 +4,14 @@ description: EA900II
 flow:
   name: m1
   fields:
+    vBatMax:
+      description: 最大电池电压
+      unit: v
+      driver: EA900II
+      type: float
+      period: 60000
+      min: 0
+      max: 100000
     vIn:
       description: 输入电压
       unit: v
@@ -53,7 +61,7 @@ flow:
       min: -80
       max: 200
     w7:
-      description: 市电故障 true:正常 false:故障
+      description: 市电故障 true:故障 false:正常
       driver: EA900II
       type: bool
       period: 60000

@@ -77,7 +77,8 @@ static void mt_gpio_light_task_loop(mt_gpio_light_t *light_handle) {
   }
 }
 
-// public func ================================================================
+// global func ================================================================
+
 bool mt_gpio_light_set_on(mt_gpio_light_t *light_handle) {
   int ret = 0;
   uint32_t target_level = 0;

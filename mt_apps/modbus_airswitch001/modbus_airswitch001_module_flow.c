@@ -41,6 +41,7 @@ static void module_get_datas_process() {
   double power[16];
   double temp[16];
   double current[16];
+  double quality[16];
   int count = 0;
   char key[24] = "";
 
@@ -58,7 +59,7 @@ static void module_get_datas_process() {
   for (int i = 1; i <= total_num; i++) {
     err = mt_airswitch001_get_datas(ADDR, i, &state[i], &ctrl[i], &votage[i],
                                     &leakCurrent[i], &power[i], &temp[i],
-                                    &current[i]);
+                                    &current[i], &quality[i]);
     if (err != ESP_OK) {
       ESP_LOGE(TAG, "%4d %s addr:%d target:%d mt_airswitch001_get_datas failed",
                __LINE__, __func__, ADDR, i);
@@ -73,7 +74,7 @@ static void module_get_datas_process() {
   int struct_size = 0;
   for (int i = 1; i <= total_num; i++) {
     if (get_state[i - 1] == true) {
-      struct_size += 7;
+      struct_size += 8;
     }
   }
 
@@ -130,6 +131,13 @@ static void module_get_datas_process() {
       memcpy(group->value[count]->key, key, strlen(key) + 1);
       group->value[count]->type = GOOGLE__PROTOBUF__VALUE__KIND_NUMBER_VALUE;
       group->value[count++]->number_value = current[i];
+
+      // quality
+      sprintf(key, "quality%d", i);
+      group->value[count]->key = malloc(strlen(key) + 1);
+      memcpy(group->value[count]->key, key, strlen(key) + 1);
+      group->value[count]->type = GOOGLE__PROTOBUF__VALUE__KIND_NUMBER_VALUE;
+      group->value[count++]->number_value = quality[i];
     }
   }
 

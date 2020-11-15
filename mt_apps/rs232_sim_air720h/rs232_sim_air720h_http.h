@@ -37,6 +37,9 @@ esp_err_t rs232_sim_air720h_http_set_para_url(char *url);
 // set para head
 esp_err_t rs232_sim_air720h_http_set_para_head(char *head);
 
+// set para head
+esp_err_t rs232_sim_air720h_http_set_para_head_user_defined(char *head);
+
 // set post data_size
 esp_err_t rs232_sim_air720h_http_set_post_data_size(uint32_t size);
 

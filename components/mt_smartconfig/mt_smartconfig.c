@@ -104,8 +104,8 @@ EXIT:
   vTaskDelete(NULL);
 }
 
-static esp_err_t event_handler(void *arg, esp_event_base_t event_base,
-                               int32_t event_id, void *event_data) {
+static void event_handler(void *arg, esp_event_base_t event_base,
+                          int32_t event_id, void *event_data) {
   if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_START) {
     int ret = 0;
     char *ssid_str = NULL;
@@ -294,8 +294,6 @@ static esp_err_t event_handler(void *arg, esp_event_base_t event_base,
     xEventGroupSetBits(WIFI_EVENT_GROUP, ESPTOUCH_DONE_BIT);
     xEventGroupSetBits(WIFI_EVENT_GROUP, WIFI_OK_BIT);
   }
-
-  return ESP_OK;
 }
 
 static void mt_wifi_loop(void) {
@@ -355,6 +353,7 @@ static void mt_wifi_loop(void) {
 }
 
 // public func ================================================================
+
 void mt_smartconfig_task(int light_pin, int light_pin_on_level, int btn_pin,
                          int btn_pin_on_level) {
   esp_err_t err = ESP_OK;

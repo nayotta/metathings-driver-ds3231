@@ -103,7 +103,7 @@ static esp_err_t rs232_PRS3342_parse_yaoce_grp_guiyi(rs232_PRS3342_t *prs3342,
     for (int i = 0; i < prs3342->data_num; i++) {
       if (prs3342->datas[i]->addr == grp_addr + grp_index) {
         prs3342->datas[i]->data =
-            (grp_data / 32768.0) * prs3342->datas[i]->convert;
+            (grp_data * prs3342->datas[i]->convert) / 32768.0;
         prs3342->datas[i]->update_time = esp_timer_get_time() / 1000000;
         match++;
         /*
@@ -285,6 +285,17 @@ esp_err_t rs232_PRS3342_task(rs232_PRS3342_t *prs3342) {
 
 esp_err_t rs232_PRS3342_new_guiyi(rs232_PRS3342_data_t *data, int addr,
                                   float convert, char *name) {
+  data->addr = addr;
+  data->type = RS232_PRS3342_DATA_TYPE_GUIYI;
+  data->convert = convert;
+  data->name = name;
+  data->update_time = 0;
+
+  return ESP_OK;
+}
+
+esp_err_t rs232_PRS3342_new_int(rs232_PRS3342_data_t *data, int addr,
+                                float convert, char *name) {
   data->addr = addr;
   data->type = RS232_PRS3342_DATA_TYPE_GUIYI;
   data->convert = convert;

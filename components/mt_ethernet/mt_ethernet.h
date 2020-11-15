@@ -3,4 +3,6 @@
 
 void mt_ethernet_task(int light_pin, int light_pin_on_level);
 
+void mt_ethernet_static_task(int light_pin, int light_pin_on_level);
+
 #endif

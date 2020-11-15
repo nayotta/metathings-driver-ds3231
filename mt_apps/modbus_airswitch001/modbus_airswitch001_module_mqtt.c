@@ -326,9 +326,10 @@ module_mqtt_process_get_data(Ai__Metathings__Component__DownStreamFrame *msg,
 
   // cmd process
   res.addr = switch_addr;
-  err = mt_airswitch001_get_datas(
-      MOD_ADDR, switch_addr, &datas.state, &datas.ctrl, &datas.votage,
-      &datas.leak_current, &datas.power, &datas.temp, &datas.current);
+  err = mt_airswitch001_get_datas(MOD_ADDR, switch_addr, &datas.state,
+                                  &datas.ctrl, &datas.votage,
+                                  &datas.leak_current, &datas.power,
+                                  &datas.temp, &datas.current, &datas.quality);
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s mt_airswitch001_get_datas failed", __LINE__,
              __func__);
