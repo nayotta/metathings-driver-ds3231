@@ -35,22 +35,25 @@
 PR_BEGIN_EXTERN_C
 #endif
 
-UCHAR get_s_usLength(void);
-int set_eRcvState(int st);
+UCHAR Airswitch_get_s_usLength(void);
+int Airswitchset_eRcvState(int st);
 
 /* if  MB_DEVICE_USE_TYPE == MB_DEVICE_MASTER  */
 
-eMBErrorCode eMBMasterRTUInit(UCHAR ucPort, ULONG ulBaudRate, eMBParity eParity,
-                              int tx_pin, int rx_pin, int en_pin);
-void eMBMasterRTUStart(void);
-void eMBMasterRTUStop(void);
-eMBErrorCode eMBMasterRTUReceive(UCHAR *pucRcvAddress, UCHAR **pucFrame,
-                                 USHORT *pusLength);
-eMBErrorCode eMBMasterRTUSend(UCHAR slaveAddress, const UCHAR *pucFrame,
-                              USHORT usLength);
-BOOL xMBMasterRTUReceiveFSM(void);
-BOOL xMBMasterRTUTransmitFSM(void);
-BOOL xMBMasterRTUTimerExpired(void);
+eMBErrorCode eMBMasterAirswitchRTUInit(UCHAR ucPort,
+                                                       ULONG ulBaudRate,
+                                                       eMBParity eParity,
+                                                       int tx_pin, int rx_pin,
+                                                       int en_pin);
+void eMBMasterAirswitchRTUStart(void);
+void eMBMasterAirswitchRTUStop(void);
+eMBErrorCode eMBMasterAirswitchRTUReceive(UCHAR *pucRcvAddress,
+                                          UCHAR **pucFrame, USHORT *pusLength);
+eMBErrorCode eMBMasterAirswitchRTUSend(UCHAR slaveAddress,
+                                       const UCHAR *pucFrame, USHORT usLength);
+BOOL xMBMasterAirswitchRTUReceiveFSM(void);
+BOOL xMBMasterAirswitchRTUTransmitFSM(void);
+BOOL xMBMasterAirswitchRTUTimerExpired(void);
 
 #ifdef __cplusplus
 PR_END_EXTERN_C

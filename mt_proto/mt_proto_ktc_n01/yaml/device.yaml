@@ -1,0 +1,34 @@
+# yaml
+version: v1beta
+description: ktc-n01 建大仁科空调控制器
+flow:
+  name: m1
+  fields:
+    port:
+      description: 端口(该条信息对应的端口号)
+      unit: 摄氏度
+      driver: ktc-n01
+      type: float
+      min: 0
+      max: 255
+    temp:
+      description: 环境温度
+      unit: 摄氏度
+      driver: ktc-n01
+      type: float
+      min: -100
+      max: 100
+    hum:
+      description: 环境湿度
+      unit: "%"
+      driver: ktc-n01
+      type: float
+      min: 0
+      max: 100
+    current:
+      description: 互感器电流
+      unit: A
+      driver: ktc-n01
+      type: float
+      min: 0
+      max: 1000

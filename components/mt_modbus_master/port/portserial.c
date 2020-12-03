@@ -216,7 +216,7 @@ BOOL xMBPortSerialInit(UCHAR ucPORT, ULONG ulBaudRate, UCHAR ucDataBits,
     en_pin = MB_UART_EN_PIN;
 
   // Set UART log level
-  esp_log_level_set(TAG, ESP_LOG_DEBUG);
+  // esp_log_level_set(TAG, ESP_LOG_DEBUG);
   // Set UART pins (using UART0 default pins ie no changes.)
   err = uart_set_pin(MB_UART, tx_pin, rx_pin, en_pin, UART_PIN_NO_CHANGE);
   if (err != ESP_OK) {

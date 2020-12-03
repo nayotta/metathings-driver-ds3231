@@ -50,7 +50,8 @@ static void modbus_lock_release() {
 
 // global func ================================================================
 // cmd 01 callback
-eMBErrorCode eMBMasterCB01(UCHAR *recvBuf, UCHAR recvCmd, USHORT recvLen) {
+eMBErrorCode eMBMasterAirswitchCB01(UCHAR *recvBuf, UCHAR recvCmd,
+                                    USHORT recvLen) {
   eMBErrorCode eStatus = MB_ENOERR;
 
   if (recvLen > BUF_MAXLEN) {
@@ -65,7 +66,8 @@ eMBErrorCode eMBMasterCB01(UCHAR *recvBuf, UCHAR recvCmd, USHORT recvLen) {
 }
 
 // cmd 02 callback
-eMBErrorCode eMBMasterCB02(UCHAR *recvBuf, UCHAR recvCmd, USHORT recvLen) {
+eMBErrorCode eMBMasterAirswitchCB02(UCHAR *recvBuf, UCHAR recvCmd,
+                                    USHORT recvLen) {
   eMBErrorCode eStatus = MB_ENOERR;
 
   if (recvLen > BUF_MAXLEN) {
@@ -80,7 +82,8 @@ eMBErrorCode eMBMasterCB02(UCHAR *recvBuf, UCHAR recvCmd, USHORT recvLen) {
 }
 
 // cmd 03 callback
-eMBErrorCode eMBMasterCB03(UCHAR *recvBuf, UCHAR recvCmd, USHORT recvLen) {
+eMBErrorCode eMBMasterAirswitchCB03(UCHAR *recvBuf, UCHAR recvCmd,
+                                    USHORT recvLen) {
   eMBErrorCode eStatus = MB_ENOERR;
 
   if (recvLen > BUF_MAXLEN) {
@@ -95,7 +98,8 @@ eMBErrorCode eMBMasterCB03(UCHAR *recvBuf, UCHAR recvCmd, USHORT recvLen) {
 }
 
 // cmd 04 callback
-eMBErrorCode eMBMasterCB04(UCHAR *recvBuf, UCHAR recvCmd, USHORT recvLen) {
+eMBErrorCode eMBMasterAirswitchCB04(UCHAR *recvBuf, UCHAR recvCmd,
+                                    USHORT recvLen) {
   eMBErrorCode eStatus = MB_ENOERR;
 
   if (recvLen > BUF_MAXLEN) {
@@ -110,7 +114,8 @@ eMBErrorCode eMBMasterCB04(UCHAR *recvBuf, UCHAR recvCmd, USHORT recvLen) {
 }
 
 // cmd 05 callback
-eMBErrorCode eMBMasterCB05(UCHAR *recvBuf, UCHAR recvCmd, USHORT recvLen) {
+eMBErrorCode eMBMasterAirswitchCB05(UCHAR *recvBuf, UCHAR recvCmd,
+                                    USHORT recvLen) {
   eMBErrorCode eStatus = MB_ENOERR;
 
   if (recvLen > BUF_MAXLEN) {
@@ -125,7 +130,8 @@ eMBErrorCode eMBMasterCB05(UCHAR *recvBuf, UCHAR recvCmd, USHORT recvLen) {
 }
 
 // cmd 06 callback
-eMBErrorCode eMBMasterCB06(UCHAR *recvBuf, UCHAR recvCmd, USHORT recvLen) {
+eMBErrorCode eMBMasterAirswitchCB06(UCHAR *recvBuf, UCHAR recvCmd,
+                                    USHORT recvLen) {
   eMBErrorCode eStatus = MB_ENOERR;
 
   if (recvLen > BUF_MAXLEN) {
