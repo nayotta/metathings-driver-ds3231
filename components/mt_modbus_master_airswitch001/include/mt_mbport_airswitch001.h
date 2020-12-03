@@ -92,25 +92,25 @@ typedef enum
 
 // BOOL            xMBPortEventGet(  /*@out@ */ eMBEventType * eEvent );
 
-BOOL xMBMasterPortEventInit(void);
+BOOL xMBMasterAirswitchPortEventInit(void);
 
-BOOL xMBMasterResEventInit(void);
+BOOL xMBMasterAirswitchResEventInit(void);
 
-BOOL xMBMasterResEventClean(void);
+BOOL xMBMasterAirswitchResEventClean(void);
 
-BOOL xMBMasterPortEventPost(eMBMasterEventType eEvent);
+BOOL xMBMasterAirswitchPortEventPost(eMBMasterEventType eEvent);
 
-BOOL xMBMasterPortEventGet(/*@out@ */ eMBMasterEventType *eEvent);
+BOOL xMBMasterAirswitchPortEventGet(/*@out@ */ eMBMasterEventType *eEvent);
 
-void vMBMasterOsResInit(void);
+void vMBMasterAirswitchOsResInit(void);
 
-BOOL xMBMasterRunResTake(int32_t time);
+BOOL xMBMasterAirswitchRunResTake(int32_t time);
 
-void vMBMasterRunResRelease(void);
+void vMBMasterAirswitchRunResRelease(void);
 
 /* ----------------------- Serial port functions ----------------------------*/
 
-// BOOL            xMBPortSerialInit( UCHAR ucPort, ULONG ulBaudRate,
+// BOOL            xMBPortAirswitchSerialInit( UCHAR ucPort, ULONG ulBaudRate,
 //                                   UCHAR ucDataBits, eMBParity eParity );
 
 // void            vMBPortClose( void );
@@ -123,22 +123,22 @@ void vMBMasterRunResRelease(void);
 
 // INLINE BOOL     xMBPortSerialPutByte( CHAR ucByte );
 
-BOOL xMBMasterPortSerialInit(UCHAR ucPort, ULONG ulBaudRate, UCHAR ucDataBits,
+BOOL xMBMasterAirswitchPortSerialInit(UCHAR ucPort, ULONG ulBaudRate, UCHAR ucDataBits,
                              eMBParity eParity, int tx_pin, int rx_pin,
                              int en_pin);
 
-void vMBMasterPortClose(void);
+void vMBMasterAirswitchPortClose(void);
 
-void xMBMasterPortSerialClose(void);
+void xMBMasterAirswitchPortSerialClose(void);
 
-void vMBMasterPortSerialEnable(BOOL xRxEnable, BOOL xTxEnable);
+void vMBMasterAirswitchPortSerialEnable(BOOL xRxEnable, BOOL xTxEnable);
 
-BOOL xMBMasterPortSerialGetByte(CHAR *pucByte);
+BOOL xMBMasterAirswitchPortSerialGetByte(CHAR *pucByte);
 
-BOOL xMBMasterPortSerialPutByte(const CHAR ucByte);
+BOOL xMBMasterAirswitchPortSerialPutByte(const CHAR ucByte);
 
 /* ----------------------- Timers functions ---------------------------------*/
-// BOOL            xMBPortTimersInit( USHORT usTimeOut50us );
+// BOOL            xMBPortAirswitchTimersInit( USHORT usTimeOut50us );
 
 // void            xMBPortTimersClose( void );
 
@@ -146,26 +146,26 @@ BOOL xMBMasterPortSerialPutByte(const CHAR ucByte);
 
 // INLINE void     vMBPortTimersDisable( void );
 
-BOOL xMBMasterPortTimersInit(USHORT usTimeOut50us);
+BOOL xMBMasterPortAirswitchTimersInit(USHORT usTimeOut50us);
 
-void xMBMasterPortTimersClose(void);
+void xMBMasterAirswitchPortTimersClose(void);
 
-void vMBMasterPortTimersT35Enable(void);
+void vMBMasterPortAirswitchTimersT35Enable(void);
 
-void vMBMasterPortTimersConvertDelayEnable(void);
+void vMBMasterPortAirswitchTimersConvertDelayEnable(void);
 
-void vMBMasterPortTimersRespondTimeoutEnable(void);
+void vMBMasterPortAirsiwtchTimersRespondTimeoutEnable(void);
 
-void vMBMasterPortTimersDisable(void);
+void vMBMasterPortAirsiwtchTimersDisable(void);
 
 /* ----------------- Callback for the master error process ------------------*/
-void vMBMasterResErrorCBRespondTimeout();
+void vMBMasterAirswitchResErrorCBRespondTimeout();
 
-void vMBMasterResErrorCBReceiveData();
+void vMBMasterAirswitchResErrorCBReceiveData();
 
-void vMBMasterResErrorCBExecuteFunction();
+void vMBMasterAirswitchResErrorCBExecuteFunction();
 
-void vMBMasterResCBRequestScuuess(void);
+void vMBMasterAirswitchResCBRequestScuuess(void);
 
 /* ----------------------- Callback for the protocol stack ------------------*/
 

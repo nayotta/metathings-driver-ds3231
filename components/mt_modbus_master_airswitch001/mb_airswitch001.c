@@ -107,17 +107,17 @@ eMBErrorCode eMBMasterAirswitchInit(eMBMode eMode, UCHAR ucPort,
 
   switch (eMode) {
   case MB_RTU:
-    pvMBMasterFrameStartCur = eMBMasterRTUStart;
-    pvMBMasterFrameStopCur = eMBMasterRTUStop;
-    peMBMasterFrameSendCur = eMBMasterRTUSend;
-    peMBMasterFrameReceiveCur = eMBMasterRTUReceive;
-    pvMBMasterFrameCloseCur = MB_PORT_HAS_CLOSE ? vMBMasterPortClose : NULL;
-    pxMBMasterFrameCBByteReceived = xMBMasterRTUReceiveFSM;
-    pxMBMasterFrameCBTransmitterEmpty = xMBMasterRTUTransmitFSM;
-    pxMBMasterPortCBTimerExpired = xMBMasterRTUTimerExpired;
+    pvMBMasterFrameStartCur = eMBMasterAirswitchRTUStart;
+    pvMBMasterFrameStopCur = eMBMasterAirswitchRTUStop;
+    peMBMasterFrameSendCur = eMBMasterAirswitchRTUSend;
+    peMBMasterFrameReceiveCur = eMBMasterAirswitchRTUReceive;
+    pvMBMasterFrameCloseCur = MB_PORT_HAS_CLOSE ? vMBMasterAirswitchPortClose : NULL;
+    pxMBMasterFrameCBByteReceived = xMBMasterAirswitchRTUReceiveFSM;
+    pxMBMasterFrameCBTransmitterEmpty = xMBMasterAirswitchRTUTransmitFSM;
+    pxMBMasterPortCBTimerExpired = xMBMasterAirswitchRTUTimerExpired;
 
     eStatus =
-        eMBMasterRTUInit(ucPort, ulBaudRate, eParity, tx_pin, rx_pin, en_pin);
+        eMBMasterAirswitchRTUInit(ucPort, ulBaudRate, eParity, tx_pin, rx_pin, en_pin);
     break;
   default:
     eStatus = MB_EINVAL;
@@ -126,7 +126,7 @@ eMBErrorCode eMBMasterAirswitchInit(eMBMode eMode, UCHAR ucPort,
 
   if (eStatus == MB_ENOERR) {
     // init port event queue
-    if (!xMBMasterPortEventInit()) {
+    if (!xMBMasterAirswitchPortEventInit()) {
       /* port dependent event module initalization failed. */
       eStatus = MB_EPORTERR;
     } else {
@@ -134,7 +134,7 @@ eMBErrorCode eMBMasterAirswitchInit(eMBMode eMode, UCHAR ucPort,
     }
 
     // init res event queue
-    if (!xMBMasterResEventInit()) {
+    if (!xMBMasterAirswitchResEventInit()) {
       /* port dependent event module initalization failed. */
       eStatus = MB_EPORTERR;
     } else {
@@ -142,7 +142,7 @@ eMBErrorCode eMBMasterAirswitchInit(eMBMode eMode, UCHAR ucPort,
     }
 
     /* initialize the OS resource for modbus master. */
-    vMBMasterOsResInit();
+    vMBMasterAirswitchOsResInit();
   }
   return eStatus;
 }
@@ -207,7 +207,7 @@ eMBErrorCode eMBMasterAirswitchPoll(void) {
 
   /* Check if there is a event available. If not return control to caller.
    * Otherwise we will handle the event. */
-  if (xMBMasterPortEventGet(&eEvent) == TRUE) {
+  if (xMBMasterAirswitchPortEventGet(&eEvent) == TRUE) {
     switch (eEvent) {
     case EV_MASTER_PROCESS_SUCESS: // 0x20
       break;
@@ -223,13 +223,13 @@ eMBErrorCode eMBMasterAirswitchPoll(void) {
       eStatus = peMBMasterFrameReceiveCur(&ucRcvAddress, &ucMBFrame, &usLength);
       /* Check if the frame is for us. If not ,send an error process event. */
       if ((eStatus == MB_ENOERR) &&
-          (ucRcvAddress == ucMBMasterGetDestAddress())) {
-        xMBMasterPortEventPost(EV_MASTER_EXECUTE);
+          (ucRcvAddress == ucMBMasterAirswitchGetDestAddress())) {
+        xMBMasterAirswitchPortEventPost(EV_MASTER_EXECUTE);
       } else {
         // printf("debug:%d rcvadd=%d getadd=%d\n",
-        // eStatus,ucRcvAddress,ucMBMasterGetDestAddress());
-        vMBMasterSetErrorType(EV_RES_ERROR_RECEIVE_DATA);
-        xMBMasterPortEventPost(EV_MASTER_ERROR_PROCESS);
+        // eStatus,ucRcvAddress,ucMBMasterAirswitchGetDestAddress());
+        vMBMasterAirswitchSetErrorType(EV_RES_ERROR_RECEIVE_DATA);
+        xMBMasterAirswitchPortEventPost(EV_MASTER_ERROR_PROCESS);
       }
       break;
 
@@ -249,10 +249,10 @@ eMBErrorCode eMBMasterAirswitchPoll(void) {
             /* If master request is broadcast,
              * the master need execute function for all slave.
              */
-            if (xMBMasterRequestIsBroadcast()) {
-              usLength = usMBMasterGetPDUSndLength();
+            if (xMBMasterAirswitchRequestIsBroadcast()) {
+              usLength = usMBMasterAirswitchGetPDUSndLength();
               for (j = 1; j <= MB_MASTER_TOTAL_SLAVE_NUM; j++) {
-                vMBMasterSetDestAddress(j);
+                vMBMasterAirswitchSetDestAddress(j);
                 eException =
                     xMasterFuncHandlers[i].pxHandler(ucMBFrame, &usLength);
               }
@@ -267,44 +267,44 @@ eMBErrorCode eMBMasterAirswitchPoll(void) {
       /* If master has exception ,Master will send error process.Otherwise the
        * Master is idle.*/
       if (eException != MB_EX_NONE) {
-        vMBMasterSetErrorType(EV_RES_ERROR_EXECUTE_FUNCTION);
-        (void)xMBMasterPortEventPost(EV_MASTER_ERROR_PROCESS);
+        vMBMasterAirswitchSetErrorType(EV_RES_ERROR_EXECUTE_FUNCTION);
+        (void)xMBMasterAirswitchPortEventPost(EV_MASTER_ERROR_PROCESS);
       } else {
-        vMBMasterResCBRequestScuuess();
-        vMBMasterRunResRelease();
+        vMBMasterAirswitchResCBRequestScuuess();
+        vMBMasterAirswitchRunResRelease();
       }
       break;
 
     case EV_MASTER_FRAME_SENT: // 0x08
       /* Master is busy now. */
-      vMBMasterGetPDUSndBuf(&ucMBFrame);
-      eStatus = peMBMasterFrameSendCur(ucMBMasterGetDestAddress(), ucMBFrame,
-                                       usMBMasterGetPDUSndLength());
+      vMBMasterAirswitchGetPDUSndBuf(&ucMBFrame);
+      eStatus = peMBMasterFrameSendCur(ucMBMasterAirswitchGetDestAddress(), ucMBFrame,
+                                       usMBMasterAirswitchGetPDUSndLength());
       break;
 
     case EV_MASTER_ERROR_PROCESS: // 0x10
       /* Execute specified error process callback function. */
-      errorType = eMBMasterGetErrorType();
-      vMBMasterGetPDUSndBuf(&ucMBFrame);
+      errorType = eMBMasterAirswitchGetErrorType();
+      vMBMasterAirswitchGetPDUSndBuf(&ucMBFrame);
       switch (errorType) {
       case EV_RES_ERROR_RESPOND_TIMEOUT:
-        vMBMasterResErrorCBRespondTimeout(ucMBFrame,
-                                          usMBMasterGetPDUSndLength());
+        vMBMasterAirswitchResErrorCBRespondTimeout(ucMBFrame,
+                                          usMBMasterAirswitchGetPDUSndLength());
         break;
       case EV_RES_ERROR_RECEIVE_DATA:
-        vMBMasterResErrorCBReceiveData(ucMBFrame, usMBMasterGetPDUSndLength());
+        vMBMasterAirswitchResErrorCBReceiveData(ucMBFrame, usMBMasterAirswitchGetPDUSndLength());
         break;
       case EV_RES_ERROR_EXECUTE_FUNCTION:
-        vMBMasterResErrorCBExecuteFunction(ucMBFrame,
-                                           usMBMasterGetPDUSndLength());
+        vMBMasterAirswitchResErrorCBExecuteFunction(ucMBFrame,
+                                           usMBMasterAirswitchGetPDUSndLength());
         break;
       case EV_RES_PROCESS_SUCESS:
         break;
       }
-      vMBMasterRunResRelease();
+      vMBMasterAirswitchRunResRelease();
       break;
     default:
-      vMBMasterRunResRelease();
+      vMBMasterAirswitchRunResRelease();
       break;
     }
   }
@@ -312,15 +312,17 @@ eMBErrorCode eMBMasterAirswitchPoll(void) {
 }
 
 /* Get Modbus Master send destination address. */
-UCHAR ucMBMasterGetDestAddress(void) { return ucMBMasterDestAddress; }
+UCHAR ucMBMasterAirswitchGetDestAddress(void) { return ucMBMasterDestAddress; }
 /* Set Modbus Master send destination address. */
-void vMBMasterSetDestAddress(UCHAR Address) { ucMBMasterDestAddress = Address; }
+void vMBMasterAirswitchSetDestAddress(UCHAR Address) {
+  ucMBMasterDestAddress = Address;
+}
 
 /* Get Modbus Master current error event type. */
-eMBMasterResEventType eMBMasterGetErrorType(void) {
+eMBMasterResEventType eMBMasterAirswitchGetErrorType(void) {
   return eMBMasterCurErrorType;
 }
 /* Set Modbus Master current error event type. */
-void vMBMasterSetErrorType(eMBMasterResEventType errorType) {
+void vMBMasterAirswitchSetErrorType(eMBMasterResEventType errorType) {
   eMBMasterCurErrorType = errorType;
 }

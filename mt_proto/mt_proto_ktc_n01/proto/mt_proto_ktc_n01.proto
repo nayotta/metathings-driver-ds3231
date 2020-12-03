@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package mt_ktc_n01;
+
+service Service {
+  rpc SetCmd(SetCmdReq) returns(SetCmdRes) {}
+}
+
+message SetCmdRes {
+  int32 code = 1;
+  string content = 2;
+}
+
+// 发送命令
+// port:    端口0-255
+// cmd:
+//    101   开机制冷
+//    102   开机制热
+//    103   关机
+//    01-20 自定义命令
+message SetCmdReq {
+  int32 port = 1;
+  int32 cmd = 2;
+}

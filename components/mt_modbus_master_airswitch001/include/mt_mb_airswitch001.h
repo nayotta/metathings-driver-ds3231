@@ -218,8 +218,8 @@ eMBErrorCode eMBMasterAirswitchDisable(void);
  *
  * This function must be called periodically. The timer interval required
  * is given by the application dependent Modbus slave timeout. Internally the
- * function calls xMBMasterPortEventGet() and waits for an event from the
- * receiver or transmitter state machines.
+ * function calls xMBMasterAirswitchPortEventGet() and waits for an event from
+ * the receiver or transmitter state machines.
  *
  * \return If the protocol stack is not in the enabled state the function
  *   returns eMBErrorCode::MB_EILLSTATE. Otherwise it returns
@@ -228,12 +228,18 @@ eMBErrorCode eMBMasterAirswitchDisable(void);
 eMBErrorCode eMBMasterAirswitchPoll(void);
 
 // cmd callback
-eMBErrorCode eMBMasterCB01(UCHAR *recvBuf, UCHAR recvCmd, USHORT recvLen);
-eMBErrorCode eMBMasterCB02(UCHAR *recvBuf, UCHAR recvCmd, USHORT recvLen);
-eMBErrorCode eMBMasterCB03(UCHAR *recvBuf, UCHAR recvCmd, USHORT recvLen);
-eMBErrorCode eMBMasterCB04(UCHAR *recvBuf, UCHAR recvCmd, USHORT recvLen);
-eMBErrorCode eMBMasterCB05(UCHAR *recvBuf, UCHAR recvCmd, USHORT recvLen);
-eMBErrorCode eMBMasterCB06(UCHAR *recvBuf, UCHAR recvCmd, USHORT recvLen);
+eMBErrorCode eMBMasterAirswitchCB01(UCHAR *recvBuf, UCHAR recvCmd,
+                                    USHORT recvLen);
+eMBErrorCode eMBMasterAirswitchCB02(UCHAR *recvBuf, UCHAR recvCmd,
+                                    USHORT recvLen);
+eMBErrorCode eMBMasterAirswitchCB03(UCHAR *recvBuf, UCHAR recvCmd,
+                                    USHORT recvLen);
+eMBErrorCode eMBMasterAirswitchCB04(UCHAR *recvBuf, UCHAR recvCmd,
+                                    USHORT recvLen);
+eMBErrorCode eMBMasterAirswitchCB05(UCHAR *recvBuf, UCHAR recvCmd,
+                                    USHORT recvLen);
+eMBErrorCode eMBMasterAirswitchCB06(UCHAR *recvBuf, UCHAR recvCmd,
+                                    USHORT recvLen);
 
 /*! \ingroup modbus
  *\brief These Modbus functions are called for user when Modbus run in Master
@@ -251,16 +257,16 @@ eMBException eMBMasterAirswitchFunc06(UCHAR *recvFrame, USHORT *recvBit);
 /*�� \ingroup modbus
  *\brief These functions are interface for Modbus Master
  */
-void vMBMasterGetPDUSndBuf(UCHAR **pucFrame);
-UCHAR ucMBMasterGetDestAddress(void);
-void vMBMasterSetDestAddress(UCHAR Address);
-USHORT usMBMasterGetPDUSndLength(void);
-void vMBMasterSetPDUSndLength(USHORT SendPDULength);
-void vMBMasterSetCurTimerMode(eMBMasterTimerMode eMBTimerMode);
-BOOL xMBMasterRequestIsBroadcast(void);
-eMBMasterResEventType eMBMasterGetErrorType(void);
-void vMBMasterSetErrorType(eMBMasterResEventType errorType);
-eMBMasterReqErrCode eMBMasterWaitRequestFinish(void);
+void vMBMasterAirswitchGetPDUSndBuf(UCHAR **pucFrame);
+UCHAR ucMBMasterAirswitchGetDestAddress(void);
+void vMBMasterAirswitchSetDestAddress(UCHAR Address);
+USHORT usMBMasterAirswitchGetPDUSndLength(void);
+void vMBMasterAirswitchSetPDUSndLength(USHORT SendPDULength);
+void vMBMasterAirswitchSetCurTimerMode(eMBMasterTimerMode eMBTimerMode);
+BOOL xMBMasterAirswitchRequestIsBroadcast(void);
+eMBMasterResEventType eMBMasterAirswitchGetErrorType(void);
+void vMBMasterAirswitchSetErrorType(eMBMasterResEventType errorType);
+eMBMasterReqErrCode eMBMasterAirswitchWaitRequestFinish(void);
 
 /* ----------------------- Callback -----------------------------------------*/
 

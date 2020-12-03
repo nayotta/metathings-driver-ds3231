@@ -38,7 +38,7 @@ static xQueueHandle xQueueMasterHdl;    // for mb.c
 static xQueueHandle xQueueMasterResHdl; // for response match
 static SemaphoreHandle_t SemaphorMasterHdl = NULL;
 
-BOOL xMBMasterPortEventInit(void) {
+BOOL xMBMasterAirswitchPortEventInit(void) {
   BOOL bStatus = FALSE;
   if (0 != (xQueueMasterHdl = xQueueCreate(1, sizeof(eMBMasterEventType)))) {
     bStatus = TRUE;
@@ -46,7 +46,7 @@ BOOL xMBMasterPortEventInit(void) {
   return bStatus;
 }
 
-BOOL xMBMasterPortEventPost(eMBMasterEventType eEvent) {
+BOOL xMBMasterAirswitchPortEventPost(eMBMasterEventType eEvent) {
   BOOL bStatus = TRUE;
   if (bMBPortIsWithinException()) {
     (void)xQueueSendFromISR(xQueueMasterHdl, (const void *)&eEvent, pdFALSE);
@@ -57,7 +57,7 @@ BOOL xMBMasterPortEventPost(eMBMasterEventType eEvent) {
   return bStatus;
 }
 
-BOOL xMBMasterPortEventGet(eMBMasterEventType *eEvent) {
+BOOL xMBMasterAirswitchPortEventGet(eMBMasterEventType *eEvent) {
   BOOL xEventHappened = FALSE;
   if (pdTRUE == xQueueReceive(xQueueMasterHdl, eEvent, portTICK_RATE_MS * 10)) {
     xEventHappened = TRUE;
@@ -65,7 +65,7 @@ BOOL xMBMasterPortEventGet(eMBMasterEventType *eEvent) {
   return xEventHappened;
 }
 
-BOOL xMBMasterResEventInit(void) {
+BOOL xMBMasterAirswitchResEventInit(void) {
   BOOL bStatus = FALSE;
   if (0 !=
       (xQueueMasterResHdl = xQueueCreate(1, sizeof(eMBMasterResEventType)))) {
@@ -74,13 +74,13 @@ BOOL xMBMasterResEventInit(void) {
   return bStatus;
 }
 
-BOOL xMBMasterResEventClean(void) {
+BOOL xMBMasterAirswitchResEventClean(void) {
   xQueueReset(xQueueMasterResHdl);
 
   return TRUE;
 }
 
-BOOL xMBMasterResEventPost(eMBMasterResEventType eEvent) {
+BOOL xMBMasterAirswitchResEventPost(eMBMasterResEventType eEvent) {
   BOOL bStatus = TRUE;
   if (bMBPortIsWithinException()) {
     (void)xQueueSendFromISR(xQueueMasterResHdl, (const void *)&eEvent, pdFALSE);
@@ -91,7 +91,7 @@ BOOL xMBMasterResEventPost(eMBMasterResEventType eEvent) {
   return bStatus;
 }
 
-BOOL xMBMasterResEventGet(eMBMasterResEventType *eEvent) {
+BOOL xMBMasterAirswitchResEventGet(eMBMasterResEventType *eEvent) {
   BOOL xEventHappened = FALSE;
   if (pdTRUE ==
       xQueueReceive(xQueueMasterResHdl, eEvent, portTICK_RATE_MS * 10)) {
@@ -100,35 +100,35 @@ BOOL xMBMasterResEventGet(eMBMasterResEventType *eEvent) {
   return xEventHappened;
 }
 
-void vMBMasterResErrorCBRespondTimeout() {
-  BOOL ret = xMBMasterResEventPost(EV_RES_ERROR_RESPOND_TIMEOUT);
+void vMBMasterAirswitchResErrorCBRespondTimeout() {
+  BOOL ret = xMBMasterAirswitchResEventPost(EV_RES_ERROR_RESPOND_TIMEOUT);
   if (!ret)
     ESP_LOGE(TAG, "%4d EV_RES_ERROR_RESPOND_TIMEOUT", __LINE__);
 }
 
-void vMBMasterResCBRequestScuuess(void) {
-  BOOL ret = xMBMasterResEventPost(EV_RES_PROCESS_SUCESS);
+void vMBMasterAirswitchResCBRequestScuuess(void) {
+  BOOL ret = xMBMasterAirswitchResEventPost(EV_RES_PROCESS_SUCESS);
   if (!ret)
     ESP_LOGI(TAG, "%4d EV_RES_PROCESS_SUCESS", __LINE__);
 }
 
-void vMBMasterResErrorCBReceiveData() {
-  BOOL ret = xMBMasterResEventPost(EV_RES_ERROR_RECEIVE_DATA);
+void vMBMasterAirswitchResErrorCBReceiveData() {
+  BOOL ret = xMBMasterAirswitchResEventPost(EV_RES_ERROR_RECEIVE_DATA);
   if (!ret)
     ESP_LOGE(TAG, "%4d EV_RES_ERROR_RECEIVE_DATA", __LINE__);
 }
 
-void vMBMasterResErrorCBExecuteFunction() {
-  BOOL ret = xMBMasterResEventPost(EV_RES_ERROR_EXECUTE_FUNCTION);
+void vMBMasterAirswitchResErrorCBExecuteFunction() {
+  BOOL ret = xMBMasterAirswitchResEventPost(EV_RES_ERROR_EXECUTE_FUNCTION);
   if (!ret)
     ESP_LOGE(TAG, "%4d EV_RES_ERROR_EXECUTE_FUNCTION", __LINE__);
 }
 
-eMBMasterReqErrCode eMBMasterWaitRequestFinish(void) {
+eMBMasterReqErrCode eMBMasterAirswitchWaitRequestFinish(void) {
   eMBMasterReqErrCode eErrStatus = MB_MRE_NO_ERR;
   eMBMasterResEventType recvedEvent;
 RESTART:
-  if (xMBMasterResEventGet(&recvedEvent) == false) {
+  if (xMBMasterAirswitchResEventGet(&recvedEvent) == false) {
     goto RESTART;
   }
   switch (recvedEvent) {
@@ -155,7 +155,7 @@ RESTART:
   return eErrStatus;
 }
 
-BOOL xMBMasterRunResTake(LONG lTimeOut) {
+BOOL xMBMasterAirswitchRunResTake(LONG lTimeOut) {
   /*If waiting time is -1 .It will wait forever */
   if (xSemaphoreTake(SemaphorMasterHdl, (portTickType)lTimeOut) ==
       pdTRUE) // portMAX_DELAY
@@ -166,12 +166,12 @@ BOOL xMBMasterRunResTake(LONG lTimeOut) {
   return FALSE;
 }
 
-void vMBMasterRunResRelease(void) {
+void vMBMasterAirswitchRunResRelease(void) {
   xSemaphoreGive(SemaphorMasterHdl);
   return;
 }
 
-void vMBMasterOsResInit(void) {
+void vMBMasterAirswitchOsResInit(void) {
   SemaphorMasterHdl = xSemaphoreCreateMutex();
   if (SemaphorMasterHdl == NULL) {
     ESP_LOGE(TAG, "%4d %s xSemaphoreCreateMutex failed", __LINE__, __func__);

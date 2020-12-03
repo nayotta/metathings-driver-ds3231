@@ -159,8 +159,9 @@ static void uart_event_task(void *pvParameters) {
   vTaskDelete(NULL);
 }
 
-BOOL xMBPortSerialInit(UCHAR ucPORT, ULONG ulBaudRate, UCHAR ucDataBits,
-                       eMBParity eParity, int tx_pin, int rx_pin, int en_pin) {
+BOOL xMBPortAirswitchSerialInit(UCHAR ucPORT, ULONG ulBaudRate,
+                                UCHAR ucDataBits, eMBParity eParity, int tx_pin,
+                                int rx_pin, int en_pin) {
   esp_log_level_set(TAG, ESP_LOG_INFO);
   int lDataBit = UART_DATA_8_BITS;
   int lParity = UART_PARITY_DISABLE;
@@ -213,7 +214,7 @@ BOOL xMBPortSerialInit(UCHAR ucPORT, ULONG ulBaudRate, UCHAR ucDataBits,
     en_pin = MB_UART_EN_PIN;
 
   // Set UART log level
-  esp_log_level_set(TAG, ESP_LOG_INFO);
+  // esp_log_level_set(TAG, ESP_LOG_INFO);
   // Set UART pins (using UART0 default pins ie no changes.)
   uart_set_pin(MB_UART, tx_pin, rx_pin, en_pin, UART_PIN_NO_CHANGE);
   // Install UART driver, and get the queue.
@@ -260,16 +261,16 @@ static void prvvUARTTxReadyISR(void) { pxMBMasterFrameCBTransmitterEmpty(); }
  */
 static void prvvUARTRxISR(void) { pxMBMasterFrameCBByteReceived(); }
 
-BOOL xMBMasterPortSerialInit(UCHAR ucPORT, ULONG ulBaudRate, UCHAR ucDataBits,
-                             eMBParity eParity, int tx_pin, int rx_pin,
-                             int en_pin) {
-  return xMBPortSerialInit(ucPORT, ulBaudRate, ucDataBits, eParity, tx_pin,
-                           rx_pin, en_pin);
+BOOL xMBMasterAirswitchPortSerialInit(UCHAR ucPORT, ULONG ulBaudRate,
+                                      UCHAR ucDataBits, eMBParity eParity,
+                                      int tx_pin, int rx_pin, int en_pin) {
+  return xMBPortAirswitchSerialInit(ucPORT, ulBaudRate, ucDataBits, eParity,
+                                    tx_pin, rx_pin, en_pin);
 }
 
-void vMBMasterPortSerialEnable(BOOL xRxEnable, BOOL xTxEnable) {
+void vMBMasterAirswitchPortSerialEnable(BOOL xRxEnable, BOOL xTxEnable) {
   vMBPortEnterCritical();
-  UCHAR len = get_s_usLength() + 1;
+  UCHAR len = Airswitch_get_s_usLength() + 1;
 
   if (xTxEnable && !xRxEnable) {
     for (int i = 0; i < len; i++)
@@ -278,10 +279,10 @@ void vMBMasterPortSerialEnable(BOOL xRxEnable, BOOL xTxEnable) {
   vMBPortExitCritical();
 }
 
-BOOL xMBMasterPortSerialGetByte(CHAR *pucByte) {
+BOOL xMBMasterAirswitchPortSerialGetByte(CHAR *pucByte) {
   return xMBPortSerialGetByte(pucByte);
 }
 
-BOOL xMBMasterPortSerialPutByte(const CHAR ucByte) {
+BOOL xMBMasterAirswitchPortSerialPutByte(const CHAR ucByte) {
   return xMBPortSerialPutByte(ucByte);
 }

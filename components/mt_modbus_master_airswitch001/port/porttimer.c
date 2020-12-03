@@ -43,7 +43,7 @@
   (TIMER_CPU_CLOCK / TIMER_DIVIDER) // used to calculate counter value
 
 // global define ==============================================================
-int MB_MASTER_TIMEOUT_MS_RESPOND = 100; // ms
+int MB_MASTER_AIRSWITCH_TIMEOUT_MS_RESPOND = 100; // ms
 
 /* ----------------------- static functions ---------------------------------*/
 static void prvvMasterTIMERExpiredISR(void *p);
@@ -84,13 +84,14 @@ static void timer_value_update(USHORT val) {
   // printf("timer %lld set %d\n", esp_timer_get_time() / 1000, val / 20);
 }
 
-BOOL xMBPortTimersInit(USHORT usTim1Timerout50us) {
+BOOL xMBPortAirswitchTimersInit(USHORT usTim1Timerout50us) {
   init_timer_group_0(usTim1Timerout50us);
   return TRUE;
 }
 
 inline void vMBPortTimersEnable() {
-  /* Enable the timer with the timeout passed to xMBPortTimersInit( ) */
+  /* Enable the timer with the timeout passed to xMBPortAirswitchTimersInit( )
+   */
   timer_start(TIMER_GROUP, TIMER_0);
 }
 
@@ -100,40 +101,40 @@ inline void vMBPortTimersDisable() {
 }
 
 /*  master device   APIs */
-BOOL xMBMasterPortTimersInit(USHORT usTim1Timerout50us) {
-  return xMBPortTimersInit(usTim1Timerout50us);
+BOOL xMBMasterPortAirswitchTimersInit(USHORT usTim1Timerout50us) {
+  return xMBPortAirswitchTimersInit(usTim1Timerout50us);
 }
 
 INLINE
-void vMBMasterPortTimersT35Enable() {
+void vMBMasterPortAirswitchTimersT35Enable() {
   USHORT timer_tick = 35 * 20; // 25ms
   /* Set current timer mode, don't change it.*/
-  vMBMasterSetCurTimerMode(MB_TMODE_T35);
+  vMBMasterAirswitchSetCurTimerMode(MB_TMODE_T35);
   timer_value_update(timer_tick);
   vMBPortTimersEnable();
 }
 
 INLINE
-void vMBMasterPortTimersDisable() {
+void vMBMasterPortAirsiwtchTimersDisable() {
   USHORT timer_tick = 2500; // 1000;
   timer_value_update(timer_tick);
   vMBPortTimersDisable();
 }
 
 INLINE
-void vMBMasterPortTimersConvertDelayEnable() {
+void vMBMasterPortAirswitchTimersConvertDelayEnable() {
   USHORT timer_tick = MB_MASTER_DELAY_MS_CONVERT * 20;
   /* Set current timer mode, don't change it.*/
-  vMBMasterSetCurTimerMode(MB_TMODE_CONVERT_DELAY);
+  vMBMasterAirswitchSetCurTimerMode(MB_TMODE_CONVERT_DELAY);
   timer_value_update(timer_tick);
   vMBPortTimersEnable();
 }
 
 INLINE
-void vMBMasterPortTimersRespondTimeoutEnable() {
-  USHORT timer_tick = MB_MASTER_TIMEOUT_MS_RESPOND * 30;
+void vMBMasterPortAirsiwtchTimersRespondTimeoutEnable() {
+  USHORT timer_tick = MB_MASTER_AIRSWITCH_TIMEOUT_MS_RESPOND * 30;
   /* Set current timer mode, don't change it.*/
-  vMBMasterSetCurTimerMode(MB_TMODE_RESPOND_TIMEOUT);
+  vMBMasterAirswitchSetCurTimerMode(MB_TMODE_RESPOND_TIMEOUT);
   timer_value_update(timer_tick);
   vMBPortTimersEnable();
 }
