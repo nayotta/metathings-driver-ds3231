@@ -86,7 +86,8 @@
                 "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/esp_netif/include",
                 "${workspaceFolder}/mt_apps/modbus_gzpd800T",
                 "${workspaceFolder}/mt_proto/mt_proto_ktc_n01/include",
-                "${workspaceFolder}/mt_apps/modbus_ktc_n01"
+                "${workspaceFolder}/mt_apps/modbus_ktc_n01",
+                "${workspaceFolder}/components/huawei_mqtt"
             ],
             "defines": [
                 "_DEBUG",

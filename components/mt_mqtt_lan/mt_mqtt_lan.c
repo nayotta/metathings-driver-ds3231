@@ -172,6 +172,47 @@ esp_err_t mqtt_init(int mod_index, char *module_id, uint64_t session_id,
   return ESP_OK;
 }
 
+esp_err_t mqtt_init_origin(char *username, char *password, char *clientID,
+                           void (*handle)(char *topic, void *buf, int size)) {
+  esp_err_t err;
+  mt_nvs_host_t *host = NULL;
+
+  host = mt_nvs_config_get_host_config();
+  if (host == NULL) {
+    ESP_LOGE(TAG, "%4d %s mt_nvs_config_get_host_config failed", __LINE__,
+             __func__);
+    return ESP_ERR_INVALID_ARG;
+  }
+
+  char mqtt_uri_str[URI_MAX_SIZE] = "";
+  strcpy(mqtt_uri_str, "mqtt://");
+  strcat(mqtt_uri_str, host->host);
+  strcat(mqtt_uri_str, ":");
+  strcat(mqtt_uri_str, host->mqtt_port);
+
+  msg_process = handle;
+
+  const esp_mqtt_client_config_t mqtt_cfg = {
+      .uri = mqtt_uri_str,
+      .username = username,
+      .password = password,
+      .client_id = clientID,
+      .event_handle = (mqtt_event_callback_t)message_arrived_callback,
+  };
+
+  Mqtt_Client = esp_mqtt_client_init(&mqtt_cfg);
+
+  err = esp_mqtt_client_start(Mqtt_Client);
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "%d esp_mqtt_client_start failed", __LINE__);
+    return ESP_ERR_INVALID_STATE;
+  }
+
+  //mt_nvs_config_free_host(host);
+
+  return ESP_OK;
+}
+
 esp_err_t mt_mqtt_lan_update_session_id(uint64_t session_id) {
   Session_id = session_id;
 

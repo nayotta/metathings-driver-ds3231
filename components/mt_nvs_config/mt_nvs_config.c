@@ -17,6 +17,11 @@ static const int DEFAULT_FLOW_INTERVAL = 600; // 10 minute
 mt_nvs_host_t *mt_nvs_config_new_host() {
   mt_nvs_host_t *host = malloc(sizeof(mt_nvs_host_t));
 
+  host->platform = NULL;
+  host->username = NULL;
+  host->password = NULL;
+  host->clientID = NULL;
+  host->topicHead = NULL;
   host->host = NULL;
   host->http_port = 0;
   host->mqtt_port = 0;
@@ -54,6 +59,21 @@ mt_nvs_module_t *mt_nvs_config_new_module() {
 void mt_nvs_config_free_host(mt_nvs_host_t *host) {
   if (host == NULL)
     return;
+
+  if (host->platform != NULL)
+    free(host->platform);
+
+  if (host->username != NULL)
+    free(host->username);
+
+  if (host->password != NULL)
+    free(host->password);
+
+  if (host->clientID != NULL)
+    free(host->clientID);
+
+  if (host->topicHead != NULL)
+    free(host->topicHead);
 
   if (host->host != NULL)
     free(host->host);
@@ -121,6 +141,48 @@ mt_nvs_host_t *mt_nvs_config_get_host_config() {
   size_t size = 0;
   mt_nvs_host_t *host_out = mt_nvs_config_new_host();
   char *net_type = NULL;
+
+  // get host_out->platform
+  host_out->platform = mt_nvs_read_string_config("platform", &size);
+  if (host_out->platform == NULL) {
+    ESP_LOGE(TAG, "%4d %s get platform failed", __LINE__, __func__);
+    err = ESP_ERR_INVALID_ARG;
+    goto EXIT;
+  }
+
+  if (strcmp(host_out->platform, "metathings") != 0) {
+    // get host_out->username
+    host_out->username = mt_nvs_read_string_config("username", &size);
+    if (host_out->username == NULL) {
+      ESP_LOGE(TAG, "%4d %s get username failed", __LINE__, __func__);
+      err = ESP_ERR_INVALID_ARG;
+      goto EXIT;
+    }
+
+    // get host_out->password
+    host_out->password = mt_nvs_read_string_config("password1", &size);
+    if (host_out->password == NULL) {
+      ESP_LOGE(TAG, "%4d %s get password failed", __LINE__, __func__);
+      err = ESP_ERR_INVALID_ARG;
+      goto EXIT;
+    }
+
+    // get host_out->clientID
+    host_out->clientID = mt_nvs_read_string_config("clientID", &size);
+    if (host_out->clientID == NULL) {
+      ESP_LOGE(TAG, "%4d %s get clientID failed", __LINE__, __func__);
+      err = ESP_ERR_INVALID_ARG;
+      goto EXIT;
+    }
+
+    // get host_out->topicHead
+    host_out->topicHead = mt_nvs_read_string_config("topicHead", &size);
+    if (host_out->topicHead == NULL) {
+      ESP_LOGE(TAG, "%4d %s get topicHead failed", __LINE__, __func__);
+      err = ESP_ERR_INVALID_ARG;
+      goto EXIT;
+    }
+  }
 
   // get host_out->host
   host_out->host = mt_nvs_read_string_config("host", &size);

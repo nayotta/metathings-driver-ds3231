@@ -9,6 +9,11 @@
 // define =====================================================================
 
 typedef struct _mt_nvs_host_t {
+  char *platform;
+  char *username;
+  char *password;
+  char *clientID;
+  char *topicHead;
   char *host;
   char *mqtt_port;
   int http_port;
