@@ -6,17 +6,14 @@
 #include "esp_err.h"
 #include "esp_eth.h"
 #include "esp_event.h"
-#include "esp_event_loop.h"
 #include "esp_log.h"
 #include "esp_netif.h"
 #include "esp_system.h"
 #include "freertos/task.h"
 #include "nvs.h"
-#include "tcpip_adapter.h"
+
 #include <stdio.h>
 #include <string.h>
-
-#include "tcpip_adapter.h"
 
 #include "gpio_light.h"
 
@@ -66,7 +63,6 @@ static void eth_event_handler(void *arg, esp_event_base_t event_base,
 
 static void eth_static_event_handler(void *arg, esp_event_base_t event_base,
                                      int32_t event_id, void *event_data) {
-  esp_err_t err = ESP_OK;
   uint8_t mac_addr[6] = {0};
   /* we can get the ethernet driver handle from event data */
   esp_eth_handle_t eth_handle = *(esp_eth_handle_t *)event_data;
@@ -80,6 +76,7 @@ static void eth_static_event_handler(void *arg, esp_event_base_t event_base,
              mac_addr[1], mac_addr[2], mac_addr[3], mac_addr[4], mac_addr[5]);
 
     /*
+        esp_err_t err = ESP_OK;
         tcpip_adapter_ip_info_t eth_ip;
         nvs_handle config_handle = 0;
         char key[64] = "";
@@ -133,7 +130,7 @@ static void eth_static_event_handler(void *arg, esp_event_base_t event_base,
 static void got_ip_event_handler(void *arg, esp_event_base_t event_base,
                                  int32_t event_id, void *event_data) {
   ip_event_got_ip_t *event = (ip_event_got_ip_t *)event_data;
-  const tcpip_adapter_ip_info_t *ip_info = &event->ip_info;
+  const esp_netif_ip_info_t *ip_info = &event->ip_info;
   bool ret = false;
 
   ESP_LOGI(TAG, "Ethernet Got IP Address");
@@ -203,8 +200,6 @@ void mt_ethernet_static_task(int light_pin, int light_pin_on_level) {
                LIGHT_HANDLE->pin);
     }
   }
-
-  tcpip_adapter_init();
 
   ESP_ERROR_CHECK(esp_netif_init());
   ESP_ERROR_CHECK(esp_event_loop_create_default());

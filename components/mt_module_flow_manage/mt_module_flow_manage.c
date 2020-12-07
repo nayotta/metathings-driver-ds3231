@@ -116,47 +116,47 @@ EXIT:
   return err;
 }
 
-static void mt_module_flow_manage_push_task_loop(mt_module_flow_t *flow) {
-  mt_module_mqtt_msg_t *mqtt_msg = NULL;
-  QueueHandle_t *handle = NULL;
-  char *flow_name = NULL;
-  esp_err_t err = ESP_OK;
-  BaseType_t ret = pdFALSE;
+// static void mt_module_flow_manage_push_task_loop(mt_module_flow_t *flow) {
+//   mt_module_mqtt_msg_t *mqtt_msg = NULL;
+//   QueueHandle_t *handle = NULL;
+//   char *flow_name = NULL;
+//   esp_err_t err = ESP_OK;
+//   BaseType_t ret = pdFALSE;
 
-  for (int i = 0; i < FLOW_MANAGE->flows_size; i++) {
-    if (FLOW_MANAGE->flows[i] == flow) {
-      // ESP_LOGW(TAG, "%4d %s flow:%p target:%p", __LINE__, __func__,
-      //        FLOW_MANAGE->flows[i], flow);
-      handle = FLOW_MANAGE->flows_handle[i];
-      flow_name = FLOW_MANAGE->flows[i]->flow->name;
-      flow = FLOW_MANAGE->flows[i];
-      break;
-    }
-  }
+//   for (int i = 0; i < FLOW_MANAGE->flows_size; i++) {
+//     if (FLOW_MANAGE->flows[i] == flow) {
+//       // ESP_LOGW(TAG, "%4d %s flow:%p target:%p", __LINE__, __func__,
+//       //        FLOW_MANAGE->flows[i], flow);
+//       handle = FLOW_MANAGE->flows_handle[i];
+//       flow_name = FLOW_MANAGE->flows[i]->flow->name;
+//       flow = FLOW_MANAGE->flows[i];
+//       break;
+//     }
+//   }
 
-  if (handle == NULL) {
-    ESP_LOGE(TAG, "%4d %s handle NULL", __LINE__, __func__);
-    vTaskDelete(NULL);
-  } else {
-    ESP_LOGI(TAG, "%4d %s handle:%p loop", __LINE__, __func__, handle);
-  }
+//   if (handle == NULL) {
+//     ESP_LOGE(TAG, "%4d %s handle NULL", __LINE__, __func__);
+//     vTaskDelete(NULL);
+//   } else {
+//     ESP_LOGI(TAG, "%4d %s handle:%p loop", __LINE__, __func__, handle);
+//   }
 
-  // wait push flow msg
-  while (1) {
-    ret = xQueueReceive(handle, &mqtt_msg, portMAX_DELAY);
-    if (ret != pdTRUE) {
-      continue;
-    }
-    err = mqtt_pub_msg(mqtt_msg->topic, mqtt_msg->buf, mqtt_msg->buf_size);
-    if (err != ESP_OK) {
-      ESP_LOGE(TAG, "%4d %s flow:%s mqtt_pub_msg failed", __LINE__, __func__,
-               flow_name);
-    }
+//   // wait push flow msg
+//   while (1) {
+//     ret = xQueueReceive(handle, &mqtt_msg, portMAX_DELAY);
+//     if (ret != pdTRUE) {
+//       continue;
+//     }
+//     err = mqtt_pub_msg(mqtt_msg->topic, mqtt_msg->buf, mqtt_msg->buf_size);
+//     if (err != ESP_OK) {
+//       ESP_LOGE(TAG, "%4d %s flow:%s mqtt_pub_msg failed", __LINE__, __func__,
+//                flow_name);
+//     }
 
-    ESP_LOGI(TAG, "%4d %s flow:%s push flow success", __LINE__, __func__,
-             flow_name);
-  }
-}
+//     ESP_LOGI(TAG, "%4d %s flow:%s push flow success", __LINE__, __func__,
+//              flow_name);
+//   }
+// }
 
 esp_err_t mt_module_flow_manage_add(mt_module_flow_t *flow) {
   mt_module_flow_manage_t *temp_manage = NULL;

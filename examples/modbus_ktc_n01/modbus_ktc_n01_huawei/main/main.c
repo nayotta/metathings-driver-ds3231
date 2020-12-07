@@ -36,6 +36,8 @@ int TX_PIN = 13;
 int RX_PIN = 15;
 int EN_PIN = 05;
 
+#define ETHERNET
+
 // global func ================================================================
 
 void app_main() {

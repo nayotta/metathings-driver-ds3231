@@ -41,7 +41,7 @@ static void modbus_lock_release() {
 eMBErrorCode eMBMasterCB01(UCHAR *recvBuf, UCHAR recvCmd, USHORT recvLen) {
   eMBErrorCode eStatus = MB_ENOERR;
 
-  if (recvLen > BUF_MAXLEN) {
+  if (recvLen > MT_MB_TASK_BUF_MAXLEN) {
     return MB_EILLSTATE;
   }
 
@@ -56,7 +56,7 @@ eMBErrorCode eMBMasterCB01(UCHAR *recvBuf, UCHAR recvCmd, USHORT recvLen) {
 eMBErrorCode eMBMasterCB02(UCHAR *recvBuf, UCHAR recvCmd, USHORT recvLen) {
   eMBErrorCode eStatus = MB_ENOERR;
 
-  if (recvLen > BUF_MAXLEN) {
+  if (recvLen > MT_MB_TASK_BUF_MAXLEN) {
     return MB_EILLSTATE;
   }
 
@@ -71,7 +71,7 @@ eMBErrorCode eMBMasterCB02(UCHAR *recvBuf, UCHAR recvCmd, USHORT recvLen) {
 eMBErrorCode eMBMasterCB03(UCHAR *recvBuf, UCHAR recvCmd, USHORT recvLen) {
   eMBErrorCode eStatus = MB_ENOERR;
 
-  if (recvLen > BUF_MAXLEN) {
+  if (recvLen > MT_MB_TASK_BUF_MAXLEN) {
     return MB_EILLSTATE;
   }
 
@@ -86,7 +86,7 @@ eMBErrorCode eMBMasterCB03(UCHAR *recvBuf, UCHAR recvCmd, USHORT recvLen) {
 eMBErrorCode eMBMasterCB04(UCHAR *recvBuf, UCHAR recvCmd, USHORT recvLen) {
   eMBErrorCode eStatus = MB_ENOERR;
 
-  if (recvLen > BUF_MAXLEN) {
+  if (recvLen > MT_MB_TASK_BUF_MAXLEN) {
     return MB_EILLSTATE;
   }
 
@@ -101,7 +101,7 @@ eMBErrorCode eMBMasterCB04(UCHAR *recvBuf, UCHAR recvCmd, USHORT recvLen) {
 eMBErrorCode eMBMasterCB05(UCHAR *recvBuf, UCHAR recvCmd, USHORT recvLen) {
   eMBErrorCode eStatus = MB_ENOERR;
 
-  if (recvLen > BUF_MAXLEN) {
+  if (recvLen > MT_MB_TASK_BUF_MAXLEN) {
     return MB_EILLSTATE;
   }
 
@@ -116,7 +116,7 @@ eMBErrorCode eMBMasterCB05(UCHAR *recvBuf, UCHAR recvCmd, USHORT recvLen) {
 eMBErrorCode eMBMasterCB06(UCHAR *recvBuf, UCHAR recvCmd, USHORT recvLen) {
   eMBErrorCode eStatus = MB_ENOERR;
 
-  if (recvLen > BUF_MAXLEN) {
+  if (recvLen > MT_MB_TASK_BUF_MAXLEN) {
     return MB_EILLSTATE;
   }
 
@@ -149,7 +149,7 @@ static void modbus_loop(void *parameter) {
   modbus_lock_init();
 
   RetMsg = malloc(sizeof(struct RetMsg_t)); // global no need free
-  memset(RetMsg->retBuf, 0, BUF_MAXLEN);
+  memset(RetMsg->retBuf, 0, MT_MB_TASK_BUF_MAXLEN);
   RetMsg->recvCmd = 0;
   RetMsg->retLen = 0;
 

@@ -3,8 +3,9 @@
 
 #include "freertos/FreeRTOS.h"
 
-#include "esp_event_loop.h"
+#include "esp_event.h"
 #include "esp_log.h"
+#include "esp_netif.h"
 #include "esp_smartconfig.h"
 #include "esp_system.h"
 #include "esp_wifi.h"
@@ -12,7 +13,6 @@
 #include "freertos/task.h"
 #include "gpio_button.h"
 #include "gpio_light.h"
-#include "tcpip_adapter.h"
 
 #include "mt_nvs_storage.h"
 #include "mt_smartconfig.h"
@@ -301,7 +301,7 @@ static void mt_wifi_loop(void) {
 
   ESP_LOGI(TAG, "mt_smartconfig_task created");
 
-  tcpip_adapter_init();
+  esp_netif_init();
 
   WIFI_EVENT_GROUP = xEventGroupCreate();
 

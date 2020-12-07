@@ -1,9 +1,9 @@
 #ifndef _MT_MBTASK_H
 #define _MT_MBTASK_H
 
+#include "esp_err.h"
 #include "mt_mb.h"
 #include "mt_mbport.h"
-#include "esp_err.h"
 
 #ifndef CONFIG_LOG_DEFAULT_LEVEL
 #define CONFIG_LOG_DEFAULT_LEVEL ESP_LOG_DEBUG
@@ -13,14 +13,14 @@
 #define CONFIG_FREERTOS_HZ 100
 #endif
 
-#define BUF_MAXLEN 128
+#define MT_MB_TASK_BUF_MAXLEN 128
 
 struct RetMsg_t // ret message struct
 {
-    UCHAR retBuf[BUF_MAXLEN]; // ret buffer
-    USHORT recvCmd;           // ret addr
-    USHORT retLen;            // ret len
-} * RetMsg;                   // global save point
+  UCHAR retBuf[MT_MB_TASK_BUF_MAXLEN]; // ret buffer
+  USHORT recvCmd;                      // ret addr
+  USHORT retLen;                       // ret len
+} * RetMsg;                            // global save point
 
 eMBErrorCode modbus_init(UCHAR ucPort, ULONG ulBaudRate, eMBParity eParity,
                          int tx_pin, int rx_pin, int en_pin);
