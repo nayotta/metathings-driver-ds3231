@@ -22,6 +22,9 @@ esp_err_t mqtt_init(int index_in, char *module_id, uint64_t session_id,
                     char *device_id,
                     void (*handle)(char *topic, void *buf, int size));
 
+esp_err_t mqtt_init_origin(char *username, char *password, char *clientID,
+                           void (*handle)(char *topic, void *buf, int size));
+
 esp_err_t mt_mqtt_lan_update_session_id(uint64_t session_id);
 
 #endif
