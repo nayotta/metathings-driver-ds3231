@@ -1,6 +1,14 @@
-set(COMPONENT_SRCDIRS .)
-set(COMPONENT_ADD_INCLUDEDIRS .)
-
-set(COMPONENT_REQUIRES mt_module_flow_manage mt_module_unarycall_ota mt_mqtt mt_protobuf_c mt_proto_device_cloud rs232_lora_ebyte mt_mqtt mt_module_http_manage mt_mqtt_lan mt_nvs_storage mt_utils)
-
-register_component()
+idf_component_register(SRCS "mt_module_lora.c"
+                       INCLUDE_DIRS "."
+                       REQUIRES rs232_lora_ebyte
+                        PRIV_REQUIRES   mt_module_flow_manage
+                                        mt_mqtt 
+                                        mt_protobuf_c 
+                                        mt_proto_device_cloud 
+                                        mt_module_mqtt 
+                                        mt_module_http_manage 
+                                        mt_mqtt_lan 
+                                        mt_nvs_storage 
+                                        mt_nvs_config
+                                        mt_utils
+                                        mt_module_unarycall)

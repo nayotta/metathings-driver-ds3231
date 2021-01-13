@@ -1,6 +1,10 @@
-set(COMPONENT_SRCDIRS .)
-set(COMPONENT_ADD_INCLUDEDIRS .)
-
-set(COMPONENT_REQUIRES mt_modbus_master mt_module_flow)
-
-register_component()
+idf_component_register(SRCS modbus_bits001_module_flow.c
+                            modbus_bits001.c
+                       INCLUDE_DIRS .
+                       REQUIRES mt_module_flow 
+                                mt_modbus_master
+                       PRIV_REQUIRES    mt_mqtt
+                                        mt_module_mqtt
+                                        mt_module_http
+                                        mt_proto_device_cloud
+                                        mt_protobuf_c)

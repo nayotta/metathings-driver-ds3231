@@ -1,6 +1,4 @@
-set(COMPONENT_SRCDIRS .)
-set(COMPONENT_ADD_INCLUDEDIRS .)
-
-set(COMPONENT_REQUIRES  mt_nvs_storage)
-
-register_component()
+idf_component_register(SRCS mt_sys_monitor.c
+                       INCLUDE_DIRS .
+                       REQUIRES 
+                       PRIV_REQUIRES    mt_nvs_storage )

@@ -1,7 +1,7 @@
-set(COMPONENT_SRCDIRS .)
-set(COMPONENT_ADD_INCLUDEDIRS .)
-
-set(COMPONENT_REQUIRES mt_nvs_storage mt_smartconfig tcpip_adapter esp_wifi gpio_button gpio_light)
-
-
-register_component()
+idf_component_register(SRCS mt_smartconfig.c
+                       INCLUDE_DIRS .
+                       REQUIRES gpio_light
+                       PRIV_REQUIRES    mt_nvs_storage 
+                                        tcpip_adapter 
+                                        esp_wifi 
+                                        gpio_button )

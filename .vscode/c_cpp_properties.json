@@ -82,12 +82,16 @@
                 "${workspaceFolder}/mt_apps/gpio_pulse_motor",
                 "${workspaceFolder}/mt_apps/gpio_button",
                 "${workspaceFolder}/mt_apps/rs232_PRS3342",
-                "C:/Users/37044/.espressif/tools/xtensa-esp32-elf/esp-2019r2-8.2.0/xtensa-esp32-elf/xtensa-esp32-elf/include",
                 "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/esp_netif/include",
                 "${workspaceFolder}/mt_apps/modbus_gzpd800T",
                 "${workspaceFolder}/mt_proto/mt_proto_ktc_n01/include",
                 "${workspaceFolder}/mt_apps/modbus_ktc_n01",
-                "${workspaceFolder}/components/huawei_mqtt"
+                "${workspaceFolder}/components/huawei_mqtt",
+                "${workspaceFolder}/mt_proto/mt_proto_sys_config/include",
+                "${workspaceFolder}/components/mt_sys_config",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/nghttp/nghttp2/third-party/mruby/include/mruby",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/nghttp/nghttp2/third-party/mruby/include",
+                "D:/7esp32/.espressif/tools/xtensa-esp32-elf/esp-2020r2-8.2.0/xtensa-esp32-elf/xtensa-esp32-elf/include"
             ],
             "defines": [
                 "_DEBUG",
@@ -104,7 +108,7 @@
                 "path": [
                     "${workspaceRoot}",
                     "D:\\7esp32\\msys32\\home\\zhanghui\\esp\\esp-idf\\components",
-                    "c:\\Users\\37044\\.espressif\\tools\\xtensa-esp32-elf\\esp-2019r2-8.2.0\\xtensa-esp32-elf\\xtensa-esp32-elf\\include"
+                    "D:\\7esp32\\.espressif\\tools\\xtensa-esp32-elf\\esp-2020r2-8.2.0\\xtensa-esp32-elf\\xtensa-esp32-elf\\include"
                 ]
             }
         }

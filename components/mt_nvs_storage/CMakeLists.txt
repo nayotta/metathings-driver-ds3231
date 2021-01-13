@@ -1,6 +1,4 @@
-set(COMPONENT_SRCDIRS .)
-set(COMPONENT_ADD_INCLUDEDIRS .)
-
-set(COMPONENT_REQUIRES nvs_flash )
-
-register_component()
+idf_component_register(SRCS mt_nvs_storage.c
+                       INCLUDE_DIRS .
+                       REQUIRES nvs_flash
+                       PRIV_REQUIRES  )

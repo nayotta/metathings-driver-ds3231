@@ -1,6 +1,4 @@
-set(COMPONENT_SRCDIRS .)
-set(COMPONENT_ADD_INCLUDEDIRS .)
-
-set(COMPONENT_REQUIRES json)
-
-register_component()
+idf_component_register(SRCS "mt_json_parse.c"
+                       INCLUDE_DIRS "."
+                       REQUIRES 
+                       PRIV_REQUIRES json)

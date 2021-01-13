@@ -1,4 +1,4 @@
-set(COMPONENT_SRCDIRS .)
-set(COMPONENT_ADD_INCLUDEDIRS .)
-
-register_component()
+idf_component_register(SRCS rs232_dev.c
+                       INCLUDE_DIRS .
+                       REQUIRES 
+                       PRIV_REQUIRES )

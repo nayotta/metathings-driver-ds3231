@@ -1,6 +1,4 @@
-set(COMPONENT_SRCDIRS .)
-set(COMPONENT_ADD_INCLUDEDIRS .)
-
-set(COMPONENT_REQUIRES )
-
-register_component()
+idf_component_register(SRCS "mt_memory_manage.c"
+                       INCLUDE_DIRS "."
+                       REQUIRES 
+                       PRIV_REQUIRES)

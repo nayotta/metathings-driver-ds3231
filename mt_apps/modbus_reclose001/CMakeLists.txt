@@ -1,6 +1,7 @@
-set(COMPONENT_SRCDIRS .)
-set(COMPONENT_ADD_INCLUDEDIRS .)
-
-set(COMPONENT_REQUIRES mt_module_flow modbus_reclose001 mt_modbus_master heap app_trace)
-
-register_component()
+idf_component_register(SRCS modbus_reclose001_module_flow.c
+                            modbus_reclose001.c
+                       INCLUDE_DIRS .
+                       REQUIRES mt_module_flow
+                       PRIV_REQUIRES    modbus_reclose001 
+                                        mt_modbus_master
+                                        mt_utils)

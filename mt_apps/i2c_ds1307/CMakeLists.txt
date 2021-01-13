@@ -1,6 +1,3 @@
-set(COMPONENT_SRCDIRS .)
-set(COMPONENT_ADD_INCLUDEDIRS .)
-
-set(COMPONENT_REQUIRES i2cdev)
-
-register_component()
+idf_component_register(SRCS ds1307.c
+                       INCLUDE_DIRS .
+                       REQUIRES i2cdev)

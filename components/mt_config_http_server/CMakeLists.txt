@@ -1,6 +1,4 @@
-set(COMPONENT_SRCDIRS .)
-set(COMPONENT_ADD_INCLUDEDIRS .)
-
-set(COMPONENT_REQUIRES esp_http_server mt_nvs_config)
-
-register_component()
+idf_component_register(SRCS "mt_config_http_server.c"
+                       INCLUDE_DIRS "."
+                       REQUIRES esp_http_server
+                       PRIV_REQUIRES mt_nvs_config)

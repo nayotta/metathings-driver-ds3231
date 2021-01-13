@@ -1,4 +1,4 @@
-set(COMPONENT_SRCDIRS .)
-set(COMPONENT_ADD_INCLUDEDIRS .)
-
-register_component()
+idf_component_register(SRCS "i2cdev.c"
+                       INCLUDE_DIRS "."
+                       REQUIRES 
+                       PRIV_REQUIRES)

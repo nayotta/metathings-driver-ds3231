@@ -2,6 +2,8 @@
 #include "stdlib.h"
 #include "string.h"
 
+#include "cJSON.h"
+
 #include "mt_nvs_config.h"
 #include "mt_nvs_storage.h"
 #include "mt_utils_string.h"

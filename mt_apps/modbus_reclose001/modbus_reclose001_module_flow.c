@@ -6,10 +6,6 @@
 #include "modbus_reclose001.h"
 #include "mt_module_flow.h"
 
-#include "esp_heap_trace.h"
-#define NUM_RECORDS 100
-static heap_trace_record_t trace_record[NUM_RECORDS];
-
 // static define ==============================================================
 
 static const char *TAG = "MODBUS_RECLOSE001_MODULE_FLOW";
@@ -26,7 +22,6 @@ static void modbus_reclose001_flow_loop(mt_module_flow_t *module_flow) {
   bool change = false;
 
   while (true) {
-    // ESP_ERROR_CHECK(heap_trace_start(HEAP_TRACE_LEAKS));
     data = modbus_reclose001_get_data(1);
     if (data == NULL) {
       ESP_LOGE(TAG, "%4d %s modbus_reclose001_get_data failed", __LINE__,
@@ -34,11 +29,6 @@ static void modbus_reclose001_flow_loop(mt_module_flow_t *module_flow) {
       err = ESP_ERR_INVALID_RESPONSE;
       goto EXIT;
     }
-
-    // mt_module_flow_free_struct_group(data);
-    // ESP_ERROR_CHECK(heap_trace_stop());
-    // heap_trace_dump();
-    // continue;
 
     if (data_save == NULL) {
       data_save = data;
@@ -93,7 +83,6 @@ static void modbus_reclose001_flow_loop(mt_module_flow_t *module_flow) {
 }
 
 void modbus_reclose001_module_flow_task(mt_module_flow_t *module_flow) {
-  ESP_ERROR_CHECK(heap_trace_init_standalone(trace_record, NUM_RECORDS));
   xTaskCreate((TaskFunction_t)modbus_reclose001_flow_loop, "MODULE_FLOW",
               8 * 1024, module_flow, 10, NULL);
 }

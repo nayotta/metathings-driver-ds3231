@@ -4,8 +4,6 @@
 #include "esp_err.h"
 #include "esp_system.h"
 
-#include "cJSON.h"
-
 // define =====================================================================
 
 typedef struct _mt_nvs_host_t {

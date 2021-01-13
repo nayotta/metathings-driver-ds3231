@@ -1,4 +1,4 @@
-set(COMPONENT_SRCDIRS .)
-set(COMPONENT_ADD_INCLUDEDIRS .)
-
-register_component()
+idf_component_register(SRCS gpio_light.c
+                       INCLUDE_DIRS .
+                       REQUIRES 
+                       PRIV_REQUIRES )

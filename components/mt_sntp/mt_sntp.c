@@ -177,6 +177,7 @@ static void mt_sntp_loop() {
   // wait 2 second for rtc module sync time first
   vTaskDelay(2 * 1000 / portTICK_PERIOD_MS);
 
+  // TODO(ZH) remove network dep
   // WIFI_EVENT_GROUP is from mt_smartconfig, if net connected send BIT2 sign
   xEventGroupWaitBits(WIFI_EVENT_GROUP, BIT2, false, false, portMAX_DELAY);
 

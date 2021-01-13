@@ -1,6 +1,5 @@
-set(COMPONENT_SRCDIRS .)
-set(COMPONENT_ADD_INCLUDEDIRS .)
-
-set(COMPONENT_REQUIRES gpio_light nvs_flash)
-
-register_component()
+idf_component_register(SRCS "mt_ethernet.c"
+                       INCLUDE_DIRS "."
+                       REQUIRES 
+                       PRIV_REQUIRES    gpio_light 
+                                        nvs_flash)

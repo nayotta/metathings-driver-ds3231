@@ -1,6 +1,4 @@
-set(COMPONENT_SRCDIRS .)
-set(COMPONENT_ADD_INCLUDEDIRS .)
-
-set(COMPONENT_REQUIRES mqtt)
-
-register_component()
+idf_component_register(SRCS mt_mqtt_manage.c
+                       INCLUDE_DIRS .
+                       REQUIRES mqtt
+                       PRIV_REQUIRES)
