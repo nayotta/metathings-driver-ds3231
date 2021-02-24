@@ -21,8 +21,6 @@ gpio_maglock001_huawei_get_data_process(mt_module_flow_t *module_flow) {
   esp_err_t err = ESP_OK;
   cJSON *data = cJSON_CreateObject();
   int port_num = 0;
-  int count = 0;
-  char key[24] = "";
   char *buf = NULL;
   char *clientID = NULL;
 
