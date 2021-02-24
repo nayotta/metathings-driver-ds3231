@@ -48,9 +48,12 @@ static esp_err_t sent_cmd(const char *buf) {
   sent_size = strlen(buf);
 
   sent_ret_size = uart_write_bytes(DEV_CONFIG->uart_num, buf, sent_size);
+  ESP_LOGW(TAG, "%4d %s uart_port:%d point:%p", __LINE__, __func__,
+           DEV_CONFIG->uart_num, DEV_CONFIG);
   if (sent_ret_size != sent_size) {
-    ESP_LOGE(TAG, "%4d %s sent:%d but sent_ret:%d", __LINE__, __func__,
-             sent_size, sent_ret_size);
+    ESP_LOGE(TAG, "%4d %s sent:%d but sent_ret:%d uart_port:%d point:%p",
+             __LINE__, __func__, sent_size, sent_ret_size, DEV_CONFIG->uart_num,
+             DEV_CONFIG);
     return ESP_ERR_INVALID_RESPONSE;
   }
 

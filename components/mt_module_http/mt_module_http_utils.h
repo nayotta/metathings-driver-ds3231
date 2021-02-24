@@ -4,6 +4,14 @@
 #include "esp_err.h"
 #include "mt_module_http.h"
 
+// help func ==================================================================
+
+char *mt_utils_login_get_issue_token_data(mt_module_http_t *module_http);
+
+char *mt_utils_login_get_heartbeat_data(mt_module_http_t *module_http);
+
+// global func ================================================================
+
 token_t *mt_module_http_utils_token_t_init();
 
 module_t *mt_module_http_utils_motule_t_init();

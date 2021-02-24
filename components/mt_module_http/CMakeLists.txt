@@ -9,4 +9,4 @@ idf_component_register(SRCS "mt_module_http_utils.c"
                                         mt_nvs_config  
                                         mt_module_http_manage
                                         mt_mqtt
-                                        mt_mqtt_lan)
+                                        )

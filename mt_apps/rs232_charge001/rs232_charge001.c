@@ -156,7 +156,7 @@ esp_err_t rs232_charge001_init(int32_t uart_num, int32_t rx_pin,
   dev_config->rx_pin = rx_pin;
   dev_config->tx_pin = tx_pin;
   dev_config->uart_config->baud_rate = 9600;
-  dev_config->uart_config->stop_bits = UART_STOP_BITS_2;
+  dev_config->uart_config->stop_bits = UART_STOP_BITS_1;
 
   err = rs232_dev_init(dev_config);
   if (err != ESP_OK) {
@@ -179,6 +179,7 @@ esp_err_t rs232_charge001_init(int32_t uart_num, int32_t rx_pin,
   }
 
   if (DEV_CONFIG != NULL) {
+    ESP_LOGW(TAG, "%4d %s DEV_CONFIG exsit", __LINE__, __func__);
     rs232_dev_config_free(DEV_CONFIG);
   }
 

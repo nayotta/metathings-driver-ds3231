@@ -77,12 +77,6 @@ static void rs232_charge001_recv_manage_loop(rs232_dev_config_t *dev_config) {
                           dev_config->timeout / portTICK_PERIOD_MS);
     {
       if (len >= 1) {
-        // debug here
-        printf("recv:");
-        for (int i = 0; i < len; i++)
-          printf("%2x ", data[i]);
-        printf("\n");
-
         uint32_t offset = 0;
         uint32_t left_size = 0;
         while (offset != len) {

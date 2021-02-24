@@ -6,8 +6,7 @@ idf_component_register(SRCS "mt_module_lora.c"
                                         mt_protobuf_c 
                                         mt_proto_device_cloud 
                                         mt_module_mqtt 
-                                        mt_module_http_manage 
-                                        mt_mqtt_lan 
+                                        mt_module_http_manage
                                         mt_nvs_storage 
                                         mt_nvs_config
                                         mt_utils

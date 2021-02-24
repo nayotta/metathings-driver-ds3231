@@ -11,7 +11,7 @@ idf_component_register(SRCS cache_airswitch001.c
                                 mt_module_http
                        PRIV_REQUIRES    mt_nvs_storage
                                         mqtt
-                                        mt_mqtt_lan
+                                        mt_mqtt
                                         mt_protobuf_c
                                         mt_proto_device_cloud
                                         mt_module_flow_manage

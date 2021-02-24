@@ -56,7 +56,6 @@
                 "${workspaceFolder}/mt_proto/mt_proto_device_cloud/include",
                 "${workspaceFolder}/components/mt_protobuf_c/include",
                 "${workspaceFolder}/components/mt_mqtt",
-                "${workspaceFolder}/components/mt_module_unarycall_ota",
                 "${workspaceFolder}/components/mt_module_http_manage",
                 "${workspaceFolder}/components/mt_module_lora",
                 "${workspaceFolder}/mt_proto/mt_device_type",
@@ -91,7 +90,13 @@
                 "${workspaceFolder}/components/mt_sys_config",
                 "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/nghttp/nghttp2/third-party/mruby/include/mruby",
                 "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/nghttp/nghttp2/third-party/mruby/include",
-                "D:/7esp32/.espressif/tools/xtensa-esp32-elf/esp-2020r2-8.2.0/xtensa-esp32-elf/xtensa-esp32-elf/include"
+                "D:/7esp32/.espressif/tools/xtensa-esp32-elf/esp-2020r2-8.2.0/xtensa-esp32-elf/xtensa-esp32-elf/include",
+                "${workspaceFolder}/mt_apps/gpio_maglock001",
+                "${workspaceFolder}/mt_apps/modbus_bits001",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/esp_system/include",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/freertos/port/riscv/include",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/mbedtls/mbedtls/include/mbedtls",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/mbedtls/mbedtls/include"
             ],
             "defines": [
                 "_DEBUG",

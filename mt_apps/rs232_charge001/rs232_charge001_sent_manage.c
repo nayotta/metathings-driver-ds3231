@@ -36,13 +36,6 @@ static esp_err_t sent_cmd(uint8_t *buf, int32_t size) {
     return ESP_ERR_INVALID_STATE;
   }
 
-  // debug here
-  printf("sent:");
-  for (int i = 0; i < size; i++) {
-    printf("%2x ", buf[i]);
-  }
-  printf("\n");
-
   err = rs232_dev_write(DEV_CONFIG, buf, size);
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s rs232_dev_write failed", __LINE__, __func__);

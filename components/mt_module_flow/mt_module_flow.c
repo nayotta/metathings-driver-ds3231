@@ -6,6 +6,8 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
+#include "cJSON.h"
+
 #include "mt_module_flow.h"
 #include "mt_module_flow_manage.h"
 #include "mt_module_http.h"
@@ -13,6 +15,7 @@
 #include "mt_mqtt.h"
 #include "mt_mqtt_utils.h"
 #include "mt_nvs_config.h"
+#include "mt_utils_login.h"
 #include "mt_utils_string.h"
 
 #include "google/protobuf/struct.pb-c.h"
@@ -413,6 +416,63 @@ mt_module_flow_add_notify_to_group(mt_module_flow_struct_group_t *group_in) {
   mt_module_flow_free_struct(notify_struct);
 
   return group_out;
+}
+
+char *mt_utils_login_get_push_frame_to_flow_data(mt_module_http_t *module_http,
+                                                 mt_module_flow_t *flow_in) {
+  char *data_out = NULL;
+  cJSON *root = NULL;
+  cJSON *config_in_json = NULL;
+  cJSON *flow_in_json = NULL;
+
+  // check argument
+  if (module_http == NULL) {
+    ESP_LOGE(TAG, "%4d %s module_http is NULL", __LINE__, __func__);
+    goto EXIT;
+  } else {
+    if (module_http->module == NULL) {
+      ESP_LOGE(TAG, "%4d %s module_http->module is NULL", __LINE__, __func__);
+      goto EXIT;
+    } else {
+      if (module_http->module->id == NULL) {
+        ESP_LOGE(TAG, "%4d %s module_http->module->id is NULL", __LINE__,
+                 __func__);
+        goto EXIT;
+      }
+    }
+    if (flow_in == NULL) {
+      ESP_LOGE(TAG, "%4d %s flow_in is NULL", __LINE__, __func__);
+      goto EXIT;
+    } else {
+      if (flow_in->flow == NULL) {
+        ESP_LOGE(TAG, "%4d %s flow_in->flow  is NULL", __LINE__, __func__);
+        goto EXIT;
+      } else {
+        if (flow_in->flow->name == NULL) {
+          ESP_LOGE(TAG, "%4d %s flow_in->flow->name is NULL", __LINE__,
+                   __func__);
+          goto EXIT;
+        }
+      }
+    }
+  }
+
+  // request post_data
+  root = cJSON_CreateObject();
+  cJSON_AddStringToObject(root, "id", module_http->module->id);
+  cJSON_AddItemToObject(root, "config", config_in_json = cJSON_CreateObject());
+  cJSON_AddItemToObject(config_in_json, "flow",
+                        flow_in_json = cJSON_CreateObject());
+  cJSON_AddStringToObject(flow_in_json, "name", flow_in->flow->name);
+  cJSON_AddBoolToObject(config_in_json, "config_ack", flow_in->config_ack);
+  cJSON_AddBoolToObject(config_in_json, "push_ack", flow_in->push_ack);
+  data_out = cJSON_Print(root);
+  cJSON_Delete(root);
+
+  //  ESP_LOGI(TAG, "%4d %s data_out =%s", __LINE__, __func__, data_out);
+
+EXIT:
+  return data_out;
 }
 
 // global func ================================================================

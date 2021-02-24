@@ -106,7 +106,7 @@ EXIT:
 }
 
 static void rs232_sim_air720h_recv_manage_push_byte(uint8_t data) {
-  if (RECV_SIZE < RS232_SIM_AIR720H_MAX_BUF_SIZE) {
+  if (RECV_SIZE < RS232_SIM_AIR720H_MAX_BUF_SIZE - 1) {
     RECV_BUF[RECV_SIZE] = data;
     RECV_BUF[RECV_SIZE + 1] = '\0';
     RECV_SIZE++;
@@ -157,8 +157,6 @@ static void rs232_sim_air720h_recv_manage_loop(rs232_dev_config_t *dev_config) {
                           20 / portTICK_PERIOD_MS);
     {
       if (len == 1) {
-        // debug here
-        // printf("%c", data);
         rs232_sim_air720h_recv_manage_push_byte(data);
       }
     }

@@ -147,9 +147,8 @@ mt_nvs_host_t *mt_nvs_config_get_host_config() {
   // get host_out->platform
   host_out->platform = mt_nvs_read_string_config("platform", &size);
   if (host_out->platform == NULL) {
-    ESP_LOGE(TAG, "%4d %s get platform failed", __LINE__, __func__);
-    err = ESP_ERR_INVALID_ARG;
-    goto EXIT;
+    ESP_LOGW(TAG, "%4d %s get platform failed", __LINE__, __func__);
+    host_out->platform = mt_utils_string_copy("metathings");
   }
 
   if (strcmp(host_out->platform, "metathings") != 0) {

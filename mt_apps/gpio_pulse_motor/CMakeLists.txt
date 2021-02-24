@@ -9,7 +9,7 @@ idf_component_register(SRCS gpio_pulse_motor_button.c
                                 mt_proto_pulse_motor
                        PRIV_REQUIRES    mt_nvs_config
                                         mt_module_mqtt
-                                        mt_mqtt_lan
+                                        mt_mqtt
                                         gpio_button 
                                         gpio_light
                                         mt_utils

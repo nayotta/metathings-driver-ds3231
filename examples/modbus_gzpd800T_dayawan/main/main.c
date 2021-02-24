@@ -35,7 +35,6 @@ void test_get_data() {
   esp_err_t err = ESP_OK;
   gzpd800T_4ch_data_t data;
 
-  // debug here
   /*
     err = modbus_gzpd800T_get_4ch_data(&data);
     if (err != ESP_OK) {
@@ -115,14 +114,13 @@ void app_main() {
   rs232_lora_ebyte_data_t *ebyte_data = NULL;
   int interval = 30 * 1000;
   while (1) {
-    
+
     err = modbus_gzpd800T_get_4ch_data(&data);
     if (err != ESP_OK) {
       ESP_LOGE(TAG, "%4d %s failed code:%d", __LINE__, __func__, err);
       goto ERROR;
     }
 
-    // debug here
     /*
     data.amp1 = 1;
     data.freq1 = 2;

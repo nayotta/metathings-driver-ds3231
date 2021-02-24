@@ -15,8 +15,8 @@
 static const char *TAG = "rs232_charge001_base";
 
 static int UART_NUM = 2;
-static int RX_PIN = 25;
-static int TX_PIN = 23;
+static int RX_PIN = 15;
+static int TX_PIN = 13;
 
 // static func ================================================================
 
@@ -26,7 +26,7 @@ static void test_set_state() {
   int32_t res_port = 0;
   int32_t res_result = 0;
 
-  err = rs232_charge001_set_charge(2, 2, 240, &res_port, &res_result);
+  err = rs232_charge001_set_charge(UART_NUM, 2, 240, &res_port, &res_result);
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s rs232_charge001_set_charge failed", __LINE__,
              __func__);
@@ -39,11 +39,11 @@ static void test_set_state() {
            __func__, end - begin, res_port, res_result);
 }
 
-static void test_get_state() {
+static void test_get_state(int32_t port) {
   int64_t begin = esp_timer_get_time() / 1000000;
   rs232_charge001_state2_t *state = NULL;
 
-  state = rs232_charge001_get_state(2);
+  state = rs232_charge001_get_state(port);
   if (state == NULL) {
     ESP_LOGE(TAG, "%4d %s rs232_charge001_get_state NULL", __LINE__, __func__);
     return;
@@ -116,26 +116,22 @@ void app_main() {
 
   // loop
   while (true) {
-    vTaskDelay(10000 / portTICK_RATE_MS);
-  }
-
-  // loop
-  while (true) {
-    for (int i = 0; i < 10; i++) {
-      test_set_state();
-      // vTaskDelay(2000 / portTICK_RATE_MS);
-    }
+    // for (int i = 0; i < 10; i++) {
+    //   printf("test set\n");
+    // test_set_state();
+    // vTaskDelay(5000 / portTICK_RATE_MS);
+    // }
 
     for (int i = 0; i < 10; i++) {
-      test_get_state();
-      // vTaskDelay(10000 / portTICK_RATE_MS);
+      test_get_state(i + 1);
+      vTaskDelay(10000 / portTICK_RATE_MS);
     }
 
-    test_get_states();
-    vTaskDelay(10000 / portTICK_RATE_MS);
+    // test_get_states();
+    // vTaskDelay(10000 / portTICK_RATE_MS);
 
-    test_get_states2();
-    vTaskDelay(10000 / portTICK_RATE_MS);
+    // test_get_states2();
+    // vTaskDelay(10000 / portTICK_RATE_MS);
   }
 
   ESP_LOGI(TAG, "test end");

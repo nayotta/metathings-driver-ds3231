@@ -31,7 +31,7 @@ gpio_maglock001_module_get_state_process(mt_module_flow_t *module_flow) {
     return;
   }
 
-  // get data process
+  // get data process 
   int module_index = 1;
   err = gpio_maglock001_get_port_num(module_index, &port_num);
   if (err != ESP_OK) {

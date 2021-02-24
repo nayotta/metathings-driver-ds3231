@@ -96,6 +96,9 @@ mt_module_flow_get_diff(mt_module_flow_struct_group_t *data1,
 esp_err_t mt_module_flow_copy_struct(mt_module_flow_struct_t *struct_in,
                                      mt_module_flow_struct_t *struct_out);
 
+char *mt_utils_login_get_push_frame_to_flow_data(mt_module_http_t *module_http,
+                                                 mt_module_flow_t *flow_in);
+
 // func =======================================================================
 
 void mt_module_flow_process(mt_module_flow_t *module_flow, char *topic,

@@ -150,8 +150,6 @@ RESTART:
   module_http->session_id =
       mt_utils_session_new_session(mt_utils_session_gen_startup_session(),
                                    mt_utils_session_gen_major_session());
-  // debug here!!!!
-  // module_http->session_id = 12345678;
   mt_mqtt_update_session_id(module_http->session_id);
 
   while (true) {
@@ -175,8 +173,6 @@ RESTART:
 
     vTaskDelay(heartbeat_interval / portTICK_PERIOD_MS);
   }
-
-  return;
 }
 
 static void rs232_sim_air720h_mqtt_task_loop() {

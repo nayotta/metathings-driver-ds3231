@@ -239,7 +239,6 @@ void app_main() {
     return;
   }
 
-  // debug here
   /*
   for (int i = 0; i < 31; i++) {
     prs3342->datas[i]->data = i;

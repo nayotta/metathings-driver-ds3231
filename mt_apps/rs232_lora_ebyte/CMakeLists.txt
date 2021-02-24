@@ -7,5 +7,5 @@ idf_component_register(SRCS rs232_lora_ebyte_flow_manage.c
                                 rs232_dev
                        PRIV_REQUIRES    mt_nvs_storage 
                                         mt_nvs_config
-                                        mt_mqtt_lan
+                                        mt_mqtt
                                         mt_module_mqtt)

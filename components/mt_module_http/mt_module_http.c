@@ -1224,7 +1224,6 @@ EXIT:
 }
 
 static void mt_module_http_task_loop(mt_module_http_t *module_http) {
-  // debug here
   int issue_module_token_interval = 30 * 1000; // 30s
   int show_module_retry_max = 10;
   int show_module_retry_count = 10;
@@ -1287,8 +1286,6 @@ RESTART:
       mt_utils_session_new_session(mt_utils_session_gen_startup_session(),
                                    mt_utils_session_gen_major_session());
 
-  // debug here
-  // module_http->session_id = 12345678;
   Session_id = module_http->session_id;
   mt_mqtt_update_session_id(Session_id);
 

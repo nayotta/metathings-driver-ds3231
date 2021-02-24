@@ -20,7 +20,6 @@ idf_component_register(SRCS rs232_charge001_lora_flow.c
                                         rs232_lora_ebyte 
                                         rs232_sim_air720h
                                         mt_device_type 
-                                        mt_mqtt_lan
                                         mt_module_lora
                                         mt_module_unarycall
                                         mt_module_flow_manage

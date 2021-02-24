@@ -35,7 +35,6 @@ void test_get_data() {
   esp_err_t err = ESP_OK;
   gzpd800T_4ch_data_t data;
 
-  // debug here
   /*
     err = modbus_gzpd800T_get_4ch_data(&data);
     if (err != ESP_OK) {
@@ -122,7 +121,6 @@ void app_main() {
       goto ERROR;
     }
 
-    // debug here
     /*
     data.amp1 = 1;
     data.freq1 = 2;

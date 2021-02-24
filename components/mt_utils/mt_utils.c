@@ -1,16 +1,14 @@
 #include "stddef.h"
 #include "string.h"
 
-#include "crypto/crypto.h"
-#include "crypto/sha256.h"
-
-#include "utils/base64.h"
-#include "utils/common.h"
-
 #include "esp_err.h"
 #include "esp_log.h"
+#include "esp_system.h"
+
+#include "mbedtls/md.h"
 
 #include "mt_utils.h"
+#include "mt_utils_base64.h"
 #include "mt_utils_login.h"
 
 static const char *TAG = "MT_UTILS";
@@ -19,16 +17,18 @@ esp_err_t mt_hmac_sha256_byte(const uint8_t *key, int key_size,
                               const uint8_t *id, int id_size,
                               uint8_t *time_stamp, int time_stamp_size,
                               uint32_t nonce, uint8_t hmac[32]) {
+
   // key use 32byte if short pad with oxff, if long drop end
   unsigned char *key_byte = NULL;
-  size_t key_byte_size;
+  unsigned int key_byte_size;
   uint8_t fmt_key[32] = "";
   uint8_t *buf = NULL;
   int buf_size;
   uint8_t nonce_str[32] = "";
   int nonce_size = 0;
 
-  key_byte = base64_decode(key, key_size, &key_byte_size);
+  key_byte = malloc(BASE64_DECODE_OUT_SIZE(key_size));
+  key_byte_size = mt_utils_base64_decode((char *)key, key_size, key_byte);
 
   if (key_byte_size >= 32) {
     memcpy((void *)fmt_key, key, 32);
@@ -41,10 +41,6 @@ esp_err_t mt_hmac_sha256_byte(const uint8_t *key, int key_size,
 
   sprintf((char *)nonce_str, "%u", nonce);
   nonce_size = strlen((char *)nonce_str);
-  // ESP_LOGW(TAG,
-  //       "%4d %s id_size:%d, id:%s, time_stamp_size:%d, "
-  //     "time_stamp:%s, nonce_size=%d, nonce=%s", __LINE__, __func__,
-  //    id_size, id, time_stamp_size, time_stamp, nonce_size, nonce_str);
 
   buf_size = id_size + time_stamp_size + nonce_size;
   buf = malloc(buf_size);
@@ -52,7 +48,19 @@ esp_err_t mt_hmac_sha256_byte(const uint8_t *key, int key_size,
   memcpy((void *)(buf + id_size), time_stamp, time_stamp_size);
   memcpy((void *)(buf + id_size + time_stamp_size), nonce_str, nonce_size);
 
-  hmac_sha256((uint8_t *)key_byte, 32, buf, buf_size, hmac);
+  mbedtls_md_context_t ctx;
+  const mbedtls_md_info_t *info;
+
+  mbedtls_md_init(&ctx);
+  info = mbedtls_md_info_from_type(MBEDTLS_MD_SHA256);
+
+  mbedtls_md_setup(&ctx, info, 1);
+
+  mbedtls_md_hmac_starts(&ctx, (unsigned char *)key_byte, key_byte_size);
+  mbedtls_md_hmac_update(&ctx, (unsigned char *)buf, buf_size);
+  mbedtls_md_hmac_finish(&ctx, hmac);
+
+  mbedtls_md_free(&ctx);
 
   free(buf);
   if (key_byte != NULL)
@@ -67,7 +75,7 @@ unsigned char *mt_hmac_sha256_base64(const uint8_t *key, int key_size,
   esp_err_t err = ESP_OK;
   uint8_t hmac[32];
   unsigned char *hmac_base64 = NULL;
-  size_t out_size = 0;
+  unsigned int out_size = 0;
 
   err = mt_hmac_sha256_byte(key, key_size, id, id_size, time_stamp,
                             time_stamp_size, nonce, hmac);
@@ -77,11 +85,13 @@ unsigned char *mt_hmac_sha256_base64(const uint8_t *key, int key_size,
     return NULL;
   }
 
-  hmac_base64 = base64_encode(hmac, 32, &out_size);
+  hmac_base64 = malloc(BASE64_ENCODE_OUT_SIZE(32));
+  out_size =
+      mt_utils_base64_encode((unsigned char *)hmac, 32, (char *)hmac_base64);
 
-  // set last char '\n' replaced with '0x00'
-  if (out_size >= 1) {
-    hmac_base64[out_size - 1] = 0x00;
+  if (out_size == 0) {
+    ESP_LOGE(TAG, "%4d %s out_size zero", __LINE__, __func__);
+    return NULL;
   }
 
   return hmac_base64;

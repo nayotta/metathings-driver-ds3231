@@ -11,7 +11,6 @@
 #include "mt_module_mqtt.h"
 #include "mt_module_unarycall_utils.h"
 #include "mt_mqtt_lan.h"
-#include "mt_mqtt_utils.h"
 #include "mt_utils_error.h"
 
 #include "rs232_charge001.h"

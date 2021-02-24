@@ -51,7 +51,7 @@ static void modbus_ktc_n01_huawei_flow_once(mt_module_flow_t *module_flow) {
              __func__);
     goto EXIT;
   }
-  mt_utils_string_copy(host->clientID);
+  clientID = mt_utils_string_copy(host->clientID);
   if (clientID == NULL) {
     ESP_LOGE(TAG, "%4d %s clientID NULL", __LINE__, __func__);
     goto EXIT;
