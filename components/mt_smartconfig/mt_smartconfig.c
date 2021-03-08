@@ -310,6 +310,8 @@ static void mt_wifi_loop(void) {
     ESP_LOGE(TAG, "%d esp_event_loop_create_default failed", __LINE__);
   }
 
+  esp_netif_t *sta_netif = esp_netif_create_default_wifi_sta();
+
   err = esp_event_handler_register(WIFI_EVENT, ESP_EVENT_ANY_ID,
                                    (esp_event_handler_t)&event_handler, NULL);
   if (err != ESP_OK) {

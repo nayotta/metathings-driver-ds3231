@@ -18,7 +18,7 @@
 #include "gpio_light.h"
 
 #include "esp_eth.h"
-#define DEFAULT_ETHERNET_PHY_CONFIG phy_lan8720_default_ethernet_config
+// #define DEFAULT_ETHERNET_PHY_CONFIG phy_lan8720_default_ethernet_config
 
 // static define ==============================================================
 static const char *TAG = "mt_ethernet";

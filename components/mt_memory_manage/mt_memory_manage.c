@@ -34,6 +34,9 @@ void mt_menory_manage_loop(bool *value) {
 // global func ================================================================
 
 void mt_memory_manage_task(bool debug) {
+  bool *debug_out = malloc(sizeof(bool));
+  *debug_out = debug;
+  ESP_LOGI(TAG, "%4d %s start debug:%d", __LINE__, __func__, debug);
   xTaskCreate((TaskFunction_t)mt_menory_manage_loop, "MT_MEMORY_MANAGE_TASK",
-              1024 * 2, &debug, 2, NULL);
+              1024 * 2, debug_out, 10, NULL);
 }

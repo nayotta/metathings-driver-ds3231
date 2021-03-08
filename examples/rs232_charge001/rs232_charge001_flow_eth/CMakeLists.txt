@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.5)
+
+set(EXTRA_COMPONENT_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/../../../../metathings-esp32-lib/components ${CMAKE_CURRENT_SOURCE_DIR}/../../../../metathings-esp32-lib/mt_proto ${CMAKE_CURRENT_SOURCE_DIR}/../../../../metathings-esp32-lib/mt_apps")
+
+include($ENV{IDF_PATH}/tools/cmake/project.cmake)
+project(example-rs232-charge001-flow)
