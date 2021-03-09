@@ -4,7 +4,9 @@
 #include "esp_err.h"
 #include "esp_log.h"
 
-#include "mt_module_flow.h"
+#include "cJSON.h"
+
+// global func ================================================================
 
 esp_err_t modbus_ld100_get_addr(int addr, bool *state);
 
@@ -18,6 +20,8 @@ esp_err_t modbus_ld100_set_relay(int addr, bool state);
 
 esp_err_t modbus_ld100_init(uint8_t port, int tx_pin, int rx_pin, int en_pin);
 
-mt_module_flow_struct_group_t *modbus_ld100_get_data(uint8_t port);
+esp_err_t modbus_ld100_get_has_changed(bool *change);
+
+cJSON *modbus_ld100_get_flow_data();
 
 #endif

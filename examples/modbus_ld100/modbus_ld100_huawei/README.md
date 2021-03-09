@@ -17,3 +17,7 @@ esp_err_t mt_ld100_get_state(int addr, bool *state);
 esp_err_t mt_ld100_get_relay(int addr, bool *state);
 
 esp_err_t mt_ld100_set_relay(int addr, bool state);
+
+# 版本
+##  v1.0
+huawei

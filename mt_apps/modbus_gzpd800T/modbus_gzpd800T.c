@@ -1,3 +1,5 @@
+#include "modbus_gzpd800T.h"
+
 #include "stdio.h"
 #include "string.h"
 
@@ -12,319 +14,163 @@
 #include "mt_mbtask.h"
 #include "mt_port.h"
 
-#include "modbus_gzpd800T.h"
-#include "mt_mbtask.h"
-
 // global define ==============================================================
 
 static const char *TAG = "MODBUS_gzpd800T";
+static int gzpd800T_port_num = 4;
 #define GZPD800T_DEAULT_ADDR 01
 #define GZPD800T_READ_DATA 03
 #define GZPD800T_READ_WARN 01
 
 #define GZPD800T_DATA_ADDR 0x0300
-#define GZPD800T_4CH_DATA_SIZE 4 * 6
-#define GZPD800T_8CH_DATA_SIZE 8 * 6
+#define GZPD800T_ONE_DATA_SIZE 6
 #define GZPD800T_WARN_SIZE 1
+
+// help func ================================================================
+
+gzpd800T_data_t *modbus_gzpd800T_new_data() {
+  gzpd800T_data_t *data = malloc(sizeof(gzpd800T_data_t));
+
+  data->port_num = gzpd800T_port_num;
+  data->port_data = malloc(data->port_num * sizeof(gzpd800T_port_data_t *));
+  for (int i = 0; i < data->port_num; i++) {
+    data->port_data[i] = malloc(sizeof(gzpd800T_port_data_t));
+    data->port_data[i]->amp = 0;
+    data->port_data[i]->freq = 0;
+    data->port_data[i]->power = 0;
+    data->port_data[i]->warn = 0;
+  }
+
+  return data;
+}
+
+void modbus_gzpd800T_free_data(gzpd800T_data_t *data) {
+  if (data == NULL)
+    return;
+
+  if (data->port_data != NULL) {
+    for (int i = 0; i < data->port_num; i++) {
+      if (data->port_data[i] != NULL)
+        free(data->port_data[i]);
+    }
+    free(data->port_data);
+  }
+
+  free(data);
+}
 
 // global func ================================================================
 
-esp_err_t modbus_gzpd800T_get_4ch_data(gzpd800T_4ch_data_t *data) {
+gzpd800T_data_t *modbus_gzpd800T_get_data() {
+  gzpd800T_data_t *data = modbus_gzpd800T_new_data();
   esp_err_t err = ESP_OK;
   struct RetMsg_t cmd_ret_payload;
 
+  // cmd data
   err = modbus_sync_Cmd_03(GZPD800T_DEAULT_ADDR, GZPD800T_DATA_ADDR,
-                           GZPD800T_4CH_DATA_SIZE, &cmd_ret_payload);
+                           gzpd800T_port_num * GZPD800T_ONE_DATA_SIZE,
+                           &cmd_ret_payload);
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s failed", __LINE__, __func__);
-    return err;
+    goto EXIT;
   }
 
+  // res check
   if (cmd_ret_payload.recvCmd != GZPD800T_READ_DATA) {
     ESP_LOGE(TAG, "%4d %s  get error ret cmd:%d", __LINE__, __func__,
              cmd_ret_payload.recvCmd);
-    return ESP_ERR_INVALID_RESPONSE;
+    err = ESP_ERR_INVALID_RESPONSE;
+    goto EXIT;
   }
 
-  if (cmd_ret_payload.retLen != 2 * GZPD800T_4CH_DATA_SIZE) {
+  if (cmd_ret_payload.retLen !=
+      2 * gzpd800T_port_num * GZPD800T_ONE_DATA_SIZE) {
     ESP_LOGE(TAG, "%4d %s get error ret size:%d", __LINE__, __func__,
              cmd_ret_payload.retLen);
-    return ESP_ERR_INVALID_RESPONSE;
+    err = ESP_ERR_INVALID_RESPONSE;
+    goto EXIT;
   }
 
-  data->amp1 = (uint32_t)cmd_ret_payload.retBuf[0] << 24 |
-               (uint32_t)cmd_ret_payload.retBuf[1] << 16 |
-               (uint32_t)cmd_ret_payload.retBuf[2] << 8 |
-               (uint32_t)cmd_ret_payload.retBuf[3];
+  // data parse
+  for (int i = 0; i < gzpd800T_port_num; i++) {
+    data->port_data[i]->amp =
+        (uint32_t)cmd_ret_payload.retBuf[i * 2 * GZPD800T_ONE_DATA_SIZE + 0]
+            << 24 |
+        (uint32_t)cmd_ret_payload.retBuf[i * 2 * GZPD800T_ONE_DATA_SIZE + 1]
+            << 16 |
+        (uint32_t)cmd_ret_payload.retBuf[i * 2 * GZPD800T_ONE_DATA_SIZE + 2]
+            << 8 |
+        (uint32_t)cmd_ret_payload.retBuf[i * 2 * GZPD800T_ONE_DATA_SIZE + 3];
+    data->port_data[i]->freq =
+        (uint32_t)cmd_ret_payload.retBuf[i * 2 * GZPD800T_ONE_DATA_SIZE + 4]
+            << 24 |
+        (uint32_t)cmd_ret_payload.retBuf[i * 2 * GZPD800T_ONE_DATA_SIZE + 5]
+            << 16 |
+        (uint32_t)cmd_ret_payload.retBuf[i * 2 * GZPD800T_ONE_DATA_SIZE + 6]
+            << 8 |
+        (uint32_t)cmd_ret_payload.retBuf[i * 2 * GZPD800T_ONE_DATA_SIZE + 7];
+    data->port_data[i]->power =
+        (uint32_t)cmd_ret_payload.retBuf[i * 2 * GZPD800T_ONE_DATA_SIZE + 8]
+            << 24 |
+        (uint32_t)cmd_ret_payload.retBuf[i * 2 * GZPD800T_ONE_DATA_SIZE + 9]
+            << 16 |
+        (uint32_t)cmd_ret_payload.retBuf[i * 2 * GZPD800T_ONE_DATA_SIZE + 10]
+            << 8 |
+        (uint32_t)cmd_ret_payload.retBuf[i * 2 * GZPD800T_ONE_DATA_SIZE + 11];
+  }
 
-  data->freq1 = (uint32_t)cmd_ret_payload.retBuf[4] << 24 |
-                (uint32_t)cmd_ret_payload.retBuf[5] << 16 |
-                (uint32_t)cmd_ret_payload.retBuf[6] << 8 |
-                (uint32_t)cmd_ret_payload.retBuf[7];
-
-  data->power1 = (uint32_t)cmd_ret_payload.retBuf[8] << 24 |
-                 (uint32_t)cmd_ret_payload.retBuf[9] << 16 |
-                 (uint32_t)cmd_ret_payload.retBuf[10] << 8 |
-                 (uint32_t)cmd_ret_payload.retBuf[11];
-
-  data->amp2 = (uint32_t)cmd_ret_payload.retBuf[12] << 24 |
-               (uint32_t)cmd_ret_payload.retBuf[13] << 16 |
-               (uint32_t)cmd_ret_payload.retBuf[14] << 8 |
-               (uint32_t)cmd_ret_payload.retBuf[15];
-
-  data->freq2 = (uint32_t)cmd_ret_payload.retBuf[16] << 24 |
-                (uint32_t)cmd_ret_payload.retBuf[17] << 16 |
-                (uint32_t)cmd_ret_payload.retBuf[18] << 8 |
-                (uint32_t)cmd_ret_payload.retBuf[19];
-
-  data->power2 = (uint32_t)cmd_ret_payload.retBuf[20] << 24 |
-                 (uint32_t)cmd_ret_payload.retBuf[21] << 16 |
-                 (uint32_t)cmd_ret_payload.retBuf[22] << 8 |
-                 (uint32_t)cmd_ret_payload.retBuf[23];
-
-  data->amp3 = (uint32_t)cmd_ret_payload.retBuf[24] << 24 |
-               (uint32_t)cmd_ret_payload.retBuf[25] << 16 |
-               (uint32_t)cmd_ret_payload.retBuf[26] << 8 |
-               (uint32_t)cmd_ret_payload.retBuf[27];
-
-  data->freq3 = (uint32_t)cmd_ret_payload.retBuf[28] << 24 |
-                (uint32_t)cmd_ret_payload.retBuf[29] << 16 |
-                (uint32_t)cmd_ret_payload.retBuf[30] << 8 |
-                (uint32_t)cmd_ret_payload.retBuf[31];
-
-  data->power3 = (uint32_t)cmd_ret_payload.retBuf[32] << 24 |
-                 (uint32_t)cmd_ret_payload.retBuf[33] << 16 |
-                 (uint32_t)cmd_ret_payload.retBuf[34] << 8 |
-                 (uint32_t)cmd_ret_payload.retBuf[35];
-
-  data->amp4 = (uint32_t)cmd_ret_payload.retBuf[36] << 24 |
-               (uint32_t)cmd_ret_payload.retBuf[37] << 16 |
-               (uint32_t)cmd_ret_payload.retBuf[38] << 8 |
-               (uint32_t)cmd_ret_payload.retBuf[39];
-
-  data->freq4 = (uint32_t)cmd_ret_payload.retBuf[40] << 24 |
-                (uint32_t)cmd_ret_payload.retBuf[41] << 16 |
-                (uint32_t)cmd_ret_payload.retBuf[42] << 8 |
-                (uint32_t)cmd_ret_payload.retBuf[43];
-
-  data->power4 = (uint32_t)cmd_ret_payload.retBuf[44] << 24 |
-                 (uint32_t)cmd_ret_payload.retBuf[45] << 16 |
-                 (uint32_t)cmd_ret_payload.retBuf[46] << 8 |
-                 (uint32_t)cmd_ret_payload.retBuf[47];
-
-  /*ESP_LOGW(TAG,
-           "%4d %s \n"
-           "amp1:%u freq1:%u power1:%u\n"
-           "amp2:%u freq2:%u power2:%u\n"
-           "amp3:%u freq3:%u power3:%u\n"
-           "amp4:%u freq4:%u power4:%u\n",
-           __LINE__, __func__, data->amp1, data->freq1, data->power1,
-           data->amp2, data->freq2, data->power2, data->amp3, data->freq3,
-           data->power3, data->amp4, data->freq4, data->power4);*/
-
-  return ESP_OK;
-}
-
-esp_err_t modbus_gzpd800T_get_8ch_data(gzpd800T_8ch_data_t *data) {
-  esp_err_t err = ESP_OK;
-  struct RetMsg_t cmd_ret_payload;
-
-  err = modbus_sync_Cmd_03(GZPD800T_DEAULT_ADDR, GZPD800T_DATA_ADDR,
-                           GZPD800T_8CH_DATA_SIZE, &cmd_ret_payload);
+  // cmd warn
+  err = modbus_sync_Cmd_01(GZPD800T_DEAULT_ADDR, 1,
+                           gzpd800T_port_num * GZPD800T_WARN_SIZE,
+                           &cmd_ret_payload);
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s failed", __LINE__, __func__);
-    return err;
+    goto EXIT;
   }
 
-  if (cmd_ret_payload.recvCmd != GZPD800T_READ_DATA) {
-    ESP_LOGE(TAG, "%4d %s  get error ret cmd:%d", __LINE__, __func__,
-             cmd_ret_payload.recvCmd);
-    return ESP_ERR_INVALID_RESPONSE;
-  }
-
-  if (cmd_ret_payload.retLen != 2 * GZPD800T_8CH_DATA_SIZE) {
-    ESP_LOGE(TAG, "%4d %s get error ret size:%d", __LINE__, __func__,
-             cmd_ret_payload.retLen);
-    return ESP_ERR_INVALID_RESPONSE;
-  }
-
-  data->amp1 = (uint32_t)cmd_ret_payload.retBuf[0] << 24 |
-               (uint32_t)cmd_ret_payload.retBuf[1] << 16 |
-               (uint32_t)cmd_ret_payload.retBuf[2] << 8 |
-               (uint32_t)cmd_ret_payload.retBuf[3];
-
-  data->freq1 = (uint32_t)cmd_ret_payload.retBuf[4] << 24 |
-                (uint32_t)cmd_ret_payload.retBuf[5] << 16 |
-                (uint32_t)cmd_ret_payload.retBuf[6] << 8 |
-                (uint32_t)cmd_ret_payload.retBuf[7];
-
-  data->power1 = (uint32_t)cmd_ret_payload.retBuf[8] << 24 |
-                 (uint32_t)cmd_ret_payload.retBuf[9] << 16 |
-                 (uint32_t)cmd_ret_payload.retBuf[10] << 8 |
-                 (uint32_t)cmd_ret_payload.retBuf[11];
-
-  data->amp2 = (uint32_t)cmd_ret_payload.retBuf[12] << 24 |
-               (uint32_t)cmd_ret_payload.retBuf[13] << 16 |
-               (uint32_t)cmd_ret_payload.retBuf[14] << 8 |
-               (uint32_t)cmd_ret_payload.retBuf[15];
-
-  data->freq2 = (uint32_t)cmd_ret_payload.retBuf[16] << 24 |
-                (uint32_t)cmd_ret_payload.retBuf[17] << 16 |
-                (uint32_t)cmd_ret_payload.retBuf[18] << 8 |
-                (uint32_t)cmd_ret_payload.retBuf[19];
-
-  data->power2 = (uint32_t)cmd_ret_payload.retBuf[20] << 24 |
-                 (uint32_t)cmd_ret_payload.retBuf[21] << 16 |
-                 (uint32_t)cmd_ret_payload.retBuf[22] << 8 |
-                 (uint32_t)cmd_ret_payload.retBuf[23];
-
-  data->amp3 = (uint32_t)cmd_ret_payload.retBuf[24] << 24 |
-               (uint32_t)cmd_ret_payload.retBuf[25] << 16 |
-               (uint32_t)cmd_ret_payload.retBuf[26] << 8 |
-               (uint32_t)cmd_ret_payload.retBuf[27];
-
-  data->freq3 = (uint32_t)cmd_ret_payload.retBuf[28] << 24 |
-                (uint32_t)cmd_ret_payload.retBuf[29] << 16 |
-                (uint32_t)cmd_ret_payload.retBuf[30] << 8 |
-                (uint32_t)cmd_ret_payload.retBuf[31];
-
-  data->power3 = (uint32_t)cmd_ret_payload.retBuf[32] << 24 |
-                 (uint32_t)cmd_ret_payload.retBuf[33] << 16 |
-                 (uint32_t)cmd_ret_payload.retBuf[34] << 8 |
-                 (uint32_t)cmd_ret_payload.retBuf[35];
-
-  data->amp4 = (uint32_t)cmd_ret_payload.retBuf[36] << 24 |
-               (uint32_t)cmd_ret_payload.retBuf[37] << 16 |
-               (uint32_t)cmd_ret_payload.retBuf[38] << 8 |
-               (uint32_t)cmd_ret_payload.retBuf[39];
-
-  data->freq4 = (uint32_t)cmd_ret_payload.retBuf[40] << 24 |
-                (uint32_t)cmd_ret_payload.retBuf[41] << 16 |
-                (uint32_t)cmd_ret_payload.retBuf[42] << 8 |
-                (uint32_t)cmd_ret_payload.retBuf[43];
-
-  data->power4 = (uint32_t)cmd_ret_payload.retBuf[44] << 24 |
-                 (uint32_t)cmd_ret_payload.retBuf[45] << 16 |
-                 (uint32_t)cmd_ret_payload.retBuf[46] << 8 |
-                 (uint32_t)cmd_ret_payload.retBuf[47];
-
-  data->amp5 = (uint32_t)cmd_ret_payload.retBuf[48] << 24 |
-               (uint32_t)cmd_ret_payload.retBuf[49] << 16 |
-               (uint32_t)cmd_ret_payload.retBuf[50] << 8 |
-               (uint32_t)cmd_ret_payload.retBuf[51];
-
-  data->freq5 = (uint32_t)cmd_ret_payload.retBuf[52] << 24 |
-                (uint32_t)cmd_ret_payload.retBuf[53] << 16 |
-                (uint32_t)cmd_ret_payload.retBuf[54] << 8 |
-                (uint32_t)cmd_ret_payload.retBuf[55];
-
-  data->power5 = (uint32_t)cmd_ret_payload.retBuf[56] << 24 |
-                 (uint32_t)cmd_ret_payload.retBuf[57] << 16 |
-                 (uint32_t)cmd_ret_payload.retBuf[58] << 8 |
-                 (uint32_t)cmd_ret_payload.retBuf[59];
-
-  data->amp6 = (uint32_t)cmd_ret_payload.retBuf[60] << 24 |
-               (uint32_t)cmd_ret_payload.retBuf[61] << 16 |
-               (uint32_t)cmd_ret_payload.retBuf[62] << 8 |
-               (uint32_t)cmd_ret_payload.retBuf[63];
-
-  data->freq6 = (uint32_t)cmd_ret_payload.retBuf[64] << 24 |
-                (uint32_t)cmd_ret_payload.retBuf[65] << 16 |
-                (uint32_t)cmd_ret_payload.retBuf[66] << 8 |
-                (uint32_t)cmd_ret_payload.retBuf[67];
-
-  data->power6 = (uint32_t)cmd_ret_payload.retBuf[68] << 24 |
-                 (uint32_t)cmd_ret_payload.retBuf[69] << 16 |
-                 (uint32_t)cmd_ret_payload.retBuf[70] << 8 |
-                 (uint32_t)cmd_ret_payload.retBuf[71];
-
-  data->amp7 = (uint32_t)cmd_ret_payload.retBuf[72] << 24 |
-               (uint32_t)cmd_ret_payload.retBuf[73] << 16 |
-               (uint32_t)cmd_ret_payload.retBuf[74] << 8 |
-               (uint32_t)cmd_ret_payload.retBuf[75];
-
-  data->freq7 = (uint32_t)cmd_ret_payload.retBuf[76] << 24 |
-                (uint32_t)cmd_ret_payload.retBuf[77] << 16 |
-                (uint32_t)cmd_ret_payload.retBuf[78] << 8 |
-                (uint32_t)cmd_ret_payload.retBuf[79];
-
-  data->power7 = (uint32_t)cmd_ret_payload.retBuf[80] << 24 |
-                 (uint32_t)cmd_ret_payload.retBuf[81] << 16 |
-                 (uint32_t)cmd_ret_payload.retBuf[82] << 8 |
-                 (uint32_t)cmd_ret_payload.retBuf[83];
-
-  data->amp8 = (uint32_t)cmd_ret_payload.retBuf[84] << 24 |
-               (uint32_t)cmd_ret_payload.retBuf[85] << 16 |
-               (uint32_t)cmd_ret_payload.retBuf[86] << 8 |
-               (uint32_t)cmd_ret_payload.retBuf[87];
-
-  data->freq8 = (uint32_t)cmd_ret_payload.retBuf[88] << 24 |
-                (uint32_t)cmd_ret_payload.retBuf[89] << 16 |
-                (uint32_t)cmd_ret_payload.retBuf[90] << 8 |
-                (uint32_t)cmd_ret_payload.retBuf[91];
-
-  data->power8 = (uint32_t)cmd_ret_payload.retBuf[92] << 24 |
-                 (uint32_t)cmd_ret_payload.retBuf[93] << 16 |
-                 (uint32_t)cmd_ret_payload.retBuf[94] << 8 |
-                 (uint32_t)cmd_ret_payload.retBuf[95];
-
-  ESP_LOGW(TAG,
-           "%4d %s \n"
-           "amp1:%u freq1:%u power1:%u\n"
-           "amp2:%u freq2:%u power2:%u\n"
-           "amp3:%u freq3:%u power3:%u\n"
-           "amp4:%u freq4:%u power4:%u\n"
-           "amp5:%u freq5:%u power5:%u\n"
-           "amp6:%u freq6:%u power6:%u\n"
-           "amp7:%u freq7:%u power7:%u\n"
-           "amp8:%u freq8:%u power8:%u\n",
-           __LINE__, __func__, data->amp1, data->freq1, data->power1,
-           data->amp2, data->freq2, data->power2, data->amp3, data->freq3,
-           data->power3, data->amp4, data->freq4, data->power4, data->amp5,
-           data->freq5, data->power5, data->amp6, data->freq6, data->power6,
-           data->amp7, data->freq7, data->power7, data->amp8, data->freq8,
-           data->power8);
-
-  return ESP_OK;
-}
-
-esp_err_t modbus_gzpd800T_get_warn(int addr, bool *warn) {
-  esp_err_t err = ESP_OK;
-  struct RetMsg_t cmd_ret_payload;
-  USHORT addr_ushort = addr;
-
-  err = modbus_sync_Cmd_01(GZPD800T_DEAULT_ADDR, addr_ushort,
-                           GZPD800T_WARN_SIZE, &cmd_ret_payload);
-  if (err != ESP_OK) {
-    ESP_LOGE(TAG, "%4d %s failed", __LINE__, __func__);
-    return err;
-  }
-
+  // res check
   if (cmd_ret_payload.recvCmd != GZPD800T_READ_WARN) {
     ESP_LOGE(TAG, "%4d %s  get error ret cmd:%d", __LINE__, __func__,
              cmd_ret_payload.recvCmd);
-    return ESP_ERR_INVALID_RESPONSE;
+    err = ESP_ERR_INVALID_RESPONSE;
+    goto EXIT;
   }
 
-  if (cmd_ret_payload.retLen != GZPD800T_WARN_SIZE) {
+  if (cmd_ret_payload.retLen != 2 * gzpd800T_port_num * GZPD800T_WARN_SIZE) {
     ESP_LOGE(TAG, "%4d %s get error ret size:%d", __LINE__, __func__,
              cmd_ret_payload.retLen);
-    return ESP_ERR_INVALID_RESPONSE;
+    err = ESP_ERR_INVALID_RESPONSE;
+    goto EXIT;
   }
 
-  if (cmd_ret_payload.retBuf[0] == 0) {
-    *warn = false;
-  } else {
-    *warn = true;
+  // parse warn
+  for (int i = 0; i < gzpd800T_port_num; i++) {
+    if (cmd_ret_payload.retBuf[i * 2 + 1] == 0)
+      data->port_data[i]->warn = false;
+    else
+      data->port_data[i]->warn = true;
   }
 
-  // ESP_LOGW(TAG, "%4d %s get warn:%d", __LINE__, __func__, *warn);
+  // log
+  ESP_LOGI(TAG, "%4d %s port_num:%d", __LINE__, __func__, data->port_num);
+  for (int i = 0; i < gzpd800T_port_num; i++) {
+    ESP_LOGI(TAG, "%4d %s port:%2d amp:%08d freq:%08d power:%08d warn:%2d",
+             __LINE__, __func__, i + 1, data->port_data[i]->amp,
+             data->port_data[i]->freq, data->port_data[i]->power,
+             data->port_data[i]->warn);
+  }
 
-  return ESP_OK;
+EXIT:
+  if (err != ESP_OK) {
+    modbus_gzpd800T_free_data(data);
+    data = NULL;
+  }
+
+  return data;
 }
 
-esp_err_t modbus_gzpd800T_init(uint8_t port, int tx_pin, int rx_pin,
-                               int en_pin) {
+esp_err_t modbus_gzpd800T_init(uint8_t port, int tx_pin, int rx_pin, int en_pin,
+                               int port_num) {
   eMBErrorCode emb_ret = 0;
   UCHAR RS485_PORT = 2;
   ULONG RS485_BAUD = 9600;
@@ -340,5 +186,47 @@ esp_err_t modbus_gzpd800T_init(uint8_t port, int tx_pin, int rx_pin,
   mt_vMBMaster_set_T35_interval(125);
   mt_modbus_task();
 
+  gzpd800T_port_num = port_num;
+
   return ESP_OK;
+}
+
+cJSON *modbus_gzpd800T_get_flow_data() {
+  esp_err_t err = ESP_OK;
+  cJSON *json_data = cJSON_CreateObject();
+  char key[24] = "";
+  gzpd800T_data_t *data = NULL;
+
+  data = modbus_gzpd800T_get_data();
+  if (data == NULL) {
+    ESP_LOGE(TAG, "%4d %s modbus_gzpd800T_get_data failed", __LINE__, __func__);
+    err = ESP_ERR_INVALID_RESPONSE;
+    goto EXIT;
+  }
+
+  for (int i = 0; i < data->port_num; i++) {
+    // amp
+    sprintf(key, "amp%d", i + 1);
+    cJSON_AddNumberToObject(json_data, key, data->port_data[i]->amp);
+
+    // freq
+    sprintf(key, "freq%d", i + 1);
+    cJSON_AddNumberToObject(json_data, key, data->port_data[i]->freq);
+
+    // power
+    sprintf(key, "power%d", i + 1);
+    cJSON_AddNumberToObject(json_data, key, data->port_data[i]->power);
+
+    // warn
+    sprintf(key, "warn%d", i + 1);
+    cJSON_AddBoolToObject(json_data, key, data->port_data[i]->warn);
+  }
+
+EXIT:
+  if (err != ESP_OK) {
+    cJSON_Delete(json_data);
+    json_data = NULL;
+  }
+  modbus_gzpd800T_free_data(data);
+  return json_data;
 }

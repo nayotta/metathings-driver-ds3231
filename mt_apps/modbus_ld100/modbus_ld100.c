@@ -12,14 +12,16 @@
 #include "mt_mbport.h"
 #include "mt_port.h"
 
-#include "mt_utils_string.h"
-
 #include "modbus_ld100.h"
 #include "mt_mbtask.h"
 
 // global define ==============================================================
 
 static const char *TAG = "MT_MODBUS_LD100";
+
+static int ld100_num = 1;
+
+static bool cache_state[256];
 
 #define LD100_READ 04
 #define LD100_WRITE 06
@@ -275,32 +277,53 @@ esp_err_t modbus_ld100_init(uint8_t port, int tx_pin, int rx_pin, int en_pin) {
   return ESP_OK;
 }
 
-mt_module_flow_struct_group_t *modbus_ld100_get_data(uint8_t port) {
+esp_err_t modbus_ld100_get_has_changed(bool *change) {
   esp_err_t err = ESP_OK;
+  *change = false;
+
+  for (int i = 0; i < ld100_num; i++) {
+    bool state_new = false;
+    err = modbus_ld100_get_state(i + 1, &state_new);
+    if (err != ESP_OK) {
+      ESP_LOGE(TAG, "%4d %s modbus_ld100_get_state port:%d failed", __LINE__,
+               __func__, i + 1);
+      return ESP_ERR_INVALID_ARG;
+    }
+
+    if (cache_state[i + 1] != state_new) {
+      ESP_LOGI(TAG, "%4d %s port:%d changed,new state:%d", __LINE__, __func__,
+               i + 1, state_new);
+      *change = true;
+      cache_state[i + 1] = state_new;
+    }
+  }
+
+  return ESP_OK;
+}
+
+cJSON *modbus_ld100_get_flow_data() {
+  esp_err_t err = ESP_OK;
+  cJSON *json_data = cJSON_CreateObject();
+  char key[24] = "";
+  bool exist = false;
   bool state = false;
-  int count = 0;
 
-  mt_module_flow_struct_group_t *data_out = mt_module_flow_new_struct_group(1);
+  for (int i = 0; i < ld100_num; i++) {
+    err = modbus_ld100_get_state(i + 1, &state);
+    if (err != ESP_OK) {
+      ESP_LOGE(TAG, "%4d %s modbus_ld100_get_state failed", __LINE__, __func__);
+    } else {
+      exist = true;
+    }
 
-  // key
-  data_out->value[count++]->key = mt_utils_string_copy("state1");
-  count = 0;
-
-  // get state
-  err = modbus_ld100_get_state(port, &state);
-  if (err != ESP_OK) {
-    ESP_LOGE(TAG, "%4d %s addr:%d modbus_ld100_get_state failed", __LINE__,
-             __func__, port);
-    goto EXIT;
-  } else {
-    data_out->value[count]->type = GOOGLE__PROTOBUF__VALUE__KIND_BOOL_VALUE;
-    data_out->value[count]->bool_value = state;
+    // state
+    sprintf(key, "state%d", i + 1);
+    cJSON_AddBoolToObject(json_data, key, state);
   }
 
-EXIT:
-  if (err != ESP_OK) {
-    mt_module_flow_free_struct_group(data_out);
-    data_out = NULL;
+  if (exist == false) {
+    cJSON_Delete(json_data);
+    json_data = NULL;
   }
-  return data_out;
+  return json_data;
 }

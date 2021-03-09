@@ -13,7 +13,7 @@
 #define CONFIG_FREERTOS_HZ 100
 #endif
 
-#define MT_MB_TASK_BUF_MAXLEN 128
+#define MT_MB_TASK_BUF_MAXLEN 256
 
 struct RetMsg_t // ret message struct
 {
