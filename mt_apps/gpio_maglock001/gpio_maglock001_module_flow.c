@@ -31,9 +31,8 @@ gpio_maglock001_module_get_state_process(mt_module_flow_t *module_flow) {
     return;
   }
 
-  // get data process 
-  int module_index = 1;
-  err = gpio_maglock001_get_port_num(module_index, &port_num);
+  // get data process
+  err = gpio_maglock001_get_port_num(&port_num);
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s gpio_maglock001_get_port_num failed", __LINE__,
              __func__);
@@ -43,10 +42,10 @@ gpio_maglock001_module_get_state_process(mt_module_flow_t *module_flow) {
   bool *state = (bool *)malloc(port_num * sizeof(bool));
 
   for (int i = 0; i < port_num; i++) {
-    err = gpio_maglock001_get_state(module_index, i + 1, &state[i]);
+    err = gpio_maglock001_get_state(i + 1, &state[i + 1]);
     if (err != ESP_OK) {
-      ESP_LOGE(TAG, "%4d %s mt_maglock_get_state module:%d index:%d failed",
-               __LINE__, __func__, module_index, i + 1);
+      ESP_LOGE(TAG, "%4d %s mt_maglock_get_state index:%d failed", __LINE__,
+               __func__, i + 1);
       return;
     }
   }
@@ -60,7 +59,7 @@ gpio_maglock001_module_get_state_process(mt_module_flow_t *module_flow) {
     group->value[count]->key = malloc(strlen(key) + 1);
     memcpy(group->value[count]->key, key, strlen(key) + 1);
     group->value[count]->type = GOOGLE__PROTOBUF__VALUE__KIND_BOOL_VALUE;
-    group->value[count++]->bool_value = state[i];
+    group->value[count++]->bool_value = state[i + 1];
   }
 
   // send msg
@@ -75,7 +74,7 @@ gpio_maglock001_module_get_state_process(mt_module_flow_t *module_flow) {
            module_flow->session);
   for (int i = 0; i < port_num; i++) {
     ESP_LOGI(TAG, "%4d %s index:%d state:%d", __LINE__, __func__, i + 1,
-             state[i]);
+             state[i + 1]);
   }
 
 EXIT:
@@ -88,13 +87,12 @@ EXIT:
 
 static void gpio_maglock001_module_flow_loop(mt_module_flow_t *module_flow) {
   esp_err_t err = ESP_OK;
-  int module_index = 1;
   int count = 0;
 
   while (true) {
     bool has_change = false;
 
-    err = gpio_maglock001_get_has_changed(module_index, &has_change);
+    err = gpio_maglock001_get_has_changed(&has_change);
     if (err != ESP_OK) {
       ESP_LOGE(TAG, "%4d %s gpio_maglock001_get_has_changed failed", __LINE__,
                __func__);

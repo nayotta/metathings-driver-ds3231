@@ -238,29 +238,31 @@ mt_nvs_host_t *mt_nvs_config_get_host_config() {
     else
       sprintf(host_out->net_type, "wifi");
   }
+    
+  if (strcmp(net_type, "eth_static") == 0) {
+    // get host_out->ip_addr
+    host_out->ip_addr = mt_nvs_read_string_config("ip_addr", &size);
+    if (host_out->ip_addr == NULL) {
+      ESP_LOGW(TAG, "%4d %s get ip_addr failed", __LINE__, __func__);
+    }
 
-  // get host_out->ip_addr
-  host_out->ip_addr = mt_nvs_read_string_config("ip_addr", &size);
-  if (host_out->ip_addr == NULL) {
-    ESP_LOGW(TAG, "%4d %s get ip_addr failed", __LINE__, __func__);
-  }
+    // get host_out->ip_mask
+    host_out->ip_mask = mt_nvs_read_string_config("ip_mask", &size);
+    if (host_out->ip_mask == NULL) {
+      ESP_LOGW(TAG, "%4d %s get ip_mask failed", __LINE__, __func__);
+    }
 
-  // get host_out->ip_mask
-  host_out->ip_mask = mt_nvs_read_string_config("ip_mask", &size);
-  if (host_out->ip_mask == NULL) {
-    ESP_LOGW(TAG, "%4d %s get ip_mask failed", __LINE__, __func__);
-  }
+    // get host_out->ip_gate
+    host_out->ip_gate = mt_nvs_read_string_config("ip_gate", &size);
+    if (host_out->ip_gate == NULL) {
+      ESP_LOGW(TAG, "%4d %s get ip_gate failed", __LINE__, __func__);
+    }
 
-  // get host_out->ip_gate
-  host_out->ip_gate = mt_nvs_read_string_config("ip_gate", &size);
-  if (host_out->ip_gate == NULL) {
-    ESP_LOGW(TAG, "%4d %s get ip_gate failed", __LINE__, __func__);
-  }
-
-  // get host_out->ip_dns
-  host_out->ip_dns = mt_nvs_read_string_config("ip_dns", &size);
-  if (host_out->ip_dns == NULL) {
-    ESP_LOGW(TAG, "%4d %s get ip_dns failed", __LINE__, __func__);
+    // get host_out->ip_dns
+    host_out->ip_dns = mt_nvs_read_string_config("ip_dns", &size);
+    if (host_out->ip_dns == NULL) {
+      ESP_LOGW(TAG, "%4d %s get ip_dns failed", __LINE__, __func__);
+    }
   }
 
 EXIT:

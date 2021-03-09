@@ -15,9 +15,9 @@
 #include "mt_smartconfig.h"
 
 #include "gpio_maglock001.h"
-#include "gpio_maglock001_huawei_flow.h"
 
 #include "huawei_mqtt.h"
+#include "huawei_mqtt_flow.h"
 #include "huawei_mqtt_manage.h"
 
 // global config ==============================================================
@@ -29,8 +29,6 @@ int LIGHT_PIN_ON_LEVEL = 0;
 
 int BTN_PIN = 35;
 int BTN_PIN_ON_LEVEL = 0;
-
-#define ETHERNET
 
 // global func ================================================================
 
@@ -45,7 +43,7 @@ void app_main() {
   mt_memory_manage_task(true);
 
   // maglock init
-  err = gpio_maglock001_task(1);
+  err = gpio_maglock001_task();
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s gpio_maglock001_task failed", __LINE__, __func__);
     return;
@@ -67,6 +65,10 @@ void app_main() {
     ESP_LOGE(TAG, "%4d %s mt_module_flow_new failed", __LINE__, __func__);
     return;
   }
-  module_flow->push_frame_interval = 120 * 1000; // 120s
-  gpio_maglock001_huawei_flow_task(module_flow);
+  module_flow->push_frame_interval = 20 * 1000; // 120s
+  module_flow->flow_handle = gpio_maglock001_get_flow_data;
+  module_flow->poll_enable = true;
+  module_flow->poll_interval = 1000; // 1s
+  module_flow->poll_handle = gpio_maglock001_get_has_changed;
+  huawei_mqtt_flow_task(module_flow);
 }

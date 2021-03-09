@@ -13,6 +13,5 @@ idf_component_register(SRCS gpio_pulse_motor_button.c
                                         gpio_button 
                                         gpio_light
                                         mt_utils
-                                        mt_module_flow_manage
                                         mt_module_unarycall
                                         mt_proto_device_cloud)

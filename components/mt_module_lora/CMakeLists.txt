@@ -1,7 +1,7 @@
 idf_component_register(SRCS "mt_module_lora.c"
                        INCLUDE_DIRS "."
                        REQUIRES rs232_lora_ebyte
-                        PRIV_REQUIRES   mt_module_flow_manage
+                        PRIV_REQUIRES   mt_module_flow
                                         mt_mqtt 
                                         mt_protobuf_c 
                                         mt_proto_device_cloud 

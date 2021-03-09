@@ -16,7 +16,6 @@
 | **mt_modbus_master**              | metathings modbus master                                             | -    | -     |
 | **mt_modbus_master_airswitch001** | metathings modbus master for airswitch only                          | -    | -     |
 | **mt_module_flow**                | metathings module flow 相关函数                                       | -    | -     |
-| **mt_module_flow_manage**         | metathings module flow manage 多flow管理                              | -    | -     |
 | **mt_module_http**                | metathings module http client api                                    | -    | -     |
 | **mt_module_http_manage**         | metathings module http manage 多module管理                           | -    | -     |
 | **mt_module_lora**                | metathings module lora 串口接收数据处理                               | -    | -     |

@@ -1,5 +1,4 @@
-idf_component_register(SRCS gpio_maglock001_huawei_flow.c
-                            gpio_maglock001_module_flow.c
+idf_component_register(SRCS gpio_maglock001_module_flow.c
                             gpio_maglock001_module_mqtt.c
                             gpio_maglock001.c
                        INCLUDE_DIRS .
@@ -12,9 +11,6 @@ idf_component_register(SRCS gpio_maglock001_huawei_flow.c
                                         mt_protobuf_c
                                         mt_proto_device_cloud
                                         mqtt
-                                        mt_module_flow_manage
                                         mt_module_unarycall
                                         mt_mqtt
-                                        mt_utils
-                                        huawei_mqtt
-                                        )
+                                        mt_utils)

@@ -12,4 +12,4 @@ idf_component_register(SRCS modbus_bits001_huawei_flow.c
                                         mt_module_http
                                         mt_proto_device_cloud
                                         mt_protobuf_c
-                                        huawei_mqtt)
+                                        huawei_iot)

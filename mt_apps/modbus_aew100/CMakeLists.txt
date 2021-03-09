@@ -12,5 +12,4 @@ idf_component_register(SRCS modbus_aew100_module_flow.c
                                         mt_nvs_storage 
                                         mt_module_mqtt
                                         mt_mqtt
-                                        mt_module_flow_manage
                                         mt_module_unarycall)

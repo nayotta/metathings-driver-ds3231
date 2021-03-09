@@ -7,7 +7,7 @@
 
 #include "google/protobuf/any.pb-c.h"
 #include "google/protobuf/empty.pb-c.h"
-#include "mt_proto_maglock.pb-c.h"
+
 #include "stream_frame.pb-c.h"
 
 #include "gpio_maglock001.h"
@@ -35,7 +35,7 @@ module_mqtt_process_get_state(Ai__Metathings__Component__DownStreamFrame *msg,
   uint8_t *frame_buf = NULL;
 
   // cmd process
-  err = gpio_maglock001_get_port_num(module_index, &port_num);
+  err = gpio_maglock001_get_port_num(&port_num);
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s gpio_maglock001_get_port_num index:%d failed",
              __LINE__, __func__, module_index);
@@ -45,10 +45,10 @@ module_mqtt_process_get_state(Ai__Metathings__Component__DownStreamFrame *msg,
   bool *state = (bool *)malloc(port_num * sizeof(bool));
 
   for (int i = 0; i < port_num; i++) {
-    err = gpio_maglock001_get_state(module_index, i + 1, &state[i]);
+    err = gpio_maglock001_get_state(i + 1, &state[i]);
     if (err != ESP_OK) {
-      ESP_LOGE(TAG, "%4d %s mt_maglock_get_state module:%d index:%d failed",
-               __LINE__, __func__, module_index, i + 1);
+      ESP_LOGE(TAG, "%4d %s mt_maglock_get_state index:%d failed", __LINE__,
+               __func__, i + 1);
       return;
     }
   }

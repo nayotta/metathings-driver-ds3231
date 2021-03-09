@@ -705,6 +705,7 @@ mt_module_flow_t *mt_module_flow_new(int module_index, int flow_index,
   module_flow->flow = malloc(sizeof(flow_t));
   module_flow->flow->name = flow_name;
   module_flow->session = NULL;
+  module_flow->flow_handle = NULL;
   module_flow->create_push_frame_interval = 30 * 1000; // 30s
   module_flow->push_frame_interval = 20 * 1000;        // 20s
   module_flow->ping_interval = 30 * 1000;              // 30s
@@ -712,6 +713,9 @@ mt_module_flow_t *mt_module_flow_new(int module_index, int flow_index,
   module_flow->ping_count = 0;
   module_flow->push_ack = true;
   module_flow->config_ack = true;
+  module_flow->poll_enable = false;
+  module_flow->poll_interval = 0;
+  module_flow->poll_handle = ESP_OK;
   module_flow->data_ack = false;
   module_flow->data_id = NULL;
 
