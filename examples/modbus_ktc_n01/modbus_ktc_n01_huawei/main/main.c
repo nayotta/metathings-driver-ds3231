@@ -15,15 +15,14 @@
 #include "mt_smartconfig.h"
 
 #include "modbus_ktc_n01.h"
-#include "modbus_ktc_n01_huawei_flow.h"
-#include "modbus_ktc_n01_huawei_mqtt.h"
 
 #include "huawei_mqtt.h"
+#include "huawei_mqtt_flow.h"
 #include "huawei_mqtt_manage.h"
 
 // global config ==============================================================
 
-static const char *TAG = "ESP32_KTC_N01_PRODUCT_MAIN";
+static const char *TAG = "ESP32_KTC_N01_HUAWEI_MAIN";
 
 int LIGHT_PIN = 14;
 int LIGHT_PIN_ON_LEVEL = 0;
@@ -35,8 +34,6 @@ uint8_t UART_PORT = 2;
 int TX_PIN = 13;
 int RX_PIN = 15;
 int EN_PIN = 05;
-
-#define ETHERNET
 
 // global func ================================================================
 
@@ -51,9 +48,10 @@ void app_main() {
   mt_memory_manage_task(true);
 
   // ktc_n01 init
-  err = modbus_ktc_n01_init(UART_PORT, TX_PIN, RX_PIN, EN_PIN);
+  err = modbus_ktc_n01_with_config_init(UART_PORT, TX_PIN, RX_PIN, EN_PIN);
   if (err != ESP_OK) {
-    ESP_LOGE(TAG, "%4d %s modbus_ktc_n01_init failed", __LINE__, __func__);
+    ESP_LOGE(TAG, "%4d %s modbus_ktc_n01_with_config_init failed", __LINE__,
+             __func__);
     return;
   }
 
@@ -65,7 +63,7 @@ void app_main() {
 #endif
 
   // mqtt task
-  modbus_ktc_n01_huawei_mqtt_init();
+  huawei_mqtt_manage_add_handle(modbus_ktc_n01_json_set_cmd, "cmd", "SetCmd");
   huawei_mqtt_init(huawei_mqtt_manage_handle_process);
 
   // flow task
@@ -75,5 +73,6 @@ void app_main() {
     return;
   }
   module_flow->push_frame_interval = 120 * 1000; // 120s
-  modbus_ktc_n01_huawei_flow_task(module_flow);
+  module_flow->flow_handle = modbus_ktc_n01_get_flow_data;
+  huawei_mqtt_flow_task(module_flow);
 }

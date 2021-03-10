@@ -15,9 +15,9 @@
 #include "mt_smartconfig.h"
 
 #include "modbus_bits001.h"
-#include "modbus_bits001_huawei_flow.h"
 
 #include "huawei_mqtt.h"
+#include "huawei_mqtt_flow.h"
 #include "huawei_mqtt_manage.h"
 
 // global config ==============================================================
@@ -30,12 +30,10 @@ int LIGHT_PIN_ON_LEVEL = 0;
 int BTN_PIN = 35;
 int BTN_PIN_ON_LEVEL = 0;
 
-UCHAR RS485_PORT = 2;
+uint8_t UART_PORT = 2;
 int TX_PIN = 13;
 int RX_PIN = 15;
 int EN_PIN = 05;
-
-#define ETHERNET
 
 // global func ================================================================
 
@@ -50,9 +48,10 @@ void app_main() {
   mt_memory_manage_task(true);
 
   // bits001 modbus task
-  err = modbus_bits001_init(RS485_PORT, TX_PIN, RX_PIN, EN_PIN);
+  err = modbus_bits001_with_config_init(UART_PORT, TX_PIN, RX_PIN, EN_PIN);
   if (err != ESP_OK) {
-    ESP_LOGE(TAG, "%4d %s modbus_bits001_init failed", __LINE__, __func__);
+    ESP_LOGE(TAG, "%4d %s modbus_bits001_with_config_init failed", __LINE__,
+             __func__);
     return;
   }
 
@@ -73,5 +72,6 @@ void app_main() {
     return;
   }
   module_flow->push_frame_interval = 120 * 1000; // 120s
-  modbus_bits001_huawei_flow_fog_task(module_flow);
+  module_flow->flow_handle = modbus_bits001_get_flow_data;
+  huawei_mqtt_flow_task(module_flow);
 }

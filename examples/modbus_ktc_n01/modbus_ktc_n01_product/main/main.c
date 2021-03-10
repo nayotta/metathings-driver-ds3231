@@ -15,8 +15,6 @@
 #include "mt_smartconfig.h"
 
 #include "modbus_ktc_n01.h"
-#include "modbus_ktc_n01_module_flow.h"
-#include "modbus_ktc_n01_module_mqtt.h"
 
 // global config ==============================================================
 
@@ -49,7 +47,7 @@ void app_main() {
   mt_memory_manage_task(true);
 
   // ktc_n01 init
-  err = modbus_ktc_n01_init(UART_PORT, TX_PIN, RX_PIN, EN_PIN);
+  err = modbus_ktc_n01_init(UART_PORT, TX_PIN, RX_PIN, EN_PIN, 1);
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s modbus_ktc_n01_init failed", __LINE__, __func__);
     return;

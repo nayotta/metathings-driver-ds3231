@@ -1,12 +1,6 @@
-idf_component_register(SRCS "."
+idf_component_register(SRCS modbus_ktc_n01.c
                        INCLUDE_DIRS "."
-                       REQUIRES mt_module_flow 
-                                mt_modbus_master
-                                mt_proto_ktc_n01
-                       PRIV_REQUIRES    huawei_iot
-                                        mt_nvs_config
+                       REQUIRES mt_modbus_master
+                       PRIV_REQUIRES    mt_nvs_storage
                                         mt_utils
-                                        mt_mqtt
-                                        mt_module_http
-                                        mt_protobuf_c
-                                        mt_proto_device_cloud)
+                                        json)

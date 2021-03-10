@@ -4,9 +4,11 @@
 #include "stdint.h"
 #include "stdio.h"
 
+#include "cJSON.h"
+
 // define =====================================================================
 
-typedef void (*huawei_mqtt_manage_handle_t)(char *msg, int size);
+typedef cJSON *(*huawei_mqtt_manage_handle_t)(cJSON *paras);
 
 typedef struct _huawei_mqtt_msg_t {
   char *topic;
@@ -29,7 +31,7 @@ void huawei_mqtt_manage_free_msg(huawei_mqtt_msg_t *msg);
 
 // func =======================================================================
 
-void huawei_mqtt_manage_add_handle(void (*handle)(char *msg, int size),
+void huawei_mqtt_manage_add_handle(cJSON *(*handle)(cJSON *paras),
                                    char *serviceID, char *method);
 
 void huawei_mqtt_manage_handle_process(char *topic, void *buf, int size);
