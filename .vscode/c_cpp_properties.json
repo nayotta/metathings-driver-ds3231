@@ -95,7 +95,8 @@
                 "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/nghttp/port/include",
                 "${workspaceFolder}/components/huawei_iot",
                 "${workspaceFolder}/components/mt_memory_manage",
-                "${workspaceFolder}/mt_proto/mt_proto_maglock/include"
+                "${workspaceFolder}/mt_proto/mt_proto_maglock/include",
+                "${workspaceFolder}/mt_apps/modbus_aew100"
             ],
             "defines": [
                 "_DEBUG",
