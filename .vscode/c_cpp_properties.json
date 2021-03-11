@@ -96,7 +96,9 @@
                 "${workspaceFolder}/components/huawei_iot",
                 "${workspaceFolder}/components/mt_memory_manage",
                 "${workspaceFolder}/mt_proto/mt_proto_maglock/include",
-                "${workspaceFolder}/mt_apps/modbus_aew100"
+                "${workspaceFolder}/mt_apps/modbus_aew100",
+                "D:/7esp32/msys32/home/zhanghui/esp/esp-idf/components/esp_timer/include",
+                "${workspaceFolder}/mt_apps/modbus_airswitch001"
             ],
             "defines": [
                 "_DEBUG",

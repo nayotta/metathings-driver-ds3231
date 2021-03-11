@@ -1,5 +1,5 @@
-#ifndef _MODBUS_ARISWITCH001_NIOTIFY_H
-#define _MODBUS_ARISWITCH001_NIOTIFY_H
+#ifndef _MODBUS_AIRSWITCH001_NIOTIFY_H
+#define _MODBUS_AIRSWITCH001_NIOTIFY_H
 
 #include "esp_err.h"
 #include "esp_system.h"

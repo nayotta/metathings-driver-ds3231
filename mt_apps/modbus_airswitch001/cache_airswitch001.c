@@ -12,6 +12,7 @@
 #include "mt_port_airswitch001.h"
 
 // global config ==============================================================
+
 static const char *TAG = "CACHE_airswitch001";
 
 int NUM_MASTER = 1;
@@ -21,6 +22,7 @@ int NUM_SLAVER = 2;
 bool SWITCH_EXIST[SWITCH_MAX];
 
 // static func ================================================================
+
 static esp_err_t cache_quality_update(int addr, int32_t quality_in) {
   char key[16] = "";
   int32_t quality = 0;
@@ -66,13 +68,13 @@ static void quality_cache_loop() {
       USHORT value_high = 0;
       USHORT value_low = 0;
 
-      err = mt_airswitch001_get_data(1, DATA_QUALITY_H, i, &value_high);
+      err = modbus_airswitch001_get_data(1, DATA_QUALITY_H, i, &value_high);
       if (err != ESP_OK) {
         ESP_LOGE(TAG, "%4d %s cache failed", __LINE__, __func__);
         goto CONTINUE;
       }
 
-      err = mt_airswitch001_get_data(1, DATA_QUALITY_L, i, &value_low);
+      err = modbus_airswitch001_get_data(1, DATA_QUALITY_L, i, &value_low);
       if (err != ESP_OK) {
         ESP_LOGE(TAG, "%4d %s cache failed", __LINE__, __func__);
         goto CONTINUE;
@@ -337,7 +339,7 @@ RESTART:
   cache->num_master = 0;
   cache->num_slaver = 0;
 
-  err = mt_airswitch001_get_addrs(slaveAddr, &addrs);
+  err = modbus_airswitch001_get_addrs(slaveAddr, &addrs);
   while (err != ESP_OK) {
     ESP_LOGE(TAG, "%4d %s slaver:%d get addrs error:%d", __LINE__, __func__,
              slaveAddr, err);
@@ -352,7 +354,7 @@ RESTART:
     SWITCH_EXIST[i] = (bool)((addrs & (1 << i)) >> i);
 
     if (SWITCH_EXIST[i] == true) {
-      err = mt_airswitch001_get_model_no_cache(slaveAddr, i, &model, &current);
+      err = modbus_airswitch001_get_model_no_cache(slaveAddr, i, &model, &current);
       if (err != ESP_OK) {
         ESP_LOGE(TAG, "%4d %s slaver:%d target:%d get model error:%d", __LINE__,
                  __func__, slaveAddr, i, err);

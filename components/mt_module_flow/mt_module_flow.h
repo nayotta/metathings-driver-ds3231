@@ -49,6 +49,7 @@ typedef struct _module_flow_t {
   bool poll_enable;
   int poll_interval;
   esp_err_t (*poll_handle)(bool *change);
+  cJSON *(*poll_process)();
 
   bool data_ack;
   char *data_id;

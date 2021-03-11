@@ -716,6 +716,7 @@ mt_module_flow_t *mt_module_flow_new(int module_index, int flow_index,
   module_flow->poll_enable = false;
   module_flow->poll_interval = 0;
   module_flow->poll_handle = ESP_OK;
+  module_flow->poll_process = NULL;
   module_flow->data_ack = false;
   module_flow->data_id = NULL;
 

@@ -7,8 +7,6 @@
 
 #include "cache_airswitch001.h"
 #include "modbus_airswitch001.h"
-#include "modbus_airswitch001_module_flow.h"
-#include "modbus_airswitch001_module_mqtt.h"
 #include "mt_module_flow.h"
 #include "mt_module_http.h"
 #include "mt_mqtt_lan.h"
@@ -45,9 +43,9 @@ RESTART:
   // cache state
   while (cache_success == false) {
     for (int i = 1; i <= total_num; i++) {
-      err = mt_airswitch001_get_state(1, i, &STATE[i]);
+      err = modbus_airswitch001_get_state(1, i, &STATE[i]);
       if (err != ESP_OK) {
-        ESP_LOGE(TAG, "%4d %s mt_airswitch001_get_state:%d failed", __LINE__,
+        ESP_LOGE(TAG, "%4d %s modbus_airswitch001_get_state:%d failed", __LINE__,
                  __func__, i);
         vTaskDelay(5000 / portTICK_RATE_MS);
         continue;
@@ -64,9 +62,9 @@ RESTART:
         vTaskDelay(DELAY_CHECK_TIME / portTICK_RATE_MS);
         DELAY_CHECK = false;
       }
-      err = mt_airswitch001_get_state(1, i, &new_state);
+      err = modbus_airswitch001_get_state(1, i, &new_state);
       if (err != ESP_OK) {
-        ESP_LOGE(TAG, "%4d %s mt_airswitch001_get_state:%d failed", __LINE__,
+        ESP_LOGE(TAG, "%4d %s modbus_airswitch001_get_state:%d failed", __LINE__,
                  __func__, i);
         vTaskDelay(5000 / portTICK_RATE_MS);
         continue;
