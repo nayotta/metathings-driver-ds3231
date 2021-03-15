@@ -160,10 +160,8 @@ static void huawei_mqtt_flow_loop(mt_module_flow_t *module_flow) {
       count++;
       vTaskDelay(module_flow->poll_interval / portTICK_RATE_MS);
     } else {
-      if (module_flow->poll_interval > module_flow->push_frame_interval) {
-        huawei_mqtt_flow_get_data_process(module_flow);
-        vTaskDelay(module_flow->push_frame_interval / portTICK_RATE_MS);
-      }
+      huawei_mqtt_flow_get_data_process(module_flow);
+      vTaskDelay(module_flow->push_frame_interval / portTICK_RATE_MS);
     }
   }
 }

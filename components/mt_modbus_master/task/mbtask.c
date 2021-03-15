@@ -166,7 +166,7 @@ static void modbus_loop(void *parameter) {
   while (1) {
     // (TODO zh) if need delay?
     eMBMasterPoll();
-    vTaskDelay(1);
+    vTaskDelay(20 / portTICK_RATE_MS);
   }
 
   vTaskDelete(NULL);
@@ -329,7 +329,8 @@ EXIT:
 }
 
 void mt_modbus_task() {
-  // task level must be highest 12!!!!!!!!!
-  xTaskCreatePinnedToCore(modbus_loop, "mt_modbus_task", 1024 * 8, NULL, 10,
-                          NULL, 1);
+  // task level must be highest!!!!!!!!!
+  xTaskCreate(modbus_loop, "mt_modbus_task", 1024 * 16, NULL, 24, NULL);
+  // xTaskCreatePinnedToCore(modbus_loop, "mt_modbus_task", 1024 * 16, NULL, 2,
+  //                        NULL, 1);
 }

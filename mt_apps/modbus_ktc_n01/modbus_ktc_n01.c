@@ -219,6 +219,7 @@ cJSON *modbus_ktc_n01_get_flow_data() {
   }
 
   if (exist == false) {
+    ESP_LOGW(TAG, "%4d %s no exsit data ", __LINE__, __func__);
     cJSON_Delete(json_data);
     json_data = NULL;
   }

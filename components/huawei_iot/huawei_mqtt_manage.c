@@ -23,7 +23,7 @@ static huawei_mqtt_manage_t *app_handle = NULL;
 
 static void huawei_mqtt_manage_handle_loop(huawei_mqtt_msg_t *msg) {
   esp_err_t err = ESP_OK;
-  cJSON *res = cJSON_CreateObject();
+  cJSON *res = NULL;
   huawei_cmd_t *cmd_t = NULL;
   char *res_buf = NULL;
 
@@ -58,19 +58,24 @@ static void huawei_mqtt_manage_handle_loop(huawei_mqtt_msg_t *msg) {
 
 EXIT:
   // gen response
-  res_buf = huawei_mqtt_utils_gen_resp(res, "ok", 0, cmd_t->mid);
-  if (res_buf == NULL) {
-    ESP_LOGE(TAG, "%4d %s huawei_mqtt_utils_gen_resp NULL", __LINE__, __func__);
-    err = ESP_ERR_INVALID_RESPONSE;
-    goto EXIT;
+  if (cmd_t != NULL) {
+    res_buf = huawei_mqtt_utils_gen_resp(res, "ok", 0, cmd_t->mid);
+    if (res_buf == NULL) {
+      ESP_LOGE(TAG, "%4d %s huawei_mqtt_utils_gen_resp NULL", __LINE__,
+               __func__);
+      err = ESP_ERR_INVALID_RESPONSE;
+      goto EXIT;
+    }
   }
 
   // sent response
-  err = huawei_mqtt_pub_msg("/commandResponse", res_buf, strlen(res_buf));
-  if (err != ESP_OK) {
-    ESP_LOGE(TAG, "%4d %s huawei_mqtt_pub_msg failed", __LINE__, __func__);
-  } else {
-    ESP_LOGI(TAG, "%4d %s huawei_mqtt_pub_msg success", __LINE__, __func__);
+  if (res_buf != NULL) {
+    err = huawei_mqtt_pub_msg("/commandResponse", res_buf, strlen(res_buf));
+    if (err != ESP_OK) {
+      ESP_LOGE(TAG, "%4d %s huawei_mqtt_pub_msg failed", __LINE__, __func__);
+    } else {
+      ESP_LOGI(TAG, "%4d %s huawei_mqtt_pub_msg success", __LINE__, __func__);
+    }
   }
 
   cJSON_Delete(res);
